@@ -1,10 +1,10 @@
-# Jason [Last Name]
+# Jason Johnson
 
 **AI Governance · Model Risk · Curriculum Architecture · Regulated-Environment Delivery**
 
 Twenty years in IT. Ten of them in regulated industries, where "move fast and break things" is a compliance finding, not a strategy.
 
-This repo is where I build the training that turns *"we should probably govern our AI"* into an operating discipline with owners, evidence, and receipts.
+This repo is where I build the training that turns *"we should probably govern our AI"* into an operating discipline with owners, evidence, and receipts.  These are then polished and packaged using AI cowork with clients such as Clause, Gemini, and ChatGPT.
 
 ---
 
@@ -24,12 +24,12 @@ docs/                    Methodology, style guides, QA standards
 
 ## Flagship work
 
-### Building the Machine (Expanded)
-61-day foundational program for the **AI Governance Practitioner**.
+### Building the Machine
+61-day foundational program for the **AI Governance Practitioner Career Path**.
 The one you take before you have opinions at the risk committee meeting.
 
 ### Taming the Machine
-61-day sequel built for **NYC Local Law 144 independent bias auditor** job-readiness.
+61-day sequel built for **Model Risk Analyst, AI Governance Practitioner, and Bias Auditor** job-readiness.
 Less theory, more "here is the audit report you will actually have to defend."
 
 ### Guardians of the Machine
@@ -43,10 +43,6 @@ Hands-on with Fairlearn, AIF360, Aequitas, and the What-If Tool. Includes the pa
 ### Reading the Machine · Reading the Numbers
 Paired **Python and applied-math literacy** courses built specifically for GRC analysts.
 For governance professionals who are tired of nodding politely when the data science team shares a notebook.
-
-### Okta Certification Study Guides
-- **Okta Certified Administrator** — 61-day guide, fully audited (HTML + PDF + LaTeX)
-- **Okta Certified Professional** — 73-day guide, aligned to the current performance-based exam format
 
 ---
 
@@ -76,7 +72,7 @@ Translation: I've governed high-stakes systems where failure has a human cost, n
 
 **In progress:** CompTIA Project+ · IAPP AIGP
 
-**Education:** B.S., Information Technology Management — Western Governors University (expected December 2027)
+**Education:** B.S., Information Technology Management — Western Governors University (expected December 2028)
 
 ---
 
