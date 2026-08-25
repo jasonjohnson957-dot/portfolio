@@ -36,7 +36,7 @@ Less theory, more "here is the audit report you will actually have to defend."
 26-week **AI Security and Governance** team curriculum.
 Ships in three synchronized editions: in-person, video-chat, and a full facilitator guide. Assembling the team is optional but strongly encouraged.
 
-### Fairness Measurement Fast-Track
+### [Fairness Measurement Fast-Track](curricula/fairness-measurement-fast-track.html)
 7-day deep dive into bias taxonomy, group fairness metrics, and the **Chouldechova / Kleinberg impossibility results**.
 Hands-on with Fairlearn, AIF360, Aequitas, and the What-If Tool. Includes the part where you explain to leadership why they cannot have all three fairness criteria at once.
 
