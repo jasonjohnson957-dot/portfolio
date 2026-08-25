@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading the Numbers — Mathematics for AI Governance Evaluation</title>
+<style>
+  :root{
+    --ink:#14202e; --ink-2:#1b2c3d; --ink-3:#24394e;
+    --parchment:#f6f3ec; --paper:#fbfaf5;
+    --teal:#178a7c; --teal-bright:#1fb3a0; --gold:#c4922a; --gold-soft:#e7c873;
+    --sev-note:#178a7c; --sev-high:#c4922a; --sev-warn:#c0392b;
+    --line:#2d4257; --muted:#7d8a98; --text:#21303f;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+  /* ---- shell ---- */
+  .wrap{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+  .rail{background:var(--ink);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;padding:0}
+  .stage{background:var(--parchment);min-height:100vh}
+
+  /* ---- rail header ---- */
+  .brand{padding:26px 22px 18px;border-bottom:1px solid var(--line)}
+  .brand .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-soft)}
+  .brand h1{margin:8px 0 2px;color:#eef3f6;font-size:19px;line-height:1.2;letter-spacing:-.01em}
+  .brand .sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px}
+
+  .coverage{padding:16px 22px;border-bottom:1px solid var(--line)}
+  .coverage .lab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .coverage .lab b{color:var(--teal-bright);font-weight:600}
+  .bar{height:5px;background:var(--ink-3);border-radius:3px;overflow:hidden}
+  .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--teal-bright));transition:width .4s ease}
+
+  /* ---- evidence log nav ---- */
+  .log{padding:10px 12px 40px}
+  .arc{margin-top:12px}
+  .arc > .arc-h{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-soft);padding:10px 10px 6px}
+  .day-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;cursor:pointer;color:#b9c6d2;font-size:13px;border:1px solid transparent}
+  .day-item:hover{background:var(--ink-2)}
+  .day-item.active{background:var(--ink-3);border-color:var(--line);color:#fff}
+  .pip{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--ink)}
+  .day-item.active .pip{border-color:var(--teal-bright);color:var(--teal-bright)}
+  .day-item.done .pip{background:var(--teal);border-color:var(--teal);color:#06231f}
+  .day-item .t{flex:1;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .day-item .d{font-family:var(--mono);font-size:9px;color:var(--muted)}
+
+  /* ---- stage content ---- */
+  .topbar{position:sticky;top:0;z-index:5;background:rgba(246,243,236,.92);backdrop-filter:blur(6px);border-bottom:1px solid #e3ddd0;display:flex;align-items:center;justify-content:space-between;padding:14px 40px}
+  .topbar .crumb{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+  .topbar .nav-btns{display:flex;gap:8px}
+  .btn{font-family:var(--mono);font-size:12px;border:1px solid #cfc7b6;background:var(--paper);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer;letter-spacing:.03em}
+  .btn:hover{border-color:var(--teal);color:var(--teal)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.primary:hover{background:var(--teal);border-color:var(--teal);color:#fff}
+
+  .content{max-width:820px;margin:0 auto;padding:46px 40px 120px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
+  .daytitle{font-size:34px;line-height:1.12;letter-spacing:-.02em;margin:10px 0 6px;color:var(--ink)}
+  .objective{font-size:15px;color:#55606b;border-left:3px solid var(--gold);padding:4px 0 4px 16px;margin:18px 0 28px;font-style:italic}
+
+  .content h3{font-size:20px;margin:34px 0 10px;letter-spacing:-.01em;color:var(--ink)}
+  .content p{margin:13px 0;font-size:15.5px}
+  .content ul,.content ol{font-size:15.5px;padding-left:22px}
+  .content li{margin:7px 0}
+  .content strong{color:var(--ink)}
+  code.inl{font-family:var(--mono);font-size:13.5px;background:#ece6d8;border:1px solid #ddd5c4;border-radius:4px;padding:1px 6px;color:#0d3c36}
+
+  /* code block */
+  pre{background:var(--ink);color:#e7eef3;border-radius:10px;padding:18px 20px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.65;border:1px solid var(--line);position:relative;margin:18px 0}
+  pre .cm{color:#7fa0b4}
+  pre .st{color:#e7c873}
+  pre .kw{color:#5fd0bd}
+  pre .fn{color:#9ad0ff}
+  pre .nm{color:#e7eef3}
+  pre .tag{position:absolute;top:0;right:0;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);background:var(--ink-2);border-bottom-left-radius:8px;border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 9px}
+
+  /* finding / severity boxes */
+  .finding{border-radius:10px;padding:16px 18px 16px 18px;margin:22px 0;border:1px solid;position:relative}
+  .finding .sev{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;display:inline-block;margin-bottom:7px;padding:3px 8px;border-radius:5px}
+  .finding p{margin:6px 0;font-size:14.5px}
+  .finding p:first-of-type{margin-top:0}
+  .note{background:#eaf4f2;border-color:#bfddd7}
+  .note .sev{background:var(--sev-note);color:#fff}
+  .high{background:#fbf3df;border-color:#ecdcae}
+  .high .sev{background:var(--sev-high);color:#fff}
+  .warn{background:#fceae7;border-color:#f0c8c0}
+  .warn .sev{background:var(--sev-warn);color:#fff}
+
+  /* quiz */
+  .quiz{background:var(--paper);border:1px solid #e3ddd0;border-radius:12px;padding:24px 26px;margin:40px 0 0}
+  .quiz .qh{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+  .quiz .q{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:16px}
+  .opt{display:block;width:100%;text-align:left;background:var(--parchment);border:1px solid #ddd5c4;border-radius:8px;padding:12px 15px;margin:8px 0;cursor:pointer;font-size:14.5px;font-family:var(--sans);color:var(--text);transition:.12s}
+  .opt:hover{border-color:var(--teal)}
+  .opt.correct{background:#e3f3ef;border-color:var(--teal);color:#0d4b43;font-weight:600}
+  .opt.wrong{background:#fbe7e3;border-color:var(--sev-warn);color:#7a241a}
+  .opt.disabled{cursor:default;pointer-events:none}
+  .explain{margin-top:14px;font-size:14px;background:#eaf4f2;border-left:3px solid var(--teal);padding:11px 14px;border-radius:0 8px 8px 0;display:none}
+  .explain.show{display:block}
+
+  .footer-nav{max-width:820px;margin:0 auto;padding:0 40px 80px;display:flex;justify-content:space-between;gap:12px}
+
+  /* cheat sheet table */
+  table.cs{width:100%;border-collapse:collapse;margin:18px 0;font-size:13.5px}
+  table.cs th,table.cs td{border:1px solid #ddd5c4;padding:9px 11px;text-align:left;vertical-align:top}
+  table.cs th{background:var(--ink);color:#eef3f6;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+  table.cs td code{font-family:var(--mono);font-size:12.5px;color:#0d3c36}
+  table.cs tr:nth-child(even){background:#efeade}
+
+  .pill{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink-3);color:var(--gold-soft);padding:3px 9px;border-radius:20px;margin:0 6px 6px 0}
+
+  @media (max-width:880px){
+    .wrap{grid-template-columns:1fr}
+    .rail{position:static;height:auto;max-height:none;border-right:none;border-bottom:1px solid var(--line)}
+    .rail .log{max-height:300px;overflow-y:auto}
+    .content,.footer-nav{padding-left:22px;padding-right:22px}
+    .topbar{padding:12px 18px}
+    .daytitle{font-size:27px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+  :focus-visible{outline:2px solid var(--teal-bright);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="rail">
+    <div class="brand">
+      <div class="kicker">GRC Evaluation Track</div>
+      <h1>Reading the Numbers</h1>
+      <div class="sub">Mathematics for AI governance · 30 days</div>
+      <div class="sub" style="margin-top:2px;color:var(--gold-soft)">Edition: June 2026 · frameworks pinned (Day 29)</div>
+    </div>
+    <div class="coverage">
+      <div class="lab"><span>Curriculum coverage</span><b id="covPct">0%</b></div>
+      <div class="bar"><i id="covBar"></i></div>
+    </div>
+    <nav class="log" id="log" aria-label="Course days"></nav>
+  </aside>
+
+  <main class="stage">
+    <div class="topbar">
+      <div class="crumb" id="crumb">Day 01 / 30</div>
+      <div class="nav-btns">
+        <button class="btn" id="prevTop">&larr; Prev</button>
+        <button class="btn primary" id="nextTop">Next &rarr;</button>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+    <div class="footer-nav">
+      <button class="btn" id="prevBot">&larr; Previous day</button>
+      <button class="btn primary" id="nextBot">Mark complete &amp; continue &rarr;</button>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   COURSE DATA
+   Voice: a 20-year GRC veteran teaching a sharp freshman.
+   Each day: arc, title, objective, body (HTML), quiz.
+   ============================================================ */
+const ARCS = {
+  read:"Reading the Language of Math · Days 1–7",
+  prob:"Probability & Statistics for Bias · Days 8–14",
+  linalg:"Linear Algebra & How Models Learn · Days 15–21",
+  eval:"Evaluation & Fairness Math · Days 22–30"
+};
+
+const DAYS = [
+/* ===== ARC 1: READING THE LANGUAGE OF MATH ===== */
+
+/* DAY 1 */
+{
+arc:"read", title:"Why a GRC Pro Needs the Math",
+obj:"See what the math is actually claiming, and the four questions it answers about any model.",
+body:`
+<p>Let me set the same expectation I set on day one of any technical review: you are not here to <em>do</em> the math. You will never derive a proof, invert a matrix, or train a model in your job. You are here to <strong>read</strong> it — to look at the numbers a model produces and know which one is load-bearing for a fairness or ethics judgment, and which is decoration.</p>
+<p>For twenty years a GRC finding rested on documents: a policy, an attestation, a vendor's assurance. Machine learning moves the evidence into numbers. A fairness claim is a ratio. A model's confidence is a probability. A bias is a gap between two rates. None of these live in a PDF you can take on faith — they live in figures you have to be able to read. If you can read them, you can ask the sharp question and catch the hand-wave.</p>
+<div class="finding note"><span class="sev">Analogy · Note</span>
+<p>Think of yourself as a financial auditor who can't run the company's accounting system but can read the statements — and knows that if the numbers don't reconcile, something is wrong. We're building that same fluency, aimed at a fairness report instead of a balance sheet.</p></div>
+<h3>What the math is — and isn't — here</h3>
+<p>Two reassurances, because notation-fear is the main thing that stops good analysts. First, <strong>no derivations and no proofs</strong> — this course explains what each number <em>means</em> and what question it answers, never how to prove it. Second, <strong>the numbers stay small</strong> — every example uses figures you can follow on paper or with a phone calculator. If you can read a budget variance, you can read a fairness metric.</p>
+<h3>The four questions the math answers</h3>
+<p>Every model, no matter how complex, can be interrogated with four plain questions. The whole course is organized around them:</p>
+<ul>
+<li><strong>How is a person turned into numbers?</strong> A model never sees a human — only a list of numbers standing in for them. (Features and vectors — Arc 3.)</li>
+<li><strong>How does the model turn those numbers into a decision?</strong> A weighted sum becomes a score, becomes a probability, becomes a yes/no. (Arc 3.)</li>
+<li><strong>How do we measure whether the decision is fair?</strong> Nearly every fairness metric is a rate from a small four-box table, computed per group. (Confusion matrix and fairness metrics — Arc 4.)</li>
+<li><strong>How confident should we be in the answer?</strong> Every number comes from a sample and carries uncertainty. (Probability and statistics — Arcs 1–2.)</li>
+</ul>
+<h3>Finding the load-bearing number</h3>
+<p>Here's the habit the whole month builds toward. In any fairness report there is usually <em>one</em> number the entire conclusion rests on — a disparate-impact ratio, a gap in false-positive rates between groups, a base rate. Consider a one-line example you'll fully understand by Day 5:</p>
+<pre><span class="tag">A load-bearing number</span>Group A approved: 45%      Group B approved: 72%
+ratio = 45 ÷ 72 = 0.625     <span class="cm">below the 0.80 fairness screen → a finding</span></pre>
+<p>You don't need the mechanics yet. The point is that a whole fairness conclusion can hinge on that single ratio — and your job is to find it, understand how it was computed, and ask what it leaves out.</p>
+<div class="finding high"><span class="sev">Highlight · Your job in one sentence</span>
+<p>Locate the number the claim rests on, understand how it was built, and ask what it hides. By Day 30 you'll do this on sight — and paired with the Python course, you'll be able to inspect both the <em>code</em> and the <em>mathematics</em> of an AI system.</p></div>
+<p>Let's start by making the notation itself stop being scary.</p>
+`,
+quiz:{q:"What is the core skill this course builds for a GRC analyst?",
+opts:["Deriving proofs and training models from scratch","Reading and interrogating the numbers a model produces to make fairness and ethics judgments","Replacing data scientists on the engineering team","Memorizing every formula in machine learning"],
+a:1, ex:"Like an auditor who reads financial statements without running the accounting system, the analyst learns to read the load-bearing numbers in a model's output and question them — not to do the math themselves."}
+},
+
+/* DAY 2 */
+{
+arc:"read", title:"Notation Without Fear",
+obj:"Decode the handful of symbols — variables, subscripts, f(x), and Σ — that make analysts freeze.",
+body:`
+<p>Most math anxiety is really <em>notation</em> anxiety. The ideas are ordinary; the shorthand looks alien. Let's defuse the handful of symbols you'll meet constantly. Not one of them is harder than a spreadsheet cell.</p>
+<h3>Variables and subscripts</h3>
+<p>A <strong>variable</strong> is just a named box for a number — the exact idea from the Python course. When you have many of the same kind of value, a <strong>subscript</strong> (a little number below the letter) tells them apart:</p>
+<pre><span class="tag">Subscripts</span>x₁ = the 1st person's value
+x₂ = the 2nd person's value
+xᵢ = the i-th person's value   <span class="cm">(i is a stand-in for "any position")</span>
+n  = how many values there are in total</pre>
+<p>So <code class="inl">xᵢ</code> isn't anything scary — it's just &ldquo;whichever one we're pointing at right now.&rdquo; The letter <code class="inl">i</code> is a counter, like a row number in a spreadsheet.</p>
+<h3>Functions: f(x)</h3>
+<p><code class="inl">f(x)</code> reads &ldquo;f of x&rdquo; and means a <strong>machine</strong>: put a value <code class="inl">x</code> in, get a value out. A model is an <code class="inl">f(x)</code> — features go in, a score comes out. A vending machine is an f(snack-code). Nothing more mysterious than that.</p>
+<h3>Summation: Σ</h3>
+<p>The capital Greek S, <strong>sigma</strong>, means one thing: &ldquo;add these up.&rdquo; It saves writing a long <code class="inl">+ + +</code> chain. Sometimes it wears little labels that only say where to start and stop:</p>
+<pre><span class="tag">Reading a summation</span>  n
+  Σ  xᵢ   =   x₁ + x₂ + ... + xₙ
+ i=1
+
+<span class="cm">"add up xᵢ, from i=1 through i=n" — i.e. total the whole column</span></pre>
+<p>When you see those labels, don't freeze — they're just &ldquo;from the first one to the last one.&rdquo; Ninety percent of the time, <code class="inl">Σ</code> simply means &ldquo;go down the column and total it.&rdquo;</p>
+<h3>Putting it together: the average</h3>
+<pre><span class="tag">Formula · the mean</span>mean = (1/n) · Σ xᵢ
+         │          │
+         │          └ add up every value
+         └ then divide by n, the count</pre>
+<div class="finding note"><span class="sev">Work it</span>
+<p>Scores: 2, 4, 9. Here n = 3.<br>
+Step 1 — sum: Σxᵢ = 2 + 4 + 9 = 15.<br>
+Step 2 — divide by n: 15 ÷ 3 = <span style="color:var(--teal)">5</span>.<br>
+You just read a real formula full of symbols and computed it. That is the entire trick.</p></div>
+<h3>Say it out loud</h3>
+<table class="cs">
+<tr><th>Symbol</th><th>Say</th><th>Means</th></tr>
+<tr><td>xᵢ</td><td>&ldquo;x-sub-i&rdquo;</td><td>the i-th value</td></tr>
+<tr><td>n</td><td>&ldquo;n&rdquo;</td><td>how many values</td></tr>
+<tr><td>Σ</td><td>&ldquo;sum of&rdquo;</td><td>add them all up</td></tr>
+<tr><td>f(x)</td><td>&ldquo;f of x&rdquo;</td><td>machine: input → output</td></tr>
+<tr><td>·</td><td>&ldquo;times&rdquo;</td><td>multiply</td></tr>
+</table>
+<div class="finding warn"><span class="sev">Warning · Notation is compression, not difficulty</span>
+<p>When a report shows a formula, translate it into a plain sentence <em>before</em> reacting. &ldquo;Σ over all people of (something)&rdquo; almost always just means &ldquo;go down the column and total it up.&rdquo; The symbol is short; the idea is ordinary. Read every formula aloud in words and it shrinks.</p></div>
+`,
+quiz:{q:"In the expression Σ xᵢ, what is the Σ telling you to do?",
+opts:["Multiply all the x values together","Add up all the x values","Find the largest x value","Divide x by i"],
+a:1, ex:"Sigma (Σ) means summation — add up all the listed values. It is shorthand for a long chain of additions, nothing more."}
+},
+
+/* DAY 3 */
+{
+arc:"read", title:"Descriptive Stats I — Mean, Median, Mode",
+obj:"Know the three 'averages' and, more importantly, how each one hides a disparity.",
+body:`
+<p>Three different numbers each claim to describe &ldquo;the typical case,&rdquo; and each can mislead in a way that matters for governance. You need to know how each is found and where each breaks.</p>
+<h3>The three averages</h3>
+<ul>
+<li><strong>Mean</strong> — the arithmetic average from Day 2: total ÷ count. Powerful, but <em>sensitive to outliers</em> — one extreme value drags it.</li>
+<li><strong>Median</strong> — the middle value when you sort them. <em>Robust</em>: outliers barely move it.</li>
+<li><strong>Mode</strong> — the most common value. The only &ldquo;average&rdquo; that makes sense for <em>categories</em> (the most frequent decision, the most common risk tier).</li>
+</ul>
+<h3>How to find the median (step by step)</h3>
+<p>Sort the values, then take the middle one. With an <strong>odd</strong> count there's a single middle. With an <strong>even</strong> count, average the two middle values.</p>
+<pre><span class="tag">Work it · median</span>Odd count:  3, 7, 8, 12, 20   → single middle is <span class="st">8</span>
+Even count: 3, 7, 8, 12       → middle two are 7 and 8 → (7+8)/2 = <span class="st">7.5</span></pre>
+<h3>Where the mean lies</h3>
+<pre><span class="tag">Work it · mean vs median</span>Incomes: 30k, 32k, 35k, 38k, <span class="st">900k</span>
+
+mean   = (30+32+35+38+900)k ÷ 5 = 207k   <span class="cm">← dragged up by one outlier; describes no one</span>
+median = middle of the sorted five = 35k  <span class="cm">← the honest "typical" value</span></pre>
+<p>Both numbers are &ldquo;correct.&rdquo; The mean is simply the wrong tool when one value is extreme — and someone reporting only the mean may be leaning on exactly that.</p>
+<div class="finding high"><span class="sev">Highlight · Why this is a fairness issue</span>
+<p>A vendor who reports only a <em>mean</em> can bury a subgroup. &ldquo;Average approval rate is 72%&rdquo; can hide that one group sits at 45% and another at 92% — the 72% is real and still misleading. Your reflex should be: <strong>&ldquo;Show me this broken out by group, and show me the spread, not just the center.&rdquo;</strong></p></div>
+<div class="finding note"><span class="sev">Analogy · Note</span>
+<p>An average is a group photo taken from very far away — everyone blurs into one face. Governance lives in the individual faces, not the blur. Always ask to zoom in.</p></div>
+`,
+quiz:{q:"A model report gives only the mean approval rate across all applicants. What is the key governance risk?",
+opts:["The mean is always calculated incorrectly","A single aggregate can hide large disparities between subgroups","The median is illegal to use","Means cannot be computed for approval rates"],
+a:1, ex:"A single mean is a far-away group photo. It can be accurate while concealing that one group is approved at 45% and another at 92%. Always ask for the breakdown by group and the spread."}
+},
+
+/* DAY 4 */
+{
+arc:"read", title:"Descriptive Stats II — Variance & Standard Deviation",
+obj:"Read 'spread' and understand why unequal spread across groups is a fairness signal.",
+body:`
+<p>The center of the data (Day 3) isn't enough; you also need its <strong>spread</strong> — how tightly or loosely the values cluster. Two groups can share an identical mean while one is tightly bunched and the other wildly scattered, and that difference carries real governance weight.</p>
+<h3>Variance and standard deviation</h3>
+<pre><span class="tag">Formula</span>variance = average of (each value − mean)²
+std dev  = √variance     <span class="cm">(the square root brings it back to normal units)</span></pre>
+<p>Read it as a four-step recipe: (1) find the mean; (2) for each value, measure how far it sits from the mean; (3) square those distances so negatives don't cancel positives; (4) average them. That average is the <strong>variance</strong>. Its square root is the <strong>standard deviation (SD)</strong> — the typical distance of a value from the average, in the original units.</p>
+<div class="finding note"><span class="sev">Work it · step by step</span>
+<p>Values 4, 5, 6.<br>
+1 — mean = (4+5+6)/3 = 5.<br>
+2 — deviations from the mean: −1, 0, +1.<br>
+3 — squared: 1, 0, 1.<br>
+4 — variance = (1+0+1)/3 = 0.67.<br>
+SD = √0.67 ≈ <span style="color:var(--teal)">0.82</span>.<br>
+A small SD means the values huddle near the mean; a large SD means they scatter.</p></div>
+<h3>Why square, then square-root?</h3>
+<p>Squaring in step 3 does two jobs: it removes minus signs (so distances below and above the mean don't cancel to zero), and it penalizes big deviations more than small ones. But squaring also changes the units — dollars become dollars-squared — so step 4's square root puts the answer back into plain, readable units. That's the only reason the √ is there.</p>
+<div class="finding high"><span class="sev">Highlight · Spread as a fairness signal</span>
+<p>If a credit model's scores have a much wider spread for one group, the model is effectively <em>less reliable</em> for that group — its errors there are bigger, even if the average score matches. Equal means can hide unequal reliability. So when a report gives group means, ask for the standard deviations too; a gap in spread is a gap in how well the model serves each group.</p></div>
+`,
+quiz:{q:"Two groups have the same mean model score, but Group A has a much larger standard deviation. What does that suggest?",
+opts:["The two groups are treated identically","The model's scores are more scattered — and effectively less reliable — for Group A","Group A has a higher average","Standard deviation has no governance meaning"],
+a:1, ex:"Standard deviation measures spread. A larger SD for Group A means its scores scatter more widely, so the model's errors are bigger and its reliability is lower for that group — even though the averages match."}
+},
+
+/* DAY 5 */
+{
+arc:"read", title:"Proportions, Rates & Ratios",
+obj:"Turn counts into rates and rates into the disparate-impact ratio you'll live by.",
+body:`
+<p>Almost every bias measurement reduces to comparing two <strong>rates</strong>. Get three closely-related words straight and the rest is arithmetic you already do.</p>
+<ul>
+<li><strong>Proportion</strong> — a part out of a whole, written as a fraction or decimal (45 out of 100 = 0.45).</li>
+<li><strong>Rate</strong> — the same idea, usually framed as &ldquo;how often, per group&rdquo; (approvals ÷ applicants).</li>
+<li><strong>Percentage</strong> — a rate times 100 (0.45 = 45%). Same number, friendlier clothes.</li>
+</ul>
+<h3>From rates to a ratio</h3>
+<pre><span class="tag">Formula</span>selection rate (group) = approvals in group ÷ applicants in group
+
+impact ratio = disadvantaged group's rate ÷ highest group's rate</pre>
+<p>The <strong>impact ratio</strong> always divides by the <em>highest</em> group's rate, so a perfectly equal outcome gives 1.0 and any disadvantage shows up as a number below 1.</p>
+<div class="finding note"><span class="sev">Work it · a flag and a pass</span>
+<p><strong>Flags:</strong> Women 61/100 = 0.61; Men 79/100 = 0.79. Ratio = 0.61 ÷ 0.79 = <span style="color:var(--teal)">0.77</span>. Below 0.80 → adverse-impact finding.<br>
+<strong>Passes:</strong> Group A 0.70; Group B 0.75. Ratio = 0.70 ÷ 0.75 = <span style="color:var(--teal)">0.93</span>. Above 0.80 → no four-fifths flag (but read the warning).</p></div>
+<p>This is the exact number the Python course computed in code — here you see the arithmetic underneath it. The 0.80 line comes from the EEOC Uniform Guidelines and is the most-cited screen for <em>disparate impact</em>.</p>
+<div class="finding warn"><span class="sev">Warning · A ratio is a screen, not a verdict</span>
+<p>The impact ratio flags where to investigate; it does not prove discrimination, and it ignores sample size and statistical significance (Day 13). And <em>passing</em> 0.80 does not certify fairness — a model can clear the four-fifths screen and still fail an error-based metric (Arc 4). Report the ratio as one piece of evidence among several.</p></div>
+`,
+quiz:{q:"Group X has a selection rate of 0.48; the highest group's rate is 0.80. What is the impact ratio, and does it flag?",
+opts:["0.60 — flags, since it is below 0.80","1.67 — does not flag","0.32 — flags","0.80 — does not flag"],
+a:0, ex:"Impact ratio = 0.48 ÷ 0.80 = 0.60, which is below the four-fifths (0.80) threshold, so it flags as evidence of adverse impact warranting investigation."}
+},
+
+/* DAY 6 */
+{
+arc:"read", title:"Intro to Probability",
+obj:"Read probabilities on the 0-to-1 scale and understand why base rates matter.",
+body:`
+<p>A model's output is usually a <strong>probability</strong> — a number from 0 to 1 saying how likely something is. Get comfortable on that scale and you can read model confidence fluently.</p>
+<pre><span class="tag">The 0-to-1 scale</span>0.0  impossible        0.5  coin flip        1.0  certain
+0.08 unlikely (8%)     0.30 uncommon (30%)   0.90 very likely (90%)</pre>
+<h3>Two words, then the formula</h3>
+<ul>
+<li><strong>Sample space</strong> — everything that could happen (approve / deny).</li>
+<li><strong>Event</strong> — the outcome you care about (approve). <code class="inl">P(approve)</code> reads &ldquo;the probability of approve.&rdquo;</li>
+</ul>
+<pre><span class="tag">Formula · probability from counts</span>P(event) = times the event happens ÷ total number of cases</pre>
+<div class="finding note"><span class="sev">Work it</span>
+<p>Of 1,000 applications, 300 were approved.<br>
+P(approve) = 300 ÷ 1000 = <span style="color:var(--teal)">0.30</span>.<br>
+That overall figure — 30% — is the <strong>base rate</strong>: how common the outcome is before you know anything about a particular individual.</p></div>
+<h3>The complement: what's left over</h3>
+<p>Because all the probabilities in a sample space add up to 1, the chance of an event <em>not</em> happening is simply 1 minus its probability:</p>
+<pre><span class="tag">Formula · complement</span>P(not approve) = 1 − P(approve) = 1 − 0.30 = <span class="st">0.70</span></pre>
+<p>Small as it looks, this is the move behind a lot of clear thinking: if a screening tool flags 5% of cases, then 95% are cleared — and knowing both halves is how you catch a lopsided story.</p>
+<div class="finding high"><span class="sev">Highlight · Base rates are load-bearing</span>
+<p>The base rate quietly controls how you should read a model's results. A fraud detector that flags 5% of transactions where real fraud is only 0.1% will be wrong most of the time it fires — not because it's a bad model, but because the base rate is low. We make this precise with Bayes on Day 9. For now, build the reflex: <strong>always ask what the base rate is.</strong></p></div>
+`,
+quiz:{q:"A model outputs P(default) = 0.08 for a borrower. What does this number mean?",
+opts:["The borrower has defaulted 8 times","There is an estimated 8% probability the borrower will default","8% of the model's features are missing","The borrower's score is 8 out of 100 and unrelated to probability"],
+a:1, ex:"A probability lives on a 0-to-1 scale. 0.08 means the model estimates an 8% chance of the event (default). It is a likelihood, not a count."}
+},
+
+/* DAY 7 */
+{
+arc:"read", title:"Week 1 Review & Checkpoint",
+obj:"Lock in notation, the three averages, spread, rates, and probability.",
+body:`
+<p>One week in, you can already read the descriptive layer of any report — the numbers that summarize data before any model is even judged. Let's prove it with one small example that chains several Week-1 tools together, then consolidate with a vocabulary table and a self-check.</p>
+<h3>A tiny end-to-end read</h3>
+<p>Suppose a report hands you approval counts for two groups. Watch how the week's tools combine:</p>
+<pre><span class="tag">Work it · chaining the tools</span>Group A: 45 approved of 100     Group B: 72 approved of 100
+
+rate A = 45 ÷ 100 = 0.45        <span class="cm">(rate, Day 5)</span>
+rate B = 72 ÷ 100 = 0.72        <span class="cm">(rate, Day 5)</span>
+impact ratio = 0.45 ÷ 0.72 = <span class="st">0.625</span>   <span class="cm">(ratio vs highest, Day 5)</span>
+0.625 &lt; 0.80  →  adverse-impact finding   <span class="cm">(four-fifths screen)</span>
+
+follow-ups: how many people per group?  (sample size, Day 13 preview)
+            what's the overall base rate? (Day 6)
+            is 0.45 a mean hiding sub-groups? (Day 3)</pre>
+<p>That is the descriptive-layer read in miniature: turn counts into rates, compare them, and immediately line up the follow-up questions.</p>
+<h3>Week 1 vocabulary — keep this nearby</h3>
+<table class="cs">
+<tr><th>Symbol / term</th><th>Plain meaning</th><th>Example</th></tr>
+<tr><td>xᵢ</td><td>the i-th value in a list</td><td>the 5th person's income</td></tr>
+<tr><td>f(x)</td><td>a machine: input → output</td><td>a model scoring an applicant</td></tr>
+<tr><td>Σ</td><td>add all these up</td><td>Σ xᵢ = total of the column</td></tr>
+<tr><td>mean</td><td>arithmetic average</td><td>(1/n) Σ xᵢ</td></tr>
+<tr><td>median</td><td>middle value; ignores outliers</td><td>robust &ldquo;typical&rdquo; value</td></tr>
+<tr><td>mode</td><td>most common value</td><td>the most frequent decision</td></tr>
+<tr><td>variance / SD</td><td>spread; typical distance from mean</td><td>SD = √variance</td></tr>
+<tr><td>rate</td><td>count ÷ total</td><td>approvals ÷ applicants</td></tr>
+<tr><td>impact ratio</td><td>one rate ÷ the highest rate</td><td>0.61 ÷ 0.79 = 0.77</td></tr>
+<tr><td>P(event)</td><td>probability, 0 to 1</td><td>P(approve) = 0.30</td></tr>
+<tr><td>complement</td><td>1 − P(event)</td><td>P(not approve) = 0.70</td></tr>
+<tr><td>base rate</td><td>how common an outcome is overall</td><td>30% approved</td></tr>
+</table>
+<div class="finding note"><span class="sev">Analogy · Note</span>
+<p>These are the reading glasses. With them on, a page of summary statistics stops being a wall of symbols and becomes a set of plain claims you can check. Week 2 turns to probability, where bias is measured and reasoned about under uncertainty.</p></div>
+<h3>Self-check</h3>
+<ul>
+<li>Can you translate a Σ formula into a plain English sentence, labels and all?</li>
+<li>Can you find a median, and say why it can differ sharply from the mean?</li>
+<li>Do you know why a mean can hide a subgroup, and what to ask for instead?</li>
+<li>Can you compute an impact ratio from two counts and say whether it flags?</li>
+<li>Can you state a probability and its complement from a base rate?</li>
+</ul>
+`,
+quiz:{q:"Which pair correctly matches a fairness use to the right statistic?",
+opts:["Use the mode to measure income spread","Use standard deviation to compare reliability across groups","Use the base rate to sort a list alphabetically","Use the median only for categories"],
+a:1, ex:"Standard deviation measures spread, so comparing SDs across groups reveals unequal reliability. (Mode is for categories, median resists outliers, and the base rate is an overall probability.)"}
+},
+
+/* ===== ARC 2: PROBABILITY & STATISTICS FOR BIAS ===== */
+
+/* DAY 8 */
+{
+arc:"prob", title:"Conditional Probability — P(A | B)",
+obj:"Read 'the probability of A given B' — the exact math behind 'given group membership.'",
+body:`
+<p>This is the single most important notation for bias work, so we'll go slowly. <code class="inl">P(A | B)</code> reads &ldquo;the probability of A <strong>given</strong> B&rdquo; — the chance of A once you already know B is true. The vertical bar <code class="inl">|</code> means &ldquo;given,&rdquo; and it narrows your attention to only the cases where B holds.</p>
+<pre><span class="tag">Formula · conditional probability</span>P(A | B) = P(A and B) ÷ P(B)
+
+<span class="cm">among only the cases where B is true, how often is A also true?</span></pre>
+<p>Read it as a two-step zoom: first set aside everyone for whom B isn't true (that's the ÷ P(B)); then, within that narrowed group, count how often A happens.</p>
+<h3>Work it from a table</h3>
+<pre><span class="tag">Work it · from counts</span>                approved   denied   total
+female              100      100      200
+male                150       50      200
+
+P(approve | female) = 100 ÷ 200 = <span class="st">0.50</span>
+P(approve | male)   = 150 ÷ 200 = <span class="st">0.75</span></pre>
+<p>You just conditioned on group: you looked only at women, then only at men, and read the approval rate inside each. A 25-point gap means the decision depends on the group.</p>
+<div class="finding high"><span class="sev">Highlight · This IS a fairness question</span>
+<p>That comparison — <code class="inl">P(approve | female)</code> versus <code class="inl">P(approve | male)</code> — is the mathematical definition of <strong>demographic parity</strong>, the metric you'll formalize on Day 25. Every &ldquo;given the group&rdquo; sentence in a fairness report is a conditional probability, so your eye should go straight to whether the conditional rates match across groups.</p></div>
+<div class="finding warn"><span class="sev">Warning · Direction matters</span>
+<p><code class="inl">P(A | B)</code> is <em>not</em> the same as <code class="inl">P(B | A)</code>. &ldquo;Probability of approval given female&rdquo; answers a different question than &ldquo;probability of being female given approved.&rdquo; Swapping the two is a classic error — and the seed of the base-rate fallacy on Day 9. Always check which way the bar points.</p></div>
+`,
+quiz:{q:"P(flagged | group = A) = 0.30 and P(flagged | group = B) = 0.10. What does this tell an evaluator?",
+opts:["The two groups are flagged at the same rate","Being flagged depends on group membership — Group A is flagged three times as often","Group B is flagged more often","Conditional probability cannot compare groups"],
+a:1, ex:"P(A|B) is the probability of an outcome given a condition. A 0.30 vs 0.10 gap means the flagging rate depends on the group — the core signal behind demographic-parity analysis."}
+},
+
+/* DAY 9 */
+{
+arc:"prob", title:"Bayes' Theorem & the Base-Rate Fallacy",
+obj:"See why a 'highly accurate' screening tool can still be wrong most times it fires.",
+body:`
+<p>Bayes' theorem flips a conditional probability around, and in doing so exposes the most common statistical trap in AI governance: the <strong>base-rate fallacy</strong>.</p>
+<pre><span class="tag">Formula · Bayes' theorem</span>P(A | B) = [ P(B | A) · P(A) ] ÷ P(B)
+
+<span class="cm">posterior = (likelihood × prior) ÷ overall evidence</span></pre>
+<p>In plain words: your updated belief after seeing evidence (the <em>posterior</em>) depends not only on how telling the evidence is (the <em>likelihood</em>), but on how common the thing was to begin with (the <em>prior</em>, i.e. the base rate). You don't need to manipulate the formula — you need the lesson it forces: <strong>a rare thing stays rare even after a positive test.</strong></p>
+<h3>Work it — lay out the counts</h3>
+<pre><span class="tag">Work it · the base-rate trap</span>Disease affects 1 in 1,000 (base rate 0.1%). Test is 99% accurate.
+Picture 10,000 people:
+
+  truly sick:      10  → about 10 test positive         (true positives)
+  truly healthy: 9,990 → about 1% wrongly test positive → about 100 (false positives)
+
+positives total  ≈ 10 + 100 = 110
+truly sick among them ≈ 10
+
+P(sick | positive) ≈ 10 ÷ 110 ≈ <span class="st">9%</span></pre>
+<p>Intuition screamed &ldquo;99% — I must be sick.&rdquo; The math says about 9%, because the false positives from the huge healthy group swamp the handful of true positives. Nothing is wrong with the test; the base rate is simply very low.</p>
+<div class="finding warn"><span class="sev">Warning · Where this bites in AI</span>
+<p>Fraud detectors, recidivism tools, child-safety flaggers, security classifiers — all operate on <em>rare</em> events, so even a strong model produces mostly false positives when it fires. When a vendor touts &ldquo;95% accuracy,&rdquo; ask: <strong>&ldquo;What's the base rate, and of everyone you flag, how many are actually positive?&rdquo;</strong> That second number is <em>precision</em> (Day 23) — and it's what the affected person actually experiences.</p></div>
+`,
+quiz:{q:"A screening tool is 95% accurate but the condition it detects occurs in only 1% of cases. What is the likely reality among the people it flags?",
+opts:["95% of flagged people truly have the condition","A large share of flagged people are false positives, because the base rate is very low","The tool never makes mistakes","Base rate is irrelevant to accuracy claims"],
+a:1, ex:"When the base rate is low, false positives from the large negative population swamp the few true positives — so most flagged people can be false positives even with high headline accuracy. Always ask for the base rate and the precision."}
+},
+
+/* DAY 10 */
+{
+arc:"prob", title:"Independence & Dependence",
+obj:"Understand the formal core of statistical fairness: outcome independent of the protected trait.",
+body:`
+<p>Two events are <strong>independent</strong> when knowing one tells you nothing about the other. That's the whole idea; the formula just states it precisely.</p>
+<pre><span class="tag">Formula · independence</span>A and B are independent when   P(A | B) = P(A)
+
+<span class="cm">knowing B doesn't change the probability of A</span></pre>
+<p>Flip it: if <code class="inl">P(A | B) ≠ P(A)</code>, the two are <strong>dependent</strong> — one carries information about the other. So to <em>check</em> independence, you compare the conditional rate to the overall rate.</p>
+<div class="finding note"><span class="sev">Work it · is the decision independent of group?</span>
+<p>Overall approval P(approve) = 0.65.<br>
+If P(approve | group A) = 0.65 and P(approve | group B) = 0.65 → conditional equals overall → <span style="color:var(--teal)">independent</span> (parity holds).<br>
+If instead P(approve | group B) = 0.48 ≠ 0.65 → <span style="color:var(--sev-warn)">dependent</span> → the decision &ldquo;knows&rdquo; the group.</p></div>
+<div class="finding high"><span class="sev">Highlight · This is what 'statistical fairness' means</span>
+<p>Demographic parity is exactly the claim that <em>the decision is independent of the protected attribute</em>: P(approve | group) = P(approve), the same for every group. When a report says a model is &ldquo;statistically fair&rdquo; on this definition, it is asserting this independence. Check whether the reported conditional rates actually match — and remember that a <em>proxy</em> can restore dependence through the back door even after the protected attribute is removed.</p></div>
+<div class="finding note"><span class="sev">Analogy · Note</span>
+<p>Independence is a firewall: the outcome shouldn't &ldquo;know&rdquo; your group. A proxy feature is a hole in that firewall — it lets the group leak back in even after you thought you'd sealed it out.</p></div>
+`,
+quiz:{q:"A model's approval decision is statistically independent of race. In probability terms, what holds?",
+opts:["P(approve | race) is undefined","P(approve | race) equals P(approve) for every race group","P(approve) is always 0.5","Race is the strongest predictor"],
+a:1, ex:"Independence means the condition doesn't change the probability: P(approve | race) = P(approve) across groups. That equality is the formal statement of demographic parity — though proxies can reintroduce dependence."}
+},
+
+/* DAY 11 */
+{
+arc:"prob", title:"Distributions & Distribution Shift",
+obj:"Read the shape of data — normal, skewed, long-tailed — and why shift breaks models.",
+body:`
+<p>A <strong>distribution</strong> is the shape of how values spread out — a picture of which values are common and which are rare. You mostly need to recognize three shapes and one danger.</p>
+<h3>Three shapes</h3>
+<ul>
+<li><strong>Normal (bell curve)</strong> — symmetric, most values near the middle, tapering off on both sides.</li>
+<li><strong>Skewed</strong> — a lopsided tail. Income skews right: most people modest, a few enormous. In a right skew the mean sits <em>above</em> the median (the long tail drags the mean up).</li>
+<li><strong>Long-tailed</strong> — rare-but-real cases far from the center: the unusual applicant the model saw little of in training.</li>
+</ul>
+<h3>The 68–95–99.7 rule (for a normal curve)</h3>
+<pre><span class="tag">Rule of thumb</span>~68% of values fall within 1 SD of the mean
+~95% within 2 SD
+~99.7% within 3 SD
+
+<span class="cm">example: mean score 600, SD 50 → about 95% of people score 500–700</span></pre>
+<p>This is why standard deviation (Day 4) is so useful: for a bell curve, the mean and SD together tell you where almost everyone lands — and let you spot a genuinely unusual score.</p>
+<div class="finding high"><span class="sev">Highlight · Distribution shift</span>
+<p>A model learns the distribution of its <em>training</em> data. When the real world differs — a new population, a later time, a different region — that's <strong>distribution shift</strong>, and reliability quietly degrades, often worst for groups thin in the training set (their slice of the curve was sparse to begin with). Ask: <strong>&ldquo;Does the deployment population match the training population, and how is drift monitored over time?&rdquo;</strong></p></div>
+<div class="finding warn"><span class="sev">Warning</span>
+<p>Fairness measured at training time does not guarantee fairness after deployment. A model can pass every fairness check in the lab and fail in the field because the input distribution moved. Point-in-time metrics have a shelf life.</p></div>
+`,
+quiz:{q:"A model was trained on one population and deployed on a very different one. What is the governance concern?",
+opts:["Nothing — models generalize perfectly","Distribution shift can degrade reliability, often worst for underrepresented groups, so lab fairness may not hold in the field","The mean will always stay the same","Skew guarantees fairness"],
+a:1, ex:"Distribution shift means the deployment data differs from the training data, degrading reliability — frequently worst for groups thin in the training set. Fairness verified at training time can fail after deployment."}
+},
+
+/* DAY 12 */
+{
+arc:"prob", title:"Correlation vs Causation",
+obj:"Read a correlation coefficient and refuse to confuse it with cause — the proxy problem, formalized.",
+body:`
+<p>A <strong>correlation coefficient (r)</strong> measures how tightly two things move together, on a scale from −1 to +1.</p>
+<pre><span class="tag">Reading r</span> r ≈ +0.9   strong positive link (they rise together)
+ r ≈ +0.3   weak positive link
+ r ≈  0.0   no linear link
+ r ≈ −0.9   strong negative link (one up, the other down)</pre>
+<h3>Correlation is not causation</h3>
+<p>Two things can move together because one causes the other, because a hidden third factor (a <strong>confounder</strong>) drives both, or by sheer coincidence. Ice-cream sales and drownings rise together — not because one causes the other, but because a confounder (hot weather) drives both. A model will happily exploit any correlation, cause or not.</p>
+<div class="finding high"><span class="sev">Highlight · The proxy connection</span>
+<p>A feature can be strongly correlated with a protected attribute (ZIP code with race, first name with gender) without &ldquo;being&rdquo; it. That correlation is exactly how a proxy smuggles a protected trait into a model. High correlation between an input and a protected class is the numeric fingerprint of a proxy — a red flag worth a conversation.</p></div>
+<div class="finding note"><span class="sev">Work it · Simpson's paradox</span>
+<p>A treatment can look <em>better</em> in Group A and <em>better</em> in Group B, yet <em>worse</em> overall when the groups are pooled — because the groups differ in size and base rate. Tiny illustration: a drug wins for mild cases and wins for severe cases, but because most drug patients were severe cases (harder to cure), its <em>combined</em> numbers look worse. The reversal is real. Lesson: always check whether a headline statistic survives being broken out by group.</p></div>
+<div class="finding warn"><span class="sev">Warning</span>
+<p>&ldquo;Correlated with good outcomes&rdquo; is not &ldquo;causes good outcomes.&rdquo; A model can lean on a correlation that is really a marker of privilege or a historical injustice, reproducing it as if it were merit.</p></div>
+`,
+quiz:{q:"A feature has correlation r = 0.85 with a protected attribute. Why does this matter for bias review?",
+opts:["It proves the feature causes the protected attribute","It flags the feature as a likely proxy that can smuggle the protected trait into the model","Correlation above 0.8 is always illegal","It means the feature is irrelevant"],
+a:1, ex:"Strong correlation with a protected attribute is the mechanism of a proxy: the feature can carry the protected trait into the model indirectly. It's a red flag to investigate — though correlation still isn't causation."}
+},
+
+/* DAY 13 */
+{
+arc:"prob", title:"Sampling, Sample Size & Significance",
+obj:"Know why small-sample numbers are noisy, and read p-values and confidence intervals plainly.",
+body:`
+<p>Every metric is computed on a <strong>sample</strong> — the people you happened to observe — not the whole <strong>population</strong>. So every metric carries uncertainty, and the smaller the sample, the noisier the number. More data generally means a tighter, more trustworthy estimate.</p>
+<div class="finding warn"><span class="sev">Warning · Small subgroups, big noise</span>
+<p>A four-fifths ratio computed on 12 people in a subgroup can swing wildly on a couple of decisions. A disparity measured on tiny numbers may be real or may be luck. This is a documented weakness of the four-fifths rule and a favorite place for weak analysis to hide. Ask: <strong>&ldquo;How many people are in each group being compared?&rdquo;</strong></p></div>
+<h3>Two words you'll see, in plain English</h3>
+<ul>
+<li><strong>p-value</strong> — the probability of seeing a result this extreme <em>if there were really no effect</em>. A small p-value (commonly &lt; 0.05) means &ldquo;luck alone is an unlikely explanation.&rdquo; It is <em>not</em> the probability that the claim is true, and it says nothing about how <em>big</em> the effect is.</li>
+<li><strong>Confidence interval (CI)</strong> — a range that plausibly contains the true value. A <em>wide</em> interval means &ldquo;we're not sure&rdquo;; an interval that <em>includes zero</em> means the disparity might not be real at all.</li>
+</ul>
+<pre><span class="tag">Work it · reading a CI</span>"disparity 12%, 95% CI [3%, 21%]"   → likely real   (whole range is above 0)
+"disparity 12%, 95% CI [−2%, 26%]"  → uncertain      (range includes 0 → get more data)</pre>
+<div class="finding high"><span class="sev">Highlight · Significant ≠ important</span>
+<p>Statistical significance (a small p-value) and practical importance are different questions. A tiny, harmless gap can be &ldquo;significant&rdquo; with enough data; a large, harmful gap can be &ldquo;not significant&rdquo; with too little. Always report both the <em>size</em> of a disparity and its <em>uncertainty</em> — never a bare point estimate.</p></div>
+`,
+quiz:{q:"A fairness report shows a 15% disparity with a 95% confidence interval of [−2%, 32%]. How should you read it?",
+opts:["The disparity is definitely 15% and proven","The interval includes 0, so the disparity may not be statistically reliable — likely small sample; ask for more data","A confidence interval proves causation","p-values and intervals mean the same thing"],
+a:1, ex:"A confidence interval that includes zero means the true disparity might be nothing — the estimate is uncertain, often from a small sample. Report the size AND the uncertainty; don't treat a noisy point estimate as settled."}
+},
+
+/* DAY 14 */
+{
+arc:"prob", title:"Week 2 Review & Checkpoint",
+obj:"Consolidate the probability and statistics that bias analysis rests on.",
+body:`
+<p>You now hold the probability toolkit that fairness measurement is built from. Let's chain a few pieces together, then lock in the vocabulary.</p>
+<h3>A tiny end-to-end read</h3>
+<pre><span class="tag">Work it · reasoning under uncertainty</span>A flagging tool: real problem's base rate = 2%. The tool flags 10% of cases.
+
+precision question:   of everyone flagged, how many are truly positive?  (Day 9, 23)
+base-rate check:      2% is rare → expect many false positives among flags (Day 9)
+sample check:         how many people sit behind each rate?               (Day 13)
+independence check:   does the flag rate depend on group? P(flag|group) vs P(flag) (Day 10)</pre>
+<p>That's the Week-2 mindset: never take a single rate at face value — interrogate its base rate, its sample size, and whether it depends on the group.</p>
+<h3>Week 2 vocabulary — keep this nearby</h3>
+<table class="cs">
+<tr><th>Symbol / term</th><th>Plain meaning</th><th>Governance use</th></tr>
+<tr><td>P(A | B)</td><td>probability of A given B</td><td>P(approve | group) = fairness check</td></tr>
+<tr><td>Bayes' theorem</td><td>flips a conditional around</td><td>exposes the base-rate trap</td></tr>
+<tr><td>base-rate fallacy</td><td>rare events stay rare after a test</td><td>false positives in rare-event tools</td></tr>
+<tr><td>independence</td><td>P(A|B) = P(A)</td><td>formal demographic parity</td></tr>
+<tr><td>distribution</td><td>the shape of the data</td><td>score shapes differ by group</td></tr>
+<tr><td>distribution shift</td><td>deployment ≠ training data</td><td>lab fairness expires in the field</td></tr>
+<tr><td>correlation (r)</td><td>move-together, −1 to +1</td><td>proxy detection</td></tr>
+<tr><td>Simpson's paradox</td><td>aggregates can reverse subgroups</td><td>always break out by group</td></tr>
+<tr><td>p-value</td><td>could luck alone explain this?</td><td>is a disparity real or noise?</td></tr>
+<tr><td>confidence interval</td><td>plausible range for the true value</td><td>how sure are we?</td></tr>
+</table>
+<div class="finding note"><span class="sev">Analogy · Note</span>
+<p>Week 1 taught you to read the data; Week 2 taught you to reason about it under uncertainty. Next week we open the model itself — how a person becomes numbers, and numbers become a decision.</p></div>
+<h3>Self-check</h3>
+<ul>
+<li>Can you explain the base-rate fallacy with the disease-test counts?</li>
+<li>Can you state demographic parity as an independence claim?</li>
+<li>Can you read a confidence interval and say whether a disparity is reliable?</li>
+<li>Do you know what to ask when a disparity comes from a tiny subgroup?</li>
+</ul>
+`,
+quiz:{q:"Which question best reflects the Week 2 mindset when handed a single fairness statistic?",
+opts:["Is the number formatted nicely?","What is the base rate, the sample size, and the uncertainty behind this number?","Is the mean higher than the median?","Which font was the report written in?"],
+a:1, ex:"Week 2 is about reasoning under uncertainty: base rate (Bayes), sample size and confidence (significance), and whether an aggregate hides subgroup reversals. Those questions separate a real finding from noise."}
+},
+
+/* ===== ARC 3: LINEAR ALGEBRA & HOW MODELS LEARN ===== */
+
+/* DAY 15 */
+{
+arc:"linalg", title:"Vectors — A Person as Numbers",
+obj:"See how a model represents an individual as a list of numbers, and why that list is the whole game.",
+body:`
+<p>Before a model can decide anything, it must turn a person into numbers. That list of numbers is a <strong>vector</strong> — just an ordered row of values, each one a <strong>feature</strong>. The number of entries is the vector's <strong>dimension</strong>.</p>
+<pre><span class="tag">A feature vector</span>applicant = [ income, age, debt_ratio, years_employed, zip_code ]
+           = [  52000,  34,   0.31,        6,          60614   ]
+
+<span class="cm">5 numbers → a 5-dimensional vector → one point in "feature space"</span></pre>
+<p>Each number is a coordinate; the whole vector is a single point in a space the model reasons over. Two applicants with similar vectors sit close together in that space — which is how a model treats &ldquo;similar&rdquo; people similarly. The crucial fact: <em>the model only ever sees this vector</em>, never the human being behind it.</p>
+<div class="finding high"><span class="sev">Highlight · What's in the vector is what the model 'knows'</span>
+<p>This is the most governance-relevant idea in linear algebra. The features chosen <em>are</em> the model's entire view of a person. If a protected attribute or a proxy for one is in the vector, the model can act on it; if a relevant fairness consideration is <em>not</em> in the vector, the model is blind to it. Reviewing the feature list is reviewing what the model is allowed to see — so start every model review there, asking of each feature: is it necessary, is it a proxy, and who decided to include it?</p></div>
+<div class="finding note"><span class="sev">Analogy · Note</span>
+<p>The feature vector is the model's only witness statement about a person. Everything the model &ldquo;believes&rdquo; comes from those few numbers. Ask what's included, what's excluded, and what might be a proxy in disguise.</p></div>
+`,
+quiz:{q:"Why is the feature vector the first thing to review in a model?",
+opts:["It sets the font of the output","It is the model's entire representation of a person — proxies and protected traits live here, and anything omitted is invisible to the model","Vectors are always fair","It determines the training speed only"],
+a:1, ex:"The model only sees the feature vector, so those numbers define everything it can act on. Protected traits and proxies enter here, and anything left out is invisible — making the feature list the natural start of a bias review."}
+},
+
+/* DAY 16 */
+{
+arc:"linalg", title:"Matrices & the Dot Product",
+obj:"See a decision as a weighted sum — and read weights as 'how much each feature matters.'",
+body:`
+<p>How does a vector of features become a single score? The simplest and most common answer is the <strong>dot product</strong>: multiply each feature by a <strong>weight</strong>, then add it all up. A <strong>matrix</strong> is just a stack of such weight-rows — many weighted sums computed at once.</p>
+<pre><span class="tag">Formula · weighted sum (dot product)</span>score = (w₁·x₁) + (w₂·x₂) + (w₃·x₃) + ...  + b
+
+<span class="cm">each feature x times its weight w, all added up, plus a baseline b (the "bias term")</span></pre>
+<div class="finding note"><span class="sev">Work it · step by step</span>
+<p>Features x = [income 3, debt 2]; weights w = [+2, −1]; baseline b = 0.<br>
+Step 1 — multiply pairs: (2 × 3) = 6, and (−1 × 2) = −2.<br>
+Step 2 — add them: 6 + (−2) = <span style="color:var(--teal)">4</span>.<br>
+Income pushed the score up; debt pulled it down. That's a linear model in two lines.</p></div>
+<p>(The <strong>bias term</strong> <code class="inl">b</code> here is just a baseline shift — an unrelated meaning from the &ldquo;bias&rdquo; we govern for. Context tells them apart.)</p>
+<div class="finding high"><span class="sev">Highlight · Weights are the model's priorities</span>
+<p>A weight is how much a feature moves the decision, and its sign is the direction. A large positive weight strongly raises the score; a large negative weight strongly lowers it. A big weight on a <em>proxy</em> feature means that proxy heavily drives outcomes — visible right there in the numbers. In a simple (linear) model you can often read the weights directly and ask, &ldquo;Why does <em>this</em> feature carry so much influence?&rdquo; Deep models bury the weights across many layers (Day 21), which is why they're harder to inspect.</p></div>
+`,
+quiz:{q:"In a linear model, what does a large positive weight on a feature mean?",
+opts:["The feature is ignored","The feature strongly pushes the decision in the positive direction","The feature is always a protected attribute","Weights have no interpretation"],
+a:1, ex:"A weight scales a feature's contribution to the score; a large positive weight means that feature strongly raises the score. Reading weights reveals the model's priorities — and a heavy weight on a proxy is a bias flag."}
+},
+
+/* DAY 17 */
+{
+arc:"linalg", title:"Embeddings — Meaning as Geometry",
+obj:"Understand how words and entities become vectors, and where bias hides in that space.",
+body:`
+<p>Modern AI represents words, sentences, and even people as vectors called <strong>embeddings</strong>, arranged so that <em>similar things sit close together</em> in space. Distance and direction come to <em>encode meaning</em> — the geometry itself carries information.</p>
+<h3>Similarity is an angle</h3>
+<p>Closeness is often measured by <strong>cosine similarity</strong> — essentially the angle between two vectors, running from −1 (pointing opposite) through 0 (unrelated) to +1 (pointing the same way). A small angle means similar meaning. So &ldquo;doctor&rdquo; and &ldquo;nurse&rdquo; land near each other; &ldquo;doctor&rdquo; and &ldquo;guitar&rdquo; land far apart.</p>
+<pre><span class="tag">Meaning as direction</span>Embeddings can even do arithmetic on meaning:
+   king − man + woman ≈ queen
+
+<span class="cm">the direction from "man" to "woman" is roughly the same as "king" to "queen"</span></pre>
+<div class="finding warn"><span class="sev">Warning · Bias is baked into the geometry</span>
+<p>Embeddings are learned from human text, so they absorb human bias. Famous audits found embeddings completing &ldquo;man is to computer programmer as woman is to ___&rdquo; with &ldquo;homemaker,&rdquo; and placing some names closer to &ldquo;pleasant&rdquo; or &ldquo;unpleasant&rdquo; words along racial lines. The bias isn't one bad output — it's a property of the <em>space itself</em>, so it quietly colors every task built on top of it.</p></div>
+<div class="finding high"><span class="sev">Highlight · Where NLP bias lives</span>
+<p>When an AI system uses language (résumé screening, chatbots, search, matching), embeddings are usually underneath. Ask: <strong>&ldquo;Were the embeddings tested for social bias, and along which axes?&rdquo;</strong> A system can look neutral on the surface while carrying skewed associations in the geometry it inherited.</p></div>
+`,
+quiz:{q:"Why can embeddings introduce bias even when the model's code looks neutral?",
+opts:["Embeddings are random numbers","They are learned from human text and absorb its social biases into the vector space, affecting all downstream uses","Cosine similarity is illegal","Embeddings only store numbers, never associations"],
+a:1, ex:"Embeddings learn their geometry from human-generated text, so societal biases become properties of the vector space itself — surfacing in analogies and associations and coloring every downstream task that uses them."}
+},
+
+/* DAY 18 */
+{
+arc:"linalg", title:"From Scores to Probabilities — The Sigmoid",
+obj:"See how a raw score becomes a 0-to-1 probability, and why the threshold is a policy choice.",
+body:`
+<p>The weighted sum from Day 16 can be any number — −4, 0, 17. To become a probability it must be squeezed into the 0-to-1 range, and the usual tool is the <strong>sigmoid</strong> (logistic) function, an S-shaped curve.</p>
+<pre><span class="tag">Formula · sigmoid</span>z = w·x + b              <span class="cm">the linear score (any real number)</span>
+σ(z) = 1 ÷ (1 + e^(−z))   <span class="cm">squashes z into a probability between 0 and 1</span></pre>
+<div class="finding note"><span class="sev">Work it · reading the curve</span>
+<p>σ(0) = 1 ÷ (1 + 1) = <span style="color:var(--teal)">0.50</span> (a dead heat).<br>
+σ(2) ≈ 1 ÷ (1 + 0.14) ≈ <span style="color:var(--teal)">0.88</span> (likely yes).<br>
+σ(−2) ≈ <span style="color:var(--teal)">0.12</span> (likely no).<br>
+Big positive score → near 1; big negative score → near 0; zero → 0.5. That's the whole behavior.</p></div>
+<p>Then a <strong>threshold</strong> turns the probability into a decision: approve if σ(z) ≥ 0.5, say. That cutoff is a choice, not a law of nature.</p>
+<div class="finding high"><span class="sev">Highlight · The threshold is policy (again)</span>
+<p>You met this in the Python course; here's the math beneath it. Moving the threshold up or down trades false positives against false negatives — and, crucially, the <em>same</em> threshold can affect two groups very differently if their score distributions differ (Day 11). Where the line sits is a governance decision about acceptable risk, and it should be documented and defended, not left at a silent default.</p></div>
+<div class="finding note"><span class="sev">Note · calibration teaser</span>
+<p>For a probability to be trustworthy it should be <em>calibrated</em>: among everyone scored 0.70, about 70% should truly be positive — and ideally that holds for every group. We return to calibration on Day 26.</p></div>
+`,
+quiz:{q:"A model applies one probability threshold of 0.5 to all applicants. Why might this still be unfair?",
+opts:["Thresholds are always fair","If the two groups' score distributions differ, the same cutoff can produce very different error rates for each group","0.5 is mathematically forbidden","The sigmoid removes all bias"],
+a:1, ex:"The sigmoid turns scores into probabilities, but a single threshold interacts with each group's score distribution. If those distributions differ, one cutoff yields different false-positive/negative rates by group — a policy choice to examine, not a neutral default."}
+},
+
+/* DAY 19 */
+{
+arc:"linalg", title:"Loss Functions — What the Model Is Told to Minimize",
+obj:"Understand that the objective a model optimizes is a values choice with fairness consequences.",
+body:`
+<p>A model learns by trying to reduce its mistakes. The <strong>loss function</strong> is the precise definition of &ldquo;mistake&rdquo; — the single number the model is built to make as small as possible. It measures the distance between what the model predicted and what was actually true.</p>
+<h3>Two common ones, conceptually</h3>
+<ul>
+<li><strong>Mean squared error (MSE)</strong> — for predicting numbers; averages the squared gaps between prediction and truth (the same &ldquo;square so nothing cancels&rdquo; idea as variance).</li>
+<li><strong>Cross-entropy</strong> — for classification; punishes confident wrong answers especially hard.</li>
+</ul>
+<div class="finding note"><span class="sev">Work it · MSE in miniature</span>
+<p>Predictions vs truth: predicted 3 (truth 5), predicted 6 (truth 6).<br>
+Errors: 5−3 = 2, and 6−6 = 0. Squared: 4 and 0.<br>
+MSE = (4 + 0) ÷ 2 = <span style="color:var(--teal)">2</span>. Training nudges the model to shrink that number.</p></div>
+<div class="finding high"><span class="sev">Highlight · The objective is an ethical choice</span>
+<p>Here's the governance heart of it: <em>whatever you tell the model to minimize is what it will optimize — and nothing else.</em> Minimize overall error, and a model will happily be very accurate on the majority group and poor on a small minority, because that still makes the <em>average</em> loss low. Fairness only enters the math if someone <em>puts it into the objective</em> (through reweighting or an explicit fairness constraint). Ask: <strong>&ldquo;What exactly was this model optimized for, and does the objective include any fairness term?&rdquo;</strong></p></div>
+<div class="finding warn"><span class="sev">Warning · Class imbalance</span>
+<p>When one outcome is rare, a loss that treats all errors equally lets the model &ldquo;win&rdquo; by mostly ignoring the rare case (the accuracy paradox in disguise). That's a technical choice with real human cost — often fixable by weighting the rare class, but only if someone decided it mattered.</p></div>
+`,
+quiz:{q:"Why is a model's loss function a governance concern, not just a technical detail?",
+opts:["It sets the screen resolution","Whatever the model is told to minimize is all it optimizes — minimizing average error alone can sacrifice a minority group unless fairness is built into the objective","Loss functions are always fair by design","It only affects training speed"],
+a:1, ex:"The loss defines 'mistake.' A model optimizes exactly that and nothing else, so minimizing average error can neglect a minority group. Fairness must be deliberately encoded in the objective to be optimized for."}
+},
+
+/* DAY 20 */
+{
+arc:"linalg", title:"Gradient Descent — How Models Learn",
+obj:"Grasp how a model finds its weights, and how biased data becomes biased weights.",
+body:`
+<p>How does a model actually adjust itself to reduce loss? <strong>Gradient descent.</strong> The <strong>gradient</strong> is the slope of the loss — it points in the direction that makes loss <em>increase</em> fastest. So the model steps the <em>opposite</em> way, a little at a time, to head downhill toward less error.</p>
+<pre><span class="tag">Formula · the learning step</span>new weight = old weight − (η × gradient)
+
+<span class="cm">η ("eta") is the learning rate: how big a step to take each time</span></pre>
+<p>The model repeats this step thousands of times, each pass nudging the weights a little lower on the loss surface, until it settles near a low point.</p>
+<div class="finding note"><span class="sev">Analogy · Note</span>
+<p>Imagine walking downhill in thick fog. You can't see the valley, but you can feel which way the ground slopes and step that way. Repeat, and you reach a low point. That's gradient descent — feeling the slope of the loss and stepping down. Too large a step (η) and you bound past the valley; too small and you crawl forever.</p></div>
+<div class="finding high"><span class="sev">Highlight · Biased data → biased weights</span>
+<p>This dismantles the most common deflection you'll hear: &ldquo;the model just learned from the data, it's neutral.&rdquo; Gradient descent faithfully drives the model toward whatever minimizes loss <em>on the data it was given</em>. If that data encodes historical discrimination, the &ldquo;best&rdquo; weights the model settles into <em>reproduce</em> that discrimination. The learning process is neutral; the destination is only as fair as the data and the objective. &ldquo;It just learned the patterns&rdquo; is a description of the problem, not a defense.</p></div>
+`,
+quiz:{q:"A vendor says 'the model isn't biased, it just learned the patterns in the data.' What's the mathematically informed response?",
+opts:["That settles it — learned models are neutral","Gradient descent drives the model toward whatever minimizes loss on the given data; if the data encodes discrimination, the learned weights reproduce it","Gradient descent guarantees fairness","The learning rate removes bias"],
+a:1, ex:"Gradient descent optimizes for low loss on the training data. If that data reflects historical bias, the optimal weights reproduce the bias. 'It learned the patterns' describes the mechanism of harm, not a defense against it."}
+},
+
+/* DAY 21 */
+{
+arc:"linalg", title:"Neural Nets & Deep Learning Math",
+obj:"Read the structure of a deep model — layers, activations, logits, softmax — without fear.",
+body:`
+<p>A <strong>neural network</strong> is just many weighted sums (Day 16) stacked in <strong>layers</strong>, with a simple bend applied between them. &ldquo;Deep&rdquo; means one layer's output feeds into the next, several times over.</p>
+<h3>The pieces</h3>
+<ul>
+<li><strong>Activation function</strong> — the bend between layers that lets the network model curves, not just straight lines (e.g. ReLU: keep positive values, zero out negatives; or the sigmoid from Day 18). Without it, stacking layers would collapse back into one plain weighted sum.</li>
+<li><strong>Logits</strong> — the raw scores the final layer produces, before they're turned into probabilities.</li>
+<li><strong>Softmax</strong> — the multi-class cousin of the sigmoid: it turns a set of logits into probabilities that add up to 1.</li>
+</ul>
+<pre><span class="tag">The forward pass</span>features → [weighted sum → activation] → [weighted sum → activation] → logits → softmax → probabilities</pre>
+<div class="finding note"><span class="sev">Work it · softmax turns logits into probabilities</span>
+<p>Logits [2, 1, 0] → raise e to each: ≈ 7.4, 2.7, 1.0 → total ≈ 11.1 →<br>
+divide each by the total: <span style="color:var(--teal)">0.67, 0.24, 0.09</span> — three probabilities that sum to 1 (e.g. 67% cat / 24% dog / 9% fox).</p></div>
+<div class="finding high"><span class="sev">Highlight · Complexity is not an exemption</span>
+<p>A deep model is harder to inspect because its weights are spread across many layers — no single number reads as &ldquo;the ZIP-code weight.&rdquo; But it is still a chain of the arithmetic you now know, and its <em>outputs</em> are evaluated with the exact same fairness metrics as any other model (Arc 4). &ldquo;It's a deep neural network, you can't audit it&rdquo; is false: you audit its behavior, not its innards. Complexity raises the bar for explainability (Day 28); it does not remove the obligation.</p></div>
+<div class="finding note"><span class="sev">Note</span>
+<p>&ldquo;Black box&rdquo; describes difficulty of <em>interpretation</em>, not absence of math. Every step is deterministic arithmetic — which is exactly why the same evaluation tools still apply.</p></div>
+`,
+quiz:{q:"A system uses a deep neural network, and the vendor says it's 'too complex to audit for bias.' Is that a valid governance position?",
+opts:["Yes — deep models are exempt from fairness review","No — you evaluate the model's outputs with the same fairness metrics regardless of internal complexity; complexity raises the explainability bar but not an exemption","Yes — softmax guarantees fairness","No — but only linear models can be audited"],
+a:1, ex:"Depth spreads the weights across layers, making internals harder to read, but the model's outputs are still evaluated with the standard fairness metrics. Complexity increases the need for explainability tools; it never exempts a system from evaluation."}
+},
+
+/* ===== ARC 4: EVALUATION & FAIRNESS MATH ===== */
+
+/* DAY 22 */
+{
+arc:"eval", title:"The Confusion Matrix",
+obj:"Build the 2×2 table that every classification and fairness metric is computed from.",
+body:`
+<p>Here is the foundation under the entire evaluation world. When a model makes yes/no predictions, every outcome falls into one of four boxes — the <strong>confusion matrix</strong>. Learn to read this table and most of Arc 4 is just arithmetic on it.</p>
+<pre><span class="tag">Confusion matrix</span>                    Actually YES        Actually NO
+Predicted YES    True Positive (TP)  False Positive (FP)
+Predicted NO     False Negative (FN) True Negative (TN)</pre>
+<ul>
+<li><strong>TP</strong> — predicted yes, and it was yes (a correct hit).</li>
+<li><strong>FP</strong> — predicted yes, but it was no (a false alarm).</li>
+<li><strong>FN</strong> — predicted no, but it was yes (a miss).</li>
+<li><strong>TN</strong> — predicted no, and it was no (a correct all-clear).</li>
+</ul>
+<div class="finding note"><span class="sev">Work it · build one from outcomes</span>
+<p>A fraud model reviews 100 transactions. It flags 20; of those, 12 were truly fraud (TP=12) and 8 were fine (FP=8). Of the 80 it cleared, 3 were actually fraud (FN=3) and 77 were fine (TN=77).<br>
+Check: 12 + 8 + 3 + 77 = 100. Those four numbers now let you compute every metric in this arc.</p></div>
+<div class="finding high"><span class="sev">Highlight · Fairness = this table, per group</span>
+<p>The whole of Arc 4 is built here. Nearly every fairness metric is one of these four numbers turned into a rate — and computed <em>separately for each group</em>, then compared. FP and FN carry different human costs (a false fraud flag vs a missed fraud; a wrongful denial vs a wrongful approval), which is why <em>which</em> error a model makes, and <em>to whom</em>, is the core of fairness analysis. When you get a confusion matrix, your first move is: &ldquo;Show me one of these per group.&rdquo;</p></div>
+`,
+quiz:{q:"A hiring model rejects a qualified candidate. Which confusion-matrix cell is this (if 'hire' is the positive class)?",
+opts:["True Positive","False Positive","False Negative","True Negative"],
+a:2, ex:"The candidate was actually a 'yes' (qualified) but predicted 'no' (rejected) — a False Negative, i.e., a miss. Distinguishing FN from FP matters because their human costs differ."}
+},
+
+/* DAY 23 */
+{
+arc:"eval", title:"Classification Metrics — When Accuracy Lies",
+obj:"Compute precision, recall, and FPR from the matrix, and see why accuracy alone deceives.",
+body:`
+<p>The four boxes combine into the metrics every report quotes. Learn these five and you can read almost any evaluation. Each is just &ldquo;of some group, how many?&rdquo;</p>
+<pre><span class="tag">Formulas · from the confusion matrix</span>accuracy  = (TP + TN) / everything     <span class="cm">overall correctness</span>
+precision = TP / (TP + FP)             <span class="cm">of those FLAGGED, how many were right</span>
+recall    = TP / (TP + FN)             <span class="cm">of the REAL positives, how many caught  (= TPR)</span>
+FPR       = FP / (FP + TN)             <span class="cm">of the REAL negatives, how many falsely flagged</span>
+F1        = a single balance of precision and recall</pre>
+<div class="finding note"><span class="sev">Work it · from Day 22 (TP=12, FP=8, FN=3, TN=77)</span>
+<p>precision = 12 / (12+8) = <span style="color:var(--teal)">0.60</span> — 60% of flags were real fraud.<br>
+recall = 12 / (12+3) = <span style="color:var(--teal)">0.80</span> — caught 80% of the actual fraud.<br>
+FPR = 8 / (8+77) = <span style="color:var(--teal)">0.094</span> — about 9% of clean transactions were falsely flagged.<br>
+accuracy = (12+77) / 100 = <span style="color:var(--teal)">0.89</span>.</p></div>
+<div class="finding warn"><span class="sev">Warning · The accuracy paradox</span>
+<p>If only 1% of transactions are fraud, a model that flags <em>nothing</em> is 99% accurate — and completely useless (recall 0). High accuracy on imbalanced data is often meaningless. This is why a single accuracy number is the most over-trusted figure in AI. Always ask for precision, recall, and the false-positive rate <em>per group</em> instead.</p></div>
+<div class="finding high"><span class="sev">Highlight · Precision vs recall is a values trade-off</span>
+<p>Chasing high recall (catch every true case) usually lowers precision (more false alarms), and vice versa. Which error is worse is an ethics question, not a math one: a false fraud flag freezes an innocent person's account; a missed one costs money. The metric a team chooses to prioritize quietly reveals whose harm they decided to minimize — so ask them to say it out loud.</p></div>
+`,
+quiz:{q:"A model that detects a condition present in 2% of cases reports 98% accuracy. What should you suspect?",
+opts:["It is an excellent model","Accuracy may be hiding failure — a model predicting 'no' for everyone scores 98% here; demand precision and recall per group","Accuracy above 95% is always sufficient","Recall and precision are irrelevant"],
+a:1, ex:"With a 2% base rate, always predicting 'no' yields 98% accuracy while catching zero cases — the accuracy paradox. Precision, recall, and per-group false-positive rates reveal the real behavior."}
+},
+
+/* DAY 24 */
+{
+arc:"eval", title:"ROC Curves, AUC & Thresholds",
+obj:"Read an ROC curve and AUC, and see the threshold as the knob that trades error types.",
+body:`
+<p>A model's threshold (Day 18) isn't one setting — it's a dial. The <strong>ROC curve</strong> plots what happens across <em>every</em> possible threshold: true-positive rate (recall) on the vertical axis against false-positive rate on the horizontal.</p>
+<pre><span class="tag">Reading ROC / AUC</span>each point on the curve = one threshold choice
+moving the threshold slides you along the curve:
+   loosen it → catch more (higher TPR) but more false alarms (higher FPR)
+   tighten it → fewer false alarms but more misses
+
+higher and more to the LEFT = better
+AUC (area under the curve): 0.5 = random guessing, 1.0 = perfect ranking</pre>
+<p><strong>AUC</strong> summarizes the whole curve in one number: the chance the model ranks a random true positive above a random true negative — a threshold-independent measure of ranking quality.</p>
+<div class="finding high"><span class="sev">Highlight · One curve per group</span>
+<p>The governance move is to plot a <em>separate</em> ROC curve for each group. A model can share one healthy overall AUC yet sit at very different points on each group's curve at the deployed threshold — meaning one group gets more false alarms and another more misses. A single global AUC can look strong while masking exactly this per-group imbalance.</p></div>
+<div class="finding warn"><span class="sev">Warning</span>
+<p>AUC measures ranking quality, not calibration or fairness. A high AUC says the model orders cases well; it says nothing about whether the threshold you actually deployed treats groups equitably. Don't let a strong AUC end the conversation.</p></div>
+`,
+quiz:{q:"A model has a strong overall AUC of 0.92. Why isn't that sufficient for a fairness sign-off?",
+opts:["AUC below 1.0 is always failing","AUC measures overall ranking, not per-group error balance or calibration; separate group curves can reveal unequal false-positive/negative rates at the deployed threshold","AUC and accuracy are identical","A high AUC proves demographic parity"],
+a:1, ex:"AUC summarizes ranking quality across thresholds overall. It doesn't reveal how the chosen threshold affects each group; per-group ROC curves can expose that one group faces more false alarms and another more misses."}
+},
+
+/* DAY 25 */
+{
+arc:"eval", title:"Fairness Metrics I — Demographic Parity",
+obj:"Formalize demographic parity and the disparate-impact ratio in the language of rates.",
+body:`
+<p>Now we assemble the pieces. <strong>Demographic parity</strong> asks that the positive-decision rate be equal across groups — the outcome independent of the protected attribute (Day 10).</p>
+<pre><span class="tag">Formula · demographic parity</span>P(Ŷ = 1 | group = A) = P(Ŷ = 1 | group = B)   for all groups
+
+<span class="cm">Ŷ = 1 ("Y-hat equals 1") means the model PREDICTED the positive outcome (e.g. approve)</span>
+
+disparate-impact ratio = lowest group rate ÷ highest group rate   (≥ 0.80 passes the four-fifths screen)</pre>
+<div class="finding note"><span class="sev">Work it · a fail and a pass</span>
+<p><strong>Fails:</strong> approval rates A 0.45, B 0.72 → ratio 0.45 ÷ 0.72 = <span style="color:var(--teal)">0.625</span> → below 0.80 → adverse-impact flag.<br>
+<strong>Passes the screen:</strong> A 0.66, B 0.72 → ratio 0.66 ÷ 0.72 = <span style="color:var(--teal)">0.92</span> → above 0.80.<br>
+This is the four-fifths rule from Day 5, now named as a formal fairness metric and tied to the code you ran in the Python course.</p></div>
+<div class="finding high"><span class="sev">Highlight · What it does and doesn't say</span>
+<p>Demographic parity looks only at <em>rates of positive decisions</em> — not whether those decisions were <em>correct</em>. It can be satisfied while the model is wrong in different ways for each group (e.g. equal approval rates but very different error rates). That gap is exactly what the Day 26 metrics — which use the confusion matrix — are built to catch. Demographic parity is necessary context, not a complete answer.</p></div>
+`,
+quiz:{q:"Demographic parity is satisfied between two groups. What has NOT been established?",
+opts:["That the positive-decision rates are equal","That the decisions are equally correct for each group — parity ignores whether predictions are right, only that positive rates match","That the groups exist","That the impact ratio is defined"],
+a:1, ex:"Demographic parity equalizes the rate of positive decisions but says nothing about correctness. A model can grant equal approval rates while making different kinds of errors per group — which error-based metrics (Day 26) are built to detect."}
+},
+
+/* DAY 26 */
+{
+arc:"eval", title:"Fairness Metrics II — Equalized Odds, Predictive Parity, Calibration",
+obj:"Read the error-based fairness metrics and know which human question each one answers.",
+body:`
+<p>Where demographic parity looks only at decision rates, these three use the confusion matrix to ask whether the model is <em>equally right and equally wrong</em> across groups. Each answers a different human question.</p>
+<ul>
+<li><strong>Equalized odds</strong> — equal <em>true-positive rate</em> AND equal <em>false-positive rate</em> across groups. &ldquo;Among the truly qualified, are we catching them equally? Among the truly unqualified, are we falsely flagging them equally?&rdquo; (Uses TPR and FPR from Day 23.)</li>
+<li><strong>Predictive parity</strong> — equal <em>precision</em> across groups. &ldquo;When the model says yes, is it right equally often for each group?&rdquo;</li>
+<li><strong>Calibration</strong> — a score means the same thing for everyone. &ldquo;Among those scored 0.70, do about 70% turn out positive in <em>every</em> group?&rdquo;</li>
+</ul>
+<pre><span class="tag">At a glance</span>equalized odds    → equal TPR and equal FPR by group
+predictive parity → equal precision by group
+calibration       → a 0.70 score = 70% reality, for every group</pre>
+<div class="finding note"><span class="sev">Work it · parity can pass while odds fail</span>
+<p>Two groups both get a 60% approval rate → demographic parity holds. But suppose Group A's approvals are 55 correct / 5 wrong and Group B's are 45 correct / 15 wrong. Equal <em>decision</em> rates, very different <em>error</em> rates — equalized odds fails even though parity passed. This is why you never stop at one metric.</p></div>
+<div class="finding high"><span class="sev">Highlight · Which one matters is a governance decision</span>
+<p>These can point in different directions, and choosing which to enforce depends on the stakes. If false denials are the gravest harm (lending, hiring), equal false-negative rates matter most. If a positive prediction triggers a serious intervention (policing, child services), equal false-positive rates and predictive parity dominate. <strong>The right metric is chosen by the use case and its harms — and that choice should be documented, with a named owner.</strong></p></div>
+`,
+quiz:{q:"For a tool where a positive prediction triggers a harmful intervention on individuals, which fairness concern is most pressing?",
+opts:["Equal font sizes across groups","Equal false-positive rates and predictive parity across groups, since wrongful positive predictions cause the harm","Only overall accuracy","Demographic parity alone fully settles it"],
+a:1, ex:"When a positive prediction triggers harm, wrongful positives are the central injustice, so equal false-positive rates (equalized odds) and equal precision (predictive parity) matter most. The right metric follows from where the harm lands."}
+},
+
+/* DAY 27 */
+{
+arc:"eval", title:"The Impossibility Theorem",
+obj:"Understand why you cannot satisfy all fairness metrics at once — so fairness is a choice.",
+body:`
+<p>Here is the most important single result in fairness math, and one you must be able to explain to leadership. When base rates differ between groups, it is <strong>mathematically impossible</strong> to satisfy every fairness definition at the same time. This is a proven theorem (Kleinberg and colleagues; Chouldechova), not an engineering shortfall.</p>
+<pre><span class="tag">The impossibility result</span>If two groups have different base rates, a model generally CANNOT
+simultaneously have:
+   • equal precision (predictive parity), and
+   • equal false-positive AND false-negative rates (equalized odds),
+   • while staying calibrated.
+
+You must CHOOSE which fairness definition to satisfy — and thereby which to violate.</pre>
+<div class="finding note"><span class="sev">Work it · watch two metrics collide</span>
+<p>Group A base rate 50% (50 positive / 50 negative). Group B base rate 20% (20 positive / 80 negative).<br>
+Tune the model to give <em>equal precision 0.75</em> and <em>equal recall 0.60</em> in both:<br>
+&nbsp;&nbsp;Group A: 30 TP, 10 FP → precision 30/40 = 0.75, recall 30/50 = 0.60, FPR 10/50 = <span style="color:var(--teal)">0.20</span><br>
+&nbsp;&nbsp;Group B: 12 TP, 4 FP → precision 12/16 = 0.75, recall 12/20 = 0.60, FPR 4/80 = <span style="color:var(--teal)">0.05</span><br>
+Equal precision and equal recall — yet the false-positive rates are 0.20 vs 0.05. You <em>cannot</em> also equalize FPR. Matching two fairness metrics forced the third apart, purely because the base rates differ.</p></div>
+<div class="finding high"><span class="sev">Highlight · Fairness is a choice, not a computation</span>
+<p>This is the intellectual core of the whole month. There is no button that makes a model &ldquo;fair&rdquo; on all counts — the definitions genuinely conflict when base rates differ. So the real questions are governance questions: <strong>which definition did we choose, why does it fit this use case, who decided, and is the trade-off documented?</strong> A vendor who claims their model is simply &ldquo;fair,&rdquo; with no mention of which definition, either doesn't understand this result or is hoping you don't.</p></div>
+<div class="finding note"><span class="sev">Note · the famous case</span>
+<p>The public COMPAS recidivism debate was, at heart, this theorem: the tool was roughly calibrated across race but had unequal false-positive rates — two defensible fairness definitions that could not both hold. Both sides were &ldquo;right,&rdquo; because the metrics were mathematically incompatible.</p></div>
+`,
+quiz:{q:"A vendor states their model 'is fair' with no further detail. Given the impossibility theorem, what's the correct response?",
+opts:["Accept it — fairness is a single achievable property","Ask which fairness definition was chosen and why, since when base rates differ the definitions provably conflict and cannot all hold at once","Demand the model satisfy all definitions simultaneously","Fairness metrics never conflict"],
+a:1, ex:"The impossibility theorem proves that with differing base rates, fairness definitions conflict — no model satisfies them all. 'Fair' is meaningless without specifying which definition, why it fits, and who owns the documented trade-off."}
+},
+
+/* DAY 28 */
+{
+arc:"eval", title:"Explainability Math — Feature Importance, SHAP & LIME",
+obj:"Read what an explanation is claiming, and where explanations can mislead.",
+body:`
+<p>When a model is complex (Day 21), <strong>explainability</strong> tools estimate which features drove a prediction. You'll be handed their output and asked to interpret it, so learn to read the two flavors: <em>global</em> (the model overall) and <em>local</em> (this one decision).</p>
+<ul>
+<li><strong>Feature importance</strong> — a ranking of which features most influence the model <em>overall</em> (global view).</li>
+<li><strong>SHAP</strong> — borrows a fair-division idea from game theory to split a <em>single</em> prediction across its features: how much each feature pushed <em>this one</em> decision up or down, and in which direction (local view).</li>
+<li><strong>LIME</strong> — approximates the complex model with a simple, readable one <em>near a single case</em>, to explain that case.</li>
+</ul>
+<pre><span class="tag">Reading a SHAP result</span>each feature gets a value:  sign = direction,  size = strength
++0.30 zip_code   → pushed this decision strongly toward "deny"
+−0.05 income     → pushed slightly toward "approve"
+
+<span class="cm">the biggest bars are the features that mattered most for THIS person</span></pre>
+<div class="finding high"><span class="sev">Highlight · Explanations are evidence, and evidence can mislead</span>
+<p>If a SHAP summary shows a proxy feature (ZIP code, name) carrying heavy weight, that's a concrete bias lead. But treat explanations with care: they are <em>approximations</em>, they can be unstable (a small input change flips the story), and there's active research on &ldquo;fairwashing&rdquo; — producing innocent-looking explanations for a biased model. Use them to <em>generate questions</em>, not to close the case. And always keep global (overall) separate from local (this one person) claims.</p></div>
+`,
+quiz:{q:"A SHAP summary shows a ZIP-code feature is the largest driver of denials. How should an analyst treat this?",
+opts:["Ignore it — SHAP is decorative","As a concrete bias lead worth investigating (a likely proxy), while remembering explanations are approximations that can be unstable or gamed","As definitive proof of intentional discrimination","As evidence the model is fair"],
+a:1, ex:"Heavy weight on a proxy like ZIP code is a real lead for proxy-driven bias. But SHAP/LIME are approximations that can be unstable or 'fairwashed,' so use them to raise questions, not to conclusively settle them."}
+},
+
+/* DAY 29 */
+{
+arc:"eval", title:"Reading a Model Card & Mapping to Frameworks",
+obj:"Know which numbers to demand in a fairness report and how each maps to a pinned framework.",
+body:`
+<p>The payoff: you can now open a model card or fairness report and read it like an auditor. Here's the checklist and the framework mapping — with control IDs pinned to the versions current at publication (June 2026), so you can always tell what was authoritative.</p>
+<h3>What to look for (and what's missing is itself a finding)</h3>
+<ul>
+<li>Metrics reported <strong>per group</strong>, not just overall — selection rates, TPR, FPR, precision.</li>
+<li>The <strong>base rates</strong> and <strong>sample sizes</strong> per group (Days 9, 13).</li>
+<li><strong>Which fairness definition</strong> was chosen, and the acknowledged trade-off (Day 27).</li>
+<li>Confidence intervals or significance on the disparities (Day 13).</li>
+<li>Evidence the training and deployment populations match, and how drift is monitored (Day 11).</li>
+</ul>
+<div class="finding note"><span class="sev">Reading a sample line</span>
+<p>&ldquo;Overall accuracy 91%, AUC 0.93.&rdquo; Your reflex: <em>both numbers are aggregate and threshold- or ranking-only.</em> Where are the per-group precision, recall, and FPR? Where's the base rate? A confident headline with no per-group breakdown is a gap, not a reassurance.</p></div>
+<h3>Mapping the math to frameworks</h3>
+<ul>
+<li><strong>Bias / fairness metrics</strong> → NIST AI RMF 1.0 <code class="inl">MEASURE 2.11</code> (fairness &amp; bias evaluation); EU AI Act (Regulation (EU) 2024/1689) <code class="inl">Art. 10</code> (data governance for high-risk systems); ISO/IEC 42005:2025 impact assessment.</li>
+<li><strong>Error-rate disparities &amp; human cost</strong> → EU AI Act <code class="inl">Art. 14</code> (human oversight); NIST AI RMF 1.0 <code class="inl">MANAGE 4.1</code>.</li>
+<li><strong>Automated decisions on individuals</strong> → GDPR (Regulation (EU) 2016/679) <code class="inl">Art. 22</code>.</li>
+<li><strong>Management &amp; documentation of the whole system</strong> → ISO/IEC 42001:2023.</li>
+</ul>
+<div class="finding warn"><span class="sev">Warning · Verify before you cite</span>
+<p>These IDs were authoritative at publication (June 2026), but this area moves fast — re-confirm before a formal report. As one live example, the EU AI Act's high-risk application dates are subject to the proposed &ldquo;Digital Omnibus&rdquo; adjustments still in progress as of mid-2026.</p></div>
+`,
+quiz:{q:"A model card reports only overall accuracy and a single AUC. What is the most important gap to raise?",
+opts:["The report should use a nicer chart","There are no per-group metrics, base rates, sample sizes, or a stated fairness definition — the numbers needed to actually judge fairness are missing","Accuracy and AUC fully establish fairness","Model cards never contain fairness data"],
+a:1, ex:"Overall accuracy and AUC hide per-group behavior. A defensible review needs per-group error rates, base rates and sample sizes, and a stated fairness definition with its trade-off — their absence is itself a finding to map against MEASURE 2.11 and related controls."}
+},
+
+/* DAY 30 */
+{
+arc:"eval", title:"Capstone & Math Cheat Sheet",
+obj:"Read a full fairness report end to end, then keep the reference card for good.",
+body:`
+<p>You made it. Thirty days ago the notation looked like a wall; now you can read a fairness report and find the load-bearing number. Let's put it together, then you keep the cheat sheet.</p>
+<h3>The capstone read-through</h3>
+<p>You're handed a hiring model's report. Walk it with the month's tools, in order:</p>
+<ol>
+<li>Check the <strong>feature list</strong> for protected traits and proxies (Day 15) — what can the model even see?</li>
+<li>Confirm metrics are reported <strong>per group</strong>, with <strong>base rates and sample sizes</strong> (Days 9, 13).</li>
+<li>Read the <strong>confusion-matrix</strong> metrics — precision, recall, FPR — for <em>each</em> group (Days 22–23).</li>
+<li>Compute the <strong>disparate-impact ratio</strong> and check it against 0.80 (Day 25).</li>
+<li>Ask which of <strong>equalized odds / predictive parity / calibration</strong> was chosen, and why (Days 26–27).</li>
+<li>Confirm a named owner <strong>owns the impossibility trade-off</strong> (Day 27).</li>
+<li>Note honestly <strong>what the metrics can't see</strong>, and map each finding to a framework (Day 29).</li>
+</ol>
+<p>That sequence is the job — technical literacy plus governance judgment, in one pass.</p>
+<h3>The evaluator's math cheat sheet</h3>
+<table class="cs">
+<tr><th>Quantity</th><th>Formula</th><th>Reads as</th></tr>
+<tr><td>Mean</td><td>(1/n) Σ xᵢ</td><td>average</td></tr>
+<tr><td>Std deviation</td><td>√variance</td><td>typical spread</td></tr>
+<tr><td>Impact ratio</td><td>low rate ÷ high rate</td><td>≥ 0.80 to pass four-fifths</td></tr>
+<tr><td>Conditional prob</td><td>P(A|B)</td><td>A given B</td></tr>
+<tr><td>Base rate</td><td>positives ÷ total</td><td>how common overall</td></tr>
+<tr><td>Precision</td><td>TP / (TP+FP)</td><td>of flags, share correct</td></tr>
+<tr><td>Recall / TPR</td><td>TP / (TP+FN)</td><td>of real positives, share caught</td></tr>
+<tr><td>FPR</td><td>FP / (FP+TN)</td><td>of real negatives, share falsely flagged</td></tr>
+<tr><td>FNR</td><td>FN / (FN+TP)</td><td>of real positives, share missed</td></tr>
+<tr><td>Accuracy</td><td>(TP+TN) / all</td><td>overall correctness (beware imbalance)</td></tr>
+<tr><td>AUC</td><td>area under ROC</td><td>ranking quality, 0.5–1.0</td></tr>
+<tr><td>Demographic parity</td><td>equal P(Ŷ=1 | group)</td><td>equal positive rates</td></tr>
+<tr><td>Equalized odds</td><td>equal TPR &amp; FPR by group</td><td>equal errors both ways</td></tr>
+<tr><td>Predictive parity</td><td>equal precision by group</td><td>&ldquo;yes&rdquo; equally trustworthy</td></tr>
+<tr><td>Calibration</td><td>score = reality, per group</td><td>0.70 means 70% for everyone</td></tr>
+<tr><td>Sigmoid</td><td>1/(1+e^(−z))</td><td>score → probability</td></tr>
+<tr><td>Gradient step</td><td>w − η·gradient</td><td>how models learn</td></tr>
+</table>
+<h3>The five math questions to always ask</h3>
+<ol>
+<li><strong>Representation:</strong> what's in the feature vector, and what's a proxy?</li>
+<li><strong>Base rate &amp; sample:</strong> how common is the outcome, and how many people per group?</li>
+<li><strong>Errors:</strong> what are the false-positive and false-negative rates <em>per group</em>?</li>
+<li><strong>Definition:</strong> which fairness metric was chosen, and who owns the impossibility trade-off?</li>
+<li><strong>Limits:</strong> what disparity could these numbers miss, and which framework does each map to?</li>
+</ol>
+<div class="finding high"><span class="sev">Highlight · You're ready</span>
+<p>You can now read the math of a machine-learning system, locate the number a fairness claim rests on, recognize when a metric is hiding a harm, and explain to leadership why &ldquo;just make it fair&rdquo; is not a computation but a documented choice. Paired with the Python course, you can inspect both the code and the mathematics of AI governance. Go put it to work.</p></div>
+`,
+quiz:{q:"Which statement best captures the skill built over these 30 days?",
+opts:["You can now derive proofs and train deep networks from scratch","You can read the math of an ML system, find the load-bearing fairness number, spot when a metric hides a harm, and frame fairness as a documented choice under the impossibility theorem","Automated metrics have replaced human judgment","Accuracy is the only number that matters"],
+a:1, ex:"The course goal: mathematical literacy to read and interrogate ML/DL numbers — representation, base rates, error rates, fairness definitions, and their provable trade-offs — combined with the governance judgment to treat fairness as a documented choice, not a single computation."}
+}
+];
+
+/* ============================================================
+   ENGINE
+   ============================================================ */
+const STORE_KEY = "mathgov_progress_v1";
+let answered = {};   // {dayIndex: chosenIndex}
+let done = {};       // {dayIndex: true}
+let current = 0;
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ const s = JSON.parse(raw); answered=s.answered||{}; done=s.done||{}; current=s.current||0; }
+  }catch(e){ /* file:// or sandbox without storage — run in-memory */ }
+}
+function save(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify({answered,done,current})); }catch(e){}
+}
+
+function esc(s){return s;}
+
+function buildRail(){
+  const log = document.getElementById('log');
+  log.innerHTML='';
+  let lastArc=null;
+  DAYS.forEach((d,i)=>{
+    if(d.arc!==lastArc){
+      const h=document.createElement('div');
+      h.className='arc'; 
+      const hh=document.createElement('div'); hh.className='arc-h'; hh.textContent=ARCS[d.arc];
+      h.appendChild(hh); log.appendChild(h);
+      lastArc=d.arc;
+    }
+    const item=document.createElement('div');
+    item.className='day-item'+(i===current?' active':'')+(done[i]?' done':'');
+    item.setAttribute('role','button'); item.tabIndex=0;
+    item.innerHTML='<div class="pip">'+(done[i]?'&#10003;':String(i+1).padStart(2,'0'))+'</div>'+
+                   '<div class="t">'+d.title+'</div>';
+    item.addEventListener('click',()=>go(i));
+    item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(i);}});
+    log.appendChild(item);
+  });
+}
+
+function updateCoverage(){
+  const n=Object.keys(done).filter(k=>done[k]).length;
+  const pct=Math.round(n/DAYS.length*100);
+  document.getElementById('covBar').style.width=pct+'%';
+  document.getElementById('covPct').textContent=pct+'%';
+}
+
+function render(){
+  const d=DAYS[current];
+  const c=document.getElementById('content');
+  document.getElementById('crumb').textContent='Day '+String(current+1).padStart(2,'0')+' / 30';
+  c.innerHTML=
+    '<div class="eyebrow">'+ARCS[d.arc]+'</div>'+
+    '<h2 class="daytitle">Day '+(current+1)+' &mdash; '+d.title+'</h2>'+
+    '<div class="objective">'+d.obj+'</div>'+
+    d.body+
+    quizHTML(d);
+  wireQuiz(d);
+  // buttons
+  document.getElementById('prevTop').disabled = current===0;
+  document.getElementById('prevBot').disabled = current===0;
+  const lastDay = current===DAYS.length-1;
+  document.getElementById('nextTop').textContent = lastDay?'Finish':'Next \u2192';
+  document.getElementById('nextBot').textContent = done[current]?(lastDay?'Course complete':'Next day \u2192'):'Mark complete \u2192';
+  // refresh rail active state
+  document.querySelectorAll('.day-item').forEach((el,i)=>{
+    el.classList.toggle('active',i===current);
+    el.classList.toggle('done',!!done[i]);
+    const pip=el.querySelector('.pip');
+    if(pip) pip.innerHTML = done[i]?'&#10003;':String(i+1).padStart(2,'0');
+  });
+  window.scrollTo({top:0,behavior:'instant' in window?'instant':'auto'});
+  document.querySelector('.stage').scrollTop=0;
+}
+
+function quizHTML(d){
+  let opts='';
+  d.quiz.opts.forEach((o,i)=>{ opts+='<button class="opt" data-i="'+i+'">'+o+'</button>'; });
+  return '<div class="quiz">'+
+    '<div class="qh">Checkpoint &mdash; Day '+(current+1)+'</div>'+
+    '<div class="q">'+d.quiz.q+'</div>'+
+    opts+
+    '<div class="explain" id="explain"></div>'+
+  '</div>';
+}
+
+function wireQuiz(d){
+  const c=document.getElementById('content');
+  const buttons=c.querySelectorAll('.opt');
+  const explain=c.querySelector('#explain');
+  const prev=answered[current];
+  function reveal(chosen){
+    buttons.forEach(b=>{
+      const i=+b.dataset.i;
+      b.classList.add('disabled');
+      if(i===d.quiz.a) b.classList.add('correct');
+      if(i===chosen && chosen!==d.quiz.a) b.classList.add('wrong');
+    });
+    explain.innerHTML='<strong>'+(chosen===d.quiz.a?'Correct. ':'Not quite. ')+'</strong>'+d.quiz.ex;
+    explain.classList.add('show');
+  }
+  if(prev!==undefined) reveal(prev);
+  buttons.forEach(b=>{
+    b.addEventListener('click',()=>{
+      if(answered[current]!==undefined) return;
+      const chosen=+b.dataset.i;
+      answered[current]=chosen;
+      save();
+      reveal(chosen);
+    });
+  });
+}
+
+function go(i){
+  if(i<0||i>=DAYS.length) return;
+  current=i; save(); render(); updateCoverage();
+}
+function markAndNext(){
+  done[current]=true; save();
+  updateCoverage();
+  if(current<DAYS.length-1){ go(current+1); }
+  else { render(); }  // last day: just mark done
+}
+
+document.getElementById('nextTop').addEventListener('click',()=>{ if(current<DAYS.length-1) go(current+1); });
+document.getElementById('prevTop').addEventListener('click',()=>go(current-1));
+document.getElementById('prevBot').addEventListener('click',()=>go(current-1));
+document.getElementById('nextBot').addEventListener('click',markAndNext);
+document.addEventListener('keydown',e=>{
+  if(e.target.classList && e.target.classList.contains('opt')) return;
+  if(e.key==='ArrowRight') { if(current<DAYS.length-1) go(current+1); }
+  if(e.key==='ArrowLeft') go(current-1);
+});
+
+load(); buildRail(); render(); updateCoverage();
+</script>
+</body>
+</html>

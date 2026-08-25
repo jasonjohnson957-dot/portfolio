@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fairness Measurement Methodology — 7-Day Fast Track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-bg:#0a1420;
+    --navy-panel:#101d30;
+    --navy-panel-2:#16273d;
+    --teal:#2dd4bf;
+    --teal-dim:#1a8f80;
+    --gold:#d9b95c;
+    --gold-dim:#a9873a;
+    --text:#e7edf5;
+    --text-muted:#91a4bc;
+    --border:rgba(230,237,245,0.09);
+    --danger:#e08a8a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--navy-bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; letter-spacing:-0.01em; }
+  .wrap{ max-width:880px; margin:0 auto; padding:0 24px 120px; }
+  header.hero{
+    padding:64px 24px 40px;
+    border-bottom:1px solid var(--border);
+    background:
+      radial-gradient(ellipse 900px 400px at 20% -10%, rgba(45,212,191,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 100% 0%, rgba(217,185,92,0.08), transparent 60%);
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--teal); margin-bottom:18px;
+  }
+  .eyebrow .matrix{
+    display:inline-grid; grid-template-columns:5px 5px; grid-template-rows:5px 5px; gap:2px;
+  }
+  .eyebrow .matrix span{ background:var(--gold); display:block; }
+  .eyebrow .matrix span:nth-child(2), .eyebrow .matrix span:nth-child(3){ background:var(--teal-dim); }
+  h1.title{ font-size:38px; margin:0 0 14px; max-width:640px; }
+  .lede{ color:var(--text-muted); font-size:16.5px; max-width:600px; margin:0 0 28px; }
+  .meta-row{ display:flex; gap:28px; flex-wrap:wrap; font-size:13.5px; color:var(--text-muted); }
+  .meta-row strong{ color:var(--text); font-weight:600; }
+
+  .progress-shell{
+    margin-top:28px; padding:16px 18px; background:var(--navy-panel);
+    border:1px solid var(--border); border-radius:10px;
+  }
+  .progress-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:13px; color:var(--text-muted);}
+  .progress-bar-track{ height:6px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+  .progress-bar-fill{ height:100%; background:linear-gradient(90deg, var(--teal-dim), var(--teal)); width:0%; transition:width .4s ease; }
+  .reset-link{ background:none; border:none; color:var(--text-muted); font-size:12px; cursor:pointer; text-decoration:underline; font-family:inherit; padding:0;}
+  .reset-link:hover{ color:var(--danger); }
+
+  nav.daynav{
+    position:sticky; top:0; z-index:10;
+    display:flex; gap:6px; overflow-x:auto;
+    padding:14px 24px; background:rgba(10,20,32,0.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  nav.daynav a{
+    flex:0 0 auto; font-size:12.5px; font-family:'IBM Plex Mono', monospace;
+    color:var(--text-muted); text-decoration:none; padding:7px 12px;
+    border:1px solid var(--border); border-radius:20px; white-space:nowrap;
+  }
+  nav.daynav a:hover{ color:var(--teal); border-color:var(--teal-dim); }
+
+  section.day{ padding:56px 0; border-bottom:1px solid var(--border); }
+  section.day:last-of-type{ border-bottom:none; }
+  .day-tag{
+    display:flex; align-items:center; gap:14px; margin-bottom:18px;
+  }
+  .day-num{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--navy-bg);
+    background:var(--gold); padding:4px 10px; border-radius:4px; font-weight:600;
+  }
+  .day-focus{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--teal); }
+  h2.day-title{ font-size:26px; margin:0 0 4px; }
+  .day-checkbox-row{ display:flex; align-items:center; gap:8px; margin-top:10px; }
+  .day-checkbox-row input{ width:16px; height:16px; accent-color:var(--teal); }
+  .day-checkbox-row label{ font-size:13px; color:var(--text-muted); cursor:pointer; }
+
+  p{ color:#d7e0ec; }
+  .callout{
+    background:var(--navy-panel); border:1px solid var(--border); border-left:3px solid var(--teal);
+    border-radius:6px; padding:16px 18px; margin:18px 0;
+  }
+  .callout.gold{ border-left-color:var(--gold); }
+  .callout .label{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--teal); margin-bottom:8px; display:block;
+  }
+  .callout.gold .label{ color:var(--gold); }
+
+  .formula{
+    font-family:'IBM Plex Mono', monospace; background:var(--navy-panel-2);
+    border:1px solid var(--border); border-radius:6px; padding:14px 16px; margin:14px 0;
+    font-size:14.5px; color:var(--teal); overflow-x:auto;
+  }
+  .formula .name{ color:var(--gold); display:block; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
+
+  table{ width:100%; border-collapse:collapse; margin:16px 0; font-size:14px; }
+  th,td{ padding:9px 12px; border:1px solid var(--border); text-align:left; }
+  th{ background:var(--navy-panel); color:var(--gold); font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:0.05em;}
+  td{ font-family:'IBM Plex Mono', monospace; font-size:13.5px; }
+  td.label-cell{ font-family:'IBM Plex Sans', sans-serif; color:var(--text-muted); }
+
+  ul, ol{ color:#d7e0ec; padding-left:22px; }
+  li{ margin-bottom:6px; }
+  strong{ color:var(--text); }
+
+  .exercise{
+    background:linear-gradient(180deg, rgba(217,185,92,0.06), transparent);
+    border:1px dashed var(--gold-dim); border-radius:8px; padding:18px; margin:20px 0;
+  }
+  .exercise .label{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; display:block; margin-bottom:8px;}
+
+  details{ background:var(--navy-panel); border:1px solid var(--border); border-radius:6px; margin:10px 0; padding:2px 16px; }
+  summary{ cursor:pointer; padding:12px 0; font-weight:600; color:var(--teal); font-size:14px; }
+  details[open] summary{ border-bottom:1px solid var(--border); margin-bottom:12px; }
+
+  .tool-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0; }
+  @media (max-width:640px){ .tool-grid{ grid-template-columns:1fr; } }
+  .tool-card{ background:var(--navy-panel); border:1px solid var(--border); border-radius:8px; padding:16px; }
+  .tool-card h4{ margin:0 0 6px; color:var(--gold); font-family:'IBM Plex Mono', monospace; font-size:14px; }
+  .tool-card p{ font-size:13.5px; margin:0; color:var(--text-muted); }
+
+  .glossary dt{ font-family:'IBM Plex Mono', monospace; color:var(--teal); font-weight:600; margin-top:14px; }
+  .glossary dd{ margin:4px 0 0; color:var(--text-muted); font-size:14.5px; }
+
+  .reading-list li{ margin-bottom:12px; }
+  .reading-list .who{ color:var(--gold); font-weight:600; }
+
+  footer.end{ text-align:center; padding:40px 24px; color:var(--text-muted); font-size:13px; }
+  .quiz-q{ margin-bottom:18px; }
+  .quiz-q .q-num{ color:var(--gold); font-family:'IBM Plex Mono', monospace; margin-right:6px;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap" style="padding:0;">
+    <div class="eyebrow">
+      <span class="matrix"><span></span><span></span><span></span><span></span></span>
+      Fast Track · 7 Days · ~45–60 min/day
+    </div>
+    <h1 class="title">Fairness Measurement Methodology</h1>
+    <p class="lede">A get-competent-fast guide for an IT veteran moving into AI Governance / AI Ethics practice. No new math beyond a confusion matrix — just the definitions, the tradeoffs, and the vocabulary you need to critique an evaluation instead of just reading one.</p>
+    <div class="meta-row">
+      <div><strong>Prereqs:</strong> basic probability, confusion matrix (Day 2 refreshes it anyway)</div>
+      <div><strong>Exit skill:</strong> compute four core fairness metrics by hand and justify which one fits a given deployment context</div>
+    </div>
+
+    <div class="progress-shell">
+      <div class="progress-top">
+        <span id="progress-label">Loading progress…</span>
+        <button class="reset-link" id="reset-btn">reset</button>
+      </div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="daynav">
+  <a href="#day1">Day 1 · Bias Taxonomy</a>
+  <a href="#day2">Day 2 · Confusion Matrix</a>
+  <a href="#day3">Day 3 · Demographic Parity</a>
+  <a href="#day4">Day 4 · Equal Opportunity</a>
+  <a href="#day5">Day 5 · Calibration & Impossibility</a>
+  <a href="#day6">Day 6 · Individual & Counterfactual</a>
+  <a href="#day7">Day 7 · Tools & Audit Report</a>
+  <a href="#glossary">Glossary</a>
+  <a href="#reading">Reading List</a>
+  <a href="#quiz">Quiz</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- DAY 1 -->
+  <section class="day" id="day1">
+    <div class="day-tag"><span class="day-num">DAY 01</span><span class="day-focus">Where bias actually enters</span></div>
+    <h2 class="day-title">The Bias Taxonomy Across the ML Lifecycle</h2>
+    <p>Before you measure fairness in a model's outputs, you need to know that "bias" isn't one thing. It enters at different points in the lifecycle, and each entry point needs a different fix — no metric at the output end repairs a problem introduced upstream. This is the mental model auditors use to scope an assessment.</p>
+
+    <table>
+      <tr><th>Stage</th><th>Bias type</th><th>What it looks like</th></tr>
+      <tr><td class="label-cell">Before data exists</td><td>Historical bias</td><td>The world itself was unequal — e.g. past promotion data reflects a workplace that historically favored one group, so even a "perfectly accurate" model learns to reproduce that pattern.</td></tr>
+      <tr><td class="label-cell">Data collection</td><td>Representation bias</td><td>The training sample under- or over-represents parts of the deployment population (rare disease data skewed toward one demographic, for instance).</td></tr>
+      <tr><td class="label-cell">Data collection</td><td>Measurement bias</td><td>Features or labels are noisier, or mean something different, across groups — e.g. "prior arrests" as a proxy for "criminal behavior" when policing intensity differs by neighborhood.</td></tr>
+      <tr><td class="label-cell">Modeling</td><td>Aggregation bias</td><td>One model is fit to a population where the true feature–outcome relationship actually differs by subgroup, so the "average" model underperforms for everyone at the edges.</td></tr>
+      <tr><td class="label-cell">Evaluation</td><td>Evaluation bias</td><td>The benchmark or test set used to validate the model doesn't reflect who it will actually be used on.</td></tr>
+      <tr><td class="label-cell">Deployment</td><td>Deployment bias</td><td>The model is used in a context or workflow different from what it was validated for — a triage-support tool becomes an autonomous gatekeeper.</td></tr>
+    </table>
+
+    <div class="callout">
+      <span class="label">Why this matters for your job</span>
+      Every fairness metric you'll learn this week measures a symptom at the output stage. Your value as a governance practitioner is tracing an unfair outcome back to which of these six points it actually came from — because the remediation is completely different for each one (better data collection vs. a different model vs. a policy change vs. a deployment constraint).
+    </div>
+
+    <div class="day-checkbox-row"><input type="checkbox" id="chk1" data-day="1"><label for="chk1">Mark Day 1 complete</label></div>
+  </section>
+
+  <!-- DAY 2 -->
+  <section class="day" id="day2">
+    <div class="day-tag"><span class="day-num">DAY 02</span><span class="day-focus">The shared vocabulary</span></div>
+    <h2 class="day-title">Confusion Matrix Refresher — Tied to Fairness</h2>
+    <p>Every group fairness metric is a comparison of confusion-matrix quantities across two or more groups. If you're solid on this, the rest of the week is just "which of these ratios do we require to be equal."</p>
+
+    <div class="formula">
+      <span class="name">Core rates</span>
+TPR (Recall / Sensitivity) = TP / (TP + FN)  — "of those who truly deserve a positive outcome, how many got one"
+FPR                        = FP / (FP + TN)  — "of those who truly don't, how many got one anyway"
+PPV (Precision)            = TP / (TP + FP)  — "of those who got a positive outcome, how many actually deserved it"
+Selection Rate             = (TP + FP) / N   — "what fraction of this group got a positive outcome, period"
+Base Rate (Prevalence)     = (TP + FN) / N   — "what fraction of this group truly belongs to the positive class"
+    </div>
+
+    <p>We'll use one running example for the rest of the week: <strong>CareBridge AI's sepsis-alert model</strong>, which flags ED patients for expedited clinician review (positive = flagged). It's evaluated across two patient groups, A and B, drawn from the same hospital system.</p>
+
+    <table>
+      <tr><th></th><th>TP</th><th>FP</th><th>FN</th><th>TN</th><th>N</th></tr>
+      <tr><td class="label-cell">Group A</td><td>250</td><td>50</td><td>30</td><td>170</td><td>500</td></tr>
+      <tr><td class="label-cell">Group B</td><td>150</td><td>50</td><td>100</td><td>200</td><td>500</td></tr>
+    </table>
+
+    <div class="callout gold">
+      <span class="label">Notice before we compute anything</span>
+      Group A's true base rate (280/500 = 56%) and Group B's (250/500 = 50%) are already different. Hold onto that — it's the detail that makes Day 5's impossibility theorem click.
+    </div>
+
+    <div class="exercise">
+      <span class="label">Practice</span>
+      Compute TPR, FPR, PPV, and Selection Rate for both groups by hand before Day 3. Answers appear in the Day 3 walkthrough — don't peek early.
+    </div>
+
+    <div class="day-checkbox-row"><input type="checkbox" id="chk2" data-day="2"><label for="chk2">Mark Day 2 complete</label></div>
+  </section>
+
+  <!-- DAY 3 -->
+  <section class="day" id="day3">
+    <div class="day-tag"><span class="day-num">DAY 03</span><span class="day-focus">Equal outcomes</span></div>
+    <h2 class="day-title">Demographic Parity & Disparate Impact</h2>
+    <p><strong>Demographic Parity</strong> (also called Statistical Parity) requires the same fraction of each group to receive the positive outcome, regardless of whether they actually belong to the positive class.</p>
+
+    <div class="formula">
+      <span class="name">Definition</span>
+P(Ŷ=1 | A=a) = P(Ŷ=1 | A=b)   for every group a, b
+    </div>
+
+    <p>In practice you'll rarely see exact equality — instead you'll see the <strong>Disparate Impact Ratio</strong>, borrowed from U.S. employment law (the EEOC's "four-fifths rule," 1978): the selection rate of the lower-selected group divided by the selection rate of the higher-selected group. A ratio below 0.80 is the traditional flag for adverse impact.</p>
+
+    <div class="formula">
+      <span class="name">Worked example (CareBridge)</span>
+Selection rate, Group A = (250+50)/500 = 0.60
+Selection rate, Group B = (150+50)/500 = 0.40
+Disparate Impact Ratio  = 0.40 / 0.60 = 0.667  →  fails the four-fifths rule
+    </div>
+
+    <div class="callout">
+      <span class="label">When this metric is the right call</span>
+      Contexts where exposure/access itself is the harm regardless of underlying qualification — ad targeting, loan pre-approval invitations, who gets shown a job posting at all.
+    </div>
+    <div class="callout gold">
+      <span class="label">Its blind spot</span>
+      Demographic parity says nothing about whether the groups actually differ in true positive rate. Forcing equal selection rates when base rates genuinely differ (Group A's 56% vs. Group B's 50%, from Day 2) can mean rejecting qualified people in one group or flagging unqualified people in the other — "leveling down" rather than fixing anything. This is exactly the critique to raise when someone hands you a disparate-impact-only audit and calls it done.
+    </div>
+
+    <div class="day-checkbox-row"><input type="checkbox" id="chk3" data-day="3"><label for="chk3">Mark Day 3 complete</label></div>
+  </section>
+
+  <!-- DAY 4 -->
+  <section class="day" id="day4">
+    <div class="day-tag"><span class="day-num">DAY 04</span><span class="day-focus">Equal error rates</span></div>
+    <h2 class="day-title">Equal Opportunity & Equalized Odds</h2>
+    <p>These two, from Hardt, Price & Srebro (2016), fix demographic parity's blind spot by conditioning on the <em>true</em> outcome instead of ignoring it.</p>
+
+    <div class="formula">
+      <span class="name">Equal Opportunity</span>
+P(Ŷ=1 | Y=1, A=a) = P(Ŷ=1 | Y=1, A=b)
+→ equal True Positive Rate across groups. "Everyone who truly qualifies has an equal chance of being correctly flagged."
+    </div>
+    <div class="formula">
+      <span class="name">Equalized Odds</span>
+Equal Opportunity, PLUS:  P(Ŷ=1 | Y=0, A=a) = P(Ŷ=1 | Y=0, A=b)
+→ equal True Positive Rate AND equal False Positive Rate across groups.
+    </div>
+
+    <div class="formula">
+      <span class="name">Worked example (CareBridge)</span>
+TPR, Group A = 250/280 = 0.893
+TPR, Group B = 150/250 = 0.600     →  Equal Opportunity gap = 0.293  (fails badly)
+
+FPR, Group A = 50/220  = 0.227
+FPR, Group B = 50/250  = 0.200     →  FPR gap = 0.027  (roughly holds)
+    </div>
+
+    <p>So this model actually clears the FPR bar but badly fails the TPR bar — Group B's truly-septic patients are far less likely to get flagged than Group A's. Demographic parity alone would have missed exactly what matters clinically here.</p>
+
+    <div class="callout">
+      <span class="label">When this metric is the right call</span>
+      Contexts where a missed true positive is the dominant harm — medical alerting, fraud detection, safety-critical flags. This is the framing at the center of the ProPublica/COMPAS recidivism debate: which error type (false positive vs. false negative) is worse, and for whom, is a policy judgment the metric can't make for you.
+    </div>
+
+    <div class="day-checkbox-row"><input type="checkbox" id="chk4" data-day="4"><label for="chk4">Mark Day 4 complete</label></div>
+  </section>
+
+  <!-- DAY 5 -->
+  <section class="day" id="day5">
+    <div class="day-tag"><span class="day-num">DAY 05</span><span class="day-focus">The uncomfortable math</span></div>
+    <h2 class="day-title">Predictive Parity, Calibration & the Impossibility Theorem</h2>
+    <p><strong>Predictive Parity</strong> requires that a positive prediction mean the same thing across groups — same precision. <strong>Calibration</strong> is the finer-grained version for risk scores: among people given a risk score of, say, 0.7, the true positive rate should be 70% in every group.</p>
+
+    <div class="formula">
+      <span class="name">Predictive Parity</span>
+P(Y=1 | Ŷ=1, A=a) = P(Y=1 | Ŷ=1, A=b)
+
+Worked example:
+PPV, Group A = 250/300 = 0.833
+PPV, Group B = 150/200 = 0.750     →  gap = 0.083 (moderate)
+    </div>
+
+    <div class="callout gold">
+      <span class="label">The result you must be able to explain in an interview</span>
+      Chouldechova (2017) and Kleinberg, Mullainathan & Raghavan (2016) independently proved: <strong>if base rates differ across groups, a model cannot simultaneously satisfy Equalized Odds and Calibration</strong> — except in the trivial case of a perfect predictor. Our CareBridge example has different base rates (56% vs. 50%), so this isn't an edge case — it's the norm.
+    </div>
+
+    <p>This is the single most important idea in the whole field, and it's why "just make the model fair" is not a well-formed instruction. You cannot optimize for every fairness definition at once. Someone — ideally documented, deliberate, and signed off, not defaulted — has to decide which error profile matters most for this specific use case. That decision, and its written rationale, is the actual audit artifact a governance practitioner produces.</p>
+
+    <div class="exercise">
+      <span class="label">Practice</span>
+      Write two sentences: for the CareBridge sepsis alert, which is worse — a missed true sepsis case (FN) or an unnecessary clinician review (FP) — and which fairness metric from Days 3–5 follows from that answer?
+    </div>
+
+    <div class="day-checkbox-row"><input type="checkbox" id="chk5" data-day="5"><label for="chk5">Mark Day 5 complete</label></div>
+  </section>
+
+  <!-- DAY 6 -->
+  <section class="day" id="day6">
+    <div class="day-tag"><span class="day-num">DAY 06</span><span class="day-focus">Beyond group averages</span></div>
+    <h2 class="day-title">Individual Fairness & Counterfactual Fairness</h2>
+    <p>Everything above operates on group averages, which can mask harm to individuals or to intersectional subgroups (e.g., Group B women vs. Group B men). These two frameworks approach fairness person-by-person instead.</p>
+
+    <div class="formula">
+      <span class="name">Individual Fairness (Dwork et al., 2012)</span>
+"Similar individuals should receive similar outcomes" — formalized as a Lipschitz condition:
+distance(outcome_i, outcome_j) ≤ L · distance(individual_i, individual_j)
+    </div>
+    <p>The catch: you need a defensible <em>similarity metric</em> — a way to say how similar two people are — and choosing that metric is itself a value judgment. This is rarely implemented in production; know it for the vocabulary, and to recognize when a vendor claims it without defining their distance function.</p>
+
+    <div class="formula">
+      <span class="name">Counterfactual Fairness (Kusner et al., 2017)</span>
+A decision is counterfactually fair if it would be the same in a hypothetical world where only the
+protected attribute changed, holding fixed everything causally upstream of it.
+    </div>
+    <p>This requires a causal model of how the protected attribute influences other features — genuinely hard to specify correctly, but this is the concept regulators reach for when they ask "would this decision differ for an otherwise-identical applicant of a different group?" It's showing up in EU AI Act high-risk conformity conversations, so know the term even if you never build one yourself.</p>
+
+    <div class="callout">
+      <span class="label">Practical takeaway</span>
+      Group metrics (Days 3–5) are what you'll compute 90% of the time. Individual and counterfactual fairness are what you cite when someone asks "but what about a specific person who was harmed, not just the group average?" — a question that comes up in every real audit.
+    </div>
+
+    <div class="day-checkbox-row"><input type="checkbox" id="chk6" data-day="6"><label for="chk6">Mark Day 6 complete</label></div>
+  </section>
+
+  <!-- DAY 7 -->
+  <section class="day" id="day7">
+    <div class="day-tag"><span class="day-num">DAY 07</span><span class="day-focus">Tools + the deliverable</span></div>
+    <h2 class="day-title">Tooling, and Writing the Fairness Audit Report</h2>
+    <p>You don't need to be the one writing mitigation code, but you need to know what these tools do so you can read their output and ask the right follow-up question.</p>
+
+    <div class="tool-grid">
+      <div class="tool-card"><h4>Fairlearn</h4><p>Microsoft, Python. Metric dashboard plus mitigation algorithms (reduction methods, threshold optimization). Plugs into scikit-learn pipelines.</p></div>
+      <div class="tool-card"><h4>AIF360</h4><p>IBM. The broadest metric library (70+), with pre-, in-, and post-processing bias mitigation algorithms. Python and R.</p></div>
+      <div class="tool-card"><h4>Aequitas</h4><p>University of Chicago. Audit-first design — generates a bias report across many groups and metrics at once. Built for practitioners, not just ML engineers.</p></div>
+      <div class="tool-card"><h4>What-If Tool</h4><p>Google PAIR. No-code, visual slicing and counterfactual exploration of a trained model — good for stakeholder demos and workshops.</p></div>
+    </div>
+
+    <h3 style="margin-top:32px;">The Fairness Evaluation Report — Structure</h3>
+    <ol>
+      <li><strong>Model context</strong> — what it does, who it affects, what a positive prediction triggers</li>
+      <li><strong>Protected attributes & proxies considered</strong> — including features that correlate with a protected attribute even if the attribute itself was excluded</li>
+      <li><strong>Metrics selected, and why</strong> — tie the choice explicitly to the harm profile (Day 5's exercise)</li>
+      <li><strong>Subgroup results</strong> — including intersectional slices, not just single-attribute groups</li>
+      <li><strong>Disparity findings & root-cause hypothesis</strong> — which lifecycle stage from Day 1 likely produced it</li>
+      <li><strong>Recommendation</strong> — mitigate, or accept the risk with documented rationale and sign-off</li>
+      <li><strong>Monitoring plan</strong> — what gets re-measured post-deployment, and at what cadence</li>
+    </ol>
+
+    <div class="exercise">
+      <span class="label">Capstone Exercise</span>
+      Take a new contingency table (build one yourself, or reuse CareBridge with different numbers), compute all four metrics from this week, and write the one-paragraph "metrics selected, and why" section for a report. That paragraph is the actual skill — anyone can run the numbers; the judgment call is the job.
+    </div>
+
+    <div class="day-checkbox-row"><input type="checkbox" id="chk7" data-day="7"><label for="chk7">Mark Day 7 complete</label></div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section class="day" id="glossary">
+    <h2 class="day-title">Glossary</h2>
+    <dl class="glossary">
+      <dt>Base rate / Prevalence</dt><dd>The true fraction of a group that actually belongs to the positive class.</dd>
+      <dt>Selection rate</dt><dd>The fraction of a group that received a positive prediction, regardless of ground truth.</dd>
+      <dt>Disparate impact ratio</dt><dd>Lower group's selection rate ÷ higher group's selection rate; below 0.80 traditionally flags adverse impact.</dd>
+      <dt>Demographic parity</dt><dd>Equal selection rates across groups.</dd>
+      <dt>Equal opportunity</dt><dd>Equal true positive rates across groups.</dd>
+      <dt>Equalized odds</dt><dd>Equal true positive rates AND equal false positive rates across groups.</dd>
+      <dt>Predictive parity</dt><dd>Equal precision (PPV) across groups.</dd>
+      <dt>Calibration</dt><dd>A risk score means the same thing across groups — a 0.7 score corresponds to a 70% true positive rate everywhere.</dd>
+      <dt>Impossibility theorem</dt><dd>Equalized odds and calibration cannot both hold when base rates differ across groups (except for a perfect predictor).</dd>
+      <dt>Individual fairness</dt><dd>Similar individuals should receive similar outcomes, formalized via a distance/similarity metric.</dd>
+      <dt>Counterfactual fairness</dt><dd>A decision is fair if it wouldn't change in a causal counterfactual world where only the protected attribute differed.</dd>
+      <dt>Proxy variable</dt><dd>A feature that correlates with a protected attribute closely enough to reintroduce its effect even when the attribute itself is excluded.</dd>
+      <dt>Intersectionality</dt><dd>Disparities that only appear when slicing by combinations of attributes (e.g., group × sex) rather than one attribute at a time.</dd>
+    </dl>
+  </section>
+
+  <!-- READING LIST -->
+  <section class="day" id="reading">
+    <h2 class="day-title">Reading List (Priority Order)</h2>
+    <ol class="reading-list">
+      <li><span class="who">Barocas, Hardt & Narayanan</span> — <em>Fairness and Machine Learning</em>. The canonical free textbook (fairmlbook.org). Read Ch. 1–3 first; it's the source most of this week is distilled from.</li>
+      <li><span class="who">Hardt, Price & Srebro (2016)</span> — the paper that introduced Equal Opportunity and Equalized Odds.</li>
+      <li><span class="who">Chouldechova (2017)</span> — the disparate-impact / calibration impossibility result, worked through a recidivism-scoring case.</li>
+      <li><span class="who">ProPublica's COMPAS investigation</span> — read this for the real-world stakes behind Day 4 and Day 5; it's the case study everyone in this field references.</li>
+      <li><span class="who">Dwork, Hardt, Pitassi, Reingold & Zemel (2012)</span> — <em>Fairness Through Awareness</em>, the individual fairness paper.</li>
+      <li><span class="who">Kusner, Loftus, Russell & Silva (2017)</span> — <em>Counterfactual Fairness</em>.</li>
+      <li><span class="who">Suresh & Guttag</span> — the lifecycle bias-sourcing framework behind Day 1's taxonomy.</li>
+      <li><span class="who">Mehrabi et al. (2021)</span> — a broad survey if you want a single paper mapping the whole field's definitions.</li>
+    </ol>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="day" id="quiz" style="border-bottom:none;">
+    <h2 class="day-title">Self-Check Quiz</h2>
+    <div class="quiz-q"><span class="q-num">1.</span>A model has equal selection rates across two groups but very different true positive rates. Which fairness definition does it satisfy, and which does it fail?</div>
+    <div class="quiz-q"><span class="q-num">2.</span>What does a Disparate Impact Ratio of 0.72 mean, and does it pass the four-fifths rule?</div>
+    <div class="quiz-q"><span class="q-num">3.</span>Name the two conditions Equalized Odds requires that Equal Opportunity does not.</div>
+    <div class="quiz-q"><span class="q-num">4.</span>Why can't a model satisfy both Equalized Odds and Calibration when group base rates differ?</div>
+    <div class="quiz-q"><span class="q-num">5.</span>In a lending model, why might "unnecessary review" (false positive) and "missed qualified applicant" (false negative) call for different fairness metrics depending on which harm is prioritized?</div>
+    <div class="quiz-q"><span class="q-num">6.</span>What's the difference between Individual Fairness and Counterfactual Fairness?</div>
+    <div class="quiz-q"><span class="q-num">7.</span>Name two of the six lifecycle bias types from Day 1 and one example each.</div>
+    <div class="quiz-q"><span class="q-num">8.</span>What's the actual deliverable a governance practitioner produces from a fairness audit — not the metric values themselves, but the written artifact?</div>
+
+    <details>
+      <summary>Show answer key</summary>
+      <p><strong>1.</strong> Satisfies Demographic Parity; fails Equal Opportunity (and therefore Equalized Odds).</p>
+      <p><strong>2.</strong> The lower-selected group is chosen at 72% the rate of the higher-selected group; 0.72 &lt; 0.80, so it fails the four-fifths rule.</p>
+      <p><strong>3.</strong> Equal False Positive Rate across groups, in addition to equal True Positive Rate.</p>
+      <p><strong>4.</strong> Because the math (Chouldechova; Kleinberg, Mullainathan & Raghavan) shows these two constraints are only jointly satisfiable when base rates are equal or the model is a perfect predictor — neither holds in most real deployments.</p>
+      <p><strong>5.</strong> If missed qualified applicants are the priority harm, Equal Opportunity (equal TPR) fits. If unnecessary reviews/denials are the priority harm, Equalized Odds or Predictive Parity fit better since they also constrain false positives.</p>
+      <p><strong>6.</strong> Individual Fairness compares similar people directly via a distance metric; Counterfactual Fairness uses a causal model to ask whether the outcome would change if only the protected attribute had been different.</p>
+      <p><strong>7.</strong> Any two of: historical, representation, measurement, aggregation, evaluation, deployment bias — with an example matching each.</p>
+      <p><strong>8.</strong> A written evaluation report that ties the chosen metric to the specific harm profile, documents subgroup results and root-cause hypothesis, and records a mitigation decision or a signed-off accepted-risk rationale.</p>
+    </details>
+  </section>
+
+</div>
+
+<footer class="end">CareBridge AI is a fictional teaching example — no real patient data. Design system matches your existing curriculum suite.</footer>
+
+<script>
+(function(){
+  const days = [1,2,3,4,5,6,7];
+  const key = 'fairness-fast-track:progress';
+  const label = document.getElementById('progress-label');
+  const fill = document.getElementById('progress-fill');
+  const resetBtn = document.getElementById('reset-btn');
+
+  function render(state){
+    const done = days.filter(d => state[d]).length;
+    label.textContent = done + ' / 7 days complete';
+    fill.style.width = Math.round((done/7)*100) + '%';
+    days.forEach(d => {
+      const box = document.getElementById('chk'+d);
+      if(box) box.checked = !!state[d];
+    });
+  }
+
+  async function load(){
+    try{
+      const result = await window.storage.get(key);
+      return result && result.value ? JSON.parse(result.value) : {};
+    }catch(e){
+      return {};
+    }
+  }
+
+  async function save(state){
+    try{
+      await window.storage.set(key, JSON.stringify(state));
+    }catch(e){
+      console.error('Could not save progress', e);
+    }
+  }
+
+  (async function init(){
+    let state = await load();
+    render(state);
+
+    days.forEach(d => {
+      const box = document.getElementById('chk'+d);
+      if(!box) return;
+      box.addEventListener('change', async () => {
+        state[d] = box.checked;
+        render(state);
+        await save(state);
+      });
+    });
+
+    resetBtn.addEventListener('click', async () => {
+      state = {};
+      render(state);
+      await save(state);
+    });
+  })();
+})();
+</script>
+
+</body>
+</html>
