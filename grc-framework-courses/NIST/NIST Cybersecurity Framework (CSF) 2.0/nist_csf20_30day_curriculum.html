@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIST CSF 2.0 — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #A32D2D; color: #FCEBEB; border-color: #A32D2D; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #FCEBEB; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #501313; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #A32D2D; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #A32D2D; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #FCEBEB; color: #501313; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #E6F1FB; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #A32D2D; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-gray   { background: #F1EFE8; color: #444441; }
+  .badge-pink   { background: #FBEAF0; color: #4B1528; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .fn-govern   { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .fn-govern b { color: #26215C; font-size: 13px; font-weight: 500; }
+  .fn-identify { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .fn-identify b { color: #042C53; font-size: 13px; font-weight: 500; }
+  .fn-protect  { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .fn-protect b { color: #173404; font-size: 13px; font-weight: 500; }
+  .fn-detect   { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .fn-detect b { color: #412402; font-size: 13px; font-weight: 500; }
+  .fn-respond  { background: #FAECE7; border: 0.5px solid #F0997B; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .fn-respond b { color: #4A1B0C; font-size: 13px; font-weight: 500; }
+  .fn-recover  { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .fn-recover b { color: #501313; font-size: 13px; font-weight: 500; }
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .tier-1c { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .tier-2c { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .tier-3c { background: #FAECE7; border: 0.5px solid #F0997B; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .tier-4c { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  @media (max-width: 560px) { .cheat-grid, .control-row, .tier-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day NIST CSF 2.0 curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>NIST CSF 2.0 — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+<script>
+const days = [
+  {
+    title: "What Is the NIST Cybersecurity Framework?",
+    tagline: "The US government's voluntary blueprint for managing cybersecurity risk",
+    body: `<p>Imagine you're the newly appointed Chief Information Security Officer at a regional hospital. You've inherited a patchwork of security tools, policies nobody reads, and an incident response plan that's four years out of date. Your CEO asks: "Are we secure? Where are we most vulnerable? What should we tackle first?" You need a structured, repeatable way to answer those questions — and that's exactly what the <span class="key-term">NIST Cybersecurity Framework</span> was built to provide.</p>
+    <p>The NIST CSF — officially the <strong>NIST Cybersecurity Framework 2.0</strong> — is a voluntary framework published by the <strong>National Institute of Standards and Technology (NIST)</strong>, a US federal agency inside the Department of Commerce. Released in <strong>February 2024</strong>, CSF 2.0 is the most significant update since the framework first appeared in 2014. It gives organizations of any size, in any sector, a common language and structured approach for managing cybersecurity risk.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of NIST CSF like a GPS for cybersecurity. It doesn't tell you which car to drive — it helps you understand where you are right now (current security posture), where you need to be (target state), and the best route between those two points (improvement roadmap). Two organizations can use the same GPS system and arrive at completely different destinations, because their risk contexts are different. The framework is the navigation tool; the destination depends on your organization.</div>
+    <div class="highlight-box">Key facts about NIST CSF 2.0: Published February 2024. Voluntary — not legally required (though referenced in many regulations and contracts). Applies to organizations of all sizes and sectors worldwide. Built around 6 core Functions: GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, and RECOVER. Free — publicly available at nist.gov. The most widely referenced cybersecurity framework in the United States, and increasingly adopted globally.</div>
+    <p>Unlike compliance-driven frameworks like HIPAA or CMMC that specify controls you <em>must</em> implement, NIST CSF is outcome-focused — it describes what security outcomes organizations should achieve, not the specific technology or process used to achieve them. This flexibility is its greatest strength and, for organizations needing specific implementation guidance, its most common limitation.</p>`,
+    quiz: { q: "What is the primary purpose of the NIST Cybersecurity Framework 2.0?", opts: ["To mandate specific security controls all US companies must implement", "To provide a common language and structured approach for managing cybersecurity risk — helping organizations understand their current state, define their target, and plan improvements", "To certify cybersecurity professionals", "To replace HIPAA and other sector-specific regulations"], ans: 1, explain: "NIST CSF provides a common language and structured approach for managing cybersecurity risk. It is voluntary (not mandated), flexible (adaptable to any organization), and outcome-focused (what to achieve) rather than prescriptive (how to achieve it). Organizations use it to assess current posture, define a target state, and build an improvement roadmap." }
+  },
+  {
+    title: "Why Was NIST CSF Created?",
+    tagline: "The executive order and national security crisis that sparked a new approach",
+    body: `<p>NIST CSF wasn't born in a committee room — it emerged from a genuine national security crisis. By the early 2010s, critical infrastructure across the United States — power grids, water treatment facilities, financial networks — was being probed and attacked by sophisticated adversaries. And the country had no unified approach to defending it.</p>
+    <div class="highlight-box"><strong>Executive Order 13636 (February 2013):</strong> President Obama signed this order — "Improving Critical Infrastructure Cybersecurity" — in direct response to escalating threats against power grids, water systems, and financial networks. The order directed NIST to collaborate with industry to develop a voluntary framework that critical infrastructure organizations could use to improve their security. The result, published in February 2014, was NIST CSF 1.0.</div>
+    <p>Several converging problems made a national framework necessary:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Fragmented Approaches</strong><span>Every sector, company, and agency had different cybersecurity approaches. There was no common language for discussing risk or consistent way to measure security posture across organizations.</span></div>
+      <div class="cheat-pill"><strong>Critical Infrastructure Vulnerability</strong><span>Sophisticated attacks against power grids and financial networks — many attributed to nation-states — showed that infrastructure failures could have catastrophic, cascading national consequences.</span></div>
+      <div class="cheat-pill"><strong>Small Organization Gap</strong><span>Large organizations could afford bespoke security programs. Smaller companies — including critical infrastructure suppliers — had no accessible, authoritative starting point for cybersecurity programs.</span></div>
+      <div class="cheat-pill"><strong>Public-Private Partnership Need</strong><span>Most critical infrastructure is privately owned. Improving its security required collaboration respecting private-sector autonomy — a voluntary framework rather than heavy-handed regulation.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The building code analogy:</strong> Before modern building codes, structures were built to each engineer's own standards — some brilliant, many catastrophically unsafe. Building codes created a common minimum standard not by limiting innovation, but by defining what all buildings must achieve for safety. NIST CSF did the same for cybersecurity: established a shared standard not by dictating technology choices, but by defining the outcomes organizations should achieve to responsibly manage cyber risk.</div>`,
+    quiz: { q: "Which executive order directly led to the creation of NIST CSF 1.0 in 2014?", opts: ["Executive Order 14028 — Improving the Nation's Cybersecurity (2021)", "Executive Order 13636 — Improving Critical Infrastructure Cybersecurity (2013)", "Executive Order 12333 — Intelligence Activities", "Executive Order 13800 — Strengthening Cybersecurity of Federal Networks"], ans: 1, explain: "Executive Order 13636, signed by President Obama in February 2013, directed NIST to develop a voluntary cybersecurity framework for critical infrastructure. This led directly to NIST CSF 1.0 in 2014. Executive Order 14028 (2021) later directed the updates that shaped CSF 2.0." }
+  },
+  {
+    title: "NIST — Who Makes This Framework?",
+    tagline: "Understanding the agency behind America's most trusted cybersecurity standards",
+    body: `<p>The <span class="key-term">National Institute of Standards and Technology (NIST)</span> is a non-regulatory federal agency inside the US Department of Commerce. Founded in 1901, NIST's mission is to promote US innovation and industrial competitiveness through measurement science, standards, and technology. It cannot write laws or regulations — but its standards are among the most influential technical documents in the world.</p>
+    <div class="highlight-box">NIST's cybersecurity portfolio is one of the most comprehensive anywhere. Beyond the CSF, NIST publishes the Special Publications (SP) 800 series — detailed technical cybersecurity guides used by US government agencies and widely adopted by private organizations globally. These are free, authoritative, and regularly updated. When professionals say "NIST 800-53" or "NIST 800-171," they mean this SP 800 series.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>NIST CSF</strong><span>The Cybersecurity Framework — voluntary, outcome-focused, for all organizations. The "what to achieve" document we're studying.</span></div>
+      <div class="cheat-pill"><strong>NIST SP 800-53</strong><span>Security and Privacy Controls for Federal Information Systems — the comprehensive control catalog for federal agencies and the basis for CMMC Level 3 (via 800-172).</span></div>
+      <div class="cheat-pill"><strong>NIST SP 800-171</strong><span>Protecting CUI in Nonfederal Systems — the 110-requirement standard that forms the basis for CMMC Level 2.</span></div>
+      <div class="cheat-pill"><strong>NIST SP 800-30</strong><span>Guide for Conducting Risk Assessments — detailed methodology for the risk assessments required by CSF's IDENTIFY function.</span></div>
+      <div class="cheat-pill"><strong>NIST SP 800-37</strong><span>Risk Management Framework (RMF) — the federal government's process for authorizing systems and managing risk across the system lifecycle.</span></div>
+      <div class="cheat-pill"><strong>NIST AI RMF</strong><span>AI Risk Management Framework (2023) — voluntary framework for managing AI system risks. The AI companion to CSF, directly relevant for AI governance programs.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why "non-regulatory" still means mandatory in practice:</strong> NIST cannot write laws — but its voluntary standards become effectively mandatory when incorporated by reference into actual regulations. HIPAA's Security Rule references NIST guidance. CMMC is built on NIST SP 800-171. FISMA requires federal agencies to follow NIST standards. State privacy laws increasingly reference NIST. A voluntary origin doesn't guarantee voluntary use in practice.</div>
+    <div class="info-box"><strong>NIST's consensus process:</strong> CSF 2.0 received over 4,000 public comments during development — from industry, government, academia, and international organizations. This open, consensus-driven development process is a primary reason the framework is trusted across sectors and globally. It reflects genuine stakeholder consensus, not just government preference.</div>`,
+    quiz: { q: "NIST is described as 'non-regulatory.' How do voluntary NIST standards still become mandatory in practice?", opts: ["They are never actually mandatory", "They are frequently incorporated by reference into actual laws and regulations — HIPAA references NIST guidance, CMMC is built on NIST SP 800-171, and FISMA requires federal agencies to follow NIST standards", "Only through presidential executive orders", "Only state laws can make NIST standards mandatory"], ans: 1, explain: "NIST cannot write mandatory regulations, but its voluntary standards become effectively mandatory when incorporated into actual laws and regulations. HIPAA references NIST guidance, FISMA mandates NIST compliance for federal agencies, CMMC is built on NIST SP 800-171, and many contracts now require NIST framework alignment. The voluntary label applies to origin, not necessarily to practical use." }
+  },
+  {
+    title: "CSF 1.0 to CSF 2.0 — What Changed and Why",
+    tagline: "A decade of hard-won lessons packed into one landmark update",
+    body: `<p>NIST CSF 1.0 (2014) and CSF 1.1 (2018) became the most widely used cybersecurity frameworks in the United States. By the late 2010s, however, the cybersecurity landscape had transformed dramatically — cloud computing, remote work, AI, sophisticated ransomware, and devastating supply chain attacks all emerged or escalated. <span class="key-term">CSF 2.0</span> (February 2024) responds to this changed world with the framework's most significant restructuring.</p>
+    <div class="highlight-box"><strong>The single biggest change — adding GOVERN:</strong> CSF 1.1 had five functions: Identify, Protect, Detect, Respond, and Recover. CSF 2.0 added a sixth — <strong>GOVERN</strong>. A decade of experience showed that cybersecurity programs fail not primarily because of technical gaps, but because of governance failures: no leadership commitment, unclear accountability, poor risk strategy, and weak culture. GOVERN is the management layer that makes everything else coherent.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Scope Expansion</strong><span>CSF 1.0 targeted critical infrastructure. CSF 2.0 explicitly addresses "all organizations" — small businesses, large enterprises, nonprofits, government agencies, educational institutions. The language throughout removes critical infrastructure as the assumed default audience.</span></div>
+      <div class="cheat-pill"><strong>Supply Chain Risk Elevation</strong><span>CSF 2.0 dramatically expands supply chain risk management (C-SCRM). A dedicated GOVERN category addresses it. The SolarWinds attack and Colonial Pipeline incident proved supply chain risk requires strategic governance, not just technical vendor checklists.</span></div>
+      <div class="cheat-pill"><strong>Improved Profiles</strong><span>CSF 2.0 significantly strengthens the Profiles concept — how organizations document current and target cybersecurity states. Adds Community Profiles as sector-specific baselines, reducing the effort of starting from scratch.</span></div>
+      <div class="cheat-pill"><strong>Better Framework Integration</strong><span>CSF 2.0 provides explicit guidance on using the framework alongside NIST SP 800-53, ISO 27001, CIS Controls, and sector-specific standards. The online Reference Tool makes these mappings searchable and exportable.</span></div>
+      <div class="cheat-pill"><strong>Privacy Integration</strong><span>CSF 2.0 better integrates with the NIST Privacy Framework — acknowledging that cybersecurity and privacy risk are increasingly inseparable, especially with GDPR and state privacy law proliferation.</span></div>
+      <div class="cheat-pill"><strong>Restructured Subcategories</strong><span>Total subcategories went from 108 (v1.1) to 106 (v2.0). Categories within functions were reorganized for clarity, reflecting how modern security programs are actually structured rather than how they were organized in 2014.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why adding GOVERN was transformative:</strong> Imagine a car with excellent engine, brakes, and safety systems — but no steering wheel. CSF 1.1's five functions were the mechanical systems; GOVERN is the steering wheel. Without it, even technically sophisticated security programs drift without direction, with no coherent strategy, no clear accountability, and no way to connect security activities to organizational objectives.</div>`,
+    quiz: { q: "What was the most significant structural change in NIST CSF 2.0 compared to version 1.1?", opts: ["Adding 50 new subcategories to existing functions", "Adding the GOVERN function — the sixth core function that addresses leadership, strategy, roles, policy, oversight, and supply chain risk, which a decade of experience showed was the missing foundation", "Removing the RECOVER function as redundant with RESPOND", "Reducing from five implementation tiers to three"], ans: 1, explain: "The most significant change in CSF 2.0 was adding GOVERN — the sixth function placed first in the framework. It addresses organizational context, risk management strategy, roles and accountability, policy, oversight, and supply chain risk management. A decade of CSF 1.0 experience showed these governance elements were the most common root cause of cybersecurity program failures." }
+  },
+  {
+    title: "The CSF Core — Functions, Categories, and Subcategories",
+    tagline: "The three-level architecture that organizes every outcome in the framework",
+    body: `<p>The <span class="key-term">CSF Core</span> is the heart of NIST CSF 2.0. It provides a nested hierarchy of cybersecurity outcomes that organizations use to understand, communicate about, and manage their security activities. Before diving into each function individually, understanding this three-level architecture is essential.</p>
+    <div class="highlight-box"><strong>Three levels of the CSF Core:</strong><br><br><strong>Functions (6):</strong> The highest level — broad categories of cybersecurity activity organized around desired outcomes. GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, RECOVER. Think of these as the chapter titles of the security playbook.<br><br><strong>Categories (22):</strong> Subdivisions within each Function — more specific groupings of related outcomes. Examples: "Asset Management" within IDENTIFY; "Access Control" within PROTECT; "Incident Management" within RESPOND.<br><br><strong>Subcategories (106):</strong> The most specific level — individual outcomes of technical and management activities. Each subcategory is a specific, achievable result. Examples within Access Control: "Identities and credentials for authorized users are managed," "Physical access to assets is managed and protected."</div>
+    <div class="analogy-box"><strong>The cookbook analogy:</strong> Functions are like meal categories (Breakfast, Lunch, Dinner). Categories are like dish types within each meal (Breakfast → Eggs, Breakfast → Cereals). Subcategories are the specific outcomes for each dish (Eggs → "Eggs are cooked to safe temperature," "Eggs are stored at correct temperature"). Each level gets more specific, from the broad organizational outcome down to the concrete, achievable result.</div>
+    <p>Key structural facts:</p>
+    <div class="badge-row">
+      <span class="badge badge-red">6 Functions — GOVERN is new in 2.0</span>
+      <span class="badge badge-red">22 Categories spread across all six Functions</span>
+      <span class="badge badge-red">106 Subcategories — each a specific security outcome</span>
+      <span class="badge badge-red">CSF Core is universal — the same for all organizations</span>
+      <span class="badge badge-red">Context is applied through Profiles, not by changing the Core</span>
+    </div>
+    <div class="warning-box"><strong>Outcomes, not controls — the critical distinction:</strong> The CSF Core describes <em>outcomes</em> to achieve, not specific technical controls to implement. "Physical access to assets is managed" is an outcome. The specific controls that achieve it — badge readers, visitor logs, security cameras — are left to the organization. This outcome-focus is what makes CSF universally applicable across different technology environments, sectors, and organization sizes. Two hospitals can achieve identical CSF outcomes through entirely different technology implementations.</div>`,
+    quiz: { q: "How do Categories differ from Subcategories in the NIST CSF Core?", opts: ["Categories are mandatory; subcategories are optional", "Categories are technical controls; subcategories are broader policies", "Categories are groupings of related security outcomes within a Function; subcategories are the specific, individual outcomes organizations achieve to fulfill each Category", "There is no meaningful distinction between them"], ans: 2, explain: "Categories cluster related security outcomes within a Function. Subcategories are the individual, specific outcomes that together fulfill a category. For example, 'Access Control Management' is a category within PROTECT; 'Identities and credentials for authorized users, services, and hardware are managed' is a subcategory within it. Categories answer 'what domain?'; subcategories answer 'what specific outcome?'" }
+  },
+  {
+    title: "GOVERN — The Function That Makes Everything Else Work",
+    tagline: "Leadership, strategy, roles, and the foundation that drives all other functions",
+    body: `<p><span class="key-term">GOVERN</span> is the most important addition to CSF 2.0. It establishes the organizational context, strategic direction, accountability structures, and oversight mechanisms that determine whether security activities in the other five functions are coherent, prioritized, and effective. Without GOVERN, the other five functions are activities without strategy.</p>
+    <div class="fn-govern"><b>GV — GOVERN: The cybersecurity risk management strategy, expectations, and policy are established, communicated, and monitored.</b><br><span style="font-size:12px;color:#1a1a18">6 Categories. Placed first because governance is the prerequisite for effective security management.</span></div>
+    <p>GOVERN's 6 Categories:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>GV.OC — Organizational Context</strong><span>Understand the mission, stakeholder expectations, legal/regulatory requirements, and dependencies that shape cybersecurity decisions. Context is what makes security proportionate and relevant rather than generic.</span></div>
+      <div class="cheat-pill"><strong>GV.RM — Risk Management Strategy</strong><span>Establish risk appetite, risk tolerance, and the organizational strategy for managing cybersecurity risk. Make conscious, documented decisions about acceptable vs. unacceptable risk levels.</span></div>
+      <div class="cheat-pill"><strong>GV.RR — Roles, Responsibilities, and Authorities</strong><span>Define who owns cybersecurity decisions, who is accountable for security outcomes, and who has authority to act. Diffuse accountability is no accountability.</span></div>
+      <div class="cheat-pill"><strong>GV.PO — Policy</strong><span>Establish, communicate, and enforce cybersecurity policies — the written rules governing how the organization manages information security. Policies must be current, communicated, and actually followed.</span></div>
+      <div class="cheat-pill"><strong>GV.OV — Oversight</strong><span>Establish active senior leadership oversight of the cybersecurity risk management program. Leaders actively review and direct — not passively receive occasional reports.</span></div>
+      <div class="cheat-pill"><strong>GV.SC — Cybersecurity Supply Chain Risk Management</strong><span>Identify, manage, monitor, and improve cybersecurity supply chain risk processes. Understand and manage the security of vendors, suppliers, and partners whose compromise could affect organizational security.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Why GOVERN is placed before IDENTIFY:</strong> NIST deliberately put GOVERN first to signal that governance must exist before security activities can be rational. Without risk appetite from GOVERN, you can't prioritize IDENTIFY's risk assessment findings. Without defined roles from GOVERN, nobody knows who acts on DETECT alerts. Without policies from GOVERN, PROTECT controls lack authority. GOVERN is the foundation; everything else is structure built on it.</div>
+    <div class="analogy-box"><strong>The orchestra conductor analogy:</strong> The five other functions are like instruments in an orchestra — each produces valuable output. But without GOVERN — the conductor — the instruments play independently, without coordination, serving individual purposes rather than a unified vision. GOVERN sets the tempo, coordinates the instruments, and ensures the whole ensemble achieves something greater than the sum of its parts.</div>`,
+    quiz: { q: "Why did NIST add GOVERN as a sixth function and place it first in CSF 2.0?", opts: ["Because governance requirements are new to cybersecurity", "Because a decade of experience showed that cybersecurity programs fail primarily due to governance failures — no risk strategy, unclear accountability, inadequate leadership commitment — and these foundations must exist before technical security activities can be effective", "Because government agencies required a governance section", "Because GOVERN replaces the other functions for small organizations"], ans: 1, explain: "NIST added GOVERN because experience consistently showed cybersecurity program failures are more often governance failures than technical ones. Organizations deploy tools without strategy, implement controls without accountability, and conduct assessments without processes to act on findings. GOVERN provides the strategic and management foundation that transforms individual security activities into a coherent, improving program." }
+  },
+  {
+    title: "IDENTIFY — Know What You Have and What Risks You Face",
+    tagline: "The intelligence foundation that makes all security decisions rational",
+    body: `<p><span class="key-term">IDENTIFY</span> is where informed security management begins — developing an understanding of the organization's assets, people, systems, data, and the risks that threaten them. Every rational security decision depends on this foundation. Protecting assets you don't know you have, or managing risks you haven't identified, is impossible.</p>
+    <div class="fn-identify"><b>ID — IDENTIFY: The organization's current cybersecurity risks are understood.</b><br><span style="font-size:12px;color:#1a1a18">2 Categories. Creates the knowledge foundation for all risk-informed security decisions.</span></div>
+    <p>IDENTIFY's 2 Categories:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>ID.AM — Asset Management</strong><span>Identify and manage assets — hardware, software, data, people, facilities, and services — that the organization must protect. Asset inventories, data flow mapping, and understanding the criticality and sensitivity of each asset enable proportionate protection decisions.</span></div>
+      <div class="cheat-pill"><strong>ID.RA — Risk Assessment</strong><span>Identify, analyze, and prioritize cybersecurity risks based on threats, vulnerabilities, likelihoods, and impacts. Risk assessment converts raw vulnerability data into actionable risk information that drives security investment decisions.</span></div>
+    </div>
+    <div class="highlight-box"><strong>CSF 2.0 reorganization of IDENTIFY:</strong> CSF 1.1 had five IDENTIFY categories including Business Environment and Governance. In CSF 2.0, Business Environment moved into GOVERN (as Organizational Context), and Governance became its own function entirely. IDENTIFY now focuses exclusively on asset management and risk assessment — a cleaner, more precise scope that better reflects what "identifying risks" actually means.</div>
+    <div class="analogy-box"><strong>The home security analogy:</strong> Before securing your home, you need to know: What do you own worth protecting? What are the vulnerabilities (unlocked windows, no exterior lighting)? What are likely threats in your neighborhood? What's the probability and impact of each threat? Only with that understanding can you make rational security investments — whether a deadbolt, an alarm system, or motion-sensing lights. IDENTIFY does this systematically for entire organizations.</div>
+    <p>Key outcomes IDENTIFY achieves:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Complete, current inventory of hardware, software, data, and services</span>
+      <span class="badge badge-blue">Understanding of data flows and how sensitive information moves</span>
+      <span class="badge badge-blue">Identification of threats and threat actors relevant to the organization</span>
+      <span class="badge badge-blue">Assessment of vulnerabilities across systems and processes</span>
+      <span class="badge badge-blue">Prioritized risk register with likelihood and impact evaluations</span>
+      <span class="badge badge-blue">Understanding of supply chain risk sources and critical dependencies</span>
+    </div>`,
+    quiz: { q: "Why is IDENTIFY placed before PROTECT in the CSF Core?", opts: ["Because identification is cheaper than protection", "Because you cannot make rational protection decisions without first knowing what assets exist, what their value is, and what risks threaten them — protection without identification is expensive guesswork", "Because IDENTIFY is the easiest function to implement", "The order of CSF functions has no significance"], ans: 1, explain: "IDENTIFY precedes PROTECT because every protection decision must be informed by knowledge of assets and risks. Without an asset inventory you don't know what to protect. Without a risk assessment you don't know which threats to prioritize or which protective measures deliver the most risk reduction. Protecting everything equally without IDENTIFY wastes resources on low-risk assets while potentially under-protecting the highest-risk ones." }
+  },
+  {
+    title: "PROTECT — Safeguards That Reduce Cybersecurity Risk",
+    tagline: "The defenses that prevent or limit the impact of cybersecurity events",
+    body: `<p><span class="key-term">PROTECT</span> covers the safeguards that limit or contain the impact of a potential cybersecurity event. While IDENTIFY creates the risk knowledge, PROTECT implements the actual defenses — the technical and administrative controls that prevent threats from materializing or reduce their impact when they do.</p>
+    <div class="fn-protect"><b>PR — PROTECT: Safeguards to manage the organization's cybersecurity risks are used.</b><br><span style="font-size:12px;color:#1a1a18">4 Categories. Implements controls that prevent or limit cybersecurity events.</span></div>
+    <p>PROTECT's 4 Categories:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>PR.AA — Identity Management, Authentication, and Access Control</strong><span>Manage identities and credentials. Authenticate users and devices. Control access based on least privilege. Prevent unauthorized access to systems and data. Multi-factor authentication is a key outcome here.</span></div>
+      <div class="cheat-pill"><strong>PR.AT — Awareness and Training</strong><span>Ensure all personnel understand cybersecurity risks and their security responsibilities. Role-specific training for high-privilege staff. Regular phishing simulations. The human element of defense.</span></div>
+      <div class="cheat-pill"><strong>PR.DS — Data Security</strong><span>Protect data at rest and in transit. Data classification and labeling, encryption, access controls on data stores, and secure data disposal practices throughout the entire data lifecycle.</span></div>
+      <div class="cheat-pill"><strong>PR.PS — Platform Security</strong><span>Manage the security of hardware, software, services, and data through secure configuration, patch management, and software integrity verification. Replaced the narrower "Protective Technology" category from v1.1 with broader scope.</span></div>
+    </div>
+    <div class="analogy-box"><strong>PROTECT in a healthcare context:</strong> A hospital's PROTECT activities include: requiring MFA for all clinical system access (Identity Management), running monthly phishing simulations for all staff (Awareness and Training), encrypting all patient records at rest and in transit (Data Security), and maintaining hardened, patched configurations on every clinical workstation (Platform Security). Together, these reduce the probability that a phishing email, an unauthorized user, or an unpatched vulnerability leads to a significant breach.</div>
+    <div class="warning-box"><strong>PROTECT alone is never enough:</strong> A persistent security misconception is that strong PROTECT means no incidents. Sophisticated attackers will eventually find a way through even excellent defenses. PROTECT reduces likelihood and impact — but DETECT, RESPOND, and RECOVER exist precisely because PROTECT is never 100% effective. The goal is defense-in-depth and resilience, not the impossible standard of perfect prevention.</div>`,
+    quiz: { q: "CSF 2.0 renamed 'Protective Technology' (in v1.1) to 'Platform Security' (PR.PS). What broader concept does this name change reflect?", opts: ["It only applies to server platforms now", "It reflects that modern security extends beyond traditional security technology to encompass the full security of hardware, software, and services — including secure configuration, patching, and software integrity across all platforms an organization uses", "It removes network security from PROTECT", "Platform Security only applies to cloud environments"], ans: 1, explain: "Renaming 'Protective Technology' to 'Platform Security' reflects an evolution from thinking narrowly about security tools to thinking comprehensively about securing all platforms — on-premises servers, cloud services, endpoints, mobile devices, containers, and IoT. The broader name captures that every platform requires security management: configuration, patching, integrity verification, and ongoing hardening — not just the deployment of security products." }
+  },
+  {
+    title: "DETECT — Finding Cybersecurity Events Before They Become Disasters",
+    tagline: "Early warning systems that catch attacks while damage is still manageable",
+    body: `<p><span class="key-term">DETECT</span> addresses the ability to identify cybersecurity events in a timely manner. Strong detection capabilities are the difference between catching an attacker in the first hours of a breach — and discovering months later that data has been exfiltrated, systems have been compromised, and the organization faces enormous recovery costs. Detection speed is one of the most important cybersecurity metrics.</p>
+    <div class="fn-detect"><b>DE — DETECT: Possible cybersecurity attacks and compromises are found and analyzed.</b><br><span style="font-size:12px;color:#1a1a18">1 Category. CSF 2.0 consolidated detection into a single comprehensive monitoring category.</span></div>
+    <div class="cheat-pill" style="max-width:100%;margin:.5rem 0"><strong>DE.CM — Continuous Monitoring</strong><span style="display:block;margin-top:4px;color:#6b6b68;font-size:12px">Monitor assets, users, and networks on an ongoing basis to identify potentially adverse events. Analyze detected events to understand attack techniques and the scope of impacts. CSF 2.0 simplified DETECT to one category, reflecting that continuous monitoring encompasses all meaningful detection activities.</span></div>
+    <p>What strong DETECT capabilities look like in practice:</p>
+    <div class="badge-row">
+      <span class="badge badge-amber">SIEM (Security Information and Event Management) — centralized log analysis and correlation</span>
+      <span class="badge badge-amber">EDR (Endpoint Detection and Response) — device-level behavioral threat detection</span>
+      <span class="badge badge-amber">Network monitoring for anomalous traffic and lateral movement</span>
+      <span class="badge badge-amber">UEBA (User and Entity Behavior Analytics) — insider threat detection</span>
+      <span class="badge badge-amber">Regular vulnerability scanning to detect configuration drift</span>
+      <span class="badge badge-amber">Threat intelligence feeds integrated with detection systems</span>
+    </div>
+    <div class="analogy-box"><strong>The smoke detector analogy:</strong> PROTECT is like fire-resistant building materials and automatic door closers — they reduce the likelihood and spread of fire. DETECT is the smoke detector — it doesn't prevent fire, but it catches it early when damage is still manageable. Without a smoke detector, a fire can burn for hours before anyone realizes. Without DETECT capabilities, an attacker can operate inside your network for months before discovery. Early detection is the single most important variable in limiting breach damage.</div>
+    <div class="highlight-box"><strong>Dwell time — the detection failure metric:</strong> "Dwell time" is the interval between an attacker entering a network and being discovered. Historical averages have been measured in months — meaning organizations were unaware of active breaches for weeks or months. Strong DETECT capabilities reduce dwell time from months to hours. Every day of reduced dwell time dramatically limits attacker impact. The goal isn't preventing every breach; it's detecting breaches fast enough to limit catastrophic damage.</div>`,
+    quiz: { q: "CSF 2.0 consolidated DETECT from two categories (in v1.1) to one category. What does this simplification reflect?", opts: ["Detection is less important in CSF 2.0", "A recognition that continuous monitoring is a unified capability — the previous two categories overlapped substantially, and a single comprehensive monitoring outcome better describes how effective detection actually works", "DETECT was merged with RESPOND", "Only large organizations need to monitor continuously"], ans: 1, explain: "CSF 2.0 consolidated DETECT into a single Continuous Monitoring category because the core detection outcome — find and analyze cybersecurity events — is best understood as a unified, ongoing capability rather than two separate activities. The previous categories (Anomalies and Events; Security Continuous Monitoring) had substantial overlap. The single category better reflects how effective detection operates: as integrated, continuous monitoring rather than separate siloed activities." }
+  },
+  {
+    title: "RESPOND — Taking Effective Action When Incidents Occur",
+    tagline: "From detection to containment — turning awareness into action",
+    body: `<p><span class="key-term">RESPOND</span> covers the activities taken to act on a detected cybersecurity incident. Detection without an effective response is like knowing your house is on fire but having no plan to call the fire department or evacuate. RESPOND transforms detection into action: containing damage, investigating what happened, communicating appropriately, and eliminating the threat.</p>
+    <div class="fn-respond"><b>RS — RESPOND: Actions regarding a detected cybersecurity incident are taken.</b><br><span style="font-size:12px;color:#1a1a18">4 Categories. The operational response when incidents are confirmed and active.</span></div>
+    <p>RESPOND's 4 Categories:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>RS.MA — Incident Management</strong><span>Manage responses to detected incidents. Execute the incident response plan, triage and categorize incidents by severity, activate appropriate response teams, and coordinate all response activities across the organization.</span></div>
+      <div class="cheat-pill"><strong>RS.AN — Incident Analysis</strong><span>Investigate incidents to understand exactly what happened, what was affected, and how the attacker operated. Forensic analysis, root cause determination, and attack timeline reconstruction inform both immediate containment and future prevention.</span></div>
+      <div class="cheat-pill"><strong>RS.CO — Incident Response Reporting and Communication</strong><span>Coordinate and communicate with all relevant parties — internal leadership, regulators (HIPAA 60-day, GDPR 72-hour, CMMC 72-hour), law enforcement, affected customers, and the media. Miscommunication during incidents routinely compounds the damage.</span></div>
+      <div class="cheat-pill"><strong>RS.MI — Incident Mitigation</strong><span>Contain and eradicate the incident. Isolate affected systems, remove malware, close unauthorized access paths, and restore affected systems to a known-good state. Prevent the incident from spreading to additional systems or recurring.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The emergency room triage analogy:</strong> When a patient arrives critically ill, the emergency team follows a protocol — not improvised chaos: Triage (how severe?), Stabilize (stop the immediate threat to life), Diagnose (what's actually wrong?), Treat (address the root cause), Communicate (inform family and specialists), Document (everything for follow-up). Effective RESPOND follows identical discipline: triage the incident, contain damage, analyze the attack, eliminate the threat, communicate appropriately, and document everything for post-incident improvement.</div>
+    <div class="highlight-box"><strong>The incident response plan must exist BEFORE the incident:</strong> Effective RESPOND requires a tested incident response plan that exists before any incident occurs. Organizations improvising response during an active breach consistently suffer more damage, longer downtime, and higher costs than those with pre-tested plans. The plan should specify: who has authority to make containment decisions, how to preserve forensic evidence while containing the threat, when and how to notify regulators and customers, and how to communicate with media and leadership. Plans only exist in the organizational response capability — not in the middle of a crisis.</div>`,
+    quiz: { q: "Why does RESPOND include a dedicated category for Incident Response Reporting and Communication (RS.CO)?", opts: ["To satisfy mandatory press release requirements", "Because effective incident response requires coordinated communication with multiple parties simultaneously — regulators (who have strict notification deadlines), affected customers, law enforcement, and leadership — and communication failures during incidents routinely cause secondary damage beyond the technical breach", "Because communication is easier than technical response activities", "Communication is only required for breaches affecting more than 500 people"], ans: 1, explain: "RS.CO is a critical response category because incident response is never purely a technical exercise. Regulators may need breach notification within hours (GDPR: 72 hours, CMMC: 72 hours) or days (HIPAA: 60 days for large breaches). Affected customers may need to take protective action. Law enforcement may need to be engaged before evidence is disturbed. Internal leadership needs real-time updates to make business decisions. Each of these communications has different content, timing, and audience — requiring dedicated planning and execution." }
+  },
+  {
+    title: "RECOVER — Restoring Operations and Learning for the Future",
+    tagline: "Getting back to business — and making sure you do better next time",
+    body: `<p><span class="key-term">RECOVER</span> addresses restoring affected systems, services, and capabilities after a cybersecurity incident. While RESPOND contains and eliminates the active threat, RECOVER rebuilds what was damaged and returns the organization to normal operations — then extracts lessons that improve future resilience across all six functions.</p>
+    <div class="fn-recover"><b>RC — RECOVER: Assets and operations affected by a cybersecurity incident are restored.</b><br><span style="font-size:12px;color:#1a1a18">2 Categories. Restoring operations while incorporating lessons that improve future resilience.</span></div>
+    <p>RECOVER's 2 Categories:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>RC.RP — Incident Recovery Plan Execution</strong><span>Execute recovery planning activities to restore systems and services. Use pre-documented recovery procedures. Validate system integrity before bringing affected systems back online. Coordinate recovery timing with operations and business teams to minimize ongoing impact.</span></div>
+      <div class="cheat-pill"><strong>RC.CO — Incident Recovery Communication</strong><span>Coordinate restoration activities with internal and external parties. Manage stakeholder communications throughout the recovery period. Coordinate with cyber insurance providers. Maintain appropriate transparency with affected parties while protecting operational security during recovery.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Recovery Time Objective (RTO) and Recovery Point Objective (RPO):</strong> Two metrics define recovery planning quality. RTO is how quickly critical systems must be restored after an incident (how long can the organization survive without that system?). RPO is how much data loss is acceptable (how old can the last backup be?). These targets must be established and tested BEFORE incidents occur — decisions made under pressure without pre-defined targets consistently produce poor outcomes and excessive costs.</div>
+    <div class="analogy-box"><strong>Ransomware recovery — the ultimate RECOVER test:</strong> Ransomware attacks encrypt all organizational data and demand payment for decryption keys. Organizations with mature RECOVER capabilities — tested, isolated backups; documented recovery procedures; pre-established RTO/RPO targets; validated restoration processes — can restore operations without paying ransom, often within hours or days. Organizations without these capabilities face weeks of downtime, potential permanent data loss, and the grim choice between paying criminals or rebuilding from nothing. The outcome difference is entirely determined by RECOVER preparation done before the attack.</div>
+    <div class="info-box"><strong>Post-incident review as the gateway to improvement:</strong> A critical RECOVER activity is the structured post-incident review — analyzing what happened, why controls failed, and what should change. This is where organizations learn from expensive experiences and feed improvements back into GOVERN (strategy updates), IDENTIFY (revised risk assessments), PROTECT (new controls), DETECT (improved monitoring), and RESPOND (updated procedures). Post-incident review without organizational change is expensive theater. With it, every incident makes the organization more resilient.</div>`,
+    quiz: { q: "What distinguishes RESPOND from RECOVER in the CSF framework?", opts: ["They address identical activities in different sequences", "RESPOND covers actions during an active incident — containing, analyzing, and mitigating the active threat; RECOVER covers restoring normal operations after the immediate threat is eliminated and extracting lessons for future improvement", "RECOVER is only relevant for large organizations with formal disaster recovery programs", "RESPOND is voluntary while RECOVER is mandatory for regulated industries"], ans: 1, explain: "RESPOND focuses on the active incident: managing the response, analyzing what's happening in real time, containing the threat, and mitigating its immediate impact. RECOVER begins after the immediate threat is addressed and focuses on restoring affected systems and services to normal operation, managing ongoing stakeholder communication during restoration, and conducting post-incident review to improve future resilience. Both require pre-incident planning, but they address fundamentally different phases of the incident lifecycle." }
+  },
+  {
+    title: "How All 6 Functions Work Together as a System",
+    tagline: "Why the framework is a continuous cycle, not a checklist to complete",
+    body: `<p>The six NIST CSF functions are not a sequential checklist — they are a <span class="key-term">concurrent, integrated system</span>. Organizations don't complete GOVERN, then move to IDENTIFY, then PROTECT, sequentially. All six functions operate simultaneously and continuously, each informing and improving the others. Understanding how they interconnect transforms the CSF from a framework to navigate into a management system to operate.</p>
+    <div class="highlight-box"><strong>The integrated cycle:</strong> GOVERN establishes the strategy and risk appetite that shapes all other functions. IDENTIFY creates the asset and risk knowledge that informs PROTECT decisions and DETECT configurations. PROTECT implements safeguards that reduce the events reaching DETECT. DETECT finds events that PROTECT didn't stop, triggering RESPOND. RESPOND contains threats, enabling RECOVER to begin. RECOVER restores operations and generates lessons that feed back into GOVERN to refine strategy and IDENTIFY to update risk assessments. The cycle is continuous and self-improving.</div>
+    <p>Examples of how the functions inform each other in practice:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>GOVERN → All Functions</strong><span>Risk appetite from GOVERN determines how much resource flows to PROTECT, what event thresholds trigger RESPOND escalation, and how quickly RECOVER must restore critical systems.</span></div>
+      <div class="cheat-pill"><strong>IDENTIFY → PROTECT</strong><span>Asset criticality from IDENTIFY determines which assets receive the strongest PROTECT controls. High-value databases get encryption and strict access controls; low-risk systems get standard controls.</span></div>
+      <div class="cheat-pill"><strong>IDENTIFY → DETECT</strong><span>Threat assessment from IDENTIFY informs what to monitor for. If IDENTIFY reveals elevated phishing threat, DETECT configurations prioritize email anomaly detection and suspicious login monitoring.</span></div>
+      <div class="cheat-pill"><strong>DETECT → RESPOND</strong><span>DETECT's continuous monitoring creates the alerts that trigger RESPOND actions. Faster DETECT = faster RESPOND = less damage. The quality of detection directly determines the quality of response.</span></div>
+      <div class="cheat-pill"><strong>RESPOND → RECOVER</strong><span>RESPOND determines the scope of damage RECOVER must address. Effective containment in RESPOND dramatically limits what needs to be restored — reducing recovery time and cost.</span></div>
+      <div class="cheat-pill"><strong>RECOVER → GOVERN</strong><span>Post-incident lessons from RECOVER feed into GOVERN strategy, IDENTIFY risk reassessment, PROTECT control updates, DETECT configuration improvements, and RESPOND plan refinements.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The immune system analogy:</strong> Your immune system doesn't work sequentially — it operates simultaneously across multiple layers. Detection (identifying foreign pathogens) happens continuously. Protection (antibodies, physical barriers) operates constantly. Response (immune activation, inflammation) triggers when threats breach protection. Recovery (healing, immunity building) happens after threats are addressed. Governance (the body's regulatory systems) coordinates everything. The CSF's six functions operate exactly this way — a coordinated, simultaneous system rather than a linear sequence.</div>`,
+    quiz: { q: "An organization's post-incident review reveals their phishing detection was poor, letting an attacker operate for eight weeks. Which functions should be updated based on this single finding?", opts: ["Only DETECT — since detection failed", "GOVERN (update risk strategy for phishing), IDENTIFY (revise phishing threat assessment), PROTECT (improve email filtering and awareness training), DETECT (tune phishing detection configurations), and RESPOND (update IR playbook for phishing scenarios)", "Only RESPOND — since response was too slow", "Post-incident findings only affect planning for the next assessment cycle"], ans: 1, explain: "A single significant finding from RECOVER's post-incident review triggers improvements across multiple functions simultaneously. An eight-week phishing dwell time indicates: GOVERN (phishing risk may be underweighted in strategy), IDENTIFY (threat assessment underestimated phishing risk), PROTECT (email filtering and training gaps allowed initial compromise), DETECT (monitoring failed to catch eight weeks of attacker activity), and RESPOND (the playbook for this specific scenario likely needs improvement). CSF improvement is holistic — failures in one area reveal related gaps across the entire system." }
+  },
+  {
+    title: "Implementation Tiers — Not Maturity Scores",
+    tagline: "How NIST describes different approaches to cybersecurity risk management",
+    body: `<p>The <span class="key-term">NIST CSF Implementation Tiers</span> describe the rigor and sophistication with which an organization manages cybersecurity risk. They are one of the most commonly misunderstood elements of the framework — because most people assume they're maturity scores where higher is always better. They're not, and that distinction is critically important.</p>
+    <div class="tier-grid">
+      <div class="tier-1c"><strong style="color:#27500A">Tier 1 — Partial</strong><br><span style="font-size:12px;color:#1a1a18">Ad hoc, reactive risk management. Limited awareness of cybersecurity risk to operations. No formal cybersecurity program. Response to security events depends on who's available, not documented procedures.</span></div>
+      <div class="tier-2c"><strong style="color:#633806">Tier 2 — Risk Informed</strong><br><span style="font-size:12px;color:#1a1a18">Management-approved risk practices. Cybersecurity activities are based on organizational risk objectives but may not be organization-wide policy. Some awareness of dependencies. Inconsistent application across the organization.</span></div>
+      <div class="tier-3c"><strong style="color:#4A1B0C">Tier 3 — Repeatable</strong><br><span style="font-size:12px;color:#1a1a18">Formal risk management practices expressed as organizational policy. Applied consistently across the organization. Updated regularly. Regular information sharing with external parties. Consistent application regardless of who's involved.</span></div>
+      <div class="tier-4c"><strong style="color:#501313">Tier 4 — Adaptive</strong><br><span style="font-size:12px;color:#1a1a18">Continuously improving practices informed by lessons learned and threat intelligence. Real-time risk decisions. Active threat intelligence sharing. Cybersecurity considerations embedded in organizational culture at all levels.</span></div>
+    </div>
+    <div class="highlight-box"><strong>The critical misunderstanding — Tiers are NOT maturity targets:</strong> NIST explicitly states that Tiers are not a maturity model where every organization should strive for Tier 4. They describe different approaches appropriate for different risk contexts. A small bakery may appropriately operate at Tier 2 — having management-approved security practices is entirely adequate for their risk profile. A nuclear power plant operating at Tier 2 would be dangerously under-governed. The appropriate Tier depends entirely on the organization's risk context, data sensitivity, and the consequences of security failures.</div>
+    <div class="analogy-box"><strong>Tiers in practice:</strong> A Tier 1 organization handles a suspicious alert by forwarding it to IT when someone notices — if they notice. A Tier 2 organization has a documented process IT follows when alerts occur. A Tier 3 organization has automated alert triage with documented, consistently applied procedures tested quarterly. A Tier 4 organization continuously incorporates threat intelligence, automatically adjusts monitoring thresholds based on current threat landscape, and shares threat indicators with sector partners in real time. Same security infrastructure; dramatically different management sophistication.</div>`,
+    quiz: { q: "A small accounting firm with 12 employees operates at Tier 2 — management-approved security practices that are not yet formal organizational policy. Is this appropriate?", opts: ["No — all organizations should be at Tier 4", "Possibly appropriate — the right tier depends on the organization's risk profile, data sensitivity, and the consequences of security failures, not on a universal requirement to maximize tier level", "No — all organizations handling financial data must be at Tier 3", "Yes — Tier 2 is always sufficient for small businesses"], ans: 1, explain: "Whether Tier 2 is appropriate depends entirely on the firm's specific risk context — what data they handle, who their clients are, what regulations apply, and what the consequences of a breach would be. NIST explicitly says Tiers are not a universal maturity target. An accounting firm handling individual returns has different risk exposure than one managing corporate accounts for publicly traded companies. The right tier is the one appropriate for the actual risk level, not the highest tier achievable." }
+  },
+  {
+    title: "Organizational Profiles — Your Customized Security Roadmap",
+    tagline: "How organizations translate the universal CSF Core into their specific security plan",
+    body: `<p>The <span class="key-term">CSF Profile</span> is how organizations translate the framework's universal outcomes into their specific situation. The CSF Core applies identically to all organizations — but a Profile is customized to each organization's unique context, risks, regulatory requirements, and available resources. Profiles are where the framework becomes actionable.</p>
+    <div class="highlight-box">CSF 2.0 defines two Profile types:<br><br><strong>Current Profile:</strong> An honest description of the cybersecurity outcomes the organization currently achieves — what's working well, what's partially implemented, and what's not yet addressed. This requires candid self-assessment, not a marketing exercise.<br><br><strong>Target Profile:</strong> The cybersecurity outcomes the organization aims to achieve, defined by risk appetite, regulatory requirements, and business objectives.<br><br>The gap between Current and Target Profiles becomes the prioritized security roadmap — translating strategic intent into specific improvement actions with clear priorities.</div>
+    <div class="analogy-box"><strong>The navigation analogy:</strong> The CSF Core is a comprehensive map. Your Current Profile is your current position on that map. Your Target Profile is your destination. The gap analysis is the route between them — identifying which roads to take, which obstacles to address first, and what resources the journey requires. Without both profiles and the gap analysis, you have a detailed map but no navigation — you know what exists but not how to get where you need to be.</div>
+    <p>What a CSF Profile includes:</p>
+    <div class="badge-row">
+      <span class="badge badge-red">Organization's specific mission and business context</span>
+      <span class="badge badge-red">Applicable legal, regulatory, and contractual requirements</span>
+      <span class="badge badge-red">Risk appetite and tolerance from GOVERN</span>
+      <span class="badge badge-red">Priority ranking of CSF outcomes by business criticality</span>
+      <span class="badge badge-red">Current achievement level for each prioritized outcome</span>
+      <span class="badge badge-red">Target achievement level for each prioritized outcome</span>
+      <span class="badge badge-red">Resource constraints shaping what's achievable in the planning period</span>
+    </div>
+    <div class="info-box"><strong>Community Profiles — the new sector baseline concept in CSF 2.0:</strong> CSF 2.0 introduced Community Profiles — sector-specific or use-case-specific profile baselines developed by industry groups, government agencies, or sector ISACs that serve as starting points for individual organizations. Rather than each hospital building a CSF Profile entirely from scratch, the healthcare sector can develop a Healthcare Community Profile reflecting common HIPAA requirements, typical ransomware threats against clinical systems, and standard clinical IT asset types. Individual organizations then customize this community baseline for their specific context — dramatically reducing the effort of starting a CSF program.</div>`,
+    quiz: { q: "A healthcare organization's Current Profile shows strong PROTECT outcomes but weak DETECT and RESPOND capabilities. How should this shape their security roadmap?", opts: ["Continue strengthening PROTECT since it's already a demonstrated strength", "Prioritize building DETECT and RESPOND capabilities — an organization that protects well but can't detect breaches or respond effectively when they occur has a critical capability gap that directly threatens patient safety and regulatory compliance", "Address RECOVER next, since it follows DETECT and RESPOND in the function sequence", "The strong PROTECT score means overall security is adequate — minimal investment needed"], ans: 1, explain: "Strong PROTECT with weak DETECT and RESPOND is a dangerous imbalance, particularly in healthcare. Even excellent defenses are eventually breached by sophisticated adversaries. If the organization can't detect breaches when they happen or respond effectively, the breach causes maximum damage before containment. For a hospital, this could mean weeks of clinical system downtime and massive HIPAA breach notification obligations. The Profile gap analysis clearly makes DETECT and RESPOND the highest-priority investment areas." }
+  },
+  {
+    title: "The CSF Reference Tool — Your Digital Framework Navigator",
+    tagline: "How NIST's free online tool makes the framework practical to use",
+    body: `<p>CSF 2.0 launched with a major practical improvement: the <span class="key-term">NIST CSF Reference Tool</span> — a free, searchable online tool that transforms the framework from a dense document into an interactive, navigable resource. Understanding this tool is essential for anyone working with NIST CSF professionally.</p>
+    <div class="highlight-box">The NIST CSF Reference Tool (available at csrc.nist.gov/projects/cybersecurity-framework) allows users to: browse all 6 Functions, 22 Categories, and 106 Subcategories in a searchable interface; view informative references showing which NIST SP 800-53 controls, ISO 27001 Annex A controls, CIS Controls v8 Safeguards, and other framework elements map to each CSF outcome; export custom views to Excel, JSON, or other formats for building assessment workbooks; filter by Function, Category, or specific subcategories relevant to a particular context; and access sector-specific Community Profiles and supplementary resources.</div>
+    <p>Why the framework mapping capability is particularly valuable:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>CSF ↔ NIST SP 800-53</strong><span>Federal agencies and contractors can see exactly which SP 800-53 controls achieve each CSF outcome — connecting the high-level governance framework to the detailed federal control catalog used in FISMA compliance and security authorization.</span></div>
+      <div class="cheat-pill"><strong>CSF ↔ ISO 27001</strong><span>Organizations pursuing ISO 27001 certification can map CSF outcomes to ISO 27001 Annex A controls — building an integrated program that satisfies both frameworks and enables efficient cross-framework reporting.</span></div>
+      <div class="cheat-pill"><strong>CSF ↔ CIS Controls v8</strong><span>Organizations using CIS Controls for implementation can demonstrate CSF alignment to boards and regulators — using the mapping to show how specific CIS Safeguards achieve specific CSF outcomes.</span></div>
+      <div class="cheat-pill"><strong>CSF ↔ CMMC</strong><span>Defense contractors can use the NIST SP 800-171 → 800-53 → CSF crosswalk to position their CMMC compliance program within the CSF governance framework, creating coherent enterprise-level reporting about defense supply chain security.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The Reference Tool as a Rosetta Stone:</strong> Before the Reference Tool, connecting CSF to other frameworks required manual mapping work taking days. The tool acts as a translation layer — a Rosetta Stone between security frameworks. A CISO can report to the board using CSF language; the security team implements controls using CIS Controls or ISO 27001; federal contractors reference SP 800-53; defense suppliers work with CMMC. Everyone pursues the same CSF outcomes through different implementation paths, and the Reference Tool makes these connections explicit and instantly accessible.</div>`,
+    quiz: { q: "How does the CSF Reference Tool's framework mapping capability benefit organizations subject to multiple compliance requirements?", opts: ["It automatically generates compliance certification reports", "It shows how CSF outcomes map to controls in frameworks like ISO 27001, CIS Controls, and NIST SP 800-53 — allowing organizations to build one integrated program satisfying multiple frameworks simultaneously rather than maintaining parallel compliance efforts", "It only maps to NIST frameworks, not commercial ones like CIS Controls", "Framework mappings are only useful for federal agencies"], ans: 1, explain: "The Reference Tool's mapping capability enables integrated multi-framework compliance programs. An organization using CSF as its governance language can see exactly which ISO 27001 controls, CIS Controls Safeguards, or SP 800-53 controls implement each CSF outcome — building one security program that satisfies all applicable frameworks simultaneously. This 'build once, satisfy many' approach dramatically reduces the cost and complexity of managing multiple compliance obligations." }
+  },
+  {
+    title: "GOVERN Deep Dive — Organizational Context (GV.OC)",
+    tagline: "Why does your organization exist, and what does that mean for security?",
+    body: `<p>Drilling deeper into GOVERN — <span class="key-term">GV.OC (Organizational Context)</span> addresses what sounds like a philosophical question but turns out to be one of the most practically consequential security activities: deeply understanding the organization's mission, environment, and stakeholder expectations so that cybersecurity decisions reflect actual organizational needs rather than generic best practice.</p>
+    <div class="fn-govern"><b>GV.OC — Organizational Context</b><br><span style="font-size:12px;color:#1a1a18">The circumstances — mission, stakeholder expectations, dependencies, and legal/regulatory requirements — surrounding the organization's cybersecurity risk decisions are understood.</span></div>
+    <p>Key outcomes within GV.OC:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Mission and Objectives</strong><span>The organizational mission is understood and articulated. Cybersecurity objectives align with and support that mission — security exists as a business enabler, not a separate technical discipline. Security trade-offs are evaluated in terms of business impact.</span></div>
+      <div class="cheat-pill"><strong>Stakeholder Expectations</strong><span>Internal and external stakeholders and their cybersecurity expectations are identified and documented. Customers, regulators, board members, employees, investors, and business partners all have security expectations that shape organizational security commitments.</span></div>
+      <div class="cheat-pill"><strong>Legal and Regulatory Requirements</strong><span>All applicable legal, regulatory, and contractual cybersecurity requirements are identified, documented, and actively tracked for changes. HIPAA, GDPR, CMMC, PCI-DSS, SOC 2, and sector-specific requirements are all explicitly mapped and managed.</span></div>
+      <div class="cheat-pill"><strong>Critical Dependencies</strong><span>The critical assets, services, capabilities, and external partners the organization depends on are understood — including supply chain dependencies whose compromise could cascade into organizational security failures.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why context changes everything:</strong> A hospital and a law firm both handle highly sensitive information — but their GV.OC contexts are radically different. The hospital's mission (patient care, life safety) means system availability has life-and-death implications — a ransomware-induced EHR outage could directly harm patients waiting for care. The law firm's primary concern is confidentiality of client communications. GV.OC ensures each organization builds security around its actual mission consequences, not around what a generic "sensitive data organization" should do.</div>
+    <div class="highlight-box"><strong>The regulatory requirements inventory:</strong> One of the most practically valuable GV.OC outcomes is maintaining a comprehensive, current inventory of all applicable legal, regulatory, and contractual security requirements. Organizations subject to HIPAA, GDPR, PCI-DSS, CMMC, SOC 2, and multiple state privacy laws simultaneously need a unified map of requirements to avoid gaps. GV.OC requires this map to exist and be actively maintained — making compliance management systematic rather than reactive (discovering requirements only when violations are alleged).</div>`,
+    quiz: { q: "A software company discovers they process employee health data through their benefits platform, making them subject to HIPAA, but never knew this obligation existed. Which GV.OC outcome was not achieved?", opts: ["Stakeholder expectations were not identified", "Legal, regulatory, and contractual requirements were not fully understood and documented — maintaining a comprehensive inventory of all applicable security requirements is an explicit GV.OC outcome", "The organizational mission was unclear", "Critical dependencies were not mapped"], ans: 1, explain: "GV.OC requires that all legal, regulatory, and contractual cybersecurity requirements are identified and documented. Failing to identify an applicable regulatory requirement — HIPAA in this case — means this GV.OC outcome was not achieved. A comprehensive requirements inventory, updated when business activities change, should have flagged HIPAA applicability when the company began handling employee health data through their benefits platform." }
+  },
+  {
+    title: "GOVERN Deep Dive — Risk Strategy and Supply Chain (GV.RM and GV.SC)",
+    tagline: "Setting risk appetite and managing the most dangerous modern attack vector",
+    body: `<p>Two of GOVERN's most critical categories address the strategic foundation of risk management and one of the most significant modern cyber threats respectively: <span class="key-term">Risk Management Strategy (GV.RM)</span> and <span class="key-term">Cybersecurity Supply Chain Risk Management (GV.SC)</span>.</p>
+    <div class="fn-govern"><b>GV.RM — Risk Management Strategy</b><br><span style="font-size:12px;color:#1a1a18">The organization's priorities, constraints, risk tolerance, and assumptions are established and used to support operational risk decisions.</span></div>
+    <p>GV.RM outcomes include:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">Risk appetite and tolerance explicitly defined and communicated by senior leadership</span>
+      <span class="badge badge-purple">Risk management objectives aligned to organizational mission and strategy</span>
+      <span class="badge badge-purple">Operational risk decisions consistently reference defined risk tolerance and strategic priorities</span>
+      <span class="badge badge-purple">Strategic opportunities are evaluated alongside risks — security enables business, not just constrains it</span>
+    </div>
+    <div class="analogy-box"><strong>Risk appetite in practice:</strong> "We will accept that our public-facing blog may occasionally be defaced by unsophisticated attackers, but we will not accept any compromise of our customer payment data or personally identifiable information." That's a risk appetite statement. It tells the security team exactly where to concentrate resources, how to evaluate competing security investments, and what trade-offs are acceptable when budget is constrained. Without explicit risk appetite, every security decision requires relitigating organizational priorities — producing inconsistent, politically-influenced security investment patterns.</div>
+    <div class="fn-govern"><b>GV.SC — Cybersecurity Supply Chain Risk Management</b><br><span style="font-size:12px;color:#1a1a18">Cyber supply chain risk management processes are identified, established, managed, monitored, and improved by organizational stakeholders.</span></div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>The SolarWinds Lesson</strong><span>In 2020, attackers inserted malicious code into a software update from SolarWinds — a trusted IT management vendor. 18,000 organizations downloaded and installed this update, giving attackers persistent access to networks including US government agencies. GV.SC specifically addresses this class of attack.</span></div>
+      <div class="cheat-pill"><strong>Supplier Requirements</strong><span>GV.SC requires establishing cybersecurity requirements for suppliers and partners — flowing security expectations down the supply chain rather than assuming that because a supplier is trusted for business purposes, they are also trustworthy for security purposes.</span></div>
+      <div class="cheat-pill"><strong>Monitoring and Response</strong><span>Supply chain risk is ongoing — a supplier that was secure last year may be compromised today. GV.SC requires continuous monitoring of supplier security posture and documented plans to respond when supplier failures affect the organization.</span></div>
+      <div class="cheat-pill"><strong>Interconnection with CMMC</strong><span>GV.SC's supply chain outcomes directly address why CMMC exists — the DoD's recognition that prime contractor security is insufficient if subcontractors handling CUI are unvetted. CMMC flow-down requirements are exactly what GV.SC mandates as a governance practice.</span></div>
+    </div>`,
+    quiz: { q: "Why was Cybersecurity Supply Chain Risk Management (GV.SC) elevated to its own dedicated GOVERN category in CSF 2.0?", opts: ["Because supply chain purchases are expensive and need budget governance", "Because the SolarWinds attack and similar incidents demonstrated that supply chain compromises represent a fundamental, board-level risk category requiring dedicated strategic governance — not just technical vendor questionnaires", "Because CMMC requires CSF to address supply chain", "Because ISO 27001 added supply chain controls in 2022"], ans: 1, explain: "Supply chain risk was elevated to a dedicated GOVERN category because SolarWinds proved that organizations with excellent internal security could be catastrophically compromised through trusted suppliers. This moved supply chain risk from a technical vendor management topic to a board-level strategic governance concern — requiring the same systematic treatment as any other major organizational risk. GV.SC ensures this elevated treatment is formalized in the framework structure." }
+  },
+  {
+    title: "CSF Metrics — Measuring What Actually Matters",
+    tagline: "How to connect framework outcomes to security performance your board can understand",
+    body: `<p>One of NIST CSF's most powerful applications is providing a structure for meaningful cybersecurity metrics. Organizations using CSF as their governance framework can align security metrics directly to CSF Functions and Categories — making it possible to report on cybersecurity performance in language that senior leaders understand and can act on.</p>
+    <div class="highlight-box"><strong>The metrics problem CSF solves:</strong> Traditional cybersecurity metrics — number of alerts blocked, patch compliance percentage, firewall rules updated — are technically real but strategically meaningless to boards. "We blocked 12 million attacks last month" tells the board nothing about whether the organization is more or less secure. CSF-aligned metrics answer the question that actually matters: are we achieving the security outcomes that reduce risk to our mission?</div>
+    <p>CSF-aligned metrics by Function:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>GOVERN Metrics</strong><span>% of critical suppliers with current security assessments. % of business processes with documented risk acceptance decisions. Days since last formal management review. % of roles with documented cybersecurity accountability.</span></div>
+      <div class="cheat-pill"><strong>IDENTIFY Metrics</strong><span>% of assets in current, verified inventory. % of critical systems with completed risk assessments in last 12 months. Mean time between risk assessment updates for high-risk systems. Untracked assets discovered each quarter.</span></div>
+      <div class="cheat-pill"><strong>PROTECT Metrics</strong><span>% of privileged accounts with MFA enabled. % of systems patched within defined SLA. % of employees completing annual security training. % of sensitive data encrypted at rest.</span></div>
+      <div class="cheat-pill"><strong>DETECT Metrics</strong><span>Mean time to detect security events (MTTD). % of log sources centralized in SIEM. % of critical systems with active endpoint detection. Alert-to-investigation ratio (false positive rate).</span></div>
+      <div class="cheat-pill"><strong>RESPOND Metrics</strong><span>Mean time to respond to confirmed incidents (MTTR). % of incidents with documented post-incident reviews. % of incidents closed within defined SLAs. Incidents requiring executive escalation per quarter.</span></div>
+      <div class="cheat-pill"><strong>RECOVER Metrics</strong><span>Mean time to recover critical systems. % of recovery procedures tested in last 12 months. Recovery Time Objective (RTO) achievement rate. Lessons learned implemented from post-incident reviews this quarter.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Metrics connected to Target Profile:</strong> CSF metrics are most powerful when connected to specific Target Profile outcomes. If the Target Profile says "MFA enabled for all privileged accounts by Q3," the metric "% of privileged accounts with MFA" directly measures progress toward that specific strategic target. This connects measurement to strategic intent — making metrics meaningful to business leadership and security teams simultaneously instead of serving two different audiences with different information.</div>`,
+    quiz: { q: "Why is 'Mean Time to Detect security events (MTTD)' a more valuable board metric than 'number of alerts handled this month'?", opts: ["MTTD is easier to calculate from existing security tools", "MTTD directly measures progress toward the DETECT outcome of finding cybersecurity events quickly — it tells leadership whether detection capability is improving or deteriorating, which directly relates to the business risk of undetected breach damage. Alert counts measure activity volume, not security outcomes.", "Alert counts are proprietary data that cannot be shared with boards", "Boards prefer simpler metrics with smaller numbers"], ans: 1, explain: "MTTD measures whether the organization is achieving the CSF DETECT outcome — finding cybersecurity events quickly. A declining MTTD (detecting events faster) directly reduces the business risk of extended undetected breaches. Counting alerts measures activity volume but says nothing about detection quality — an organization can handle thousands of low-quality alerts and still miss a sophisticated attacker operating for months. MTTD answers the strategic question: are we getting better at finding threats?" }
+  },
+  {
+    title: "NIST CSF for Small and Medium Organizations",
+    tagline: "Making the framework practical for organizations without dedicated security teams",
+    body: `<p>A common concern about NIST CSF is whether it's only accessible to large organizations with dedicated security teams. CSF 2.0 directly addressed this with explicit small business guidance, simplified resources, and Community Profiles. The answer is a clear no — but using CSF effectively in a small organization requires a different approach than deploying it at an enterprise.</p>
+    <div class="highlight-box">NIST published a companion resource alongside CSF 2.0: the <strong>NIST CSF 2.0 Small Business Quick Start Guide</strong>. This free resource translates CSF outcomes into plain language appropriate for small businesses, identifies the highest-priority outcomes for resource-constrained organizations, and provides concrete first steps that don't require large security budgets, dedicated security staff, or specialized consulting firms.</div>
+    <p>Practical approaches for small organizations:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Start with GOVERN — Not Tools</strong><span>Even with minimal resources, establish: who owns security decisions, what the risk appetite is, what regulations apply, and who is accountable for each security area. Governance costs decisions and time, not money.</span></div>
+      <div class="cheat-pill"><strong>Focus on Highest-Impact Outcomes</strong><span>Small organizations cannot achieve all 106 subcategories simultaneously. Use the CSF to identify the 20-30 outcomes most critical to their specific risk context. A payroll company's priorities differ dramatically from a manufacturing firm's.</span></div>
+      <div class="cheat-pill"><strong>Use Community Profiles as Starting Points</strong><span>Many small businesses operate in sectors with available Community Profiles — healthcare, financial services, manufacturing, education. These sector baselines provide a calibrated starting point without requiring expertise to build from scratch.</span></div>
+      <div class="cheat-pill"><strong>Leverage Managed Security Services</strong><span>Small organizations can achieve DETECT and RESPOND outcomes through managed security service providers (MSSPs) — accessing enterprise-grade capabilities at a subscription price rather than building internal teams for capabilities that don't justify full-time dedicated staff.</span></div>
+      <div class="cheat-pill"><strong>Connect CSF to Cyber Insurance</strong><span>Cyber insurance underwriters increasingly use CSF-aligned questions in their applications. Organizations that document their CSF implementation often qualify for better coverage terms and lower premiums — making CSF investment commercially justified beyond security outcomes alone.</span></div>
+      <div class="cheat-pill"><strong>Progress Over Perfection</strong><span>A small business moving from Tier 1 (ad hoc) to Tier 2 (management-approved practices) achieves real, meaningful security improvement — even if Tier 4 remains years away. The framework supports incremental progress, not only comprehensive transformation.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The coffee shop vs. hospital contrast:</strong> A coffee shop and a hospital both benefit from NIST CSF — but appropriate profiles look completely different. The hospital needs comprehensive, Tier 3-4 capabilities because patient safety depends on system availability and data confidentiality. The coffee shop needs to protect customer payment data and their point-of-sale system — a narrower, simpler profile at a lower tier. CSF accommodates both because it's outcome-based and context-driven, not prescriptive and uniform.</div>`,
+    quiz: { q: "A 20-person legal firm wants to start using NIST CSF but has no dedicated IT security staff. What is the most practical starting approach?", opts: ["Implement all 106 subcategories simultaneously using an outside consultant", "Start with GOVERN (document who owns security, risk appetite, applicable regulations), identify the 15-20 outcomes most critical to their specific risk context (client confidentiality, malpractice risk), use any available legal sector Community Profile, and implement incrementally with managed services for capabilities beyond internal capacity", "Wait until they can hire a dedicated CISO before using any framework", "Only implement PROTECT outcomes — the other functions require security specialists"], ans: 1, explain: "The most effective approach for a resource-constrained small firm: establish governance foundations first (accountability, risk appetite, applicable legal requirements — which for a law firm include attorney-client privilege and various state bar requirements), focus on the outcomes most critical to their context, leverage any available Community Profile to avoid starting from scratch, and use managed services for capabilities like DETECT and RESPOND that would require specialist staff they can't justify full-time. Start with GOVERN; build incrementally." }
+  },
+  {
+    title: "NIST CSF and Enterprise Risk Management",
+    tagline: "Connecting cybersecurity risk to every other organizational risk the board manages",
+    body: `<p>NIST CSF 2.0 doesn't position cybersecurity as a separate technical discipline — it explicitly integrates cybersecurity risk into broader <span class="key-term">Enterprise Risk Management (ERM)</span>. This integration is strategically important: until cybersecurity risk appears in the board's portfolio of organizational risks alongside financial risk, operational risk, and legal risk, security investment remains perpetually underfunded and disconnected from business strategy.</p>
+    <div class="highlight-box">CSF 2.0's GOVERN function explicitly connects to ERM through GV.RM (Risk Management Strategy) and GV.OV (Oversight). The outcomes require that cybersecurity risk receives the same systematic, board-visible treatment as other organizational risks — evaluated in business-impact terms (financial loss, operational disruption, regulatory penalties, reputational damage) rather than technical terms (vulnerability counts, patch status) that business leaders cannot evaluate or act on.</div>
+    <p>How CSF connects to NIST's broader risk management ecosystem:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>NIST Risk Management Framework (RMF — SP 800-37)</strong><span>The federal system authorization process. CSF GOVERN aligns with RMF Prepare; IDENTIFY with Categorize; PROTECT with Select and Implement; DETECT and RESPOND with Assess; RECOVER with Monitor. Federal agencies use both simultaneously — CSF for enterprise governance, RMF for individual system authorization.</span></div>
+      <div class="cheat-pill"><strong>NIST Risk Assessment (SP 800-30)</strong><span>The detailed risk assessment methodology that produces the assessments required by CSF's IDENTIFY function (ID.RA). Organizations using CSF for governance and SP 800-30 for assessment methodology have a complete, standards-based risk management program.</span></div>
+      <div class="cheat-pill"><strong>NIST Privacy Framework</strong><span>Parallel structure to CSF (Identify-Govern-Control-Communicate-Protect). CSF 2.0 references Privacy Framework outcomes in several subcategories, acknowledging that cybersecurity and privacy risk require integrated management particularly under GDPR, CCPA, and other privacy regulations.</span></div>
+      <div class="cheat-pill"><strong>NIST AI Risk Management Framework</strong><span>Released January 2023. Addresses risks specific to AI systems — performance reliability, bias, explainability, privacy, security. CSF addresses cybersecurity of AI infrastructure; AI RMF extends to AI-specific risks. Critical for organizations Jason is targeting in AI Governance Program Management roles.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The board risk portfolio analogy:</strong> A Chief Risk Officer manages a portfolio — credit risk, market risk, operational risk, legal risk, reputational risk. Cybersecurity risk must appear in that portfolio expressed in comparable terms: "A successful ransomware attack against our patient records system has an estimated financial impact of $15-50 million including remediation, notification, regulatory fines, and reputational damage, with a 35% probability in the next 36 months based on industry data." That's the language GOVERN enables — and it's what transforms cybersecurity from an IT expense into a board-level risk management discussion.</div>`,
+    quiz: { q: "How does the NIST AI Risk Management Framework (AI RMF) relate to NIST CSF for organizations deploying AI systems?", opts: ["The AI RMF replaces CSF for all AI-related security concerns", "They are complementary frameworks: CSF addresses cybersecurity risks affecting AI systems (unauthorized access, infrastructure failures, training data breaches); the AI RMF addresses AI-specific risks (model bias, unexplainable decisions, misuse). Together they provide complete risk coverage for AI deployments.", "The AI RMF only applies to federal agencies deploying AI", "AI systems are exempt from CSF requirements because they're technology, not business systems"], ans: 1, explain: "CSF and the AI RMF are complementary, not competing. CSF addresses whether the infrastructure running an AI system is secure — protecting against unauthorized access, data breaches, and availability failures that would affect the AI system as any other system. The AI RMF addresses risks unique to AI — that the model produces systematically biased outputs, fails in unexpected ways, can't explain its decisions, or is deliberately misused. Organizations deploying AI in important contexts should use both frameworks concurrently." }
+  },
+  {
+    title: "NIST CSF in Regulated Industries",
+    tagline: "How healthcare, finance, energy, and government sectors apply the framework",
+    body: `<p>While NIST CSF 2.0 is explicitly designed for all organizations, regulated industries have specific relationships with the framework that reflect both its original critical infrastructure focus and decade-long evolution. Understanding these sector-specific applications is essential for compliance professionals who will work across multiple regulatory environments.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Healthcare (HIPAA + CSF)</strong><span>HHS has explicitly endorsed using NIST CSF as a guide for HIPAA Security Rule implementation. The HIPAA Security Rule's administrative, physical, and technical safeguard categories map directly to CSF Functions. HITRUST CSF aligns HIPAA, NIST CSF, and ISO 27001 into one healthcare-specific framework. HHS published a specific CSF-to-HIPAA crosswalk that organizations can use directly.</span></div>
+      <div class="cheat-pill"><strong>Financial Services (FFIEC + CSF)</strong><span>The FFIEC (Federal Financial Institutions Examination Council) integrated CSF into its IT Examination Handbook and published a Cybersecurity Assessment Tool (CAT) mapped to CSF outcomes. Banks, credit unions, and other regulated financial institutions use CSF alongside FFIEC examination guidance and often SOC 2 for vendor assurance.</span></div>
+      <div class="cheat-pill"><strong>Energy and Critical Infrastructure</strong><span>CSF was born from energy sector needs (EO 13636). NERC CIP (North American Electric Reliability Corporation Critical Infrastructure Protection) standards for the electrical grid have official CSF mappings. Energy organizations often use CSF for enterprise-level cybersecurity governance while meeting NERC CIP mandatory standards for grid-specific operational technology.</span></div>
+      <div class="cheat-pill"><strong>Federal Government (FISMA + CSF)</strong><span>Federal agencies must follow NIST standards under FISMA. Executive Order 14028 (2021) directed federal agencies to adopt CSF. The relationship: CSF provides enterprise governance (the "what to achieve") while NIST SP 800-53 provides the detailed federal control catalog (the "how to achieve it") for individual system authorization through the RMF.</span></div>
+    </div>
+    <div class="highlight-box"><strong>CISA and CSF implementation support:</strong> The Cybersecurity and Infrastructure Security Agency (CISA) works alongside NIST to support CSF adoption in the 16 critical infrastructure sectors. CISA provides free technical assistance, sector-specific resources, and Community Profile development support. Organizations in critical infrastructure sectors can access CISA's cybersecurity advisory services, which increasingly use CSF as the common reference framework for identifying and addressing organizational security gaps.</div>
+    <div class="analogy-box"><strong>CSF as the governance layer, sector requirements as the compliance layer:</strong> In virtually every regulated industry, CSF serves as the enterprise governance framework (the strategic management layer) while sector-specific regulations serve as specific compliance requirements (the tactical obligation layer). CSF ensures security decisions align with organizational strategy and risk context. HIPAA, PCI-DSS, NERC CIP, and FISMA ensure specific regulatory obligations are met. The two layers reinforce each other — CSF gives coherence and strategic direction; sector requirements give specific regulatory precision.</div>`,
+    quiz: { q: "A hospital uses NIST CSF for enterprise cybersecurity governance alongside HIPAA Security Rule compliance for PHI protection. Why is this a sound integrated approach rather than unnecessary duplication?", opts: ["Using both creates regulatory risk from conflicting requirements", "CSF provides the strategic governance structure ensuring security aligns with organizational mission and risk appetite; HIPAA provides the specific regulatory requirements for PHI protection. They operate at different levels and reinforce each other — CSF is the management framework, HIPAA is the specific compliance obligation within it.", "HIPAA supersedes NIST CSF in healthcare, making CSF irrelevant for hospitals", "CSF comprehensively satisfies all HIPAA requirements, making separate HIPAA compliance work unnecessary"], ans: 1, explain: "Using CSF for governance alongside HIPAA for PHI-specific compliance is the approach HHS endorses. CSF ensures the organization has a coherent, strategic approach to cybersecurity risk management aligned with its patient care mission and business strategy. HIPAA provides specific requirements for PHI that must be met regardless of the governance framework used. The two frameworks address different questions: CSF asks 'how should we govern cybersecurity risk across the enterprise?'; HIPAA asks 'what specifically must we do to protect patient health information?'" }
+  },
+  {
+    title: "Executive Order 14028 and Its Impact on CSF 2.0",
+    tagline: "How the Biden Administration's cybersecurity executive order reshaped the framework",
+    body: `<p><span class="key-term">Executive Order 14028</span> — "Improving the Nation's Cybersecurity" — signed by President Biden in May 2021, directly shaped the development of CSF 2.0. It responded to a wave of high-profile incidents that exposed fundamental gaps in national cybersecurity posture, and its requirements flowed directly into the framework update process.</p>
+    <div class="highlight-box"><strong>The incidents behind EO 14028:</strong> Three incidents in rapid succession demonstrated the scale of national cybersecurity vulnerability: the SolarWinds supply chain attack (December 2020, compromising 18,000+ organizations including federal agencies through a trusted software update), the Microsoft Exchange Server mass exploitation (March 2021, affecting hundreds of thousands of organizations), and the Colonial Pipeline ransomware attack (May 2021, disrupting fuel supply to 45% of the US East Coast). EO 14028 was signed just days after Colonial Pipeline.</div>
+    <p>Key EO 14028 directives that shaped CSF 2.0:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Software Supply Chain Security</strong><span>Directed NIST to define "critical software" and establish minimum security standards for software supply chains. This directly drove CSF 2.0's expanded and elevated GV.SC (Supply Chain Risk Management) category — moving supply chain from a sub-topic to a dedicated GOVERN category.</span></div>
+      <div class="cheat-pill"><strong>Zero Trust Architecture</strong><span>Required federal agencies to develop Zero Trust implementation plans. Zero Trust principles — verify explicitly, use least privilege, assume breach — align directly with CSF PROTECT (PR.AA access control) and DETECT (DE.CM continuous monitoring) outcomes.</span></div>
+      <div class="cheat-pill"><strong>Logging and Detection</strong><span>Directed improved logging, detection, and investigation capabilities for federal agencies. This reinforced CSF DETECT's Continuous Monitoring outcomes and drove emphasis on centralized log collection and analysis in CSF 2.0's updated guidance.</span></div>
+      <div class="cheat-pill"><strong>Incident Response Standards</strong><span>Directed creation of a standard federal incident response playbook. This informed CSF 2.0's RESPOND outcomes — particularly RS.MA (Incident Management) and RS.CO (Reporting and Communication) — emphasizing pre-documented, tested response procedures over improvised response.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The Colonial Pipeline lesson:</strong> The ransomware attack succeeded using compromised contractor credentials (supply chain risk) and forced operators to proactively shut down the pipeline's operational technology systems — not because OT was directly compromised, but because IT/OT network segmentation was insufficient to guarantee separation. The attack demonstrated that cyber risk has physical, economic, and national security consequences. EO 14028 responded by demanding systemic improvements across both federal and private sector cybersecurity — with CSF 2.0 as the primary implementation vehicle.</div>`,
+    quiz: { q: "How did the SolarWinds attack directly influence a specific structural change in NIST CSF 2.0?", opts: ["SolarWinds led NIST to add more prescriptive technical controls to PROTECT", "SolarWinds demonstrated that trusted supply chain compromises could devastate thousands of organizations simultaneously — directly driving the elevation of supply chain risk management to a dedicated GV.SC category in GOVERN, signaling it requires board-level strategic governance", "SolarWinds caused NIST to remove supply chain content from the framework as too sensitive", "SolarWinds only affected federal agency compliance requirements, not the CSF framework itself"], ans: 1, explain: "The SolarWinds attack proved supply chain risk is a board-level strategic issue — not just a technical vendor management problem. When a trusted software update can silently compromise 18,000 organizations including government agencies, supply chain risk requires the same strategic governance as any other major organizational risk. CSF 2.0 responded by elevating supply chain risk management from a subcategory within other functions to GV.SC — its own dedicated GOVERN category — signaling that supply chain cybersecurity requires explicit, sustained board-level attention." }
+  },
+  {
+    title: "NIST CSF and CMMC — The Governance Layer Above Compliance",
+    tagline: "How defense contractors can use CSF to govern their CMMC compliance program",
+    body: `<p>For organizations in the US defense supply chain, NIST CSF and CMMC serve different but deeply complementary functions. Understanding their relationship enables defense contractors to build more efficient, coherent compliance programs rather than treating them as separate, competing obligations.</p>
+    <div class="highlight-box"><strong>The key relationship in one sentence:</strong> CMMC specifies the specific security requirements defense contractors must meet to protect CUI; NIST CSF provides the governance framework for managing the security program that implements those requirements. CMMC is the destination you must reach; CSF is the management system for the journey.</div>
+    <p>How each CSF function supports a CMMC compliance program:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>GOVERN → CMMC Program Leadership</strong><span>CSF GOVERN ensures senior leadership owns CMMC as an organizational priority (not just an IT project), risk appetite explicitly addresses CUI protection, supply chain risk management addresses subcontractor CMMC flow-down requirements, and roles are clear about who is accountable for each CMMC domain.</span></div>
+      <div class="cheat-pill"><strong>IDENTIFY → CMMC Scoping</strong><span>CSF IDENTIFY asset management outcomes directly enable CMMC scoping — identifying which systems, applications, personnel, and locations handle FCI or CUI and therefore fall within the CMMC assessment boundary. Poor IDENTIFY = poor scoping = assessment surprises.</span></div>
+      <div class="cheat-pill"><strong>PROTECT → CMMC Level 2 Controls</strong><span>CMMC Level 2's 14 domains and 110 practices are the specific implementation requirements for achieving CSF PROTECT outcomes in a DoD CUI environment. CSF provides the governance language; NIST SP 800-171 provides the specific requirements.</span></div>
+      <div class="cheat-pill"><strong>DETECT → CMMC Audit and Accountability</strong><span>CSF DETECT's continuous monitoring outcomes map directly to CMMC's AU (Audit and Accountability) domain — maintaining audit logs of CUI system access, analyzing them for anomalies, and alerting on suspicious activity patterns.</span></div>
+      <div class="cheat-pill"><strong>RESPOND → CMMC Incident Response</strong><span>CSF RESPOND outcomes align with CMMC's IR (Incident Response) domain, including the DoD-specific 72-hour cyber incident reporting requirement to DC3 and the requirement to preserve system images for 90 days following significant incidents.</span></div>
+      <div class="cheat-pill"><strong>RECOVER → CMMC Resilience</strong><span>CSF RECOVER outcomes inform backup and recovery requirements that support CMMC's CA (Security Assessment) domain's system availability requirements and help defense contractors build resilience against ransomware — a significant and escalating threat to the DIB.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Reporting up and down the compliance stack:</strong> A defense contractor CISO can report to the board using CSF language: "Our GOVERN and IDENTIFY capabilities are at Tier 3; DETECT is our primary gap at Tier 2, which is the root cause of our current CMMC audit findings." The security team works to CMMC Level 2's specific domain requirements. The assessor validates CMMC practices. The board understands strategic security posture in CSF terms. One security program, multiple stakeholder views — each using the appropriate framework for their audience.</div>`,
+    quiz: { q: "A defense contractor achieves CMMC Level 2 certification but has no documented risk management strategy, no defined risk appetite, and no formal supply chain security requirements for their subcontractors. Which CSF function is critically deficient?", opts: ["PROTECT — because technical controls are missing", "GOVERN — CMMC Level 2 certification addresses technical practices but doesn't require the strategic governance foundations that CSF GOVERN mandates: risk strategy, defined risk appetite, roles and accountability, and supply chain risk management", "IDENTIFY — because risk assessments weren't conducted", "DETECT — because monitoring is inadequate"], ans: 1, explain: "CMMC Level 2 certification validates that 110 specific security practices are implemented — but it doesn't require a documented risk management strategy, explicit risk appetite, or formalized supply chain risk management for subcontractors. These are exactly what CSF GOVERN requires. An organization can be CMMC Level 2 certified and GOVERN-deficient simultaneously — having technical compliance without strategic governance. This is why using CSF as the governance layer above CMMC compliance produces a more resilient, strategically coherent security program." }
+  },
+  {
+    title: "Building a CSF-Based Security Program",
+    tagline: "A practical roadmap for implementing NIST CSF 2.0 from first principles",
+    body: `<p>Understanding NIST CSF conceptually is the starting point. Implementing it effectively in a real organization is the goal. Here's what a practical, phased CSF 2.0 implementation actually looks like — from securing initial commitment through continuous operation.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Phase 1: Establish Governance First</strong><span>Before any technical control deployment: secure genuine leadership commitment, define who owns security decisions and with what authority, establish risk appetite, inventory all applicable regulatory requirements, and initiate supply chain risk identification. These GOVERN foundations make every subsequent security activity coherent and accountable.</span></div>
+      <div class="cheat-pill"><strong>Phase 2: Create an Honest Current Profile</strong><span>Assess the actual current state of each CSF outcome — what's genuinely working, what's partially implemented, and what's completely absent. This requires candor, not optimism. A falsely positive Current Profile produces a misleading gap analysis and a useless roadmap.</span></div>
+      <div class="cheat-pill"><strong>Phase 3: Define a Realistic Target Profile</strong><span>Establish target states for prioritized outcomes, informed by risk appetite, regulatory requirements, and business objectives. Be honest about resource constraints — a Target Profile that requires 10x current budget is not a planning tool, it's a wish list. Targets should be ambitious but achievable in the planning period.</span></div>
+      <div class="cheat-pill"><strong>Phase 4: Gap Analysis and Prioritization</strong><span>Compare Current and Target Profiles. Identify gaps. Prioritize by: risk reduction potential, regulatory obligation, business impact of closure, and resource requirements. This is where strategic security investment decisions are made — and where GOVERN's risk appetite is operationalized into specific project priorities.</span></div>
+      <div class="cheat-pill"><strong>Phase 5: Build the Roadmap</strong><span>Create a time-phased implementation plan with specific milestones, named owners, resource requirements, and success metrics for each priority gap. The roadmap is the living document connecting strategic security intent to specific operational activities with accountability.</span></div>
+      <div class="cheat-pill"><strong>Phase 6: Implement, Measure, and Communicate</strong><span>Execute the roadmap while simultaneously establishing the metrics program. Measure progress toward Target Profile outcomes. Communicate progress to leadership in CSF terms — reporting on outcome achievement, not activity completion. Security programs without visible metrics don't maintain investment.</span></div>
+      <div class="cheat-pill"><strong>Phase 7: Review and Improve Continuously</strong><span>Regularly review profile achievement, incorporate incident lessons learned, update for regulatory changes and emerging threats, and update both Current and Target Profiles as the security program matures. The PDCA improvement cycle applies to the CSF program itself, not just the security activities within it.</span></div>
+      <div class="cheat-pill"><strong>Common Fatal Mistake: Skipping GOVERN</strong><span>The most common and damaging implementation error is bypassing GOVERN entirely to deploy security tools directly. This produces fragmented controls without strategic direction, unclear accountability, no risk-based prioritization, and inability to demonstrate business value. The CSF implementation always starts with GOVERN — without exception.</span></div>
+    </div>
+    <div class="highlight-box"><strong>CSF for board reporting:</strong> One of the most practical CSF benefits is enabling executive-level security reporting in business language. Instead of "we blocked 12 million attacks," CSF enables: "Our Current Profile shows strong IDENTIFY and PROTECT capabilities at Tier 3. Our primary gap is DETECT, currently at Tier 2 — this is the root cause of our extended dwell time in last quarter's incident. Our Q2 investment in managed detection services is projected to move DETECT to Tier 3 by year end, reducing our exposure to this risk class by an estimated 60%." That's a conversation boards can engage with, question, and fund.</div>`,
+    quiz: { q: "An organization deploys next-generation firewalls, endpoint detection software, and a SIEM system without first establishing governance foundations. What fundamental problem does this create?", opts: ["Technical tools are always the correct starting point — governance can be added later", "Without GOVERN foundations — risk appetite, accountability, policy, roles — there is no strategic context determining what the tools should monitor for, no accountability for acting on alerts, and no way to evaluate whether the investment is achieving meaningful security outcomes", "The problem is choosing the wrong tools — better technology would overcome the governance gap", "This approach is fine for small organizations that can't afford formal governance"], ans: 1, explain: "Deploying tools without governance foundations creates expensive security theater. Without defined risk appetite, nobody can rationally prioritize what the SIEM should alert on — every alert becomes equally important or equally ignored. Without clear accountability, nobody owns the responsibility to act on alerts. Without policy, there are no rules defining what constitutes a security event requiring response. CSF's emphasis on starting with GOVERN reflects a consistent finding: governance failures are the most common root cause of security program ineffectiveness, regardless of the quality of technical tools deployed." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've completed all 30 days of NIST CSF 2.0! Let's take a final inventory of everything you now understand about the most widely used cybersecurity framework in the United States — and increasingly, the world.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>NIST CSF 2.0 is a voluntary cybersecurity framework published by NIST (National Institute of Standards and Technology) in February 2024. Free, publicly available, and applicable to all organizations of any size and sector. Outcome-focused rather than prescriptive — describes what to achieve, not which technology to use. Provides common language for managing cybersecurity risk. Driven by Executive Orders 13636 (2013) and 14028 (2021).</p>
+    <div class="tag-header">The 6 Core Functions</div>
+    <div class="fn-govern" style="margin-bottom:4px"><b>GV — GOVERN (NEW in 2.0)</b> — 6 Categories. Establishes strategy, expectations, and policy. The foundational governance function placed first.</div>
+    <div class="fn-identify" style="margin-bottom:4px"><b>ID — IDENTIFY</b> — 2 Categories. Asset Management + Risk Assessment. Know what you have and what risks threaten it.</div>
+    <div class="fn-protect" style="margin-bottom:4px"><b>PR — PROTECT</b> — 4 Categories. Identity/Access, Awareness/Training, Data Security, Platform Security.</div>
+    <div class="fn-detect" style="margin-bottom:4px"><b>DE — DETECT</b> — 1 Category. Continuous Monitoring. Find and analyze cybersecurity events fast.</div>
+    <div class="fn-respond" style="margin-bottom:4px"><b>RS — RESPOND</b> — 4 Categories. Incident Management, Analysis, Communication, Mitigation.</div>
+    <div class="fn-recover"><b>RC — RECOVER</b> — 2 Categories. Recovery Plan Execution + Recovery Communication.</div>
+    <div class="tag-header">4 Implementation Tiers</div>
+    <div class="badge-row">
+      <span class="badge badge-green">Tier 1 — Partial (ad hoc, reactive)</span>
+      <span class="badge badge-amber">Tier 2 — Risk Informed (management-approved)</span>
+      <span class="badge badge-coral">Tier 3 — Repeatable (organizational policy)</span>
+      <span class="badge badge-red">Tier 4 — Adaptive (continuously improving)</span>
+    </div>
+    <div class="tag-header">Key Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-red">Current Profile — where you are</span>
+      <span class="badge badge-red">Target Profile — where you want to be</span>
+      <span class="badge badge-red">Gap Analysis — your security roadmap</span>
+      <span class="badge badge-red">Community Profiles — sector-specific baselines</span>
+      <span class="badge badge-red">CSF Reference Tool — free online mapping tool</span>
+      <span class="badge badge-red">6 Functions, 22 Categories, 106 Subcategories</span>
+      <span class="badge badge-red">Tiers ≠ maturity levels — appropriate tier depends on risk context</span>
+      <span class="badge badge-red">GOVERN → IDENTIFY → PROTECT → DETECT → RESPOND → RECOVER (all concurrent)</span>
+    </div>
+    <div class="tag-header">Critical Framework Relationships</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">NIST SP 800-53 — federal control catalog implementing CSF outcomes</span>
+      <span class="badge badge-blue">NIST SP 800-171 / CMMC — CMMC practices implement CSF outcomes for CUI</span>
+      <span class="badge badge-gray">ISO 27001 — parallel international standard; ~80% conceptual overlap</span>
+      <span class="badge badge-purple">CIS Controls v8 — prescriptive implementation guide for CSF outcomes</span>
+      <span class="badge badge-pink">HIPAA — CSF provides governance; HIPAA provides PHI-specific requirements</span>
+      <span class="badge badge-teal">NIST AI RMF — companion framework for AI-specific risks</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete NIST CSF 2.0 cheat sheet — all 6 functions, all 22 categories, implementation tiers, profile concepts, key numbers, and framework relationships summarized in one comprehensive reference.</div>`,
+    quiz: { q: "What was the most important structural addition in NIST CSF 2.0, and why does its placement first in the framework matter?", opts: ["Adding 50 new subcategories — volume of guidance is the most important factor", "Adding the GOVERN function and placing it first — because governance is the prerequisite for effective security management: without risk strategy, accountability, policy, and oversight, technical security activities lack direction, prioritization, and the management structures needed to operate effectively", "Adding mandatory certification requirements for compliant organizations", "Adding more prescriptive technical controls to PROTECT"], ans: 1, explain: "The GOVERN function is the most important CSF 2.0 addition, and its placement first is intentional and significant. NIST placed it first to signal that governance is the prerequisite for everything else — without defined risk appetite, clear accountability, policy, and oversight, even technically excellent security activities become disconnected, unprioritized, and impossible to defend as rational business investments. GOVERN turns security activities into a managed, strategic program." }
+  },
+  {
+    title: "NIST CSF 2.0 Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is NIST CSF 2.0?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">NIST Cybersecurity Framework 2.0. Published by NIST (National Institute of Standards and Technology, US Department of Commerce) in February 2024. Voluntary — not legally required, but referenced in many regulations and contracts. Free — publicly available at nist.gov. Applies to all organizations of any size, sector, or geography. Outcome-focused (what to achieve), not prescriptive (which technology to use). Most widely used cybersecurity framework in the US, with growing global adoption. Driven by Executive Order 13636 (2013, which created CSF 1.0) and Executive Order 14028 (2021, which directed CSF 2.0). Previous versions: CSF 1.0 (2014), CSF 1.1 (2018).</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The 6 Core Functions — 22 Categories — 106 Subcategories</h3>
+      <div class="fn-govern"><b>GV — GOVERN (NEW in 2.0)</b> — 6 Categories<br><span style="font-size:12px;color:#1a1a18">Establishes and monitors cybersecurity risk management strategy, expectations, and policy. PLACED FIRST — governance is foundational to all other functions.<br>GV.OC — Organizational Context (mission, stakeholders, legal requirements, dependencies)<br>GV.RM — Risk Management Strategy (risk appetite, risk tolerance, strategic priorities)<br>GV.RR — Roles, Responsibilities, and Authorities (clear ownership and accountability)<br>GV.PO — Policy (written, enforced, regularly reviewed security policies)<br>GV.OV — Oversight (active senior leadership review and direction)<br>GV.SC — Cybersecurity Supply Chain Risk Management (supplier security requirements, monitoring, response)</span></div>
+      <div class="fn-identify"><b>ID — IDENTIFY</b> — 2 Categories<br><span style="font-size:12px;color:#1a1a18">Understand current cybersecurity risks to the organization.<br>ID.AM — Asset Management (inventory hardware, software, data, services, personnel, facilities; map data flows; understand asset criticality)<br>ID.RA — Risk Assessment (identify threats and vulnerabilities; evaluate likelihood and impact; prioritize risks by business consequence)</span></div>
+      <div class="fn-protect"><b>PR — PROTECT</b> — 4 Categories<br><span style="font-size:12px;color:#1a1a18">Use safeguards to manage cybersecurity risks.<br>PR.AA — Identity Management, Authentication, and Access Control (credentials, MFA, least privilege, physical access)<br>PR.AT — Awareness and Training (security awareness for all; role-specific training for privileged users; phishing simulations)<br>PR.DS — Data Security (encryption at rest and in transit; data classification; secure disposal)<br>PR.PS — Platform Security (secure configuration; patch management; software integrity verification)</span></div>
+      <div class="fn-detect"><b>DE — DETECT</b> — 1 Category<br><span style="font-size:12px;color:#1a1a18">Find and analyze possible cybersecurity attacks and compromises.<br>DE.CM — Continuous Monitoring (monitor assets, users, networks; analyze detected events; reduce dwell time)</span></div>
+      <div class="fn-respond"><b>RS — RESPOND</b> — 4 Categories<br><span style="font-size:12px;color:#1a1a18">Take action on detected cybersecurity incidents.<br>RS.MA — Incident Management (execute IR plan; triage incidents; activate response teams)<br>RS.AN — Incident Analysis (forensic investigation; root cause; attack timeline)<br>RS.CO — Reporting and Communication (notify regulators, customers, law enforcement; internal leadership updates)<br>RS.MI — Incident Mitigation (contain, eradicate, restore to known-good state)</span></div>
+      <div class="fn-recover"><b>RC — RECOVER</b> — 2 Categories<br><span style="font-size:12px;color:#1a1a18">Restore assets and operations after cybersecurity incidents.<br>RC.RP — Incident Recovery Plan Execution (restore systems per documented procedures; validate before bringing online)<br>RC.CO — Incident Recovery Communication (stakeholder updates during restoration; cyber insurance coordination; post-incident review)</span></div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>4 Implementation Tiers</h3>
+      <div class="tier-grid">
+        <div class="tier-1c"><strong style="color:#27500A">Tier 1 — Partial</strong><br><span style="font-size:12px">Ad hoc, reactive. No formal program. Limited awareness of cybersecurity risk. Inconsistent response to events.</span></div>
+        <div class="tier-2c"><strong style="color:#633806">Tier 2 — Risk Informed</strong><br><span style="font-size:12px">Management-approved practices. Based on organizational risk objectives. Not yet consistent organization-wide policy.</span></div>
+        <div class="tier-3c"><strong style="color:#4A1B0C">Tier 3 — Repeatable</strong><br><span style="font-size:12px">Formal organizational policy. Applied consistently. Regularly reviewed and updated. External cybersecurity information sharing.</span></div>
+        <div class="tier-4c"><strong style="color:#501313">Tier 4 — Adaptive</strong><br><span style="font-size:12px">Continuously improving. Real-time threat intelligence. Active sector information sharing. Cybersecurity embedded in culture at all levels.</span></div>
+      </div>
+      <p style="font-size:12.5px;color:#6b6b68;margin-top:.5rem"><strong>CRITICAL:</strong> Tiers are NOT a maturity scale where Tier 4 is always the goal. The appropriate tier depends entirely on the organization's risk context, data sensitivity, and the business consequences of security failures. A Tier 4 approach for a small bakery is unnecessary; a Tier 2 approach for a nuclear facility is dangerous.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Profiles — The Navigation System</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Current Profile</b> — Honest description of cybersecurity outcomes currently achieved. Where you actually are. Requires candor not optimism. Used as baseline for gap analysis.</div>
+        <div class="ctrl-card"><b>Target Profile</b> — Desired outcomes based on risk appetite, regulatory requirements, and business objectives. Where you aim to be. Must be realistic given resource constraints.</div>
+        <div class="ctrl-card"><b>Gap Analysis</b> — Comparison of Current and Target Profiles. Identifies improvement priorities. Directly drives security investment decisions. The cybersecurity roadmap.</div>
+        <div class="ctrl-card"><b>Community Profiles</b> — Sector-specific baselines developed by industry groups (healthcare, financial services, energy). Starting points for individual organizations in that sector — reduces blank-page problem.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Framework Relationships</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>NIST SP 800-53</b> — Federal control catalog. CSF = governance "what"; 800-53 = detailed federal "how." Federal agencies use both under FISMA. CMMC Level 3 derives from 800-172 (800-53 subset).</div>
+        <div class="ctrl-card"><b>NIST SP 800-171 / CMMC</b> — CMMC Level 2's 110 practices implement CSF PROTECT/DETECT outcomes for CUI in defense environments. CSF provides the governance layer above CMMC compliance.</div>
+        <div class="ctrl-card"><b>ISO 27001</b> — International certifiable ISMS standard. ~80% conceptual overlap with CSF. CSF = US governance framework (voluntary); ISO 27001 = international management system (certifiable). Reference Tool shows mappings.</div>
+        <div class="ctrl-card"><b>CIS Controls v8</b> — Prescriptive implementation guidance for CSF outcomes. CIS Controls IG2 implements many CSF PROTECT and DETECT subcategory outcomes. Reference Tool maps CIS Controls to CSF subcategories.</div>
+        <div class="ctrl-card"><b>HIPAA</b> — HHS endorses CSF for HIPAA Security Rule implementation. CSF = enterprise governance framework; HIPAA = PHI-specific compliance requirements within that framework. HITRUST aligns both.</div>
+        <div class="ctrl-card"><b>NIST AI RMF</b> — Companion framework for AI-specific risks (bias, explainability, misuse). CSF addresses cybersecurity of AI infrastructure; AI RMF addresses AI-specific risks. Use both concurrently for AI deployments.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts</h3>
+      <div class="badge-row">
+        <span class="badge badge-red">Published: February 2024 (CSF 2.0)</span>
+        <span class="badge badge-red">Previous: CSF 1.0 (2014), CSF 1.1 (2018)</span>
+        <span class="badge badge-red">Publisher: NIST — National Institute of Standards and Technology</span>
+        <span class="badge badge-red">Cost: FREE — publicly available at nist.gov</span>
+        <span class="badge badge-red">6 Functions (GOVERN is new in 2.0)</span>
+        <span class="badge badge-red">22 Categories</span>
+        <span class="badge badge-red">106 Subcategories (down from 108 in v1.1)</span>
+        <span class="badge badge-red">4 Implementation Tiers (Partial → Risk Informed → Repeatable → Adaptive)</span>
+        <span class="badge badge-red">EO 13636 (Feb 2013): Created CSF 1.0</span>
+        <span class="badge badge-red">EO 14028 (May 2021): Directed CSF 2.0 update</span>
+        <span class="badge badge-red">CSF Reference Tool: csrc.nist.gov (free, searchable, exportable)</span>
+        <span class="badge badge-red">Voluntary — but referenced in HIPAA, FISMA, EOs, contracts</span>
+        <span class="badge badge-red">Applies to ALL organizations (not just critical infrastructure)</span>
+        <span class="badge badge-red">Community Profiles: sector-specific baselines for faster adoption</span>
+        <span class="badge badge-red">Tiers ≠ maturity scores — context determines appropriate tier</span>
+        <span class="badge badge-red">GOVERN categories: OC, RM, RR, PO, OV, SC</span>
+        <span class="badge badge-red">IDENTIFY categories: AM (Asset Mgmt), RA (Risk Assessment)</span>
+        <span class="badge badge-red">PROTECT categories: AA, AT, DS, PS</span>
+        <span class="badge badge-red">DETECT categories: CM (Continuous Monitoring only)</span>
+        <span class="badge badge-red">RESPOND categories: MA, AN, CO, MI</span>
+        <span class="badge badge-red">RECOVER categories: RP, CO</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

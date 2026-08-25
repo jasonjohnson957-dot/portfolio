@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO 42001 — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat { background: #185FA5; color: #E6F1FB; border-color: #185FA5; }
+  .day-pip.cheat.active { background: #0C447C; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #E1F5EE; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #085041; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #0F6E56; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #0F6E56; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #E1F5EE; color: #085041; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #E6F1FB; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #0F6E56; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-gray   { background: #F1EFE8; color: #444441; }
+  .badge-pink   { background: #FBEAF0; color: #4B1528; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .clause-card { background: #E1F5EE; border: 0.5px solid #9FE1CB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .clause-card b { font-size: 13px; font-weight: 500; color: #085041; }
+  .annex-card { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .annex-card b { font-size: 13px; font-weight: 500; color: #0F6E56; }
+  .pdca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .pdca-plan { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .pdca-do   { background: #E1F5EE; border: 0.5px solid #9FE1CB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .pdca-check { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .pdca-act  { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  @media (max-width: 520px) { .cheat-grid, .control-row, .pdca-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day ISO 42001 curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>ISO 42001 — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title: "What Is ISO 42001?",
+    tagline: "The world's first international standard for managing AI responsibly",
+    body: `<p>You've probably heard about artificial intelligence — AI that writes essays, diagnoses diseases, approves loans, or drives cars. But who makes sure the organizations building and using these AI systems are doing so responsibly? That's exactly what <span class="key-term">ISO 42001</span> was created for.</p>
+    <p>ISO 42001 is the world's first international standard specifically designed for <strong>AI Management Systems</strong>. Its full official name is <em>ISO/IEC 42001:2023 — Information technology — Artificial intelligence — Management system</em>. It was published in <strong>December 2023</strong> and gives organizations a structured framework for responsible AI governance.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of ISO 42001 like a driver's education program for organizations using AI. It doesn't tell them which car to drive — it teaches them how to drive responsibly. Just like driver's ed covers safety rules, emergency procedures, and what to do when something goes wrong, ISO 42001 covers how to govern AI systems: identifying risks, setting policies, training staff, and making sure AI is used fairly and safely.</div>
+    <p>ISO 42001 defines requirements for an <span class="key-term">AIMS</span> — an <strong>Artificial Intelligence Management System</strong>. The word "management system" is key: this isn't a one-time checklist. It's an ongoing organizational process — a living system that gets better over time.</p>
+    <div class="highlight-box">ISO 42001 applies to any organization — regardless of size, industry, or location — that develops, provides, or uses AI systems. A hospital using AI for diagnosis, a bank using AI for loan decisions, a government agency using AI to process benefits claims, a startup building AI tools — all are in scope.</div>`,
+    quiz: { q: "What does AIMS stand for in the context of ISO 42001?", opts: ["Automated Intelligence Management Software", "Artificial Intelligence Management System", "AI Inspection and Monitoring Standard", "Advanced IT Management Structure"], ans: 1, explain: "AIMS stands for Artificial Intelligence Management System — the core concept of ISO 42001. It's a management system (an ongoing organizational process) specifically designed to govern how AI is developed, deployed, and used responsibly." }
+  },
+  {
+    title: "Why Was ISO 42001 Created?",
+    tagline: "The AI governance gap that demanded a global solution",
+    body: `<p>By the early 2020s, AI was being deployed in life-changing decisions — who gets a job offer, who gets approved for a mortgage, how a medical diagnosis is made, how criminal sentencing recommendations are formed. Yet there was no globally accepted standard for how organizations should govern these systems.</p>
+    <div class="highlight-box"><strong>The problem:</strong> Hundreds of organizations worldwide were using AI in high-stakes situations with no common baseline for safety, fairness, transparency, or accountability. Different countries were developing different rules. Different industries had different expectations. There was no universal language for responsible AI governance — and no way to independently verify whether an organization was actually doing it.</div>
+    <p>Several catalysts pushed the international standards community to act:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">High-profile AI bias incidents in hiring, lending, and criminal justice</span>
+      <span class="badge badge-teal">Growing regulatory pressure — EU AI Act, US Executive Orders on AI</span>
+      <span class="badge badge-teal">Enterprise customers demanding proof of responsible AI practices</span>
+      <span class="badge badge-teal">Lack of a common global vocabulary for AI governance</span>
+      <span class="badge badge-teal">Increasing AI use in safety-critical sectors: healthcare, transport, finance</span>
+    </div>
+    <div class="analogy-box"><strong>Think of it this way:</strong> Before international food safety standards existed, a jar of food labeled "safe" in one country might be considered dangerous in another. ISO created universal food safety standards so that "safe food" means the same thing everywhere. ISO 42001 does the same for AI: it creates a globally shared understanding of what "responsibly managed AI" looks like — regardless of country, industry, or AI application.</div>
+    <p>ISO 42001 was developed through an international collaborative process involving experts from over 40 countries — ensuring it reflects diverse perspectives on what responsible AI governance requires, not just one country's or industry's view.</p>`,
+    quiz: { q: "Which of the following best describes the core problem ISO 42001 was created to solve?", opts: ["AI systems were running too slowly", "There was no globally accepted standard for how organizations should govern AI responsibly", "AI was too expensive for small businesses", "Programmers needed better coding guidelines"], ans: 1, explain: "ISO 42001 addresses the absence of a globally accepted framework for AI governance. Without it, there was no universal language or verifiable standard for what 'responsibly managed AI' actually means — making it impossible to consistently assess or compare AI governance practices across organizations." }
+  },
+  {
+    title: "ISO — Who Makes These Standards?",
+    tagline: "Understanding the global organization behind the world's most trusted standards",
+    body: `<p>Before we go deeper into ISO 42001, it helps to understand who <span class="key-term">ISO</span> is and why their standards carry so much weight. ISO stands for the <strong>International Organization for Standardization</strong> — a non-governmental organization founded in 1947, headquartered in Geneva, Switzerland.</p>
+    <p>ISO brings together national standards bodies from over <strong>165 countries</strong>. When a new standard is developed, experts from all member countries contribute to drafting, reviewing, and voting on it. This makes ISO standards genuinely international — not dominated by any single country's perspective.</p>
+    <div class="analogy-box"><strong>ISO analogy:</strong> Think of ISO like the United Nations, but for technical and business standards instead of political diplomacy. Just as the UN brings together countries to agree on international laws and norms, ISO brings together national standards bodies to agree on technical requirements that make the world function more smoothly. When ISO says a standard is ready, it reflects genuine international consensus.</div>
+    <div class="highlight-box">ISO 42001 was developed jointly by <strong>ISO</strong> (International Organization for Standardization) and <strong>IEC</strong> (International Electrotechnical Commission) — which is why it's formally called ISO/IEC 42001. IEC specializes in electrical, electronic, and related technologies. For AI — which is fundamentally a technology — joint ISO/IEC development ensures both the organizational management perspective (ISO) and the technology standards perspective (IEC) are represented.</div>
+    <p>ISO standards are used in over 165 countries. Organizations can be independently certified against ISO standards — meaning an external auditor verifies that the organization genuinely meets the standard's requirements. This certification is recognized globally, giving it market credibility that voluntary self-assessments lack.</p>
+    <div class="info-box"><strong>Other important ISO standards you'll encounter in GRC:</strong> ISO 27001 (Information Security), ISO 9001 (Quality Management), ISO 31000 (Risk Management), ISO 14001 (Environmental Management). These all share a similar structure to ISO 42001 — which makes learning one standard helpful for understanding all the others.</div>`,
+    quiz: { q: "Why do ISO standards carry significant international credibility compared to national or industry-specific standards?", opts: ["Because ISO is a government organization", "Because ISO standards are developed through consensus by experts from over 165 countries", "Because ISO standards are legally mandatory worldwide", "Because ISO is headquartered in the United States"], ans: 1, explain: "ISO standards are credible because they're developed through a rigorous international consensus process involving national standards bodies from over 165 countries. This broad input ensures the standards reflect diverse perspectives and are truly international rather than dominated by one country's approach." }
+  },
+  {
+    title: "The High-Level Structure — ISO's Common Framework",
+    tagline: "Why ISO 42001 looks familiar if you know ISO 27001",
+    body: `<p>One of the most important things to understand about ISO 42001 is its structure. ISO 42001 follows ISO's <span class="key-term">High-Level Structure (HLS)</span> — a common framework used by all modern ISO management system standards.</p>
+    <p>This means ISO 42001 has the same 10-clause skeleton as ISO 27001 (information security), ISO 9001 (quality management), and ISO 14001 (environmental management). The structure is identical — only the specific requirements within each clause differ.</p>
+    <div class="highlight-box">The 10 clauses of ISO 42001 (and all modern ISO management system standards):<br><br>
+    Clauses 1–3: Introduction (scope, normative references, terms) — not auditable requirements<br>
+    Clause 4: Context of the Organization<br>
+    Clause 5: Leadership<br>
+    Clause 6: Planning<br>
+    Clause 7: Support<br>
+    Clause 8: Operation<br>
+    Clause 9: Performance Evaluation<br>
+    Clause 10: Improvement</div>
+    <div class="analogy-box"><strong>Why this matters enormously:</strong> If your organization already has an ISO 27001 certification, you already have the organizational infrastructure — the policies, audit processes, management review cadence, documentation system — to implement ISO 42001. The specific content is different, but the frame is identical. Organizations that know ISO 27001 can implement ISO 42001 much faster because they're building on a familiar foundation.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Benefits of the HLS</strong><span>Easy integration with other ISO standards. Auditors can assess multiple standards simultaneously. Consistent terminology across standards. Familiar structure for experienced practitioners.</span></div>
+      <div class="cheat-pill"><strong>What changes between standards</strong><span>The specific requirements within each clause. The subject matter (AI vs. information security vs. quality). Annex A controls. The specific risks and objectives being addressed.</span></div>
+    </div>`,
+    quiz: { q: "Why is the ISO High-Level Structure (HLS) valuable for organizations already certified to ISO 27001?", opts: ["Because ISO 27001 automatically grants ISO 42001 certification", "Because both standards use the same 10-clause framework — organizations already have the management infrastructure in place", "Because the HLS removes the need for external audits", "Because ISO 27001 covers all AI-related requirements"], ans: 1, explain: "The HLS means ISO 42001 uses the same 10-clause management system framework as ISO 27001. Organizations with ISO 27001 already have the governance infrastructure (policies, audits, management reviews, documentation) — they add ISO 42001-specific content to a familiar, existing structure." }
+  },
+  {
+    title: "The PDCA Cycle — The Engine of Improvement",
+    tagline: "Plan, Do, Check, Act — the loop that makes management systems work",
+    body: `<p>At the heart of every ISO management system standard — including ISO 42001 — is the <span class="key-term">PDCA cycle</span>: <strong>Plan, Do, Check, Act</strong>. This four-stage loop is the fundamental mechanism that drives continuous improvement in any management system.</p>
+    <div class="pdca-grid">
+      <div class="pdca-plan"><strong style="color:#0C447C">PLAN (Clauses 4, 5, 6)</strong><br><span style="font-size:12px;color:#1a1a18">Establish the AIMS. Understand context and stakeholders. Set AI policy. Identify risks and opportunities. Define objectives and controls. Design the system before implementing it.</span></div>
+      <div class="pdca-do"><strong style="color:#085041">DO (Clauses 7, 8)</strong><br><span style="font-size:12px;color:#1a1a18">Implement and operate the AIMS. Provide resources. Train people. Execute operational controls. Manage the AI system life cycle. Put the plan into action.</span></div>
+      <div class="pdca-check"><strong style="color:#633806">CHECK (Clause 9)</strong><br><span style="font-size:12px;color:#1a1a18">Monitor, measure, analyze, and evaluate. Conduct internal audits. Perform management review. Verify the system is working as intended. Gather evidence of effectiveness.</span></div>
+      <div class="pdca-act"><strong style="color:#501313">ACT (Clause 10)</strong><br><span style="font-size:12px;color:#1a1a18">Take action on findings. Address nonconformities. Correct problems. Continually improve the AIMS. Then start the cycle again — Plan for the next iteration.</span></div>
+    </div>
+    <div class="analogy-box"><strong>PDCA analogy:</strong> Imagine you're training for a race. Plan = decide your training schedule and target time. Do = actually run every day as scheduled. Check = review your race times, compare to targets, identify where you're falling short. Act = adjust the training plan based on what you learned. Then repeat the whole cycle next month. ISO 42001 applies this same iterative logic to AI governance: plan it, do it, check it, fix it, and repeat continuously.</div>
+    <div class="highlight-box">The PDCA cycle is why ISO 42001 is a management <em>system</em> — not just a policy document. A policy sits on a shelf. A management system loops continuously: it plans, executes, measures its own performance, and improves itself. That self-correcting loop is what makes ISO 42001 genuinely effective over time rather than becoming obsolete.</div>`,
+    quiz: { q: "A company implementing ISO 42001 discovers through internal audit that their AI bias monitoring process isn't working. They fix the process and update their controls. Which phase of PDCA does the 'fixing' represent?", opts: ["Plan — because they're designing a solution", "Do — because they're implementing the fix", "Check — because they're verifying the problem", "Act — because they're taking corrective action based on findings"], ans: 3, explain: "Act is the phase where you take action based on what the Check phase revealed. When an internal audit finds a problem and the organization corrects it and improves the system, that's the Act phase — turning findings into improvements, then beginning the next Plan cycle." }
+  },
+  {
+    title: "Key Roles in ISO 42001",
+    tagline: "Provider, operator, customer — who does what with AI",
+    body: `<p>ISO 42001 defines three primary roles that organizations can play in the AI ecosystem. Understanding these roles is essential because ISO 42001's requirements differ depending on which role — or combination of roles — your organization occupies.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>AI Provider</strong><span>An organization that develops an AI system and makes it available to others. Responsible for the AI system's design, development, training, testing, and documentation. Example: OpenAI provides ChatGPT. Google provides Gemini. A company that builds a medical diagnosis AI.</span></div>
+      <div class="cheat-pill"><strong>AI Operator (Deployer)</strong><span>An organization that deploys and uses an AI system in a product or service — often using an AI system built by a Provider. Responsible for appropriate use, monitoring outcomes, and managing the AI in their context. Example: A hospital that deploys a medical AI built by a tech company.</span></div>
+      <div class="cheat-pill"><strong>AI Customer (End User)</strong><span>The person or organization that ultimately uses the AI-powered product or service. May have limited visibility into how the AI works but is directly affected by its outputs. Example: A patient whose diagnosis is influenced by an AI system.</span></div>
+      <div class="cheat-pill"><strong>Dual Roles</strong><span>Many organizations play multiple roles simultaneously. A company might be an AI Provider (building a recruitment AI) AND an AI Operator (using a third-party AI for their own HR processes). ISO 42001 applies to all roles an organization plays.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Car industry analogy:</strong> Ford (AI Provider) designs and manufactures a car with self-driving features. A car rental company (AI Operator) puts that car in their fleet and rents it to customers. The person renting the car (AI Customer) uses the self-driving feature during their trip. Each party has different responsibilities: Ford must build the feature safely. The rental company must maintain the car and train customers. The customer must use it appropriately.</div>
+    <div class="highlight-box">ISO 42001 is primarily directed at AI Providers and AI Operators — the organizations building and deploying AI. The standard requires these organizations to consider impacts on AI Customers (end users) and affected communities in their risk assessments and impact assessments.</div>`,
+    quiz: { q: "A fintech startup uses a third-party AI model from a cloud provider to power its loan-approval decisions. What roles does the startup play?", opts: ["Only AI Provider — because it builds the loan product", "Only AI Customer — because it uses someone else's AI", "AI Operator — because it deploys and uses the third-party AI in its service", "Neither — fintech companies are exempt from ISO 42001"], ans: 2, explain: "The startup is an AI Operator — it deploys an AI system (built by the cloud provider/AI Provider) and uses it in delivering its own financial service. The startup is accountable for how that AI is used in context, even though it didn't build the underlying model." }
+  },
+  {
+    title: "Clause 4 — Context of the Organization (Part 1)",
+    tagline: "Knowing who you are and what world you operate in",
+    body: `<p><span class="key-term">Clause 4</span> is where every ISO management system begins: understanding the context of your organization. Before you can build an effective AI management system, you need a clear picture of your environment — the forces inside and outside your organization that affect AI governance.</p>
+    <div class="clause-card"><b>Clause 4.1 — Understanding the Organization and Its Context</b> — Determine the external and internal factors that are relevant to the organization's purpose and that affect its ability to achieve the intended outcomes of the AIMS.</div>
+    <p>External factors include:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">Regulatory environment (EU AI Act, GDPR, national AI laws)</span>
+      <span class="badge badge-teal">Industry standards and customer expectations</span>
+      <span class="badge badge-teal">Competitive landscape and market pressures</span>
+      <span class="badge badge-teal">Social attitudes toward AI and public trust</span>
+      <span class="badge badge-teal">Technology trends and the evolving AI landscape</span>
+    </div>
+    <p>Internal factors include:</p>
+    <div class="badge-row">
+      <span class="badge badge-green">The organization's strategy and business objectives</span>
+      <span class="badge badge-green">Existing governance structures and culture</span>
+      <span class="badge badge-green">Technical capabilities and resources</span>
+      <span class="badge badge-green">Existing policies and procedures</span>
+      <span class="badge badge-green">The organization's values and ethical commitments</span>
+    </div>
+    <div class="analogy-box"><strong>Why context matters:</strong> A startup building consumer apps faces a completely different context from a hospital network deploying diagnostic AI. The startup's biggest external factor might be gaining user trust. The hospital's biggest external factor is HIPAA compliance and patient safety regulations. ISO 42001 requires both to understand their specific context before building their AI governance system — because the same generic approach won't work for both.</div>
+    <div class="highlight-box">Clause 4.1 also requires organizations to understand the specific context of each AI system they develop or deploy. The purpose, intended use, deployment environment, and potential misuse of an AI system all affect what governance controls are appropriate.</div>`,
+    quiz: { q: "A healthcare company developing AI for patient diagnosis must understand which external factors when implementing ISO 42001 Clause 4.1?", opts: ["Only the cost of AI development tools", "Regulatory requirements (HIPAA, FDA), patient safety expectations, professional medical standards, and social trust in AI-assisted diagnosis", "Only internal technical capabilities", "Only what competitors are doing"], ans: 1, explain: "Clause 4.1 requires understanding all relevant external factors — for a healthcare AI company, these include healthcare regulations (HIPAA, FDA approval requirements), patient safety standards, professional medical ethics, public trust in AI diagnostics, and applicable AI-specific laws. Context shapes everything that follows." }
+  },
+  {
+    title: "Clause 4 — Stakeholders and Scope (Part 2)",
+    tagline: "Who cares about your AI — and what does your management system cover?",
+    body: `<p>The second half of Clause 4 deals with two critical questions: <em>Who are the stakeholders affected by your AI?</em> And <em>What exactly does your AI management system cover?</em></p>
+    <div class="clause-card"><b>Clause 4.2 — Understanding the Needs and Expectations of Interested Parties</b> — Identify the parties that have an interest in the AIMS and what they require from it. These are your stakeholders — the people and organizations whose needs your AI governance must address.</div>
+    <p>ISO 42001 stakeholders typically include:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">Customers and end users of AI-powered products</span>
+      <span class="badge badge-teal">Employees working with AI systems</span>
+      <span class="badge badge-teal">Regulators and government bodies</span>
+      <span class="badge badge-teal">Investors and shareholders</span>
+      <span class="badge badge-teal">Third-party AI providers and suppliers</span>
+      <span class="badge badge-teal">Communities affected by AI decisions</span>
+      <span class="badge badge-teal">Civil society organizations and advocacy groups</span>
+    </div>
+    <div class="clause-card"><b>Clause 4.3 — Determining the Scope of the AIMS</b> — Define the boundaries of your AI management system. Which AI systems are covered? Which parts of the organization? Which roles and activities?</div>
+    <div class="analogy-box"><strong>Scope is a strategic decision:</strong> A company can start with a narrow AIMS scope — covering only its highest-risk AI system — and expand coverage over time. Or it can go broad immediately, covering all AI systems across the entire organization. ISO 42001 doesn't require a specific scope width, but it does require that the scope be clearly documented and that it genuinely reflects the organization's AI activities. A scope so narrow it excludes all meaningful AI is not credible.</div>
+    <div class="clause-card"><b>Clause 4.4 — Artificial Intelligence Management System</b> — Having understood context and stakeholders, establish, implement, maintain, and continually improve the AIMS in accordance with ISO 42001. This is the commitment clause — it says "now build the system."</div>
+    <div class="highlight-box">Scope definition has legal and commercial implications. If an organization is certified to ISO 42001 for a specific scope, customers asking for proof of certification need to verify that the AI systems they care about fall within that scope. A narrow scope that excludes the relevant AI system makes the certification irrelevant for that customer's due diligence.</div>`,
+    quiz: { q: "A company certifies its ISO 42001 but defines the scope as covering only its internal IT tools, excluding the customer-facing AI that makes product recommendations. What problem does this create?", opts: ["No problem — ISO 42001 allows any scope definition", "The scope is credible because it's documented", "Customers concerned about the recommendation AI cannot rely on the certification — it doesn't cover the AI that affects them", "ISO 42001 only applies to internal AI systems anyway"], ans: 2, explain: "Scope matters enormously for stakeholders. If a company's certification scope excludes the AI system that customers care about, the certification provides no assurance for that system. Stakeholders must always verify that the scope of an ISO 42001 certification actually covers the relevant AI systems." }
+  },
+  {
+    title: "Clause 5 — Leadership and Top Management Commitment",
+    tagline: "Why AI governance must be owned at the very top",
+    body: `<p><span class="key-term">Clause 5</span> of ISO 42001 deals with leadership — the requirement that senior management and the board actively own, champion, and support the AI management system. This isn't about delegating AI governance to a junior IT team. It's about accountability at the highest organizational level.</p>
+    <div class="clause-card"><b>Clause 5.1 — Leadership and Commitment</b> — Top management must demonstrate leadership and commitment to the AIMS by: taking accountability for the effectiveness of the AIMS, ensuring alignment between AI policy and organizational strategy, integrating AIMS requirements into organizational processes, making resources available, communicating the importance of responsible AI, and promoting continual improvement.</div>
+    <div class="highlight-box">ISO 42001 makes explicit that top management cannot simply "approve" an AI policy and walk away. They must be actively engaged: reviewing performance, responding to significant AI incidents, ensuring the organization's values around AI are genuinely lived — not just stated. ISO uses the phrase "demonstrating leadership" specifically to distinguish active engagement from passive approval.</div>
+    <div class="analogy-box"><strong>Why leadership accountability matters:</strong> History is full of corporate disasters where boards and CEOs claimed they "didn't know" about problems that turned out to be systemic. ISO 42001 makes that excuse much harder to maintain. By requiring documented management review, board-level awareness of AI risks, and top management sign-off on the AI policy, the standard creates a clear accountability trail from AI risks all the way to the boardroom.</div>
+    <div class="warning-box"><strong>A common failure mode:</strong> Organizations assign ISO 42001 responsibility entirely to the legal or compliance team, who write excellent policies that nobody in the business reads or follows. Leadership then claims compliance because the documents exist. ISO 42001 Clause 5.1 explicitly requires that top management take personal accountability for AIMS effectiveness — not just sign documents. Auditors will probe this distinction.</div>`,
+    quiz: { q: "Under ISO 42001 Clause 5.1, what does 'top management demonstrating leadership' specifically require — beyond simply approving an AI policy?", opts: ["Publishing the AI policy on the company website", "Active accountability for AIMS effectiveness, resource allocation, integration into business processes, and personal commitment to continual improvement", "Attending one AI training session per year", "Delegating all AI decisions to the CISO"], ans: 1, explain: "Clause 5.1 requires that top management actively demonstrate leadership — not just sign documents. This includes taking personal accountability, ensuring strategic alignment, making resources available, communicating importance, and promoting improvement. Passive approval of a policy document does not satisfy this requirement." }
+  },
+  {
+    title: "Clause 5 — The AI Policy",
+    tagline: "The organization's public commitment to responsible AI",
+    body: `<p>One of the most visible outputs of Clause 5 is the <span class="key-term">AI policy</span> — the organization's formal statement of its principles, commitments, and objectives for AI governance. Think of it as the organization's "responsible AI constitution."</p>
+    <div class="clause-card"><b>Clause 5.2 — AI Policy</b> — Top management must establish an AI policy that: is appropriate to the purpose of the organization, provides a framework for setting AI objectives, includes a commitment to satisfying applicable requirements, includes a commitment to continual improvement, and considers the specific nature and context of AI systems used.</div>
+    <p>A well-written ISO 42001 AI policy typically addresses:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">The organization's values and ethical commitments regarding AI</span>
+      <span class="badge badge-teal">Commitment to human oversight of AI decisions</span>
+      <span class="badge badge-teal">Commitment to fairness and non-discrimination in AI</span>
+      <span class="badge badge-teal">Transparency requirements for AI systems</span>
+      <span class="badge badge-teal">Data protection and privacy principles</span>
+      <span class="badge badge-teal">Compliance with applicable AI regulations</span>
+      <span class="badge badge-teal">Accountability and governance structures</span>
+    </div>
+    <div class="analogy-box"><strong>AI Policy vs. a Mission Statement:</strong> A mission statement says "We want to be the best." An AI policy says "Here's exactly what we commit to doing — and not doing — with AI." The difference is specificity and accountability. An AI policy must be concrete enough that it's possible to check whether the organization is actually following it. "We use AI responsibly" is not a policy. "All AI systems affecting individual rights undergo a documented impact assessment before deployment" is a policy.</div>
+    <div class="highlight-box">The AI policy must be: documented, communicated to all relevant people within the organization, and available to relevant interested parties (customers, regulators). This last point means the AI policy is often publicly available — it's a trust signal to external stakeholders that the organization has genuinely committed to responsible AI governance, not just claimed it.</div>`,
+    quiz: { q: "An organization writes an AI policy that states 'We are committed to ethical AI.' Is this sufficient under ISO 42001 Clause 5.2?", opts: ["Yes — any commitment to ethical AI satisfies the requirement", "No — the policy must provide a framework for setting AI objectives, include specific commitments, and be appropriate to the organization's context. Vague statements are insufficient.", "Yes — as long as the board approves it", "Yes — as long as it is posted on the company website"], ans: 1, explain: "ISO 42001 requires the AI policy to be substantive — it must provide a framework for setting objectives, include commitments to satisfying requirements and continual improvement, and be appropriate to the organization's specific context. A vague general statement like 'We are committed to ethical AI' does not satisfy these requirements." }
+  },
+  {
+    title: "Clause 5 — Roles, Responsibilities, and Accountability",
+    tagline: "Who owns what in the AI management system",
+    body: `<p>The final requirement of Clause 5 is clear assignment of roles and responsibilities within the AIMS. Without this, accountability gets diffused — everyone is vaguely responsible, which means nobody is truly responsible.</p>
+    <div class="clause-card"><b>Clause 5.3 — Organizational Roles, Responsibilities, and Authorities</b> — Top management must ensure that responsibilities and authorities for relevant roles are assigned and communicated within the organization.</div>
+    <p>ISO 42001 requires clearly designated responsibilities for:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>AIMS Owner</strong><span>Senior leader accountable for the overall AI management system. Ensures the AIMS meets ISO 42001 requirements. Typically a CTO, CIO, CISO, or dedicated Chief AI Officer (CAIO).</span></div>
+      <div class="cheat-pill"><strong>AI Risk Owner</strong><span>Accountable for managing risks associated with specific AI systems. Often the business unit leader responsible for deploying or overseeing a particular AI application.</span></div>
+      <div class="cheat-pill"><strong>AI System Owner</strong><span>Responsible for the governance of a specific AI system — ensuring it operates within approved parameters, is monitored, and is properly documented throughout its lifecycle.</span></div>
+      <div class="cheat-pill"><strong>Internal Auditor</strong><span>Conducts internal audits of the AIMS to assess whether it is effective and conforming to ISO 42001 requirements. Must be independent of the activities they audit.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The "RACI" principle for AI:</strong> Just like in COBIT, effective governance requires that every AI-related activity has a clear owner. ISO 42001 Clause 5.3 establishes the same principle: ambiguous accountability is governance failure. If an AI system causes harm and nobody can point to the person responsible for its governance — that's a Clause 5.3 deficiency. Clear accountability is both an ethical obligation and a legal protection.</div>
+    <div class="highlight-box">The emergence of the <strong>Chief AI Officer (CAIO)</strong> role reflects this requirement. Organizations serious about ISO 42001 are creating dedicated senior roles responsible for AI governance — not just adding AI responsibilities to an existing IT or legal job description. The CAIO sits at the intersection of technology, ethics, risk, and business strategy.</div>`,
+    quiz: { q: "An organization's AI system causes biased outcomes, but no one can identify who was responsible for overseeing that system's governance. Which ISO 42001 clause has most directly failed?", opts: ["Clause 4.1 — Context of the Organization", "Clause 5.3 — Organizational Roles, Responsibilities, and Authorities", "Clause 8.1 — Operational Planning", "Clause 10.1 — Continual Improvement"], ans: 1, explain: "Clause 5.3 requires clear assignment of roles and responsibilities for the AIMS. If an AI governance failure occurs and accountability cannot be traced to a specific role, that's a Clause 5.3 failure — the organization did not properly assign and communicate responsibilities for AI system oversight." }
+  },
+  {
+    title: "Clause 6 — Planning and AI Risk",
+    tagline: "Understanding what could go wrong — before it does",
+    body: `<p><span class="key-term">Clause 6</span> is where planning happens — identifying risks and opportunities, establishing how to address them, and setting objectives for the AIMS. It's the "what could go wrong with AI, and what are we going to do about it?" clause.</p>
+    <div class="clause-card"><b>Clause 6.1 — Actions to Address Risks and Opportunities</b> — The organization must determine the risks and opportunities that need to be addressed to: ensure the AIMS achieves its intended outcomes, prevent or reduce undesired effects, and achieve continual improvement.</div>
+    <p>ISO 42001 distinguishes between two types of risk that organizations must assess:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>AIMS Risks</strong><span>Risks to the management system itself — that the AIMS might fail to function properly. Example: inadequate resources, untrained staff, poor documentation, ineffective monitoring. These are governance and process risks.</span></div>
+      <div class="cheat-pill"><strong>AI System Risks</strong><span>Risks from the AI systems themselves — that they might cause harm. Example: biased outputs, privacy violations, safety failures, misuse by operators, unintended consequences. These are technical and ethical AI risks.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The two-level risk analogy:</strong> Imagine a hospital has both "hospital management risks" (the administration might run out of budget, staff might not be trained on new equipment) and "patient care risks" (a drug might have side effects, a procedure might go wrong). ISO 42001 requires organizations to think about both: risks to the governance system and risks from the AI systems being governed. Both levels of risk can cause harm if unaddressed.</div>
+    <div class="highlight-box">ISO 42001 connects Clause 6.1 to two specific and detailed processes: the <strong>AI Risk Assessment</strong> (which we'll cover in Day 13) and the <strong>AI Impact Assessment</strong> (which we'll cover in Day 14). These are not simple checklists — they are structured analytical processes that form the core of ISO 42001's risk-based approach.</div>`,
+    quiz: { q: "ISO 42001 Clause 6.1 requires organizations to address two types of risk. What are they?", opts: ["Financial risk and reputational risk", "Risks to the AIMS (management system) itself and risks from AI systems (potential harms AI could cause)", "Cybersecurity risk and compliance risk", "Development risk and deployment risk"], ans: 1, explain: "ISO 42001 requires addressing both AIMS risks (risks that the management system won't function properly — governance failures) and AI system risks (risks from the AI causing harm — biased outputs, privacy violations, safety failures). Both levels must be understood and managed." }
+  },
+  {
+    title: "The AI Risk Assessment",
+    tagline: "Systematically identifying and evaluating what your AI could do wrong",
+    body: `<p>The <span class="key-term">AI risk assessment</span> is one of the most technically substantive requirements in ISO 42001. Unlike a generic organizational risk assessment, an AI risk assessment must consider the specific characteristics of AI systems that make their risks unique and sometimes difficult to predict.</p>
+    <div class="highlight-box">ISO 42001 requires a documented AI risk assessment that: identifies AI-specific risks, evaluates their likelihood and potential severity, considers the context and intended use, assesses risks to individuals and society (not just the organization), and informs the selection of controls from Annex A.</div>
+    <p>AI-specific risks that must be considered include:</p>
+    <div class="badge-row">
+      <span class="badge badge-coral">Bias and discriminatory outcomes</span>
+      <span class="badge badge-coral">Privacy violations through data processing or inference</span>
+      <span class="badge badge-coral">Safety failures in physical AI applications</span>
+      <span class="badge badge-coral">Lack of explainability in high-stakes decisions</span>
+      <span class="badge badge-coral">Adversarial attacks and model manipulation</span>
+      <span class="badge badge-coral">Dependency on training data quality</span>
+      <span class="badge badge-coral">Model drift over time as context changes</span>
+      <span class="badge badge-coral">Unintended use or misuse by operators</span>
+    </div>
+    <div class="analogy-box"><strong>Why AI risk is different from regular IT risk:</strong> A traditional IT system either works or it doesn't — it's binary. An AI system can work "correctly" by its technical metrics while still being harmful. A facial recognition system can be 99% accurate overall but 70% accurate for dark-skinned women — technically "working" but deeply discriminatory. AI risk assessment must go beyond technical performance metrics to evaluate fairness, social impact, and potential for harm to specific groups.</div>
+    <p>The risk assessment must be <strong>documented, reviewed periodically, and updated when significant changes occur</strong> — new AI systems are deployed, existing systems are modified, or the deployment context changes materially. A risk assessment done once and filed away does not meet ISO 42001's requirements.</p>`,
+    quiz: { q: "An AI hiring tool achieves 95% accuracy in predicting job performance, but analysis reveals it significantly disadvantages candidates from certain ethnic backgrounds. From an ISO 42001 AI risk assessment perspective, this represents:", opts: ["No risk — the accuracy rate is excellent", "A bias and discriminatory outcome risk — AI risk assessment must evaluate fairness and harm to specific groups, not just overall technical performance", "Only a legal risk — not an AI management risk", "A data quality risk only"], ans: 1, explain: "ISO 42001's AI risk assessment must go beyond technical performance metrics. A system that is technically accurate overall but discriminatory toward specific groups represents a significant bias risk — which the AI risk assessment must identify and address through appropriate controls, regardless of the overall accuracy figure." }
+  },
+  {
+    title: "The AI Impact Assessment",
+    tagline: "Understanding how your AI affects real people and society",
+    body: `<p>Alongside the risk assessment, ISO 42001 requires an <span class="key-term">AI impact assessment</span> — an evaluation of how an AI system might affect individuals, groups, communities, and society more broadly. Where the risk assessment focuses on risks to the organization, the impact assessment focuses on impacts on people outside the organization.</p>
+    <div class="highlight-box">The AI impact assessment asks: <em>"Who could be affected by this AI system — and how?"</em> It goes beyond simple risk identification to evaluate the broader social, ethical, and rights-based implications of deploying AI. It should be conducted before deployment and updated when the system or its context changes significantly.</div>
+    <p>An AI impact assessment typically covers:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Affected Groups</strong><span>Who will interact with or be affected by this AI? What characteristics do they have? Are any groups particularly vulnerable — children, people with disabilities, minorities, low-income communities?</span></div>
+      <div class="cheat-pill"><strong>Nature of Impact</strong><span>What decisions or actions does the AI influence? What are the potential positive and negative outcomes? How significant and reversible are potential harms?</span></div>
+      <div class="cheat-pill"><strong>Fairness Analysis</strong><span>Are the AI's outputs fair across different demographic groups? Could the system perpetuate or amplify existing inequalities? What is the risk of disparate impact?</span></div>
+      <div class="cheat-pill"><strong>Rights Implications</strong><span>Could the AI affect fundamental rights — privacy, freedom of expression, non-discrimination, due process? What safeguards exist? Is human oversight adequate?</span></div>
+    </div>
+    <div class="analogy-box"><strong>Impact assessment vs. risk assessment:</strong> Risk assessment asks "What could go wrong for us?" Impact assessment asks "Who could get hurt?" For a bank using AI for loan decisions: risk assessment identifies that the model might be inaccurate (organizational risk). Impact assessment identifies that certain communities might be systematically denied loans (societal impact). Both must be done — they address different dimensions of AI governance.</div>
+    <div class="info-box"><strong>Connection to other frameworks:</strong> ISO 42001's AI impact assessment is closely aligned with the EU AI Act's Fundamental Rights Impact Assessment (FRIA) and GDPR's Data Protection Impact Assessment (DPIA). Organizations subject to multiple frameworks can design one combined assessment process that satisfies all three requirements simultaneously.</div>`,
+    quiz: { q: "What is the primary difference between an AI risk assessment and an AI impact assessment under ISO 42001?", opts: ["Risk assessment is mandatory; impact assessment is optional", "Risk assessment focuses on risks to the organization; impact assessment focuses on impacts on people and society affected by the AI", "They are the same thing with different names", "Risk assessment covers security; impact assessment covers privacy"], ans: 1, explain: "The key distinction is perspective: risk assessment evaluates what could go wrong for the organization, while impact assessment evaluates how the AI affects individuals, groups, and society. Both are required and together provide a complete picture of AI governance responsibilities." }
+  },
+  {
+    title: "Clause 6 — AI Objectives and Planning",
+    tagline: "Setting measurable goals for your AI management system",
+    body: `<p>The final major requirement of Clause 6 is establishing <span class="key-term">AI objectives</span> — specific, measurable goals for what the AI management system is trying to achieve. Objectives turn the AI policy's commitments into concrete targets that can be tracked and verified.</p>
+    <div class="clause-card"><b>Clause 6.2 — AI Objectives and Planning to Achieve Them</b> — The organization must establish AI objectives at relevant functions and levels. Objectives must be consistent with the AI policy, measurable (where practicable), take into account applicable requirements, be monitored and communicated, and be updated as appropriate.</div>
+    <p>Well-written ISO 42001 AI objectives are SMART:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Specific</strong><span>"Reduce model bias in our hiring AI system for gender and ethnicity" — not "improve fairness."</span></div>
+      <div class="cheat-pill"><strong>Measurable</strong><span>"Achieve demographic parity within ±5% across all measured groups by Q4."</span></div>
+      <div class="cheat-pill"><strong>Achievable</strong><span>Set targets that are challenging but realistic given available resources.</span></div>
+      <div class="cheat-pill"><strong>Relevant</strong><span>Directly connected to the AI policy and the organization's most significant AI risks.</span></div>
+      <div class="cheat-pill"><strong>Time-bound</strong><span>With a clear deadline — not "eventually."</span></div>
+      <div class="cheat-pill"><strong>Owned</strong><span>Each objective has a named person accountable for achieving it.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Objectives link policy to action:</strong> An AI policy might say "We are committed to transparent AI." An AI objective turns that into: "By December 31, all customer-facing AI systems will have plain-language explanations of their decision logic available to affected individuals, owned by the Product team." The objective makes the policy commitment real, specific, and verifiable.</div>
+    <div class="highlight-box">ISO 42001 also addresses <strong>planning for changes to the AIMS</strong> (Clause 6.3) — requiring that when changes to the management system are needed, they are carried out in a planned manner that considers the purpose of the change, potential consequences, availability of resources, and allocation of responsibilities. AI management systems must evolve, but not chaotically.</div>`,
+    quiz: { q: "An AI objective that states 'We will work to make AI fairer over time' is problematic under ISO 42001 Clause 6.2. Why?", opts: ["Because fairness is not a valid AI objective", "Because it is not measurable, time-bound, or owned — making it impossible to assess whether the objective was achieved", "Because AI fairness is only relevant under GDPR, not ISO 42001", "Because objectives must only address security risks"], ans: 1, explain: "ISO 42001 requires AI objectives to be measurable (where practicable), monitored, and communicated. A vague statement like 'work to make AI fairer over time' cannot be measured or verified. A conforming objective would specify what fairness metric is targeted, to what value, by what date, and who is accountable." }
+  },
+  {
+    title: "Clause 7 — Resources and Competence",
+    tagline: "Governance requires the right people with the right skills",
+    body: `<p><span class="key-term">Clause 7</span> covers the support requirements for the AIMS — the infrastructure of people, knowledge, and communication that makes governance actually work. No matter how well-designed the management system, it fails without adequate support.</p>
+    <div class="clause-card"><b>Clause 7.1 — Resources</b> — The organization must determine and provide the resources needed for the establishment, implementation, maintenance, and continual improvement of the AIMS. Resources include: people, technology, budget, time, and expert knowledge.</div>
+    <div class="clause-card"><b>Clause 7.2 — Competence</b> — The organization must determine the necessary competence of persons working in AI-related roles, ensure they have that competence (through education, training, or experience), take actions to acquire necessary competence where gaps exist, and retain documented evidence of competence.</div>
+    <p>ISO 42001 requires competence in multiple dimensions:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">Technical AI competence — understanding how AI systems work</span>
+      <span class="badge badge-teal">AI ethics and responsible AI principles</span>
+      <span class="badge badge-teal">Regulatory knowledge — AI Act, GDPR, sector regulations</span>
+      <span class="badge badge-teal">Risk management and impact assessment skills</span>
+      <span class="badge badge-teal">AI system life cycle management</span>
+    </div>
+    <div class="analogy-box"><strong>The "AI literacy gap" problem:</strong> One of the most common governance failures in AI is the competence gap between AI builders and AI decision-makers. Data scientists build increasingly powerful AI systems. Executives make governance decisions about those systems without understanding what they're actually deciding. ISO 42001 Clause 7.2 requires bridging this gap: the people responsible for AI governance decisions must have sufficient competence to make those decisions meaningfully.</div>
+    <div class="highlight-box">ISO 42001 is one of the few management standards that explicitly addresses <strong>AI-specific technical competence</strong> as a governance requirement — not just management skills. Understanding concepts like model drift, training data bias, explainability limitations, and adversarial robustness is necessary for meaningful AI governance. You can't govern what you don't understand.</div>`,
+    quiz: { q: "A company's AI governance committee is staffed entirely with business executives who have no technical understanding of how the AI systems they oversee actually work. Which ISO 42001 clause does this most directly violate?", opts: ["Clause 5.1 — Leadership commitment", "Clause 7.2 — Competence requirements", "Clause 8.1 — Operational planning", "Clause 9.2 — Internal audit"], ans: 1, explain: "Clause 7.2 requires that persons performing AI-related governance work have the necessary competence, including technical understanding. A governance committee that lacks technical AI competence cannot meaningfully assess AI risks, make informed governance decisions, or detect AI-related problems — making this a Clause 7.2 deficiency." }
+  },
+  {
+    title: "Clause 7 — Awareness, Communication, and Documentation",
+    tagline: "Getting information to the right people in the right way",
+    body: `<p>The remaining requirements of Clause 7 address how the organization communicates about AI governance internally and externally, and how it documents its AIMS.</p>
+    <div class="clause-card"><b>Clause 7.3 — Awareness</b> — Persons working under the organization's control must be aware of: the AI policy, their contribution to the effectiveness of the AIMS, the implications of not conforming to AIMS requirements, and their specific responsibilities regarding AI.</div>
+    <div class="clause-card"><b>Clause 7.4 — Communication</b> — Determine what needs to be communicated about the AIMS, when, to whom, how, and by whom. This covers both internal communication (employees, management) and external communication (customers, regulators, affected communities).</div>
+    <div class="clause-card"><b>Clause 7.5 — Documented Information</b> — Create, control, and maintain documented information required by ISO 42001 plus any additional documentation the organization determines is necessary. Documents must be available, protected, controlled for changes, and retained appropriately.</div>
+    <div class="analogy-box"><strong>Documented information in practice:</strong> ISO 42001 requires documentation at three levels: policies (what we commit to), procedures (how we do things), and records (evidence that we did them). A hospital's AI governance might document: their AI policy (commitment), their AI impact assessment procedure (how they assess impacts), and completed impact assessment records for each deployed AI system (evidence of assessment). All three levels are necessary — policy alone means nothing without evidence of execution.</div>
+    <div class="highlight-box">ISO 42001 is deliberately not prescriptive about documentation formats. Organizations can use documents, databases, systems, or other formats. The requirement is that information is <em>controlled</em> (proper version management, access controls), <em>available</em> when needed, and <em>protected</em> from inappropriate changes. A well-maintained wiki can satisfy documentation requirements as well as a traditional policy library.</div>`,
+    quiz: { q: "An employee using an AI-powered customer service tool doesn't know what to do when the AI makes an obviously wrong recommendation. Which Clause 7 requirement has most likely failed?", opts: ["Clause 7.1 — Resources (insufficient technology)", "Clause 7.3 — Awareness (the employee wasn't trained on their AI responsibilities)", "Clause 7.5 — Documentation (policies aren't written down)", "Clause 7.4 — Communication (management didn't communicate the strategy)"], ans: 1, explain: "Clause 7.3 requires that employees are aware of their specific responsibilities regarding AI and what to do when something goes wrong. An employee who doesn't know how to handle an AI failure was never adequately made aware of their AIMS responsibilities — a Clause 7.3 gap." }
+  },
+  {
+    title: "Clause 8 — Operational Planning and Control",
+    tagline: "Turning governance plans into operational reality",
+    body: `<p><span class="key-term">Clause 8</span> is where the rubber meets the road — it covers the actual operation of the AIMS, implementing the plans made in Clause 6 and ensuring AI systems are governed throughout their entire life cycle.</p>
+    <div class="clause-card"><b>Clause 8.1 — Operational Planning and Control</b> — Plan, implement, control, and maintain the processes needed to meet AIMS requirements. Ensure controls are established for identified risks and impacts. Document processes sufficiently to ensure they can be carried out as intended. Control planned changes and review unintended changes.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Planned controls</strong><span>Proactive measures put in place before AI systems are deployed. Example: requiring an impact assessment as a gate before any new AI system goes live.</span></div>
+      <div class="cheat-pill"><strong>Operational controls</strong><span>Controls operating continuously while AI systems are in use. Example: automated monitoring for model drift, regular fairness audits, incident reporting mechanisms.</span></div>
+      <div class="cheat-pill"><strong>Change controls</strong><span>Governance over modifications to AI systems. Any significant change to a deployed AI system should trigger re-assessment of risks and impacts.</span></div>
+      <div class="cheat-pill"><strong>Outsourced processes</strong><span>When AI processes are outsourced or rely on third-party AI, the organization remains responsible for ensuring those processes meet AIMS requirements.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The outsourcing responsibility principle:</strong> A hospital that outsources its AI diagnostic system to a third-party vendor cannot outsource its accountability. ISO 42001 Clause 8.1 is clear: outsourcing a process doesn't outsource the governance responsibility. The hospital must ensure the vendor's AI meets the hospital's AIMS requirements — through contracts, audits, and ongoing monitoring. "We used a vendor" is not an excuse for an AI governance failure.</div>
+    <div class="warning-box"><strong>Unplanned changes are a major risk:</strong> AI systems can change in subtle ways — model updates from vendors, data distribution shifts, changes in user behavior — that weren't planned and might not be immediately noticed. Clause 8.1 requires processes to detect and review unintended changes to ensure they don't silently undermine the governance controls that were put in place.</div>`,
+    quiz: { q: "A company's AI vendor pushes an update to their shared AI model without the company's knowledge. The updated model starts producing different outputs. Under ISO 42001 Clause 8.1, what should have been in place?", opts: ["Nothing — vendor updates are the vendor's responsibility", "A process to detect and review unintended changes to AI systems — and a contractual mechanism requiring vendor notification of significant updates", "An updated impact assessment but only after problems are discovered", "Only internal monitoring, not vendor controls"], ans: 1, explain: "Clause 8.1 requires processes to detect and review unintended changes, and responsibility for outsourced AI processes remains with the organization. This requires contractual obligations on vendors to notify of significant changes, combined with monitoring to detect when AI behavior shifts unexpectedly." }
+  },
+  {
+    title: "Clause 8 — The AI System Life Cycle",
+    tagline: "Governing AI from first idea to final decommission",
+    body: `<p>ISO 42001's most operationally detailed requirement is its approach to the <span class="key-term">AI system life cycle</span> — the sequence of phases every AI system goes through, from initial concept to eventual retirement. The standard requires governance controls at every phase.</p>
+    <div class="highlight-box">The ISO 42001 AI system life cycle phases (based on ISO/IEC 22989 AI concepts standard):<br><br>
+    <strong>1. Conception</strong> → <strong>2. Design & Development</strong> → <strong>3. Verification & Validation</strong> → <strong>4. Deployment</strong> → <strong>5. Operation & Monitoring</strong> → <strong>6. Decommissioning</strong></div>
+    <p>Key governance requirements at each phase:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Conception</strong><span>Define intended purpose, use cases, and out-of-scope uses. Conduct initial risk and impact assessment. Gain governance approval before proceeding.</span></div>
+      <div class="cheat-pill"><strong>Design & Development</strong><span>Apply responsible AI principles in design. Ensure training data quality and governance. Document model architecture and design decisions. Build in explainability where possible.</span></div>
+      <div class="cheat-pill"><strong>Verification & Validation</strong><span>Test for accuracy, fairness, robustness, and security. Validate that the system meets its intended purpose. Document test results and any identified issues.</span></div>
+      <div class="cheat-pill"><strong>Deployment</strong><span>Formal deployment authorization. User documentation and training. Establish operational monitoring. Confirm controls are in place and working.</span></div>
+      <div class="cheat-pill"><strong>Operation & Monitoring</strong><span>Continuous monitoring for performance, fairness, and safety. Manage incidents. Handle feedback from users and affected parties. Periodic re-assessment.</span></div>
+      <div class="cheat-pill"><strong>Decommissioning</strong><span>Safe and documented retirement. Data disposal per privacy requirements. Knowledge capture. Assessment of any ongoing obligations to affected parties.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why decommissioning matters:</strong> Organizations often focus intensely on AI deployment and forget about end-of-life. But a decommissioned AI system may leave behind training data, model weights, decision records, and ongoing contractual obligations. Poorly handled AI decommissioning can create privacy violations, audit gaps, and liability exposure.</div>`,
+    quiz: { q: "An AI-powered credit scoring system is being retired. Under ISO 42001's life cycle requirements, which of the following is a necessary decommissioning step?", opts: ["Simply turning off the servers hosting the model", "Documenting the retirement, properly disposing of personal data per privacy requirements, capturing knowledge, and addressing any ongoing obligations to affected parties", "Only informing the IT team", "Archiving all model outputs indefinitely"], ans: 1, explain: "ISO 42001's decommissioning phase requires: documented retirement process, data disposal according to privacy requirements (GDPR, etc.), knowledge capture about the system's performance and lessons learned, and assessment of ongoing obligations to parties who were affected by the AI system's decisions." }
+  },
+  {
+    title: "Clause 8 — Managing AI Suppliers",
+    tagline: "Your AI's supply chain is your responsibility",
+    body: `<p>Very few organizations build all their AI capabilities from scratch. Most use a combination of pre-built AI models, cloud AI services, third-party datasets, and specialized AI tools. ISO 42001 requires organizations to govern this entire <span class="key-term">AI supply chain</span>.</p>
+    <div class="clause-card"><b>Clause 8.4 — Suppliers and Third-Party Relationships</b> — When AI-related processes or products are obtained from external providers, establish and apply criteria for selection and evaluation. Communicate requirements. Monitor and review supplier performance. Retain documented information of these activities.</div>
+    <p>AI supply chain governance requires addressing:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">Foundation model providers (OpenAI, Google, Anthropic, Meta)</span>
+      <span class="badge badge-teal">Cloud AI services (AWS AI, Azure AI, Google Cloud AI)</span>
+      <span class="badge badge-teal">Training data vendors and data brokers</span>
+      <span class="badge badge-teal">AI development tools and MLOps platforms</span>
+      <span class="badge badge-teal">AI annotation and labeling services</span>
+      <span class="badge badge-teal">AI testing and audit service providers</span>
+    </div>
+    <div class="analogy-box"><strong>The supply chain responsibility principle:</strong> When a car manufacturer uses a brake component from a supplier that turns out to be defective, the car manufacturer cannot simply blame the supplier. They had an obligation to vet that supplier, specify safety requirements, and monitor quality. ISO 42001 applies the same principle to AI: if you use a third-party AI model that turns out to be biased or unsafe, you cannot simply blame the model provider. You were responsible for proper supplier governance.</div>
+    <div class="highlight-box">This requirement is increasingly significant as <strong>foundation model providers</strong> (companies providing large language models and other general-purpose AI) become central to many organizations' AI strategies. ISO 42001 requires that organizations using these models conduct appropriate due diligence — reviewing providers' own AI governance practices, understanding training data provenance, and establishing contractual obligations around model behavior and updates.</div>`,
+    quiz: { q: "A company uses a third-party AI model to power its customer chatbot. The model provider updates the model, and it starts giving inaccurate financial advice. Under ISO 42001 Clause 8.4, what should the company have had in place?", opts: ["Nothing — the model provider is solely responsible", "Supplier evaluation criteria, contractual requirements around model behavior and notification of changes, and ongoing performance monitoring of the third-party AI", "A disclaimer on the chatbot about AI limitations", "Quarterly meetings with the model provider"], ans: 1, explain: "Clause 8.4 requires selection criteria for AI suppliers, communicated requirements (including behavioral standards), and ongoing monitoring of supplier performance. The company should have contractually required the provider to notify them of significant model changes and should have been monitoring chatbot outputs for quality and accuracy." }
+  },
+  {
+    title: "Clause 9 — Monitoring and Measurement",
+    tagline: "You can't improve what you don't measure",
+    body: `<p><span class="key-term">Clause 9</span> covers performance evaluation — how the organization monitors, measures, analyzes, and evaluates whether the AIMS is working. This is the CHECK phase of PDCA: verifying that what was planned and implemented is actually effective.</p>
+    <div class="clause-card"><b>Clause 9.1 — Monitoring, Measurement, Analysis, and Evaluation</b> — Determine what needs to be monitored and measured, the methods to use, when to perform analysis, and when to report results. Retain documented evidence of results. Evaluate the performance and effectiveness of the AIMS.</div>
+    <p>ISO 42001 performance monitoring operates at multiple levels:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>AI System Performance</strong><span>Is the AI performing as intended? Accuracy, fairness metrics, drift indicators, anomaly detection. Are outputs still matching expectations from when the system was deployed?</span></div>
+      <div class="cheat-pill"><strong>Control Effectiveness</strong><span>Are the implemented controls (from Annex A) actually working? Are impact assessments being completed? Is monitoring happening as required? Are incidents being reported?</span></div>
+      <div class="cheat-pill"><strong>Objective Achievement</strong><span>Are the AI objectives set in Clause 6.2 being met? Are fairness targets being hit? Are transparency commitments being honored?</span></div>
+      <div class="cheat-pill"><strong>Stakeholder Satisfaction</strong><span>How do affected parties — customers, employees, communities — perceive the AI systems and the organization's AI governance? Are concerns being surfaced and addressed?</span></div>
+    </div>
+    <div class="analogy-box"><strong>Model drift — a critical monitoring challenge:</strong> An AI system trained on data from 2022 might work perfectly in 2022 — and start failing in 2025 as the world changes. Customer behavior shifts. Regulatory requirements evolve. Social contexts change. AI systems must be continuously monitored for "drift" — gradual degradation in performance or fairness as the gap between training data and current reality grows. ISO 42001's monitoring requirements directly address this challenge.</div>`,
+    quiz: { q: "An organization discovers that its AI loan-approval model has drifted over 18 months — it now underperforms significantly for applicants in new geographic markets not well-represented in the original training data. Which Clause 9.1 monitoring should have caught this?", opts: ["Stakeholder satisfaction surveys", "AI system performance monitoring including fairness metrics and drift detection", "Supply chain monitoring", "Documentation review"], ans: 1, explain: "Clause 9.1 requires monitoring AI system performance, including fairness metrics. Regular monitoring of model performance across demographic groups and geographic markets should have detected the drift before it caused significant harm. This is a core reason why ongoing monitoring — not just pre-deployment testing — is required." }
+  },
+  {
+    title: "Clause 9 — Internal Audit and Management Review",
+    tagline: "Independent verification that the system is really working",
+    body: `<p>Two critical mechanisms in Clause 9 provide higher-level verification of AIMS effectiveness: <span class="key-term">internal audits</span> and <span class="key-term">management reviews</span>. Together, they create internal checks on whether the organization is genuinely conforming to ISO 42001 — not just claiming to.</p>
+    <div class="clause-card"><b>Clause 9.2 — Internal Audit</b> — Conduct internal audits at planned intervals to determine whether the AIMS conforms to the organization's own requirements and ISO 42001, and is effectively implemented and maintained. Auditors must be independent of the activities they audit.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Audit programme</strong><span>A planned schedule of internal audits covering all AIMS requirements over time. Risk-based — higher-risk areas get more frequent attention.</span></div>
+      <div class="cheat-pill"><strong>Auditor independence</strong><span>Internal auditors must be objective — they cannot audit their own work. Someone responsible for implementing a control should not audit whether that control works.</span></div>
+      <div class="cheat-pill"><strong>Audit findings</strong><span>Non-conformities and observations are documented, reported to management, and tracked to closure. Findings feed directly into Clause 10 continual improvement.</span></div>
+    </div>
+    <div class="clause-card"><b>Clause 9.3 — Management Review</b> — Top management must review the AIMS at planned intervals to ensure its continuing suitability, adequacy, and effectiveness. The review must consider: status of actions from previous reviews, changes in context or requirements, performance information, stakeholder feedback, opportunities for improvement.</div>
+    <div class="analogy-box"><strong>Why management review is different from internal audit:</strong> Internal audit is a technical check — "Is the system conforming?" Management review is a strategic check — "Is the system still the right system? Are our AI policies still appropriate? Are the risks we planned for still the right risks?" An AI management system that was appropriate in 2023 may need significant updates by 2026 as AI technology and regulations have evolved dramatically. Management review is the mechanism for catching strategic drift.</div>
+    <div class="highlight-box">Management review outputs must be documented and must include decisions and actions related to AIMS improvement. A management review that produces no outputs, recommendations, or action items suggests it isn't genuinely engaging with AIMS performance — and auditors will probe this.</div>`,
+    quiz: { q: "An ISO 42001 internal audit finds that the organization's AI impact assessment procedure isn't being followed for minor AI system updates. What should happen next under the standard?", opts: ["Document the finding and move on", "Document the non-conformity, report it to management, investigate the root cause, take corrective action, and verify that the corrective action was effective", "Immediately suspend the AI systems affected", "Revise the procedure to make compliance easier"], ans: 1, explain: "ISO 42001 requires that non-conformities are documented, reported, root-caused, corrected, and verified. A finding that procedures aren't being followed requires understanding why (root cause), fixing the immediate issue, taking action to prevent recurrence, and confirming the fix worked. 'Document and move on' without corrective action is itself a non-conformity." }
+  },
+  {
+    title: "Clause 10 — Improvement",
+    tagline: "Good is never good enough — the commitment to continual progress",
+    body: `<p><span class="key-term">Clause 10</span> completes the PDCA cycle by addressing how the organization acts on what it learned from monitoring, auditing, and management review. Improvement is not optional in ISO 42001 — it's explicitly required.</p>
+    <div class="clause-card"><b>Clause 10.1 — Continual Improvement</b> — The organization must continually improve the suitability, adequacy, and effectiveness of the AIMS. Not just maintain it — actively make it better over time.</div>
+    <div class="clause-card"><b>Clause 10.2 — Nonconformity and Corrective Action</b> — When a nonconformity occurs: react to it and control it, evaluate the need to eliminate the root cause, implement necessary actions, review the effectiveness of those actions, and update risks and opportunities if needed. Retain documented evidence of nonconformities and corrective actions.</div>
+    <div class="analogy-box"><strong>The root cause principle:</strong> The most important word in Clause 10.2 is "root cause." Treating a symptom without addressing the cause just means the problem comes back. If the symptom is "employees aren't completing AI impact assessments," the root cause might be: they weren't trained, the process is too burdensome, there's no management accountability, or they don't understand why it matters. Each root cause requires a different corrective action. ISO 42001 requires you to find and fix the actual cause — not just address the surface symptom.</div>
+    <div class="highlight-box"><strong>Three sources of improvement input in ISO 42001:</strong> (1) Corrective actions from nonconformities found in audits or incidents. (2) Outputs from management review identifying AIMS inadequacies. (3) Proactive improvement opportunities identified through monitoring, analysis, or stakeholder feedback. The first two are reactive improvement. The third is proactive — finding ways to get better before problems occur. Mature AIMS operate at all three levels.</div>
+    <p>Clause 10 closes the PDCA loop: Act on findings → Plan the next cycle with improved understanding → Do with better processes → Check with better metrics → Act again. The spiral of improvement continues indefinitely.</p>`,
+    quiz: { q: "An organization's AI system caused a bias incident. After investigation, they discover the root cause was that the team responsible for bias testing had never been trained on testing methodology. Under Clause 10.2, what corrective action most directly addresses this root cause?", opts: ["Apologize to affected customers and move on", "Train the bias testing team, update the testing procedure, and verify improved testing quality — then track to ensure the training was effective", "Hire a new AI team", "Suspend all AI systems until the issue resolves itself"], ans: 1, explain: "Clause 10.2 requires corrective actions that address the root cause. Here, the root cause is a training gap. The corrective action must address that specific gap: provide training, update the procedure to make training a prerequisite, verify the training improved competence, and track that the improved process prevents recurrence." }
+  },
+  {
+    title: "Annex A Controls — Overview",
+    tagline: "The 39 reference controls that implement responsible AI governance",
+    body: `<p>ISO 42001 includes <span class="key-term">Annex A</span> — a comprehensive set of reference controls organized into 9 domains. These 39 controls represent the specific practices organizations can implement to meet their AI governance obligations. Annex A is normative (required as a reference), but organizations select which controls to implement based on their risk assessment results.</p>
+    <div class="highlight-box">Like ISO 27001's Annex A (information security controls), ISO 42001's Annex A provides a structured library of controls that organizations must consider. For each control, they either implement it or document why it doesn't apply to their context. This "Statement of Applicability" approach ensures the selection is deliberate — not accidental.</div>
+    <p>The 9 Annex A control domains:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">A.2 — Policies related to AI</span>
+      <span class="badge badge-teal">A.3 — Internal organization</span>
+      <span class="badge badge-teal">A.4 — Resources for AI systems</span>
+      <span class="badge badge-teal">A.5 — Assessing impacts of AI systems</span>
+      <span class="badge badge-teal">A.6 — AI system life cycle</span>
+      <span class="badge badge-teal">A.7 — Data for AI systems</span>
+      <span class="badge badge-teal">A.8 — Information for interested parties about AI systems</span>
+      <span class="badge badge-teal">A.9 — Use of AI systems</span>
+      <span class="badge badge-teal">A.10 — Third-party and customer relationships</span>
+    </div>
+    <div class="analogy-box"><strong>Annex A as a governance menu:</strong> Think of Annex A like a comprehensive menu at a restaurant. You don't have to order everything. But you do need to look at the whole menu and consciously decide what to order based on your needs — and explain why you're skipping certain items. An organization that ignores an Annex A domain entirely without documented justification has a gap in its ISO 42001 conformity.</div>
+    <div class="info-box"><strong>Statement of Applicability (SoA):</strong> Organizations must produce a Statement of Applicability listing all Annex A controls, stating whether each is implemented, and justifying any exclusions. This document is key evidence during certification audits — it shows that control selection was deliberate and risk-based, not arbitrary.</div>`,
+    quiz: { q: "An organization decides not to implement any controls from Annex A domain A.7 (Data for AI Systems), arguing they don't work with data. An auditor challenges this. Why?", opts: ["Because A.7 is always mandatory for all organizations", "Because all AI systems use data — claiming otherwise is implausible. The organization must provide credible documented justification for any Annex A exclusion.", "Because data controls are governed by GDPR, not ISO 42001", "Because Annex A is optional for small organizations"], ans: 1, explain: "ISO 42001 requires that organizations document justification for any Annex A control they don't implement. Claiming data controls don't apply when the organization uses AI systems (which by definition use data) would be implausible. Auditors would require credible justification — which wouldn't exist for this exclusion." }
+  },
+  {
+    title: "Annex A — Policies, Organization, and Accountability",
+    tagline: "The governance and structural controls",
+    body: `<p>Let's look at the first three Annex A control domains in depth. These establish the governance foundation — policies, organizational structure, and resource accountability for AI systems.</p>
+    <div class="annex-card"><b>A.2 — Policies Related to AI</b><br>Controls covering: the AI policy itself, specific policies for different types of AI risks (bias, safety, privacy), AI risk management policy, AI incident handling policy. These translate governance intent into documented behavioral requirements.</div>
+    <div class="annex-card"><b>A.3 — Internal Organization</b><br>Controls covering: assignment of roles and responsibilities for AI governance, ensuring appropriate expertise in AI governance roles, designating accountability for specific AI systems, oversight structures for AI decision-making. This is where "who is responsible for what AI" gets formally documented.</div>
+    <div class="annex-card"><b>A.4 — Resources for AI Systems</b><br>Controls covering: data resources (quality, provenance, representativeness of training data), computational resources (adequate infrastructure for AI development and operation), human resources (competent people throughout the AI life cycle), knowledge resources (documented best practices, lessons learned, AI-specific expertise).</div>
+    <div class="analogy-box"><strong>A.4 data resources are critical:</strong> The AI world has a saying — "garbage in, garbage out." An AI trained on biased, incomplete, or low-quality data will produce biased, unreliable results — no matter how sophisticated the model architecture. A.4 controls over data resources recognize this: governance of training data is governance of AI outcomes. You cannot separate them.</div>
+    <div class="highlight-box">A.4 also covers <strong>knowledge resources</strong> — the organizational knowledge about AI systems that must be captured, maintained, and made available. This includes documentation of AI design decisions, testing results, known limitations, and lessons learned from previous AI projects. Without knowledge management, organizations repeat the same mistakes with every new AI system.</div>`,
+    quiz: { q: "An organization trains an AI on customer data collected 10 years ago, without assessing whether that data is representative of today's customer base or whether it contains historical biases. Which Annex A control domain most directly addresses this gap?", opts: ["A.2 — Policies related to AI", "A.3 — Internal organization", "A.4 — Resources for AI systems (specifically data resources)", "A.10 — Third-party and customer relationships"], ans: 2, explain: "A.4 covers resources for AI systems, including data resources. Data quality, representativeness, and bias assessment are core A.4 concerns. Using outdated or unrepresented training data without assessment is a gap in data resource governance — the foundational A.4 control domain." }
+  },
+  {
+    title: "Annex A — Risks, Impacts, and Life Cycle",
+    tagline: "The operational heart of responsible AI governance",
+    body: `<p>The middle Annex A domains — A.5, A.6, and A.7 — cover the operational core of ISO 42001: assessing what AI systems might do wrong, governing them through their life cycle, and managing the data they use.</p>
+    <div class="annex-card"><b>A.5 — Assessing Impacts of AI Systems</b><br>Controls for conducting systematic AI impact assessments. Evaluating social, ethical, and rights-based impacts of AI. Considering vulnerable populations. Documenting assessment methodology and results. Using assessment findings to inform design and deployment decisions. Re-assessing when systems or contexts change.</div>
+    <div class="annex-card"><b>A.6 — AI System Life Cycle</b><br>Controls across each life cycle phase: design principles for responsible AI, training data governance, model validation and testing (including fairness testing), deployment authorization, operational monitoring for drift and degradation, incident response, and end-of-life management. This is the most extensive Annex A domain — reflecting that the life cycle is where most AI governance actually happens.</div>
+    <div class="annex-card"><b>A.7 — Data for AI Systems</b><br>Controls for: data governance policies, data quality management, personal data protection in AI contexts, data documentation (data cards, model cards), data lifecycle management including retention and deletion. A.7 closely aligns with GDPR's data protection requirements, making it a natural integration point for organizations already managing GDPR compliance.</div>
+    <div class="analogy-box"><strong>A.6 life cycle controls in practice:</strong> Many AI governance failures happen because organizations treat AI deployment as a one-time event rather than an ongoing responsibility. A.6 requires continuous governance — not just a pre-launch review. Monitoring deployed AI systems for fairness drift, performance degradation, and emerging safety issues is a permanent operational obligation, not a project.</div>
+    <div class="highlight-box">A.7 includes a specific requirement for <strong>data documentation</strong> — maintaining records of what data was used to train AI systems, where it came from, how it was processed, and what its known limitations are. This "data provenance" documentation is essential for troubleshooting AI problems and for demonstrating compliance to auditors and regulators.</div>`,
+    quiz: { q: "A company discovers that its deployed AI system has started making increasingly poor decisions over the past six months due to changes in customer behavior that weren't reflected in the training data. Which Annex A control domain most directly requires the monitoring that should have caught this?", opts: ["A.5 — Assessing impacts", "A.6 — AI system life cycle (specifically operational monitoring controls)", "A.3 — Internal organization", "A.10 — Third-party relationships"], ans: 1, explain: "A.6's AI system life cycle controls include operational monitoring requirements for deployed AI systems — specifically to detect performance degradation, drift, and emerging issues. Regular monitoring of model performance should have flagged the decline in decision quality long before it became a significant problem." }
+  },
+  {
+    title: "Annex A — Transparency, Use, and Third Parties",
+    tagline: "Communicating about AI and governing its use and supply chain",
+    body: `<p>The final three Annex A domains — A.8, A.9, and A.10 — address transparency with stakeholders, governance of how AI is actually used, and management of the AI supply chain.</p>
+    <div class="annex-card"><b>A.8 — Information for Interested Parties About AI Systems</b><br>Controls requiring organizations to provide appropriate information about their AI systems to affected parties. This includes: informing users when they are interacting with AI, explaining how AI decisions work (in accessible terms), disclosing AI capabilities and limitations, and documenting AI system characteristics in formats that enable oversight and accountability.</div>
+    <div class="annex-card"><b>A.9 — Use of AI Systems</b><br>Controls governing how AI systems are actually operated — particularly relevant for AI Operators (deployers) using third-party AI. Covers: using AI systems only for their intended purpose, establishing processes for human oversight of AI decisions, managing incidents when AI behaves unexpectedly, and providing mechanisms for affected individuals to contest AI-based decisions.</div>
+    <div class="annex-card"><b>A.10 — Third-Party and Customer Relationships</b><br>Controls for managing the AI supply chain and customer relationships. Covers: due diligence on AI providers and suppliers, contractual requirements for AI governance from vendors, monitoring supplier AI governance practices, and managing customer expectations about AI capabilities and limitations.</div>
+    <div class="analogy-box"><strong>A.8 transparency in the real world:</strong> When you interact with a customer service chatbot, does it tell you it's an AI? When an AI reviews your job application, are you informed? When AI influences your insurance premium, do you know how it works? A.8 requires organizations to think through what information affected parties need about AI systems — and provide it. Transparency isn't just good ethics; it's an ISO 42001 control requirement.</div>
+    <div class="highlight-box">A.9's human oversight requirement is one of ISO 42001's most important controls. It recognizes that fully automated AI decisions in high-stakes contexts are dangerous — not because AI is always wrong, but because errors without human catch mechanisms can scale catastrophically. A.9 requires processes where humans meaningfully oversee AI outputs in contexts where the stakes are high.</div>`,
+    quiz: { q: "A company uses AI to make initial hiring decisions but never tells candidates they are being screened by AI. Which Annex A domain does this violate?", opts: ["A.6 — AI system life cycle", "A.7 — Data for AI systems", "A.8 — Information for interested parties about AI systems", "A.10 — Third-party relationships"], ans: 2, explain: "A.8 requires organizations to provide appropriate information about their AI systems to affected parties — including informing people when AI is being used in decisions that affect them. Screening job candidates without disclosing AI involvement violates A.8's transparency controls." }
+  },
+  {
+    title: "ISO 42001 and the EU AI Act",
+    tagline: "How the standard and the regulation work together",
+    body: `<p>ISO 42001 and the EU AI Act are the two most important AI governance frameworks in the world today — and they're closely aligned. Understanding how they relate is essential for organizations operating in or serving the EU.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>EU AI Act</strong><span>A regulation — legally mandatory for companies operating in the EU. Uses a risk-based approach with four tiers. Requires specific conformity assessments for high-risk AI. Enforced through national authorities with significant fines.</span></div>
+      <div class="cheat-pill"><strong>ISO 42001</strong><span>A voluntary standard — not legally required, but practically expected by customers and markets. Provides a management system framework for responsible AI across all risk levels. Can be used as evidence of compliance with regulatory requirements.</span></div>
+    </div>
+    <div class="highlight-box"><strong>How they align:</strong> ISO 42001's requirements map closely to EU AI Act obligations for high-risk AI providers. An organization with a mature ISO 42001 AIMS will have most of the governance processes already in place that the EU AI Act requires — including risk management, technical documentation, human oversight, post-market monitoring, and transparency. ISO 42001 certification could serve as evidence of good-faith compliance efforts.</div>
+    <div class="analogy-box"><strong>Law vs. standard analogy:</strong> The EU AI Act is like traffic law — you must follow it or face fines. ISO 42001 is like a comprehensive driver education curriculum — you don't legally have to take it, but organizations that do are demonstrably better at meeting the law's requirements. In fact, ISO and the European Commission have been coordinating to ensure ISO 42001 aligns with EU AI Act obligations — making them complementary by design.</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">EU AI Act high-risk AI requirements → ISO 42001 Clauses 6, 8, 9</span>
+      <span class="badge badge-teal">EU AI Act transparency requirements → ISO 42001 Annex A.8</span>
+      <span class="badge badge-teal">EU AI Act human oversight → ISO 42001 Annex A.9</span>
+      <span class="badge badge-teal">EU AI Act post-market monitoring → ISO 42001 Clause 9.1</span>
+      <span class="badge badge-teal">EU AI Act FRIA → ISO 42001 AI Impact Assessment (Clause 6)</span>
+    </div>`,
+    quiz: { q: "A company has ISO 42001 certification and is now subject to the EU AI Act for its high-risk AI hiring tool. Does the ISO 42001 certification replace EU AI Act compliance?", opts: ["Yes — ISO 42001 certification automatically satisfies EU AI Act requirements", "No — they are separate obligations, but ISO 42001 provides governance infrastructure that helps meet EU AI Act requirements and may serve as evidence of good-faith compliance", "Yes — but only if the certification covers high-risk AI systems", "No — ISO 42001 and the EU AI Act have no relationship"], ans: 1, explain: "ISO 42001 and the EU AI Act are complementary but distinct. The EU AI Act is legally mandatory; ISO 42001 is voluntary. Having ISO 42001 doesn't replace EU AI Act compliance, but it provides governance infrastructure that aligns with many EU AI Act requirements — potentially streamlining compliance efforts and serving as evidence of good governance practices." }
+  },
+  {
+    title: "ISO 42001 and Other Frameworks",
+    tagline: "How ISO 42001 integrates with ISO 27001, GDPR, COBIT, and SOC 2",
+    body: `<p>ISO 42001 doesn't exist in isolation. For organizations already operating compliance programs under other frameworks, understanding the integration points is essential for efficient, non-duplicative governance.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>ISO 42001 + ISO 27001</strong><span>The most natural integration. Both use the same HLS structure. Information security (27001) underpins AI security (42001). Organizations can create an Integrated Management System (IMS) covering both — sharing policies, audit programs, management reviews, and documentation systems.</span></div>
+      <div class="cheat-pill"><strong>ISO 42001 + GDPR</strong><span>Significant overlap in data governance, privacy impact assessments, and individual rights. Annex A.7 (Data for AI Systems) aligns with GDPR's data protection principles. A combined AI impact assessment + DPIA can satisfy both requirements simultaneously.</span></div>
+      <div class="cheat-pill"><strong>ISO 42001 + COBIT</strong><span>COBIT provides IT governance structure; ISO 42001 provides AI-specific governance. COBIT's APO12 (risk management), APO13 (security), and MEA03 (compliance monitoring) directly support ISO 42001's Clauses 6, 9, and 10 respectively.</span></div>
+      <div class="cheat-pill"><strong>ISO 42001 + SOC 2</strong><span>SOC 2 provides independent audit assurance; ISO 42001 provides the governance framework. SOC 2's CC3 (risk assessment) and CC5 (control activities) align with ISO 42001's risk management. Organizations can pursue combined audits covering both.</span></div>
+    </div>
+    <div class="highlight-box">The most important integration insight: <strong>build once, satisfy many</strong>. Rather than separate programs for ISO 42001, ISO 27001, GDPR, and COBIT, a well-designed Integrated Management System shares documentation, risk assessments, audit programs, and training — reducing duplication by 40–60%. This is why understanding framework relationships is so valuable for GRC professionals.</div>
+    <div class="analogy-box"><strong>Framework integration analogy:</strong> Think of each compliance framework as a different team sport — soccer, basketball, tennis. Each has its own rules. But all require physical fitness, teamwork, and strategic thinking. If you invest in a general athletic training program (your integrated management system), you perform better in every sport simultaneously — rather than training separately for each one.</div>`,
+    quiz: { q: "An organization subject to both GDPR and ISO 42001 wants to avoid conducting two separate impact assessments for every new AI system. What is the most efficient approach?", opts: ["Only do the ISO 42001 impact assessment and ignore GDPR", "Only do the GDPR DPIA and ignore ISO 42001", "Design a combined AI impact assessment that satisfies both the ISO 42001 AI impact assessment requirements and GDPR's DPIA requirements simultaneously", "Do them completely separately to ensure thoroughness"], ans: 2, explain: "ISO 42001's AI impact assessment and GDPR's DPIA have significant overlap in content. A carefully designed combined assessment can satisfy both requirements in one process — reducing burden and duplication. This is an example of the 'build once, satisfy many' principle in integrated compliance management." }
+  },
+  {
+    title: "Getting ISO 42001 Certified",
+    tagline: "The path from implementing the standard to receiving the certificate",
+    body: `<p>ISO 42001 is certifiable — organizations can obtain independent third-party certification demonstrating they meet the standard's requirements. Certification is voluntary but increasingly expected by enterprise customers, government agencies, and regulators.</p>
+    <div class="highlight-box">ISO 42001 certification follows the same process as ISO 27001 and other ISO management system certifications: an independent, accredited <strong>Certification Body (CB)</strong> conducts a two-stage audit and issues the certificate if the organization meets the standard's requirements. The certificate is valid for <strong>3 years</strong>, with annual surveillance audits to verify continued conformity.</div>
+    <p>The certification journey typically involves these phases:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Gap Analysis (1–3 months)</strong><span>Assess current state against ISO 42001 requirements. Identify gaps. Prioritize remediation. Estimate effort and timeline. Create an implementation roadmap.</span></div>
+      <div class="cheat-pill"><strong>Implementation (3–12 months)</strong><span>Build the AIMS: develop policies, implement controls, conduct risk and impact assessments, train staff, establish monitoring. The timeline depends on organizational size and starting point.</span></div>
+      <div class="cheat-pill"><strong>AIMS Operation (3–6 months minimum)</strong><span>The management system must be operational — not just designed. Evidence of AIMS operation (completed assessments, audit records, management reviews) must exist before certification audit.</span></div>
+      <div class="cheat-pill"><strong>Stage 1 Audit</strong><span>The certification body reviews documentation. Are the policies, procedures, and scope appropriate? Are the required processes in place? The auditor identifies any major gaps that must be addressed before Stage 2.</span></div>
+      <div class="cheat-pill"><strong>Stage 2 Audit</strong><span>The certification body verifies that the AIMS is actually operating effectively. They interview staff, review records, test controls, and assess whether the organization genuinely conforms to ISO 42001.</span></div>
+      <div class="cheat-pill"><strong>Certification and Surveillance</strong><span>Certificate issued (3-year validity). Annual surveillance audits verify continued conformity. Recertification audit every 3 years. Significant AI system changes may require additional assessment.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Certification is evidence, not immunity:</strong> ISO 42001 certification proves your management system meets the standard — it doesn't guarantee your AI never causes harm. A certified organization with a well-functioning AIMS will catch problems faster, respond more effectively, and demonstrate accountability more credibly than an uncertified organization.</div>`,
+    quiz: { q: "How long is an ISO 42001 certificate valid, and what maintains it during that period?", opts: ["1 year, renewed through annual full audits", "3 years, maintained through annual surveillance audits that verify continued conformity", "5 years with no interim reviews", "Indefinitely until a non-conformity is found"], ans: 1, explain: "ISO 42001 certificates are valid for 3 years. During that period, annual surveillance audits conducted by the certification body verify that the AIMS continues to operate effectively and the organization remains in conformity. After 3 years, a full recertification audit is required." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've completed all 30 days of ISO 42001! Let's take a final inventory of everything you now know about the world's first international standard for AI management systems.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>ISO 42001 (ISO/IEC 42001:2023) is the first international standard for Artificial Intelligence Management Systems. It provides a framework for organizations to govern AI responsibly — whether they build it (providers) or deploy it (operators). Based on ISO's High-Level Structure (HLS), it uses the PDCA cycle and has 10 clauses plus an Annex A with 39 reference controls.</p>
+    <div class="tag-header">3 Key Roles</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">AI Provider — builds AI systems</span>
+      <span class="badge badge-teal">AI Operator — deploys AI systems</span>
+      <span class="badge badge-teal">AI Customer — uses AI-powered products</span>
+    </div>
+    <div class="tag-header">The 10-Clause Structure</div>
+    <div class="badge-row">
+      <span class="badge badge-green">Clause 4 — Context (stakeholders, scope)</span>
+      <span class="badge badge-green">Clause 5 — Leadership (commitment, AI policy, roles)</span>
+      <span class="badge badge-green">Clause 6 — Planning (risks, impacts, objectives)</span>
+      <span class="badge badge-green">Clause 7 — Support (resources, competence, docs)</span>
+      <span class="badge badge-green">Clause 8 — Operation (life cycle, suppliers)</span>
+      <span class="badge badge-green">Clause 9 — Performance Evaluation (audit, review)</span>
+      <span class="badge badge-green">Clause 10 — Improvement (corrective action, continual improvement)</span>
+    </div>
+    <div class="tag-header">9 Annex A Control Domains</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">A.2 Policies</span>
+      <span class="badge badge-teal">A.3 Internal Organization</span>
+      <span class="badge badge-teal">A.4 Resources</span>
+      <span class="badge badge-teal">A.5 Impact Assessment</span>
+      <span class="badge badge-teal">A.6 AI Life Cycle</span>
+      <span class="badge badge-teal">A.7 Data</span>
+      <span class="badge badge-teal">A.8 Transparency</span>
+      <span class="badge badge-teal">A.9 Use of AI</span>
+      <span class="badge badge-teal">A.10 Third Parties</span>
+    </div>
+    <div class="tag-header">Key Structural Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-amber">PDCA cycle (Plan-Do-Check-Act)</span>
+      <span class="badge badge-amber">High-Level Structure (HLS)</span>
+      <span class="badge badge-amber">AI Risk Assessment</span>
+      <span class="badge badge-amber">AI Impact Assessment</span>
+      <span class="badge badge-amber">Statement of Applicability</span>
+      <span class="badge badge-amber">3-year certification cycle</span>
+      <span class="badge badge-amber">AI system life cycle governance</span>
+      <span class="badge badge-amber">39 Annex A controls</span>
+    </div>
+    <div class="highlight-box">Hit the blue "CS" button above to access your complete ISO 42001 cheat sheet with all clauses, controls, and key concepts summarized in one place.</div>`,
+    quiz: { q: "ISO 42001 was published in what year, and by which organizations?", opts: ["2021, by the European Union", "2023, jointly by ISO and IEC (ISO/IEC 42001:2023)", "2022, by ISACA", "2024, by NIST and AICPA"], ans: 1, explain: "ISO 42001 was published in December 2023 as ISO/IEC 42001:2023 — jointly by ISO (International Organization for Standardization) and IEC (International Electrotechnical Commission). It is the world's first international standard specifically addressing AI management systems." }
+  },
+  {
+    title: "ISO 42001 Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is ISO 42001?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">ISO/IEC 42001:2023 — Information technology — Artificial intelligence — Management system. The world's first international standard for AI Management Systems (AIMS). Published December 2023, jointly by ISO and IEC. Voluntary — not legally mandated — but practically required by enterprise customers, regulated industries, and governments. Based on ISO's High-Level Structure (HLS). Applies to any organization that develops, provides, or uses AI systems. Certifiable through accredited Certification Bodies.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>3 Key Roles</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>AI Provider</b> — Develops an AI system and makes it available. Responsible for design, development, training, testing, and documentation. Most obligations for high-risk AI.</div>
+        <div class="ctrl-card"><b>AI Operator (Deployer)</b> — Deploys and uses an AI system in a product or service. Accountable for appropriate use, monitoring, and governance in their deployment context.</div>
+        <div class="ctrl-card"><b>AI Customer (End User)</b> — Ultimately uses the AI-powered product. Directly affected by AI outputs. Organizations may hold multiple roles simultaneously.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The PDCA Cycle Mapped to ISO 42001</h3>
+      <div class="pdca-grid">
+        <div class="pdca-plan"><strong style="color:#0C447C">PLAN (Clauses 4, 5, 6)</strong><br><span style="font-size:12px;color:#1a1a18">Context → Stakeholders → Scope → Leadership → AI Policy → Roles → Risk Assessment → Impact Assessment → AI Objectives</span></div>
+        <div class="pdca-do"><strong style="color:#085041">DO (Clauses 7, 8)</strong><br><span style="font-size:12px;color:#1a1a18">Resources → Competence → Awareness → Communication → Documentation → Operational Controls → AI Life Cycle → Supplier Management</span></div>
+        <div class="pdca-check"><strong style="color:#633806">CHECK (Clause 9)</strong><br><span style="font-size:12px;color:#1a1a18">Monitoring → Measurement → Analysis → Evaluation → Internal Audit → Management Review</span></div>
+        <div class="pdca-act"><strong style="color:#501313">ACT (Clause 10)</strong><br><span style="font-size:12px;color:#1a1a18">Nonconformity → Root Cause → Corrective Action → Verify Effectiveness → Continual Improvement</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>10-Clause Structure — Requirements Summary</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Clause 4 — Context</b> — 4.1: Understand external/internal context. 4.2: Identify interested parties and their needs. 4.3: Define AIMS scope. 4.4: Establish and maintain the AIMS.</div>
+        <div class="ctrl-card"><b>Clause 5 — Leadership</b> — 5.1: Top management accountability and active commitment. 5.2: AI policy (documented, communicated, available). 5.3: Clear roles, responsibilities, and authorities assigned.</div>
+        <div class="ctrl-card"><b>Clause 6 — Planning</b> — 6.1: Identify risks and opportunities (AIMS risks + AI system risks). 6.2: AI objectives (SMART, owned, monitored). 6.3: Plan changes to AIMS in a controlled manner.</div>
+        <div class="ctrl-card"><b>Clause 7 — Support</b> — 7.1: Provide necessary resources. 7.2: Ensure competence (technical + ethics + regulatory). 7.3: Awareness of AI responsibilities. 7.4: Internal and external communication. 7.5: Documented information control.</div>
+        <div class="ctrl-card"><b>Clause 8 — Operation</b> — 8.1: Operational planning and change control. 8.2: AI risk assessment (conducted and documented). 8.3: AI impact assessment (conducted and documented). 8.4: Supplier and third-party management. 8.5–8.6: AI system life cycle governance.</div>
+        <div class="ctrl-card"><b>Clause 9 — Performance Evaluation</b> — 9.1: Monitor and measure AIMS and AI system performance. 9.2: Internal audit program (independent, risk-based, documented). 9.3: Management review (strategic, documented, produces action items).</div>
+        <div class="ctrl-card"><b>Clause 10 — Improvement</b> — 10.1: Continual improvement of AIMS suitability and effectiveness. 10.2: Nonconformity → root cause analysis → corrective action → verify effectiveness → document evidence.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>9 Annex A Control Domains (39 Controls)</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>A.2 — Policies Related to AI</b> — AI policy, risk management policy, incident handling policy. Translate governance intent into documented behavioral requirements.</div>
+        <div class="ctrl-card"><b>A.3 — Internal Organization</b> — Role assignment and accountability for AI systems. Oversight structures. Designated responsibility for each AI system.</div>
+        <div class="ctrl-card"><b>A.4 — Resources for AI Systems</b> — Data resources (quality, provenance, bias), computational resources, human resources (competent people), knowledge resources (documentation, lessons learned).</div>
+        <div class="ctrl-card"><b>A.5 — Assessing Impacts of AI Systems</b> — Systematic AI impact assessment methodology. Evaluate social, ethical, rights-based impacts. Consider vulnerable populations. Document and re-assess when contexts change.</div>
+        <div class="ctrl-card"><b>A.6 — AI System Life Cycle</b> — Most extensive domain. Responsible design principles, training data governance, testing (including fairness), deployment authorization, operational monitoring, incident response, decommissioning.</div>
+        <div class="ctrl-card"><b>A.7 — Data for AI Systems</b> — Data governance policies, data quality management, personal data protection, data documentation (data cards), data lifecycle management. Aligns with GDPR.</div>
+        <div class="ctrl-card"><b>A.8 — Information for Interested Parties</b> — Transparency requirements: inform users of AI use, explain AI decisions accessibly, disclose capabilities and limitations, document characteristics for oversight.</div>
+        <div class="ctrl-card"><b>A.9 — Use of AI Systems</b> — Use AI only for intended purpose. Human oversight of AI decisions. Incident management. Mechanisms for individuals to contest AI-based decisions.</div>
+        <div class="ctrl-card"><b>A.10 — Third-Party and Customer Relationships</b> — Due diligence on AI providers, contractual AI governance requirements, supplier performance monitoring, customer expectations management.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Assessment Tools</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>AI Risk Assessment</b> — Identifies risks from AI systems (bias, privacy, safety, explainability, adversarial, drift, misuse). Required before deployment and when significant changes occur. Must consider impacts on individuals, not just organizational risk.</div>
+        <div class="ctrl-card"><b>AI Impact Assessment</b> — Evaluates how AI affects people and society. Who is affected? What are the harms? Are vulnerable groups impacted? What rights are implicated? Aligns with EU AI Act FRIA and GDPR DPIA.</div>
+        <div class="ctrl-card"><b>Statement of Applicability (SoA)</b> — Documents all 39 Annex A controls, states which are implemented, and justifies exclusions. Key certification audit evidence. Must be deliberate and risk-based.</div>
+        <div class="ctrl-card"><b>AI Objectives</b> — SMART goals aligned to AI policy. Each has an owner and a deadline. Cover fairness metrics, transparency commitments, compliance targets, and improvement goals. Monitored and reported.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Relationships with Other Frameworks</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>EU AI Act</b> — Legally mandatory regulation; ISO 42001 is voluntary standard. Close alignment — ISO 42001 governance infrastructure supports EU AI Act compliance. Not a substitute but a strong enabler.</div>
+        <div class="ctrl-card"><b>ISO 27001</b> — Most natural integration partner. Same HLS structure. Share management system infrastructure. Combined IMS (Integrated Management System) is efficient and common.</div>
+        <div class="ctrl-card"><b>GDPR</b> — A.7 data controls align with GDPR principles. Combined AI impact assessment + DPIA is possible. Annex A.8 transparency aligns with GDPR individual rights.</div>
+        <div class="ctrl-card"><b>COBIT</b> — COBIT provides IT governance framework; ISO 42001 provides AI-specific governance. COBIT APO12/13 and MEA processes support ISO 42001 Clauses 6, 8, 9.</div>
+        <div class="ctrl-card"><b>SOC 2</b> — SOC 2 provides independent audit assurance; ISO 42001 provides governance framework. CC3/CC5 align with ISO 42001 risk and control requirements. Combined audits possible.</div>
+        <div class="ctrl-card"><b>NIST AI RMF</b> — US AI Risk Management Framework (Govern, Map, Measure, Manage). Highly complementary to ISO 42001's risk-based approach. Organizations can satisfy both simultaneously.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Certification Process</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Stage 1 Audit</b> — Documentation review. Assess whether AIMS is designed correctly and scope is appropriate. Identifies gaps before Stage 2.</div>
+        <div class="ctrl-card"><b>Stage 2 Audit</b> — Operational verification. Interviews, evidence review, control testing. Confirms AIMS is actually working, not just documented.</div>
+        <div class="ctrl-card"><b>Certificate Validity</b> — 3 years. Annual surveillance audits maintain certification. Full recertification audit at 3-year mark.</div>
+        <div class="ctrl-card"><b>Certification Bodies</b> — Must be accredited and independent. Cannot also be the implementation consultant. Same CPA-independence principle as SOC 2.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts</h3>
+      <div class="badge-row">
+        <span class="badge badge-teal">Published: December 2023</span>
+        <span class="badge badge-teal">Full name: ISO/IEC 42001:2023</span>
+        <span class="badge badge-teal">10 clauses (clauses 4–10 are auditable requirements)</span>
+        <span class="badge badge-teal">9 Annex A control domains</span>
+        <span class="badge badge-teal">39 Annex A reference controls</span>
+        <span class="badge badge-teal">3-year certification cycle</span>
+        <span class="badge badge-teal">PDCA = Plan-Do-Check-Act</span>
+        <span class="badge badge-teal">HLS = High-Level Structure (shared with ISO 27001, 9001, 14001)</span>
+        <span class="badge badge-teal">3 roles: Provider | Operator | Customer</span>
+        <span class="badge badge-teal">2 assessment types: AI Risk Assessment + AI Impact Assessment</span>
+        <span class="badge badge-teal">SoA = Statement of Applicability</span>
+        <span class="badge badge-teal">AIMS = Artificial Intelligence Management System</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E6F1FB">
+            <div class="day-num" style="color:#0C447C;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#185FA5">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

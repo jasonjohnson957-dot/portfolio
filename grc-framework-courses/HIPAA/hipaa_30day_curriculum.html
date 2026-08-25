@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIPAA — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #993556; color: #FBEAF0; border-color: #993556; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #FBEAF0; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #72243E; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #993556; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #993556; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #FBEAF0; color: #72243E; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #E6F1FB; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .penalty-box { background: #FCEBEB; border-left: 3px solid #A32D2D; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .5rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #993556; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-pink   { background: #FBEAF0; color: #72243E; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-gray   { background: #F1EFE8; color: #444441; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .rule-card { background: #FBEAF0; border: 0.5px solid #ED93B1; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .rule-card b { font-size: 13px; font-weight: 500; color: #72243E; }
+  .tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .tier-1 { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .tier-2 { background: #FAECE7; border: 0.5px solid #F0997B; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .tier-3 { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .tier-4 { background: #501313; border: 0.5px solid #791F1F; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  @media (max-width: 520px) { .cheat-grid, .control-row, .tier-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day HIPAA curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>HIPAA — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title: "What Is HIPAA?",
+    tagline: "The law that protects your medical information",
+    body: `<p>Imagine going to the doctor, and later that week your employer finds out you have a serious illness — and suddenly your job is in danger. Or your insurance company learns about a mental health diagnosis and raises your premiums. These are exactly the kinds of harms that <span class="key-term">HIPAA</span> was designed to prevent.</p>
+    <p>HIPAA stands for the <strong>Health Insurance Portability and Accountability Act</strong>. It is a US federal law enacted in <strong>1996</strong> that protects the privacy and security of people's medical information. Unlike GDPR (which is European), HIPAA applies specifically within the <strong>United States</strong> — though its influence shapes healthcare privacy globally.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of HIPAA like a secure vault for your medical history. Your doctors, hospitals, and insurers hold a key. HIPAA sets the rules for who can look inside that vault, when, and for what purpose — and makes sure the vault itself is strong enough that unauthorized people can't break in. Without HIPAA, your most sensitive personal information — your diagnoses, medications, mental health records, and genetic data — could be freely shared, sold, or misused.</div>
+    <p>HIPAA has four main components, called "Rules," each addressing a different aspect of healthcare information protection:</p>
+    <div class="badge-row">
+      <span class="badge badge-pink">Privacy Rule — Who can see your information and when</span>
+      <span class="badge badge-pink">Security Rule — How your electronic health information must be protected</span>
+      <span class="badge badge-pink">Breach Notification Rule — What happens when your data is exposed</span>
+      <span class="badge badge-pink">Enforcement Rule — How violations are investigated and punished</span>
+    </div>
+    <div class="highlight-box">HIPAA is not just a healthcare compliance requirement — it's a fundamental patient rights law. It gives you control over who sees your medical information, the right to access your own records, and the right to know when your information has been breached. We'll cover all of these rights in depth throughout this course.</div>`,
+    quiz: { q: "What does HIPAA stand for?", opts: ["Health Information Privacy and Access Act", "Health Insurance Portability and Accountability Act", "Healthcare Information Protection and Authorization Act", "Hospital Insurance Privacy and Accountability Act"], ans: 1, explain: "HIPAA stands for the Health Insurance Portability and Accountability Act. It was signed into law in 1996 and protects the privacy and security of individuals' medical information in the United States." }
+  },
+  {
+    title: "Why Was HIPAA Created?",
+    tagline: "The problems it was built to solve — and why they still matter today",
+    body: `<p>HIPAA didn't emerge from nowhere. It was a response to very real problems in the American healthcare system in the 1990s — problems that had been building for years as healthcare became more complex, more computerized, and more fragmented.</p>
+    <div class="highlight-box"><strong>The "Portability" problem:</strong> In the early 1990s, millions of Americans lost their health insurance coverage when they changed or lost jobs — because insurers could refuse coverage for "pre-existing conditions." HIPAA's original primary purpose was actually to protect workers' ability to keep health insurance when changing jobs. This is the "portability" in the name — ensuring health coverage could move with the worker.</div>
+    <p>But as Congress worked on portability, they identified a second critical problem: there were no national standards for protecting patients' medical information. Healthcare was becoming increasingly computerized, and patient records were flowing between hospitals, insurers, employers, and countless other parties — with almost no rules about who could access them or how they had to be protected.</p>
+    <div class="analogy-box"><strong>The pre-HIPAA world:</strong> Before HIPAA, a hospital could legally share your medical records with your employer. Your insurer could share your diagnosis with a credit bureau. A pharmacy could sell your prescription history to a drug company. Gossip about a patient's HIV diagnosis, mental illness, or cancer could spread with no legal consequences. Medical information had essentially no privacy protection under federal law.</div>
+    <div class="warning-box"><strong>The "Accountability" problem:</strong> The other major driver was fraud and abuse in the healthcare system. Billions of dollars were being lost annually to fraudulent billing, unnecessary procedures, and administrative waste. HIPAA's accountability provisions were designed to standardize healthcare transactions and make fraud easier to detect.</div>
+    <p>HIPAA was passed as an omnibus healthcare reform law — but the Privacy Rule and Security Rule (which are what most people mean when they talk about "HIPAA") weren't implemented until 2003 and 2005, respectively. The law has been significantly strengthened several times since, most notably through the HITECH Act in 2009 and the Omnibus Rule in 2013.</p>`,
+    quiz: { q: "What was HIPAA's original primary purpose — before privacy became its most discussed feature?", opts: ["Preventing hospital data breaches", "Protecting workers' ability to keep health insurance when changing jobs", "Standardizing electronic health records", "Regulating pharmaceutical companies"], ans: 1, explain: "HIPAA's original primary purpose was health insurance 'portability' — protecting workers' ability to maintain health coverage when changing or losing jobs. The privacy and security protections grew out of the broader healthcare reform effort, but portability was the initial driving concern." }
+  },
+  {
+    title: "Who Must Follow HIPAA — Covered Entities",
+    tagline: "The organizations directly bound by HIPAA's rules",
+    body: `<p>HIPAA does not apply to everyone who handles medical information. It applies to specific categories of organizations called <span class="key-term">Covered Entities</span>. Understanding who qualifies as a Covered Entity is fundamental — because if an organization isn't a Covered Entity (or a Business Associate), HIPAA simply doesn't apply to them.</p>
+    <p>There are three categories of Covered Entities:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Healthcare Providers</strong><span>Any provider that transmits health information electronically in connection with covered transactions. Includes: hospitals, clinics, doctors' offices, dentists, pharmacies, nursing homes, mental health counselors, chiropractors, home health agencies.</span></div>
+      <div class="cheat-pill"><strong>Health Plans</strong><span>Organizations that provide or pay for medical care. Includes: health insurance companies, HMOs (Health Maintenance Organizations), Medicare and Medicaid programs, employer-sponsored health plans with 50+ participants, long-term care insurers.</span></div>
+      <div class="cheat-pill"><strong>Healthcare Clearinghouses</strong><span>Organizations that process nonstandard health information into standard formats (or vice versa). These are intermediaries that translate between different healthcare billing and claims formats. Less common but critically positioned in the claims processing chain.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The "electronic transmission" requirement for providers:</strong> A very small healthcare provider who keeps only paper records and never submits electronic claims might technically not be a HIPAA Covered Entity. But in practice, virtually every healthcare provider transmits information electronically for billing, referrals, or prescriptions — making almost all providers covered.</div>
+    <div class="highlight-box"><strong>Who is notably NOT a Covered Entity?</strong> This surprises many people: employers (even though they see employee health data through benefits administration), life insurance companies (unless they also sell health insurance), workers' compensation carriers, law enforcement agencies, schools and school districts, and most app developers — even if they collect health data. These entities may be subject to other privacy laws, but not HIPAA.</div>
+    <div class="warning-box"><strong>The fitness app exception:</strong> When you use a fitness app or a consumer health app that isn't part of a healthcare provider's system, HIPAA generally doesn't apply — even if that app collects extremely sensitive health data. This is a major gap in US health privacy law that is actively being debated by regulators.</div>`,
+    quiz: { q: "Your employer has access to some of your health information through the company's health insurance benefits program. Is your employer a HIPAA Covered Entity?", opts: ["Yes — employers always qualify as Covered Entities because they handle employee health data", "No — employers are generally not HIPAA Covered Entities, even though they may handle some health-related information", "Only if the employer has more than 50 employees", "Only if the employer is a hospital or clinic"], ans: 1, explain: "Employers are generally NOT HIPAA Covered Entities. HIPAA applies to Healthcare Providers, Health Plans, and Healthcare Clearinghouses. Employers access health information through benefits administration, but this doesn't make them Covered Entities — they're subject to different laws (like ADA and GINA) for employee health information." }
+  },
+  {
+    title: "Business Associates",
+    tagline: "The vendors and partners who handle your health data on behalf of covered entities",
+    body: `<p>Covered Entities can't do everything themselves. A hospital uses a billing company. A health plan uses a data analytics firm. A doctor's office uses a cloud storage provider. These third parties — who handle Protected Health Information on behalf of Covered Entities — are called <span class="key-term">Business Associates</span> under HIPAA.</p>
+    <div class="highlight-box">A Business Associate is any person or organization that: performs functions or activities on behalf of a Covered Entity that involve the use or disclosure of PHI, or provides certain services to a Covered Entity that require access to PHI. Business Associates are directly subject to HIPAA — they face the same civil and criminal penalties as Covered Entities for violations.</div>
+    <p>Common Business Associate examples:</p>
+    <div class="badge-row">
+      <span class="badge badge-pink">Medical billing and coding companies</span>
+      <span class="badge badge-pink">Health IT and EHR software vendors</span>
+      <span class="badge badge-pink">Cloud storage providers hosting medical records</span>
+      <span class="badge badge-pink">Data analytics and population health firms</span>
+      <span class="badge badge-pink">Legal firms handling healthcare litigation</span>
+      <span class="badge badge-pink">Accounting firms with access to patient data</span>
+      <span class="badge badge-pink">Transcription services for medical records</span>
+      <span class="badge badge-pink">Shredding companies destroying medical documents</span>
+    </div>
+    <div class="analogy-box"><strong>The Business Associate Agreement (BAA):</strong> When a Covered Entity engages a Business Associate, HIPAA requires a written contract called a <strong>Business Associate Agreement (BAA)</strong>. The BAA establishes the permitted uses of PHI, requires the Business Associate to implement appropriate safeguards, requires breach notification back to the Covered Entity, and establishes that the Business Associate is directly accountable under HIPAA. We'll cover BAAs in detail on Day 21.</div>
+    <div class="warning-box"><strong>Subcontractors matter too:</strong> If a Business Associate hires a subcontractor who also handles PHI — that subcontractor is also a Business Associate and also requires a BAA. The HIPAA compliance obligation flows down the entire supply chain. A cloud provider hired by a billing company hired by a hospital must also have a BAA — and must also comply with HIPAA.</div>`,
+    quiz: { q: "A hospital uses a cloud software company to store and process patient medical records. What is the cloud company's relationship to HIPAA?", opts: ["The cloud company has no HIPAA obligations — only the hospital does", "The cloud company is a Business Associate and is directly subject to HIPAA requirements", "The cloud company only needs to follow HIPAA if it is also a healthcare provider", "HIPAA doesn't apply to technology companies"], ans: 1, explain: "The cloud company is a Business Associate — it handles PHI on behalf of the Covered Entity (the hospital). Business Associates are directly subject to HIPAA and face the same penalties as Covered Entities. A Business Associate Agreement (BAA) must be in place between the hospital and the cloud company." }
+  },
+  {
+    title: "Protected Health Information (PHI)",
+    tagline: "If it identifies you and relates to your health, it's probably PHI",
+    body: `<p>The entire edifice of HIPAA rests on a single concept: <span class="key-term">Protected Health Information (PHI)</span>. Everything HIPAA regulates is about protecting PHI. So understanding exactly what PHI is — and isn't — is foundational.</p>
+    <div class="highlight-box">PHI is defined as: any individually identifiable health information that is created, received, maintained, or transmitted by a Covered Entity or Business Associate, in any form — electronic, paper, or oral. The three elements that must all be present: (1) health information, (2) that identifies or could identify an individual, (3) held or transmitted by a Covered Entity or Business Associate.</div>
+    <p>HIPAA identifies <strong>18 specific identifiers</strong> that make health information "individually identifiable" and therefore PHI:</p>
+    <div class="badge-row">
+      <span class="badge badge-pink">Names</span>
+      <span class="badge badge-pink">Geographic subdivisions smaller than state</span>
+      <span class="badge badge-pink">Dates (except year) related to individuals</span>
+      <span class="badge badge-pink">Phone numbers</span>
+      <span class="badge badge-pink">Fax numbers</span>
+      <span class="badge badge-pink">Email addresses</span>
+      <span class="badge badge-pink">Social Security numbers</span>
+      <span class="badge badge-pink">Medical record numbers</span>
+      <span class="badge badge-pink">Health plan beneficiary numbers</span>
+      <span class="badge badge-pink">Account numbers</span>
+      <span class="badge badge-pink">Certificate/license numbers</span>
+      <span class="badge badge-pink">Vehicle identifiers and serial numbers</span>
+      <span class="badge badge-pink">Device identifiers and serial numbers</span>
+      <span class="badge badge-pink">Web URLs</span>
+      <span class="badge badge-pink">IP addresses</span>
+      <span class="badge badge-pink">Biometric identifiers (fingerprints, voiceprints)</span>
+      <span class="badge badge-pink">Full-face photographs</span>
+      <span class="badge badge-pink">Any other unique identifying number or code</span>
+    </div>
+    <div class="analogy-box"><strong>A key test:</strong> A medical record that says "Patient has Type 2 diabetes" is NOT PHI by itself — it identifies no individual. The same record combined with a name, date of birth, or medical record number IS PHI. The health information must be linked to an identified or identifiable person to be protected under HIPAA.</div>
+    <div class="info-box"><strong>De-identified data is NOT PHI:</strong> If all 18 identifiers are removed from health information (Safe Harbor method), or if a statistical expert certifies that the risk of identifying individuals is very small (Expert Determination method), the data is "de-identified" and HIPAA no longer applies to it. De-identified health data can be used, shared, and sold freely — which is why many healthcare companies invest heavily in de-identification processes.</div>`,
+    quiz: { q: "A dataset contains thousands of patient records showing diagnoses and treatments, with all names, addresses, and identification numbers removed. The only remaining identifier is each patient's zip code. Is this PHI under HIPAA?", opts: ["No — once names are removed, it's de-identified", "Possibly — zip codes are geographic identifiers that could re-identify individuals in small areas, so this may still be PHI depending on the zip code's population size", "Yes — any health information is always PHI", "No — zip codes are not one of the 18 identifiers"], ans: 1, explain: "Zip codes are geographic identifiers on the HIPAA list of 18 identifiers. Small zip codes with few residents could enable re-identification. Under HIPAA's Safe Harbor method, only the first 3 digits of a zip code may be retained — and only if the geographic area contains more than 20,000 people. Small zip codes must be replaced with '000.'" }
+  },
+  {
+    title: "Electronic PHI (ePHI)",
+    tagline: "When health data goes digital — and why that changes the risk",
+    body: `<p><span class="key-term">Electronic PHI (ePHI)</span> is a specific subset of PHI — Protected Health Information that is created, received, maintained, or transmitted in electronic form. While the Privacy Rule covers all PHI in any format, the <strong>Security Rule</strong> applies specifically to ePHI.</p>
+    <div class="highlight-box">Why does ePHI get special treatment? Because electronic health information carries fundamentally different risks than paper records. A paper file can be stolen by one person who physically accesses it. An improperly secured electronic file can be stolen by thousands of hackers simultaneously, from anywhere in the world, without anyone in the building knowing it happened. The scale and speed of electronic breaches demand their own regulatory framework.</div>
+    <p>ePHI includes health information in:</p>
+    <div class="badge-row">
+      <span class="badge badge-pink">Electronic Health Record (EHR) systems</span>
+      <span class="badge badge-pink">Email containing patient information</span>
+      <span class="badge badge-pink">Text messages about patients</span>
+      <span class="badge badge-pink">Cloud storage systems containing medical records</span>
+      <span class="badge badge-pink">Medical devices that transmit health data</span>
+      <span class="badge badge-pink">Portable drives and USB devices with patient data</span>
+      <span class="badge badge-pink">Backup tapes and disaster recovery systems</span>
+      <span class="badge badge-pink">Fax servers transmitting health information</span>
+    </div>
+    <div class="analogy-box"><strong>The ePHI explosion:</strong> In 1996, when HIPAA was passed, most medical records were still on paper. Today, over 96% of US hospitals use electronic health records. A single hospital system might maintain ePHI for hundreds of thousands of patients across dozens of interconnected systems. The Security Rule was specifically designed to protect this digital health information infrastructure — requiring technical, physical, and administrative safeguards that simply don't apply to paper records.</div>
+    <div class="warning-box"><strong>The mobile device problem:</strong> One of the most common sources of healthcare data breaches today is lost or stolen mobile devices. A nurse checking patient records on an unencrypted personal phone. A doctor emailing a patient's diagnosis from a personal Gmail account. A laptop with patient records left in a car. These are ePHI security failures that violate the HIPAA Security Rule — and they happen constantly.</div>`,
+    quiz: { q: "A doctor texts a patient's name and diagnosis to a specialist from her personal smartphone. Does HIPAA apply to this text message?", opts: ["No — personal smartphones are exempt from HIPAA", "Yes — this is ePHI being transmitted electronically by a Covered Entity, and the Security Rule requirements apply", "Only if the text is intercepted by someone else", "Only if the doctor is part of a hospital system"], ans: 1, explain: "This text message is ePHI — it contains individually identifiable health information (the patient's name and diagnosis) transmitted electronically by a healthcare provider (a Covered Entity). The HIPAA Security Rule applies, requiring appropriate safeguards. Unencrypted text messages containing PHI generally violate the Security Rule." }
+  },
+  {
+    title: "The HIPAA Privacy Rule — Overview",
+    tagline: "The rules governing who can see and use your health information",
+    body: `<p>The <span class="key-term">HIPAA Privacy Rule</span> is the cornerstone of healthcare privacy in the United States. Finalized in 2003, it establishes national standards for protecting individuals' medical records and personal health information — setting limits on who can access PHI and when.</p>
+    <div class="highlight-box">The Privacy Rule's fundamental principle: A Covered Entity may not use or disclose PHI except as permitted or required by the Privacy Rule. This "default to privacy" principle means that when in doubt, you don't share. The burden is on the organization to identify a valid reason to disclose — not on the patient to prove their information shouldn't be shared.</div>
+    <p>The Privacy Rule applies to PHI in all forms: electronic, paper, and oral (spoken). This means a doctor casually mentioning a patient's diagnosis in a crowded elevator — where it could be overheard — is a potential HIPAA violation, even though nothing was written or transmitted electronically.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>What the Privacy Rule covers</strong><span>All uses and disclosures of PHI by Covered Entities and Business Associates. Patient rights over their own health information. Requirements for notice of privacy practices. Conditions for uses and disclosures.</span></div>
+      <div class="cheat-pill"><strong>What the Privacy Rule requires</strong><span>Using only the minimum necessary PHI. Obtaining patient authorization for certain uses. Providing patients access to their records. Honoring requests for restrictions. Accounting for certain disclosures.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Privacy Rule as a permission system:</strong> Think of the Privacy Rule like a permission system on your computer. By default, nobody can access your health files. The Privacy Rule then lists the specific circumstances where access IS permitted — treatment, payment, healthcare operations, and certain other purposes. For anything outside those permissions, the patient must give explicit authorization. Default is locked; access requires a valid key.</div>
+    <p>We'll spend the next several days exploring the specific components of the Privacy Rule — including the permitted uses and disclosures, patient rights, and key requirements like the minimum necessary standard and notice of privacy practices.</p>`,
+    quiz: { q: "A hospital receptionist looks up a patient's psychiatric records out of curiosity, even though the patient isn't her family and she has no treatment role. Is this a HIPAA violation?", opts: ["No — employees of Covered Entities can access any records within their system", "Yes — accessing PHI without a valid treatment, payment, or operations purpose violates the Privacy Rule", "Only if she shares the information with someone else", "Only if the patient finds out and complains"], ans: 1, explain: "The HIPAA Privacy Rule requires that PHI is accessed only for permitted purposes — including treatment, payment, and healthcare operations relevant to one's job role. A receptionist accessing psychiatric records out of personal curiosity has no permissible basis for access — this is a Privacy Rule violation regardless of whether the information is shared further." }
+  },
+  {
+    title: "The 6 Permitted Uses and Disclosures",
+    tagline: "When can a Covered Entity share your health information without asking you first?",
+    body: `<p>The Privacy Rule permits — and in some cases requires — disclosure of PHI in specific circumstances <strong>without patient authorization</strong>. These are called permitted uses and disclosures. There are six main categories.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. To the Individual</strong><span>Patients always have the right to access their own PHI. You can always get your own records.</span></div>
+      <div class="cheat-pill"><strong>2. Treatment, Payment, and Healthcare Operations (TPO)</strong><span>The most common category. Sharing information needed to treat a patient, process insurance claims, or run the healthcare organization.</span></div>
+      <div class="cheat-pill"><strong>3. With Opportunity to Agree or Object</strong><span>For hospital directories, notification of family members, and similar uses — the patient is given an opportunity to restrict the disclosure before it happens.</span></div>
+      <div class="cheat-pill"><strong>4. Incidental Use and Disclosure</strong><span>Disclosures that occur as a by-product of permitted communications — like someone overhearing a conversation. Permitted if reasonable safeguards are in place and the underlying disclosure is permitted.</span></div>
+      <div class="cheat-pill"><strong>5. Public Interest and Benefit Activities</strong><span>Specific circumstances where the public interest outweighs individual privacy: public health reporting, law enforcement (with limits), national security, research (with safeguards), workers' compensation, and judicial proceedings.</span></div>
+      <div class="cheat-pill"><strong>6. Limited Data Set</strong><span>A data set with most (but not all) identifiers removed — can be used for research, public health, or healthcare operations without full de-identification, but requires a data use agreement.</span></div>
+    </div>
+    <div class="analogy-box"><strong>TPO is the big one:</strong> Treatment, Payment, and Healthcare Operations covers the vast majority of everyday healthcare information sharing. Your primary care doctor shares your records with a specialist treating you (Treatment). Your doctor's office sends a claim to your insurance company (Payment). A hospital reviews its complication rates to improve quality (Operations). All permitted without asking you first — because these are essential to healthcare functioning.</div>
+    <div class="highlight-box">Everything outside these six categories requires explicit written <strong>patient authorization</strong> — a signed document that specifically describes what information can be shared, with whom, for what purpose, and with an expiration date. Marketing uses, most research uses, and selling PHI always require authorization (with narrow exceptions for research).</div>`,
+    quiz: { q: "A hospital shares a patient's diagnosis with the patient's insurance company to process a claim. Which permitted use category covers this disclosure?", opts: ["Public Interest and Benefit Activities", "Treatment, Payment, and Healthcare Operations (TPO)", "Limited Data Set", "Incidental Use"], ans: 1, explain: "Sharing PHI with an insurance company to process an insurance claim falls under Treatment, Payment, and Healthcare Operations (TPO) — specifically the 'Payment' component. TPO disclosures are permitted without patient authorization because they are essential to the functioning of the healthcare system." }
+  },
+  {
+    title: "Patient Rights Under the Privacy Rule — Part 1",
+    tagline: "Your legal rights over your own medical information",
+    body: `<p>One of the most powerful aspects of HIPAA is that it gives patients specific, enforceable <span class="key-term">rights</span> over their own health information. These aren't just policies — they are legal rights that Covered Entities must honor. We'll cover the first three rights today.</p>
+    <div class="rule-card"><b>Right of Access</b><br>You have the right to inspect and obtain a copy of your own PHI maintained by a Covered Entity, with limited exceptions. The Covered Entity must respond within <strong>30 days</strong> (extendable once by 30 days with written notice). They can charge a reasonable cost-based fee for copies. They cannot deny access because you owe them money.</div>
+    <div class="analogy-box"><strong>Why the Right of Access matters:</strong> Imagine being treated for a condition, and when you ask to see your records, the hospital says no. Before HIPAA, this happened routinely. Now you have a federal right to access your records — and if a hospital illegally denies or obstructs access, you can file a complaint with HHS (the Department of Health and Human Services). The HHS Office for Civil Rights has issued significant fines specifically for Right of Access violations.</div>
+    <div class="rule-card"><b>Right to Amend</b><br>You have the right to request amendment of PHI in your records if you believe it is inaccurate or incomplete. The Covered Entity can deny the request if the information was not created by them, is accurate and complete, is not part of the designated record set, or is not available for inspection. If denied, you have the right to submit a statement of disagreement.</div>
+    <div class="rule-card"><b>Right to an Accounting of Disclosures</b><br>You have the right to receive a list (accounting) of certain disclosures of your PHI made in the past 6 years. Note: This does NOT include disclosures for TPO (treatment, payment, operations) — it covers disclosures made without authorization for purposes like public health reporting or law enforcement. The accounting period is 6 years before the date of the request.</div>
+    <div class="highlight-box">These rights are not automatic — you generally must submit a written request to exercise them. But once you do, the Covered Entity has legal obligations and strict timelines to respond. Failure to honor these rights can result in OCR investigations and significant financial penalties.</div>`,
+    quiz: { q: "You request a copy of your medical records from your doctor's office. They respond that they can't provide them for 45 days. Under HIPAA, is this acceptable?", opts: ["No — records must be provided within 24 hours", "Yes — 45 days is within the permitted 30-day response window plus a 30-day extension, if the extension was communicated in writing within the first 30 days", "No — the 30-day deadline cannot be extended under any circumstances", "Yes — healthcare providers have no specific timeline requirement"], ans: 1, explain: "HIPAA's Right of Access requires a response within 30 days. A single 30-day extension is permitted if the Covered Entity provides written notification within the initial 30-day period explaining the delay. A 45-day total response time is within the 60-day maximum — but only if the extension was properly communicated within the first 30 days." }
+  },
+  {
+    title: "Patient Rights Under the Privacy Rule — Part 2",
+    tagline: "More rights that put you in control of your health information",
+    body: `<p>Today we cover the remaining patient rights under the Privacy Rule — completing the picture of what HIPAA gives you as a patient.</p>
+    <div class="rule-card"><b>Right to Request Restrictions</b><br>You have the right to request that a Covered Entity restrict uses or disclosures of your PHI for treatment, payment, or operations. Generally, the Covered Entity is NOT required to agree to a restriction request — with one important exception: if you request restriction on disclosure to a health plan for a service you paid for entirely out of pocket, the Covered Entity MUST honor this restriction.</div>
+    <div class="analogy-box"><strong>The out-of-pocket exception:</strong> This is one of the most powerful but least-known HIPAA rights. If you pay for a medical service completely out of pocket — not through insurance — you can tell your provider NOT to share that information with your health plan. This is especially important for sensitive services like mental health treatment, addiction counseling, or reproductive health care that you might want to keep private from an insurer.</div>
+    <div class="rule-card"><b>Right to Request Confidential Communications</b><br>You have the right to request that a Covered Entity communicate with you about your health through alternative means or at alternative locations. Example: "Please only contact me at my cell phone, not my home number." Or "Please send all communications to my work address." Covered Entities must accommodate reasonable requests — they cannot require an explanation for why you want alternative communications.</div>
+    <div class="rule-card"><b>Right to Receive a Notice of Privacy Practices</b><br>You have the right to receive a written notice explaining the Covered Entity's privacy practices — what information they collect, how they use it, when they can disclose it, and what your rights are. This notice must be provided at the first service encounter and be made available upon request. We'll cover the Notice of Privacy Practices (NPP) in detail on Day 12.</div>
+    <div class="rule-card"><b>Right to Complain</b><br>You have the right to file a complaint with the Covered Entity directly or with the HHS Office for Civil Rights (OCR) if you believe your privacy rights have been violated. Covered Entities cannot retaliate against you for filing a complaint — retaliation is itself a HIPAA violation.</div>
+    <div class="highlight-box">These rights collectively give patients meaningful agency over their health information — the ability to know what's being collected, see it, correct it, restrict its use, and complain when violations occur. Together with GDPR's individual rights, HIPAA's patient rights represent one of the world's most comprehensive frameworks for personal data control.</div>`,
+    quiz: { q: "A patient pays cash out-of-pocket for a mental health therapy session and tells the therapist not to share that information with her health insurance company. Under HIPAA, must the therapist honor this request?", opts: ["No — providers can share any treatment information with health plans", "Yes — when a patient pays fully out-of-pocket and requests restriction from their health plan, the provider MUST honor this restriction", "Only if the therapist agrees it is clinically appropriate", "Only for services costing more than $1,000"], ans: 1, explain: "The Right to Request Restrictions includes a mandatory exception: when a patient pays entirely out-of-pocket for a service and requests restriction from disclosure to the health plan, the provider MUST honor that restriction. This is one of the few instances where HIPAA requires compliance with a restriction request rather than leaving it to the provider's discretion." }
+  },
+  {
+    title: "The Minimum Necessary Standard",
+    tagline: "Share only what's needed — nothing more",
+    body: `<p>One of the Privacy Rule's most important operational requirements is the <span class="key-term">minimum necessary standard</span>. It sounds simple — but it has profound implications for how healthcare organizations handle information on a daily basis.</p>
+    <div class="highlight-box">The minimum necessary standard requires that Covered Entities and Business Associates make reasonable efforts to limit the use and disclosure of PHI to the minimum amount necessary to accomplish the intended purpose. You can only access, use, or share the specific PHI needed for the specific task at hand — not everything you could access.</div>
+    <p>The minimum necessary standard applies to:</p>
+    <div class="badge-row">
+      <span class="badge badge-pink">Uses of PHI within the organization</span>
+      <span class="badge badge-pink">Disclosures to outside parties</span>
+      <span class="badge badge-pink">Requests for PHI from other Covered Entities</span>
+    </div>
+    <div class="analogy-box"><strong>Practical examples:</strong> A billing clerk needs a patient's name, diagnosis code, and insurance number to process a claim — but does NOT need the patient's full medical history, mental health notes, or sexual history. Under the minimum necessary standard, the billing system should only make those specific fields accessible to billing staff. A lab technician running a blood test needs the specific test order — not the full chart. A receptionist confirming an appointment needs the appointment time — not the reason for the visit.</div>
+    <div class="warning-box"><strong>What minimum necessary does NOT apply to:</strong> Disclosures to or requests by a healthcare provider for treatment purposes. Disclosures to the patient themselves. Disclosures required by law. Uses or disclosures authorized by the patient. The logic: for these purposes, limiting information could cause more harm (missing important clinical context, for example) than sharing complete information.</div>
+    <p>Implementing minimum necessary requires role-based access controls — ensuring that different categories of staff only see the PHI their job requires. This is both a Privacy Rule requirement and a Security Rule requirement. A hospital where every employee can access every patient's complete record fails the minimum necessary standard regardless of whether anyone actually misuses that access.</p>`,
+    quiz: { q: "A hospital's entire administrative staff has access to complete patient medical records, including psychiatric notes and HIV status, even though most staff only need name, contact information, and insurance details. Does this violate HIPAA?", opts: ["No — employees of Covered Entities may access all records in the system", "Yes — this violates the minimum necessary standard by providing access to far more PHI than most staff need for their specific roles", "Only if a staff member actually reads the psychiatric notes", "Only if the hospital has more than 500 employees"], ans: 1, explain: "The minimum necessary standard requires that access to PHI be limited to what is needed for each person's specific job function. Giving all administrative staff access to complete records including psychiatric notes and HIV status — when most only need basic administrative information — violates the minimum necessary standard, regardless of whether anyone actually misuses the access." }
+  },
+  {
+    title: "The Notice of Privacy Practices (NPP)",
+    tagline: "The document that tells patients exactly what happens with their health information",
+    body: `<p>The <span class="key-term">Notice of Privacy Practices (NPP)</span> is a required document that every Covered Entity must provide to patients. It's the healthcare equivalent of a privacy policy — but with very specific content requirements mandated by HIPAA.</p>
+    <div class="highlight-box">The NPP must describe: how the Covered Entity uses and discloses PHI, the patient's legal rights under HIPAA, how to exercise those rights, the Covered Entity's legal duties regarding PHI, how to file a complaint with the Covered Entity and with HHS, and effective date of the notice. It must be written in plain language — not legal jargon — and be available in languages common in the area served.</div>
+    <p>NPP delivery requirements:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Healthcare Providers</strong><span>Must provide the NPP at the first service delivery (or as soon as reasonably practicable in emergencies). Must make a good-faith effort to obtain written acknowledgment of receipt. Must post it prominently at service locations and on websites.</span></div>
+      <div class="cheat-pill"><strong>Health Plans</strong><span>Must provide the NPP at enrollment, within 60 days of a material change to privacy practices, and at least once every 3 years. Must also remind members of NPP availability at least once every 3 years.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The paper you sign at the doctor's office:</strong> You've probably been handed a document to sign when you first visited a new doctor — usually something you quickly sign without reading in detail. That document contains the NPP. The signature isn't giving the provider permission to use your information — they already have that under HIPAA. The signature is just acknowledging you received notice of their privacy practices. You can refuse to sign and still receive treatment, though the provider must document that you were offered the NPP and declined.</div>
+    <div class="warning-box"><strong>A common misconception:</strong> Many patients think signing the NPP acknowledgment at a doctor's office means they've consented to all uses of their PHI. This is incorrect. The signature only acknowledges receipt of the notice. It is NOT authorization for uses outside the permitted uses. Marketing uses, research, and sharing with employers still require separate written authorization from the patient.</div>`,
+    quiz: { q: "A patient refuses to sign the acknowledgment form for the Notice of Privacy Practices at a new doctor's office. Can the doctor refuse to treat the patient?", opts: ["Yes — signing the NPP acknowledgment is a condition of receiving care", "No — the patient can refuse to sign and still receive treatment. The provider must document that the NPP was offered and the patient declined to acknowledge receipt.", "Yes — HIPAA requires patient acknowledgment before any treatment", "No — providers must get the signature within 30 days of first treatment"], ans: 1, explain: "Signing the NPP acknowledgment form is NOT a condition of receiving care. Patients may decline to sign without losing access to treatment. The provider's obligation is to make a good-faith effort to obtain acknowledgment — if the patient refuses, the provider must document that fact. The Notice was given; the refusal to sign doesn't change the provider's privacy obligations." }
+  },
+  {
+    title: "The HIPAA Security Rule — Overview",
+    tagline: "How electronic health information must be technically protected",
+    body: `<p>While the Privacy Rule governs who can access health information and for what purposes, the <span class="key-term">HIPAA Security Rule</span> specifically governs how electronic PHI (ePHI) must be technically protected. Finalized in 2005, it establishes a national standard for healthcare cybersecurity.</p>
+    <div class="highlight-box">The Security Rule's core requirement: Covered Entities and Business Associates must implement reasonable and appropriate safeguards to protect the confidentiality, integrity, and availability of all ePHI they create, receive, maintain, or transmit. The three objectives — confidentiality, integrity, and availability — are familiar to anyone who has studied information security (the classic "CIA triad").</div>
+    <p>The Security Rule organizes requirements into three categories of safeguards:</p>
+    <div class="tier-grid">
+      <div class="tier-1"><strong style="color:#633806">Administrative Safeguards</strong><br><span style="font-size:12px;color:#1a1a18">The largest category. Policies, procedures, and management oversight. Covers risk analysis, workforce training, incident response, contingency planning. About 50% of Security Rule requirements.</span></div>
+      <div class="tier-1"><strong style="color:#633806">Physical Safeguards</strong><br><span style="font-size:12px;color:#1a1a18">Controls over physical access to facilities and devices containing ePHI. Covers workstation security, device and media controls, facility access controls.</span></div>
+    </div>
+    <div class="tier-grid">
+      <div class="tier-2"><strong style="color:#4A1B0C">Technical Safeguards</strong><br><span style="font-size:12px;color:#1a1a18">Technology controls protecting ePHI. Covers access controls, audit controls, integrity controls, transmission security (encryption).</span></div>
+      <div class="tier-2"><strong style="color:#4A1B0C">Organizational Requirements</strong><br><span style="font-size:12px;color:#1a1a18">Business Associate Agreements and related policies. Ensures the compliance chain extends to all parties handling ePHI.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Required vs. Addressable:</strong> A crucial distinction in the Security Rule is between "required" and "addressable" specifications. Required specifications must be implemented — no exceptions. Addressable specifications must be implemented if reasonable and appropriate, or the organization must document why an equivalent alternative measure was used instead. "Addressable" does NOT mean "optional" — it means "evaluate and implement or justify alternatives."</div>`,
+    quiz: { q: "The Security Rule divides its requirements into required and addressable specifications. What does 'addressable' mean in this context?", opts: ["Optional — the organization can choose whether to implement it", "Must be implemented if reasonable and appropriate, or the organization must document why an equivalent alternative was used instead", "Only applies to large healthcare organizations", "Only relevant for cloud-based systems"], ans: 1, explain: "In the HIPAA Security Rule, 'addressable' does NOT mean optional. Addressable specifications must be implemented if reasonable and appropriate for the organization's environment. If not implemented, the organization must document why and what equivalent alternative measure (if any) was implemented instead. Treating addressable specifications as optional is a common and costly HIPAA misconception." }
+  },
+  {
+    title: "Administrative Safeguards",
+    tagline: "The policies and management practices that make security work",
+    body: `<p><span class="key-term">Administrative safeguards</span> are the foundation of the HIPAA Security Rule — they account for the largest portion of requirements. These are the management practices, policies, and procedures that protect ePHI and govern the workforce's behavior around electronic health information.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Security Management Process</strong><span>The cornerstone requirement: conduct a comprehensive risk analysis to identify vulnerabilities and threats to ePHI, then implement a risk management program to reduce those risks to a reasonable and appropriate level. Required specifications.</span></div>
+      <div class="cheat-pill"><strong>Assigned Security Responsibility</strong><span>Designate a Security Officer responsible for developing and implementing security policies and procedures. This person is accountable for HIPAA security compliance.</span></div>
+      <div class="cheat-pill"><strong>Workforce Security</strong><span>Implement procedures to authorize and supervise workforce access to ePHI. Includes background checks (addressable), sanctions for violations, and procedures for workforce clearance.</span></div>
+      <div class="cheat-pill"><strong>Information Access Management</strong><span>Implement policies to authorize access to ePHI based on job function — only as necessary. Includes access establishment and modification procedures.</span></div>
+      <div class="cheat-pill"><strong>Security Awareness and Training</strong><span>Train all workforce members on security policies and procedures, including periodic security reminders, protection from malicious software, log-in monitoring, and password management.</span></div>
+      <div class="cheat-pill"><strong>Security Incident Procedures</strong><span>Document and implement procedures to identify, respond to, mitigate, and document security incidents. Track incidents and their outcomes. Required specification.</span></div>
+      <div class="cheat-pill"><strong>Contingency Plan</strong><span>Develop and test plans for responding to emergencies that damage systems containing ePHI. Includes data backup, disaster recovery, emergency mode operations, and testing procedures.</span></div>
+      <div class="cheat-pill"><strong>Evaluation</strong><span>Periodically reassess security procedures in light of environmental or operational changes. When you change your system, re-evaluate your security controls.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Risk analysis is the non-negotiable foundation:</strong> The HHS Office for Civil Rights has repeatedly emphasized that the risk analysis is the single most important HIPAA Security Rule requirement. Nearly every major HIPAA security enforcement action has cited inadequate risk analysis as a central finding. Without a thorough, documented risk analysis, an organization cannot know what controls to implement.</div>`,
+    quiz: { q: "Which administrative safeguard is considered the single most fundamental requirement in the HIPAA Security Rule, according to HHS enforcement guidance?", opts: ["Workforce security training", "The contingency plan (disaster recovery)", "The risk analysis — identifying vulnerabilities and threats to ePHI", "The security awareness program"], ans: 2, explain: "The risk analysis is the foundational administrative safeguard. HHS enforcement actions almost universally cite inadequate or missing risk analysis as a central violation. Without understanding what threats and vulnerabilities exist, an organization cannot rationally design or implement appropriate security controls — making risk analysis the prerequisite for everything else in the Security Rule." }
+  },
+  {
+    title: "Physical Safeguards",
+    tagline: "Protecting the actual places and devices where ePHI lives",
+    body: `<p><span class="key-term">Physical safeguards</span> under the HIPAA Security Rule address the physical protections around the facilities, equipment, and devices that contain or access ePHI. These are the "real world" controls — locks, cameras, clean-desk policies, and device management.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Facility Access Controls</strong><span>Limit physical access to systems containing ePHI to authorized individuals. Includes: contingency operations procedures, facility security plans, access control and validation, maintenance records for physical security measures.</span></div>
+      <div class="cheat-pill"><strong>Workstation Use</strong><span>Implement policies governing the proper use of and access to workstations that access ePHI. Specify the physical environment of workstations, including positioning monitors away from public view and requiring screen locks.</span></div>
+      <div class="cheat-pill"><strong>Workstation Security</strong><span>Implement physical safeguards for workstations that access ePHI — restricting access to authorized users only. Cable locks, privacy screens, secure room placement.</span></div>
+      <div class="cheat-pill"><strong>Device and Media Controls</strong><span>Implement policies for the receipt, movement, and disposal of hardware and electronic media containing ePHI. Includes procedures for final disposal (data wiping or physical destruction), media reuse, and tracking of hardware/media movement.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The laptop-in-the-car problem:</strong> One of the most common causes of large healthcare data breaches is a laptop with unencrypted patient data left in a car — which is then stolen. Physical safeguards require organizations to have policies about how devices are secured, what data can be stored locally vs. in the cloud, and what happens when devices are taken off-premises. A hospital that has no policy about employee laptops being left in cars has a physical safeguard deficiency.</div>
+    <div class="warning-box"><strong>Device disposal is a major gap:</strong> Many healthcare organizations carefully protect data while it's in use — but fail when it comes to disposal. Old computers sold without data wiping, photocopiers returned to leasing companies with hard drives still containing patient information, USB drives thrown in trash cans — these are all physical safeguard failures. HIPAA requires documented procedures ensuring ePHI is properly destroyed or rendered unrecoverable before any device leaves the organization's control.</div>`,
+    quiz: { q: "A clinic sells its old computers to a refurbisher without running any data-wiping software first. Thousands of patient records are later discovered on the hard drives. Which HIPAA safeguard category was violated?", opts: ["Administrative safeguards — inadequate policies", "Technical safeguards — lack of encryption", "Physical safeguards — specifically the device and media controls requirement for proper disposal procedures", "All three categories equally"], ans: 2, explain: "Physical safeguards' device and media controls specifically require documented procedures for the final disposition of electronic media — including data wiping or physical destruction before hardware leaves the organization's control. Selling computers without removing patient data is a physical safeguard violation, even though it has technical dimensions (unencrypted data)." }
+  },
+  {
+    title: "Technical Safeguards",
+    tagline: "The technology controls that protect ePHI in systems and transit",
+    body: `<p><span class="key-term">Technical safeguards</span> are the technology-based controls that protect ePHI within information systems and during transmission. While administrative safeguards are about people and processes, and physical safeguards are about real-world environments, technical safeguards are about the technology itself.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Access Control (Required)</strong><span>Implement technical policies to allow only authorized persons or software to access ePHI. Includes: unique user identification (required), emergency access procedures (required), automatic logoff (addressable), encryption and decryption (addressable).</span></div>
+      <div class="cheat-pill"><strong>Audit Controls (Required)</strong><span>Implement hardware, software, and procedural mechanisms to record and examine access and other activity in information systems containing ePHI. Audit logs must capture who accessed what data, when, and what actions were taken.</span></div>
+      <div class="cheat-pill"><strong>Integrity Controls (Addressable)</strong><span>Implement policies and procedures to protect ePHI from improper alteration or destruction. Authentication mechanisms confirm data has not been changed without authorization — checksums, digital signatures, hash values.</span></div>
+      <div class="cheat-pill"><strong>Transmission Security (Addressable)</strong><span>Implement technical security measures to guard against unauthorized access to ePHI transmitted over electronic networks. Encryption is listed as an addressable implementation specification for transmission — but in practice, unencrypted transmission of ePHI over public networks is almost always indefensible.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Encryption and the "Safe Harbor" protection:</strong> Under the Breach Notification Rule, if ePHI is encrypted according to NIST standards at the time of a breach, the incident may not constitute a reportable breach — because encrypted data is generally unreadable without the encryption key. This "encryption safe harbor" creates a powerful incentive to encrypt ePHI: if your encrypted laptop is stolen, you may avoid a mandatory breach notification and all the associated costs and reputational damage.</div>
+    <div class="highlight-box"><strong>Unique user IDs are required:</strong> Technical safeguards explicitly require that every user who accesses ePHI has a unique identifier — shared login accounts or generic passwords are not compliant. This isn't just good security practice; it's a HIPAA requirement. Unique IDs make audit trails meaningful: you can trace exactly which person accessed which records, when, from where, and what they did. Without unique IDs, accountability collapses.</div>`,
+    quiz: { q: "A hospital uses a shared login ('admin'/'password123') for all nursing station computers to make it faster for nurses to access patient records. Which technical safeguard does this violate?", opts: ["Audit Controls — it makes logging impossible", "Access Control — specifically the required unique user identification specification", "Integrity Controls — patient records could be altered", "Both Access Controls and Audit Controls — shared logins violate unique user ID requirements AND undermine meaningful audit trails"], ans: 3, explain: "Shared logins violate both: (1) the required unique user identification specification under Access Controls — each user must have a unique identifier, and (2) Audit Controls — without unique user IDs, audit logs cannot attribute access to specific individuals, making accountability impossible. In practice, this affects both safeguards simultaneously." }
+  },
+  {
+    title: "The HIPAA Breach Notification Rule — Overview",
+    tagline: "What must happen when your health data is exposed",
+    body: `<p>Even organizations with excellent privacy and security programs can experience data breaches. The <span class="key-term">HIPAA Breach Notification Rule</span>, introduced in 2009 through the HITECH Act and finalized in 2013, establishes what must happen when a breach of unsecured PHI occurs.</p>
+    <div class="highlight-box">The core requirement: Following a breach of unsecured PHI, Covered Entities must provide notification to affected individuals, to HHS, and — in certain large breaches — to prominent media outlets. Business Associates must notify the Covered Entity of breaches they experience. These notifications have specific content requirements and strict timelines.</div>
+    <div class="analogy-box"><strong>Why breach notification matters:</strong> Before mandatory breach notification laws existed, companies could suffer massive data breaches and simply not tell anyone — leaving affected individuals with no way to protect themselves. Breach notification requirements force transparency: when your health data is exposed, you have the right to know so you can monitor for identity theft, watch for discrimination, or take other protective steps. You can't protect yourself from a harm you don't know occurred.</div>
+    <p>The Breach Notification Rule has three key questions:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>What is a "breach"?</strong><span>The acquisition, access, use, or disclosure of PHI in a manner not permitted by the Privacy Rule, which compromises the security or privacy of the PHI. We'll cover the full definition on Day 18.</span></div>
+      <div class="cheat-pill"><strong>What is "unsecured" PHI?</strong><span>PHI that has not been rendered unusable, unreadable, or indecipherable to unauthorized persons through encryption (per NIST standards) or physical destruction. Encrypted PHI is not subject to breach notification requirements even if stolen.</span></div>
+      <div class="cheat-pill"><strong>What notifications are required?</strong><span>Individual notice, HHS notice, and (for large breaches) media notice. Each has specific timelines, content requirements, and methods. We'll cover these on Day 19.</span></div>
+    </div>
+    <div class="warning-box"><strong>The HITECH Act connection:</strong> The Breach Notification Rule was created by the Health Information Technology for Economic and Clinical Health (HITECH) Act in 2009. HITECH was passed to promote adoption of electronic health records and also dramatically strengthened HIPAA penalties, created the Breach Notification Rule, and extended HIPAA requirements directly to Business Associates. It's the single most significant expansion of HIPAA since the original law.</div>`,
+    quiz: { q: "A hospital's server containing encrypted patient records is stolen. The encryption meets NIST standards. Under the Breach Notification Rule, what is required?", opts: ["Full breach notification to all affected patients and HHS", "No notification is required — encrypted PHI is not subject to breach notification requirements", "Notification to HHS only, not to patients", "Notification to patients within 60 days"], ans: 1, explain: "Under HIPAA's Breach Notification Rule, PHI that is properly encrypted per NIST standards is considered 'secured.' Even if the device containing it is stolen, no breach notification is required because the data is unreadable without the encryption key. This is the 'encryption safe harbor' — a major practical incentive for healthcare organizations to encrypt all ePHI." }
+  },
+  {
+    title: "What Constitutes a Breach",
+    tagline: "Not every incident is a breach — understanding the definition and exceptions",
+    body: `<p>HIPAA defines a <span class="key-term">breach</span> as the acquisition, access, use, or disclosure of PHI in a manner not permitted by the Privacy Rule — and that compromises the security or privacy of the PHI. This definition is broad, but HIPAA also provides important exceptions that narrow it significantly.</p>
+    <div class="highlight-box"><strong>The presumption of breach:</strong> Under HIPAA, any impermissible use or disclosure of PHI is presumed to be a breach — UNLESS the Covered Entity or Business Associate demonstrates that there is a low probability that PHI has been compromised. This shifts the burden of proof to the organization: you must prove it wasn't a meaningful breach, not assume it wasn't one.</div>
+    <p>There are three exceptions to the breach definition — cases where an impermissible disclosure is NOT a breach requiring notification:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Exception 1: Unintentional Access by Authorized Workforce</strong><span>An unintentional acquisition, access, or use of PHI by a workforce member acting in good faith — if it was made within the scope of authority and the PHI is not further used or disclosed impermissibly.</span></div>
+      <div class="cheat-pill"><strong>Exception 2: Inadvertent Disclosure to Authorized Person</strong><span>An inadvertent disclosure from one authorized person to another authorized person at the same Covered Entity, if the PHI is not further impermissibly used or disclosed.</span></div>
+      <div class="cheat-pill"><strong>Exception 3: Good Faith Belief of No Retention</strong><span>The Covered Entity or Business Associate has a good faith belief that the unauthorized person who received the PHI would not have been able to retain the information (e.g., a fax sent to the wrong number that is immediately confirmed destroyed).</span></div>
+    </div>
+    <div class="analogy-box"><strong>The four-factor risk assessment:</strong> For impermissible disclosures that don't clearly fall into an exception, organizations must conduct a four-factor risk assessment to determine the probability of compromise: (1) the nature and extent of PHI involved, (2) who used it or to whom it was disclosed, (3) whether PHI was actually acquired or viewed, and (4) the extent to which risk has been mitigated. Only if this assessment shows low probability of compromise can notification be avoided.</div>
+    <div class="warning-box"><strong>The word "compromises" matters:</strong> HIPAA specifies that a breach must "compromise" the security or privacy of PHI. If a nurse inadvertently sees one line of a wrong patient's record and immediately closes it — and there's good faith reason to believe no harm could result — that may not be a reportable breach. But organizations have often underestimated what counts as "compromise," leading to enforcement actions for failure to report.</div>`,
+    quiz: { q: "A healthcare worker accidentally emails a patient summary to the wrong patient, then immediately calls the recipient who confirms they deleted it without reading it. Under HIPAA's breach definition and exceptions, how should this be treated?", opts: ["Definitely a reportable breach — any wrong disclosure is a breach", "Possibly not a breach — may fall under Exception 3 (good faith belief recipient could not retain the PHI) or require a four-factor risk assessment showing low probability of compromise", "Definitely not a breach — accidental disclosures are always exempt", "A breach only if the recipient reads the email"], ans: 1, explain: "This scenario may qualify under Exception 3 (good faith belief the recipient couldn't retain the PHI) or may require the four-factor risk assessment. Key factors: the prompt confirmation that the email was deleted unread, the nature of PHI involved, and the circumstances of the disclosure. The organization should document its risk assessment analysis rather than assuming this is automatically exempt or automatically reportable." }
+  },
+  {
+    title: "Breach Notification Requirements",
+    tagline: "Who gets notified, when, how, and what must be in the notification",
+    body: `<p>When a reportable breach occurs, HIPAA mandates specific notification obligations with strict timelines and content requirements. Getting this wrong — by notifying too late or providing inadequate notification — is itself a HIPAA violation.</p>
+    <div class="rule-card"><b>Individual Notice</b><br>Affected individuals must be notified without unreasonable delay and no later than <strong>60 days</strong> after discovery of the breach. Notice must be by first-class mail (or email if the individual has agreed to electronic notice). If 10 or more individuals have outdated contact information, substitute notice is required (media or website posting). Content must include: description of what happened, types of PHI involved, steps individuals should take to protect themselves, what the entity is doing to investigate and mitigate, and contact information.</div>
+    <div class="rule-card"><b>Notice to HHS (Department of Health and Human Services)</b><br>For breaches involving <strong>500 or more individuals</strong>: Notify HHS <strong>simultaneously</strong> with individual notification (within 60 days). HHS posts these on its public "Wall of Shame" website. For breaches involving <strong>fewer than 500 individuals</strong>: Report to HHS on an annual basis — within 60 days of the end of the calendar year in which the breach was discovered.</div>
+    <div class="rule-card"><b>Media Notice</b><br>For breaches involving <strong>500 or more residents of a state or jurisdiction</strong>: Notify prominent media outlets (typically major newspapers) serving that area — within 60 days of breach discovery. This requirement ensures large local breaches become public knowledge.</div>
+    <div class="analogy-box"><strong>The "Wall of Shame":</strong> HHS publicly posts all breach reports involving 500 or more individuals on its website (sometimes called the "Wall of Shame" in the industry). You can visit it right now at hhs.gov — it lists every large healthcare data breach reported since 2009, including the organization's name, breach date, type of breach, and number of individuals affected. This public transparency creates powerful reputational incentives for healthcare organizations to prevent large breaches.</div>
+    <div class="highlight-box"><strong>Business Associate notifications to Covered Entities:</strong> Business Associates must notify the Covered Entity of breaches they experience "without unreasonable delay" — generally interpreted as 60 days or less. The Covered Entity then has 60 days from discovery (which starts when the Business Associate notifies them) to send individual notices. BAA contracts often specify shorter notification windows.</div>`,
+    quiz: { q: "A hospital discovers a breach affecting 10,000 patients on March 1. What are their notification deadlines?", opts: ["90 days for individuals, 120 days for HHS", "60 days for individuals (by May 1), HHS notification simultaneously with individual notice (also by May 1), and media notice within 60 days for the affected jurisdiction", "30 days for individuals, 90 days for HHS", "60 days for HHS, 120 days for individuals"], ans: 1, explain: "A breach of 500+ individuals triggers: (1) individual notification within 60 days of discovery (by May 1), (2) HHS notification simultaneously with individual notice (also by May 1), and (3) media notice to prominent outlets in the affected area within 60 days (also by May 1). All three have the same 60-day deadline from the date of discovery for large breaches." }
+  },
+  {
+    title: "The HITECH Act and the Omnibus Rule",
+    tagline: "How HIPAA was dramatically strengthened after 2009",
+    body: `<p>HIPAA's enforcement landscape changed dramatically in 2009 and 2013 through two legislative and regulatory actions: the <span class="key-term">HITECH Act</span> and the <span class="key-term">Omnibus Rule</span>. Understanding these updates is essential because much of modern HIPAA compliance is shaped by them.</p>
+    <div class="highlight-box"><strong>The HITECH Act (2009):</strong> The Health Information Technology for Economic and Clinical Health Act was part of the American Recovery and Reinvestment Act. Its HIPAA-related provisions: created the Breach Notification Rule, dramatically increased civil monetary penalties, gave states' attorneys general the authority to enforce HIPAA, extended HIPAA requirements directly to Business Associates (they were previously only bound through their Covered Entity contracts), and created a tiered penalty structure. HITECH transformed HIPAA from a largely unenforced framework into one with real financial consequences.</div>
+    <div class="highlight-box"><strong>The Omnibus Rule (2013):</strong> A comprehensive update that implemented HITECH's requirements. Key additions: made Business Associates directly liable under HIPAA (no longer just through contracts), expanded the definition of Business Associate to include subcontractors, strengthened restrictions on PHI use for marketing and fundraising, restricted sale of PHI, expanded individual rights (including the right to electronic copies of records), and revised the breach notification standard to the current "presumption of breach" approach.</div>
+    <div class="analogy-box"><strong>Before HITECH:</strong> Under original HIPAA, maximum penalties were $25,000 per violation category per year. Enforcement was sporadic. Business Associates weren't directly liable — only the Covered Entity could be sanctioned. The result: widespread non-compliance with little consequence. HITECH changed the math entirely: the new penalty structure could result in $1.9 million per violation category per year, and Business Associates could be separately fined. This turned HIPAA from a suggestion into a serious legal obligation.</div>`,
+    quiz: { q: "Before the HITECH Act (2009), Business Associates could be held directly liable under HIPAA. True or false?", opts: ["True — Business Associates were always directly subject to HIPAA penalties", "False — Before HITECH, Business Associates' obligations came only through their contracts with Covered Entities, not directly from HIPAA law", "True — but only for Security Rule violations", "False — Business Associates are still not directly liable under HIPAA"], ans: 1, explain: "Before HITECH (2009), Business Associates were only bound through their contractual Business Associate Agreements with Covered Entities. HIPAA didn't directly apply to them as a matter of law. HITECH changed this: Business Associates became directly subject to HIPAA and its penalties, creating a new enforcement dimension that fundamentally changed healthcare vendor relationships." }
+  },
+  {
+    title: "Business Associate Agreements (BAAs)",
+    tagline: "The contracts that extend HIPAA compliance through the supply chain",
+    body: `<p>The <span class="key-term">Business Associate Agreement (BAA)</span> is one of HIPAA's most practically important requirements. It's the mechanism by which Covered Entities extend their HIPAA obligations to the vendors, service providers, and partners who handle PHI on their behalf.</p>
+    <div class="highlight-box">A BAA is a written contract that must be executed between a Covered Entity and any Business Associate before the Business Associate can access PHI. Without a BAA, a Covered Entity cannot legally share PHI with a third party — and doing so is a HIPAA violation. The BAA creates a legally binding accountability structure that flows PHI protection requirements down through the healthcare supply chain.</div>
+    <p>Required BAA elements under HIPAA:</p>
+    <div class="badge-row">
+      <span class="badge badge-pink">Description of permitted uses and disclosures of PHI by the Business Associate</span>
+      <span class="badge badge-pink">Requirement to use appropriate safeguards to protect PHI</span>
+      <span class="badge badge-pink">Requirement to report breaches to the Covered Entity</span>
+      <span class="badge badge-pink">Requirement to ensure subcontractors agree to the same restrictions</span>
+      <span class="badge badge-pink">Requirement to make PHI available to individuals exercising their rights</span>
+      <span class="badge badge-pink">Requirement to return or destroy PHI at contract termination</span>
+    </div>
+    <div class="analogy-box"><strong>The BAA as a trust chain:</strong> Imagine a hospital hires a billing company, which hires a coding company, which uses a cloud storage provider. Each link in this chain handles PHI. HIPAA requires: Hospital ↔ BAA ↔ Billing Company ↔ BAA ↔ Coding Company ↔ BAA ↔ Cloud Provider. Each party is bound to HIPAA's requirements — and each party is directly liable for violations. The BAA chain ensures that PHI protection travels with the data, regardless of how many parties handle it.</div>
+    <div class="warning-box"><strong>Popular technology companies and BAAs:</strong> Many technology companies that handle healthcare data offer BAAs — Google Workspace, Microsoft 365, AWS, Dropbox Business, Zoom. But the standard consumer versions of these services do NOT have BAAs. A doctor who stores patient records in their personal Google Drive (without a BAA) is violating HIPAA. Many small healthcare practices unknowingly violate HIPAA by using consumer-grade technology without securing BAAs.</div>`,
+    quiz: { q: "A medical practice uses a consumer email service to send patient lab results, and the email provider has not signed a Business Associate Agreement. Is this a HIPAA violation?", opts: ["No — consumer email services are exempt from HIPAA", "Yes — sharing PHI with a third-party service provider without a BAA is a HIPAA violation, regardless of the service type", "Only if the email is intercepted", "Only if the email provider is also a healthcare company"], ans: 1, explain: "Sharing PHI with any third-party service provider (including consumer email services) without a Business Associate Agreement is a HIPAA violation. Consumer email providers aren't exempt — the requirement is about PHI protection, not about the type of service. The practice must either use a HIPAA-compliant email service with a BAA or switch to a secure messaging system." }
+  },
+  {
+    title: "HIPAA Enforcement and Penalties",
+    tagline: "The real financial and legal consequences of HIPAA violations",
+    body: `<p>HIPAA is not a law without teeth. The <span class="key-term">HIPAA Enforcement Rule</span> establishes a civil and criminal penalty structure designed to create genuine deterrence — especially after HITECH dramatically increased penalty amounts in 2009.</p>
+    <p>Civil monetary penalties are organized in a four-tier structure based on the level of culpability:</p>
+    <div class="tier-grid">
+      <div class="tier-1"><strong style="color:#633806">Tier 1: Did Not Know</strong><br><span style="font-size:12px;color:#1a1a18">The entity didn't know and couldn't reasonably have known about the violation. Minimum: $100 per violation. Maximum: $50,000 per violation. Annual cap: $25,000 per identical violation category.</span></div>
+      <div class="tier-1"><strong style="color:#633806">Tier 2: Reasonable Cause</strong><br><span style="font-size:12px;color:#1a1a18">The violation was due to reasonable cause — not willful neglect. Minimum: $1,000 per violation. Maximum: $50,000 per violation. Annual cap: $100,000 per identical violation category.</span></div>
+    </div>
+    <div class="tier-grid">
+      <div class="tier-3"><strong style="color:#501313">Tier 3: Willful Neglect — Corrected</strong><br><span style="font-size:12px;color:#1a1a18">Willful neglect but corrected within 30 days of discovery. Minimum: $10,000 per violation. Maximum: $50,000 per violation. Annual cap: $250,000 per identical violation category.</span></div>
+      <div class="tier-4"><strong style="color:#FBEAF0">Tier 4: Willful Neglect — Not Corrected</strong><br><span style="font-size:12px;color:#FBEAF0;font-weight:500">Willful neglect, not corrected within 30 days. Minimum: $50,000 per violation. Maximum: $50,000 per violation. Annual cap: $1.9 million per identical violation category.</span></div>
+    </div>
+    <div class="penalty-box"><strong>Notable enforcement actions:</strong> Anthem Health (2018): $16 million — largest HIPAA settlement at the time, for a breach affecting 79 million records. Memorial Hermann Health System (2017): $2.4 million. Community Health Systems (2014): 4.5 million patient records breached, $6.85 million settlement. Advocate Medical Group: $5.55 million for three separate laptop thefts. These settlements signal that HIPAA enforcement has real financial consequences.</div>
+    <div class="highlight-box"><strong>Criminal penalties:</strong> Beyond civil fines, HIPAA also has criminal provisions for knowing violations. Penalties range from up to 1 year in prison for basic violations, to up to 5 years for violations under false pretenses, to up to 10 years for violations involving intent to sell, transfer, or use PHI for commercial advantage, personal gain, or malicious harm. Criminal HIPAA prosecutions are relatively rare but do occur.</div>`,
+    quiz: { q: "A hospital knowingly fails to implement required HIPAA security safeguards, is notified by an auditor, and still fails to correct the violations within 30 days. Which penalty tier applies?", opts: ["Tier 1 — Did Not Know (lowest tier)", "Tier 2 — Reasonable Cause", "Tier 3 — Willful Neglect, Corrected", "Tier 4 — Willful Neglect, Not Corrected (highest tier)"], ans: 3, explain: "Tier 4 (Willful Neglect — Not Corrected) applies when violations are the result of willful neglect and not corrected within 30 days of discovery. This carries the highest penalties: $50,000 per violation with an annual cap of $1.9 million per identical violation category. This scenario — knowing violation, notification, no correction — is the definition of Tier 4." }
+  },
+  {
+    title: "The Office for Civil Rights (OCR)",
+    tagline: "The federal agency responsible for enforcing HIPAA",
+    body: `<p>HIPAA is enforced primarily by the <span class="key-term">Office for Civil Rights (OCR)</span> within the US Department of Health and Human Services (HHS). Understanding how OCR operates — how it investigates complaints, initiates audits, and resolves violations — is essential for healthcare compliance professionals.</p>
+    <div class="highlight-box">OCR's mandate: investigate complaints of HIPAA violations, conduct compliance reviews, perform education and outreach, and take enforcement actions when violations are found. OCR can investigate based on: individual complaints filed by patients, media reports of large breaches (500+ individuals automatically trigger scrutiny), and proactive compliance audits.</div>
+    <p>The OCR investigation process:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Complaint Intake</strong><span>OCR receives a complaint and determines whether it falls within HIPAA's scope. Many complaints are dismissed as outside OCR's jurisdiction (e.g., complaints against non-Covered Entities).</span></div>
+      <div class="cheat-pill"><strong>Investigation</strong><span>OCR contacts the Covered Entity, requests documentation, conducts interviews. The investigation examines whether a violation occurred and what the level of culpability was.</span></div>
+      <div class="cheat-pill"><strong>Resolution</strong><span>Most cases resolve through: technical assistance (educating the entity), corrective action plans (requiring specific changes), or resolution agreements (formal agreements with monetary penalties and corrective action). Formal civil monetary penalty proceedings are relatively rare.</span></div>
+      <div class="cheat-pill"><strong>HIPAA Audit Program</strong><span>OCR conducts periodic compliance audits of Covered Entities and Business Associates — proactive examinations not triggered by complaints. Audits assess whether required policies and procedures are in place and being followed.</span></div>
+    </div>
+    <div class="analogy-box"><strong>States' Attorneys General:</strong> Since HITECH, state Attorneys General can also bring HIPAA enforcement actions on behalf of state residents. This creates dual federal-state enforcement risk. Several states — including Connecticut, Massachusetts, and New York — have brought significant HIPAA enforcement actions and negotiated substantial settlements with healthcare organizations.</div>
+    <div class="info-box"><strong>Right of access enforcement:</strong> Since 2019, OCR has specifically prioritized enforcement of patients' right of access — the right to timely copies of their own medical records. OCR has settled dozens of cases with healthcare providers who denied or delayed patient record requests. These settlements range from $3,500 to $240,000 and serve as a warning that access rights violations are now an active enforcement priority.</div>`,
+    quiz: { q: "A healthcare patient files a HIPAA complaint with OCR because their hospital denied their request for a copy of their medical records. What is the most likely OCR resolution for most cases?", opts: ["Immediate multi-million dollar fine against the hospital", "Criminal prosecution of hospital executives", "Technical assistance, a corrective action plan requiring the hospital to provide access and improve its procedures, or a resolution agreement — formal CMPs are used in more egregious cases", "Dismissal — OCR doesn't handle record access complaints"], ans: 2, explain: "Most OCR investigations resolve through corrective action plans or resolution agreements rather than formal civil monetary penalty proceedings. For right of access violations, OCR often requires the entity to provide the records, implement improved procedures, and train staff — reserving larger penalties for willful or repeated non-compliance. However, OCR has imposed fines specifically for access violations since 2019, so these cases are taken seriously." }
+  },
+  {
+    title: "Risk Analysis and Risk Management",
+    tagline: "The cornerstone of HIPAA Security Rule compliance",
+    body: `<p>If there's one HIPAA requirement that rises above all others in importance, it's the <span class="key-term">risk analysis</span>. HHS has consistently stated that the Security Rule's risk analysis and risk management requirements are foundational — the starting point for all security compliance. And OCR's enforcement actions consistently cite inadequate risk analysis as a primary finding.</p>
+    <div class="highlight-box">The risk analysis requirement (§164.308(a)(1)(ii)(A)) requires: an accurate and thorough assessment of the potential risks and vulnerabilities to the confidentiality, integrity, and availability of all ePHI that the organization creates, receives, maintains, or transmits. This is not a one-time exercise — it must be reviewed periodically and updated when operations or the environment change.</div>
+    <p>A compliant HIPAA risk analysis must include:</p>
+    <div class="badge-row">
+      <span class="badge badge-pink">Scope: all ePHI created, received, maintained, or transmitted</span>
+      <span class="badge badge-pink">Data collection: identifying where ePHI lives and flows</span>
+      <span class="badge badge-pink">Threat identification: what could cause harm to ePHI</span>
+      <span class="badge badge-pink">Vulnerability identification: weaknesses that could be exploited</span>
+      <span class="badge badge-pink">Current controls: what safeguards are already in place</span>
+      <span class="badge badge-pink">Likelihood determination: probability of each threat/vulnerability combination</span>
+      <span class="badge badge-pink">Impact analysis: severity of potential harm if exploited</span>
+      <span class="badge badge-pink">Risk level assignment: combining likelihood and impact</span>
+      <span class="badge badge-pink">Documentation: written analysis that can be demonstrated to auditors</span>
+    </div>
+    <div class="analogy-box"><strong>Risk analysis feeds everything else:</strong> Think of the risk analysis as the foundation of a building. If you don't understand what risks exist — what threats could harm your ePHI and what vulnerabilities could be exploited — you can't rationally choose which security controls to implement. A hospital that buys expensive security software without doing a risk analysis might be protecting against threats that aren't actually present while remaining vulnerable to the real ones.</div>
+    <div class="warning-box"><strong>Risk analysis ≠ risk management:</strong> Risk analysis identifies and evaluates risks. Risk management (§164.308(a)(1)(ii)(B)) implements security measures to reduce identified risks to a reasonable and appropriate level. Both are required. Many organizations do an excellent risk analysis and then fail to actually implement the recommended remediation — which is itself a HIPAA violation.</div>`,
+    quiz: { q: "A medical practice buys a firewall and antivirus software but has never formally documented the threats and vulnerabilities facing its ePHI systems. From a HIPAA perspective, what is the key problem?", opts: ["No problem — having security tools is sufficient", "They may have appropriate controls but violated the required risk analysis specification — without documented analysis, they cannot demonstrate they understand their risks or that their controls address the actual risks present", "The problem is only the lack of documentation — not the security itself", "HIPAA doesn't require risk analysis for small practices"], ans: 1, explain: "The risk analysis requirement is a required specification — not addressable. Without a documented risk analysis, the practice cannot demonstrate: (1) that it understands its actual risks, (2) that the controls chosen are appropriate for the specific risks present, or (3) that it's complying with the foundational Security Rule requirement. Having tools without documented analysis is a HIPAA violation regardless of the tools' quality." }
+  },
+  {
+    title: "HIPAA and Electronic Health Records (EHRs)",
+    tagline: "The digital transformation of healthcare and its compliance implications",
+    body: `<p>The widespread adoption of <span class="key-term">Electronic Health Records (EHRs)</span> represents one of the biggest HIPAA compliance challenges and opportunities in modern healthcare. EHRs centralize and interconnect patient information across care settings — creating powerful clinical tools while concentrating enormous amounts of ePHI in single systems.</p>
+    <div class="highlight-box">Before EHRs, a patient's health information was distributed across paper files in dozens of separate offices. Breaches were limited by physical access. Today, a single compromised hospital EHR system might expose the complete medical histories of hundreds of thousands of patients simultaneously. The centralization that makes EHRs clinically powerful also makes them one of the most valuable and vulnerable targets for hackers.</div>
+    <p>Key HIPAA compliance considerations for EHR systems:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Access Controls</strong><span>Role-based access ensuring each user sees only the records relevant to their job. Single sign-on with unique user IDs. Automatic session timeout. Emergency access procedures that are audited.</span></div>
+      <div class="cheat-pill"><strong>Audit Logs</strong><span>Complete logging of every access to patient records — who viewed what, when, from which device. Audit logs must be retained and regularly reviewed. Critical for detecting inappropriate access.</span></div>
+      <div class="cheat-pill"><strong>Interoperability and Data Sharing</strong><span>EHRs often share data with other systems — labs, pharmacies, specialists, payers. Each data-sharing interface must be evaluated for HIPAA compliance. Business Associate Agreements with every receiving system.</span></div>
+      <div class="cheat-pill"><strong>Patient Portal Rights</strong><span>Modern EHRs include patient portals allowing direct record access. HIPAA's Right of Access now includes the right to electronic copies in machine-readable format — a significant shift from paper-era records access.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The "snooping" problem:</strong> One of the most common internal EHR compliance violations is employees accessing records of patients they aren't treating — celebrities, neighbors, family members, or former partners. Major hospitals have fired dozens of employees for snooping through EHRs out of curiosity. HIPAA's minimum necessary standard requires access controls preventing this, and audit log analysis is the primary tool for detecting it after the fact.</div>`,
+    quiz: { q: "A nurse accesses the EHR of a celebrity patient who was admitted to her hospital, even though she has no clinical role in that patient's care. She doesn't share the information. Is this a HIPAA violation?", opts: ["No — employees of Covered Entities can access any record in their system", "Yes — accessing PHI without a treatment, payment, or operations purpose violates the Privacy Rule's minimum necessary standard, regardless of whether information is further disclosed", "Only if the celebrity finds out", "Only if the hospital has a specific policy against this"], ans: 1, explain: "Accessing a patient's EHR without a legitimate treatment, payment, or operations purpose violates HIPAA's Privacy Rule — specifically the minimum necessary standard. The lack of further disclosure doesn't matter; the impermissible access itself is the violation. Most hospitals have terminated employees and faced OCR investigations for exactly this type of 'celebrity snooping.'" }
+  },
+  {
+    title: "HIPAA in the Age of Health Technology",
+    tagline: "Wearables, apps, AI, and the evolving HIPAA landscape",
+    body: `<p>The healthcare technology landscape has changed dramatically since HIPAA was enacted in 1996. Mobile health apps, wearable devices, telehealth, AI diagnostic tools, and cloud computing have created new privacy challenges that HIPAA's original framework was never designed to address.</p>
+    <div class="warning-box"><strong>The consumer health app gap:</strong> HIPAA's most significant limitation in the digital age is its narrow scope. A fitness app that tracks your heart rate, sleep patterns, menstrual cycle, or mental health — and stores this information on a company's servers — is generally NOT subject to HIPAA. If you consent to sharing this data, the app company can sell it to advertisers, data brokers, and others. This creates a massive loophole: data that would be protected if your doctor collected it is completely unprotected if you collect it yourself through a consumer app.</div>
+    <p>How HIPAA applies to emerging healthcare technologies:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Telehealth</strong><span>Video consultations between patients and providers involve ePHI. HIPAA applies to the provider. Video platform must have a BAA (e.g., Zoom for Healthcare has a BAA; regular Zoom does not). Transmission must be secure.</span></div>
+      <div class="cheat-pill"><strong>Connected Medical Devices</strong><span>Pacemakers, insulin pumps, glucose monitors, and other connected devices generate ePHI. Devices that transmit data to EHR systems or provider portals fall within HIPAA's scope. Security of these devices is an emerging focus.</span></div>
+      <div class="cheat-pill"><strong>AI Diagnostic Tools</strong><span>AI systems that analyze medical images, predict diagnoses, or process patient records are ePHI systems subject to HIPAA. Vendors are Business Associates requiring BAAs. The AI's training data itself may be PHI requiring protection.</span></div>
+      <div class="cheat-pill"><strong>Cloud Computing</strong><span>Cloud storage and processing of ePHI is permitted under HIPAA — but requires BAAs with cloud providers, appropriate encryption, access controls, and audit logging. Cloud providers offering HIPAA-compliant services typically offer specific Business Associate Agreement terms.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The FTC as a backup regulator:</strong> Where HIPAA doesn't reach consumer health apps, the Federal Trade Commission (FTC) increasingly fills the gap. The FTC Act prohibits unfair or deceptive trade practices — and the FTC has used this authority to act against health app companies that violated their own privacy promises. In 2021, the FTC issued a policy statement that health apps collecting sensitive health data must notify users when data is shared with third parties.</div>`,
+    quiz: { q: "A popular mental health journaling app collects sensitive entries about users' anxiety and depression. It is not affiliated with any healthcare provider or insurer. Does HIPAA apply?", opts: ["Yes — any app collecting mental health data is subject to HIPAA", "No — consumer health apps not affiliated with Covered Entities or Business Associates are generally not subject to HIPAA, though FTC regulations may apply", "Yes — if the app has more than 10,000 users", "No — mental health data is never subject to any privacy law"], ans: 1, explain: "Consumer health apps not affiliated with HIPAA Covered Entities or their Business Associates are generally not subject to HIPAA — one of the law's most significant limitations in the digital age. However, the FTC and some state laws (like California's CCPA) may apply. This gap has prompted increasing regulatory attention and proposed HIPAA modernization." }
+  },
+  {
+    title: "HIPAA vs. GDPR — Key Differences",
+    tagline: "How the world's two most important health privacy laws compare",
+    body: `<p>For anyone working in global GRC, understanding how <span class="key-term">HIPAA</span> and <span class="key-term">GDPR</span> compare is essential. They both protect health information, but they approach privacy very differently — reflecting different legal philosophies and different political contexts.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Scope</strong><span>HIPAA: Applies only to specific categories of Covered Entities and their Business Associates in the US. GDPR: Applies to any organization processing personal data of EU residents — regardless of sector, size, or location. GDPR is dramatically broader.</span></div>
+      <div class="cheat-pill"><strong>Lawful Basis for Processing</strong><span>HIPAA: Defines specific permitted uses without requiring a separate lawful basis concept. TPO is the primary permitted use. GDPR: Requires a specific lawful basis for every processing activity — consent, contract, legal obligation, vital interests, public task, or legitimate interests.</span></div>
+      <div class="cheat-pill"><strong>Patient/Data Subject Rights</strong><span>GDPR is broader: includes Right to Erasure, Right to Data Portability, and Right to Object — none of which exist under HIPAA in the same form. HIPAA's Right of Access is comparable to GDPR's Right of Access. HIPAA's Right to Amend is similar to GDPR's Right to Rectification.</span></div>
+      <div class="cheat-pill"><strong>Breach Notification</strong><span>HIPAA: 60 days for large breaches (500+), annual reporting for small breaches. GDPR: 72 hours to supervisory authority (much faster). GDPR's timeline is dramatically more demanding for significant breaches.</span></div>
+      <div class="cheat-pill"><strong>Penalties</strong><span>HIPAA: Up to $1.9 million per violation category per year. GDPR: Up to €20 million or 4% of global annual turnover — whichever is higher. For large multinationals, GDPR penalties can be far more severe.</span></div>
+      <div class="cheat-pill"><strong>Enforcement Model</strong><span>HIPAA: Single federal agency (OCR) plus state AGs. GDPR: Network of national Data Protection Authorities across all EU member states, coordinated at the EU level.</span></div>
+    </div>
+    <div class="analogy-box"><strong>When both apply:</strong> A US hospital that has patients who are EU residents — and processes their health data — may be subject to BOTH HIPAA and GDPR. A pharmaceutical company conducting clinical trials in both the US and EU must comply with both frameworks simultaneously. The more stringent requirement must generally be followed when they conflict.</div>`,
+    quiz: { q: "A US hospital experiences a breach affecting EU patients' health records. What are the notification timelines under HIPAA and GDPR respectively?", opts: ["Both require notification within 24 hours", "HIPAA: 60 days for large breaches. GDPR: 72 hours to the supervisory authority (for likely risks to individuals)", "HIPAA: 30 days. GDPR: 30 days", "Both require 90-day notification"], ans: 1, explain: "HIPAA requires notification to individuals and HHS within 60 days for breaches involving 500+ individuals. GDPR requires notification to the relevant supervisory authority within 72 hours of becoming aware of a breach likely to result in risks to individuals. The GDPR timeline is dramatically faster — more than 24 times shorter than HIPAA's 60-day window." }
+  },
+  {
+    title: "Building a HIPAA Compliance Program",
+    tagline: "What it actually takes to achieve and maintain HIPAA compliance",
+    body: `<p>HIPAA compliance isn't a one-time project — it's an ongoing program. Organizations that treat it as a checkbox exercise consistently end up with enforcement actions and breaches. Organizations that build genuine compliance programs protect patients and themselves. Here's what a real HIPAA compliance program looks like.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. Designate Privacy and Security Officers</strong><span>Required by HIPAA. The Privacy Officer oversees Privacy Rule compliance. The Security Officer owns Security Rule compliance. In small organizations, one person may fill both roles. These roles need real authority and resources.</span></div>
+      <div class="cheat-pill"><strong>2. Conduct and Document Risk Analysis</strong><span>The foundation. Identify all ePHI flows. Assess threats and vulnerabilities. Assign risk levels. Update annually and after significant changes. Document everything — the documentation is what auditors examine.</span></div>
+      <div class="cheat-pill"><strong>3. Develop Policies and Procedures</strong><span>Written policies for every HIPAA requirement: Privacy, Security, Breach Notification. Plain language. Practical. Actually followed by staff. Reviewed and updated annually and when regulations change.</span></div>
+      <div class="cheat-pill"><strong>4. Train All Workforce Members</strong><span>HIPAA training is required for all workforce members — not just clinical staff. Training at hire. Annual refreshers. Documentation of completion. Role-specific training for higher-risk positions.</span></div>
+      <div class="cheat-pill"><strong>5. Manage Business Associates</strong><span>Inventory all vendors who touch PHI. Execute BAAs with every one. Review BAAs periodically. Include security requirements in vendor contracts. Have a process for onboarding new vendors.</span></div>
+      <div class="cheat-pill"><strong>6. Implement and Monitor Controls</strong><span>Technical controls (encryption, access controls, audit logs). Physical controls (device management, facility security). Administrative controls (procedures followed, not just documented). Regular testing and monitoring.</span></div>
+      <div class="cheat-pill"><strong>7. Incident Response Capability</strong><span>Documented incident response plan. Trained incident response team. Regular tabletop exercises. Clear breach determination process. 60-day notification capability — systems ready to identify affected individuals quickly.</span></div>
+      <div class="cheat-pill"><strong>8. Audit and Improve</strong><span>Internal audits of compliance program effectiveness. Regular review of audit logs for inappropriate access. Management review. Continuous improvement of policies and controls. External audits periodically.</span></div>
+    </div>
+    <div class="highlight-box">The most common HIPAA compliance failure isn't ignorance of the rules — it's the gap between written policies and actual practice. Organizations document beautiful compliance programs that their staff never follow. Regular audits, meaningful workforce training, and accountability for violations are what separate genuine compliance from paper compliance.</div>`,
+    quiz: { q: "A healthcare organization has detailed HIPAA policies and procedures but has never trained its staff on them. From a compliance perspective, what is the fundamental problem?", opts: ["No problem — having documented policies satisfies HIPAA requirements", "HIPAA requires workforce training as a specific required or addressable safeguard — policies that exist but are never communicated to staff cannot be followed and represent both a Security Rule and Privacy Rule deficiency", "Training is only required for clinical staff, not administrative workers", "Training is only required when OCR specifically requests it"], ans: 1, explain: "HIPAA requires workforce training as both a Privacy Rule and Security Rule requirement. Policies that exist but haven't been communicated to staff through training cannot reasonably be expected to be followed. Furthermore, untrained staff who violate HIPAA cannot use 'I didn't know' as a meaningful defense for the organization when OCR investigates — particularly for Tiers 2-4 violations." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've made it through all 30 days of HIPAA! Let's take a final inventory of everything you now know about the foundational US law protecting healthcare privacy.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>HIPAA (Health Insurance Portability and Accountability Act) is a US federal law enacted in 1996 protecting the privacy and security of health information. It applies to Covered Entities (healthcare providers, health plans, clearinghouses) and their Business Associates. It has been significantly strengthened through the HITECH Act (2009) and the Omnibus Rule (2013). Enforced by HHS Office for Civil Rights (OCR).</p>
+    <div class="tag-header">The 4 HIPAA Rules</div>
+    <div class="badge-row">
+      <span class="badge badge-pink">Privacy Rule — Who can use and disclose PHI (effective 2003)</span>
+      <span class="badge badge-pink">Security Rule — How ePHI must be protected (effective 2005)</span>
+      <span class="badge badge-pink">Breach Notification Rule — What to do when PHI is exposed (effective 2009/2013)</span>
+      <span class="badge badge-pink">Enforcement Rule — Penalties and investigation process</span>
+    </div>
+    <div class="tag-header">Key Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-pink">PHI — 18 identifiers + health information</span>
+      <span class="badge badge-pink">ePHI — electronic form of PHI</span>
+      <span class="badge badge-pink">Covered Entities — providers, plans, clearinghouses</span>
+      <span class="badge badge-pink">Business Associates — vendors handling PHI</span>
+      <span class="badge badge-pink">BAA — Business Associate Agreement</span>
+      <span class="badge badge-pink">TPO — Treatment, Payment, Operations</span>
+      <span class="badge badge-pink">Minimum Necessary Standard</span>
+      <span class="badge badge-pink">NPP — Notice of Privacy Practices</span>
+    </div>
+    <div class="tag-header">Security Rule Safeguards</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Administrative — risk analysis, training, incident response, contingency planning</span>
+      <span class="badge badge-blue">Physical — facility access, workstation security, device disposal</span>
+      <span class="badge badge-blue">Technical — access controls, audit logs, encryption, transmission security</span>
+    </div>
+    <div class="tag-header">Patient Rights</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">Right of Access (30 days)</span>
+      <span class="badge badge-teal">Right to Amend</span>
+      <span class="badge badge-teal">Right to Accounting of Disclosures</span>
+      <span class="badge badge-teal">Right to Request Restrictions</span>
+      <span class="badge badge-teal">Right to Confidential Communications</span>
+      <span class="badge badge-teal">Right to Receive NPP</span>
+      <span class="badge badge-teal">Right to Complain (no retaliation)</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete HIPAA cheat sheet with all rules, rights, safeguards, and key facts summarized in one reference.</div>`,
+    quiz: { q: "HIPAA enforcement is primarily handled by which government body?", opts: ["The FDA (Food and Drug Administration)", "The FTC (Federal Trade Commission)", "The HHS Office for Civil Rights (OCR)", "The Department of Justice"], ans: 2, explain: "HIPAA civil enforcement is primarily handled by the HHS Office for Civil Rights (OCR). OCR investigates complaints, conducts compliance audits, and imposes civil monetary penalties. The Department of Justice handles criminal HIPAA prosecutions. State Attorneys General can also bring enforcement actions since the HITECH Act in 2009." }
+  },
+  {
+    title: "HIPAA Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is HIPAA?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">Health Insurance Portability and Accountability Act. US federal law enacted 1996. Protects privacy and security of health information. Significantly strengthened by HITECH Act (2009) and Omnibus Rule (2013). Enforced by HHS Office for Civil Rights (OCR). Applies to Covered Entities (healthcare providers, health plans, healthcare clearinghouses) and their Business Associates. Penalties up to $1.9 million per violation category per year, plus criminal penalties.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Who Must Follow HIPAA</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Covered Entities:</b> (1) Healthcare Providers that transmit health information electronically (hospitals, doctors, pharmacies, dentists, labs). (2) Health Plans (insurers, HMOs, Medicare/Medicaid, employer plans with 50+ participants). (3) Healthcare Clearinghouses (process health data between formats).</div>
+        <div class="ctrl-card"><b>Business Associates:</b> Any person or entity performing functions on behalf of a Covered Entity involving use or disclosure of PHI. Examples: billing companies, IT vendors, cloud providers, law firms, accountants, shredding services, subcontractors handling PHI. Must have signed BAA. Directly subject to HIPAA since HITECH 2009.</div>
+        <div class="ctrl-card"><b>NOT Covered:</b> Employers (generally), consumer health apps, life insurance companies (if not health plans), schools, workers' compensation carriers, law enforcement. These may be subject to other laws (FTC Act, state privacy laws, ADA, GINA).</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Protected Health Information (PHI)</h3>
+      <p style="font-size:13.5px;color:#6b6b68">Individually identifiable health information created, received, maintained, or transmitted by a Covered Entity or Business Associate — in any form (electronic, paper, oral). Requires: (1) health information + (2) one or more of 18 identifiers + (3) held/transmitted by covered entity or BA.</p>
+      <div class="badge-row" style="margin-top:.5rem">
+        <span class="badge badge-pink">18 Identifiers: Names | Geographic subdivisions &lt; state | Dates (except year) | Phone | Fax | Email | SSN | Medical record # | Health plan # | Account # | Certificate/license # | Vehicle IDs | Device IDs | URLs | IP addresses | Biometrics | Photos | Any unique ID</span>
+      </div>
+      <p style="font-size:12.5px;color:#6b6b68;margin-top:.5rem">De-identified data is NOT PHI: Safe Harbor method (remove all 18 identifiers) or Expert Determination method. ePHI = PHI in electronic form — subject to Security Rule in addition to Privacy Rule.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The 4 HIPAA Rules</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Privacy Rule (2003)</b> — Covers all PHI in all forms. Default: no use/disclosure without permission. Permitted uses: TPO, individual access, opportunity to agree/object, incidental, public interest, limited data set. Patient authorization required for all other uses (marketing, research, sale of PHI).</div>
+        <div class="ctrl-card"><b>Security Rule (2005)</b> — Covers ePHI only. Three safeguard categories: Administrative (risk analysis, training, incident procedures, contingency plan), Physical (facility access, workstation security, device disposal), Technical (access controls, audit logs, integrity, transmission security). Required vs. Addressable specifications.</div>
+        <div class="ctrl-card"><b>Breach Notification Rule (2009/2013)</b> — Presumption of breach for all impermissible disclosures unless low probability of compromise demonstrated. Individual notice within 60 days. HHS simultaneous notice for 500+ breaches. Media notice for 500+ in a state. Encrypted PHI not subject to notification. BA must notify CE.</div>
+        <div class="ctrl-card"><b>Enforcement Rule</b> — 4-tier civil penalty structure. Criminal penalties (1-10 years). OCR investigates complaints and conducts audits. State AGs can also enforce (since HITECH). Wall of Shame: public HHS breach database for 500+ breaches.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Patient Rights Under the Privacy Rule</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Right of Access</b> — Inspect/copy own PHI. 30-day response (extendable once to 60 days with written notice). Reasonable cost-based fee allowed. Cannot deny for unpaid bills. Electronic copies in machine-readable format on request.</div>
+        <div class="ctrl-card"><b>Right to Amend</b> — Request correction of inaccurate/incomplete PHI. CE can deny if CE didn't create it, accurate/complete, not in record set, or not available for inspection. Denial: patient may submit statement of disagreement.</div>
+        <div class="ctrl-card"><b>Right to Accounting</b> — List of certain non-TPO disclosures in past 6 years. Excludes TPO disclosures. Must be provided within 60 days.</div>
+        <div class="ctrl-card"><b>Right to Request Restrictions</b> — Generally CE need not agree. MANDATORY EXCEPTION: CE must restrict disclosure to health plan when patient pays entirely out-of-pocket and requests restriction.</div>
+        <div class="ctrl-card"><b>Right to Confidential Communications</b> — Alternative means or location for communications. CE must accommodate reasonable requests without requiring explanation.</div>
+        <div class="ctrl-card"><b>Right to NPP + Right to Complain</b> — Receive Notice of Privacy Practices. File complaint with CE or OCR. No retaliation permitted — retaliation itself is a HIPAA violation.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Security Rule Safeguards</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Administrative Safeguards (~50% of requirements)</b> — Risk analysis (REQUIRED — foundational), Risk management (REQUIRED), Security Officer designation, Workforce security, Information access management, Security awareness training, Security incident procedures (REQUIRED), Contingency plan, Evaluation, BAA compliance.</div>
+        <div class="ctrl-card"><b>Physical Safeguards</b> — Facility access controls, Workstation use policies, Workstation security, Device and media controls (including data disposal and media reuse procedures).</div>
+        <div class="ctrl-card"><b>Technical Safeguards</b> — Access Control: unique user IDs (REQUIRED), emergency access (REQUIRED), auto-logoff (addressable), encryption (addressable). Audit Controls (REQUIRED). Integrity (addressable). Transmission Security: encryption (addressable — but practically mandatory).</div>
+        <div class="ctrl-card"><b>Required vs. Addressable</b> — REQUIRED: Must implement. ADDRESSABLE: Implement if reasonable and appropriate, or document why + equivalent alternative. "Addressable" ≠ "Optional." Most commonly misunderstood Security Rule concept.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Business Associate Agreements (BAAs)</h3>
+      <p style="font-size:13.5px;color:#6b6b68">Required written contract before Covered Entity shares PHI with any Business Associate. Required contents: permitted uses/disclosures, appropriate safeguards, breach reporting to CE, subcontractor BAA requirement, PHI availability for patient rights, return/destroy PHI at termination. Subcontractors also require BAAs. Common failures: using consumer tech (Gmail, Dropbox, Zoom) without a BAA version.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Breach Notification Timeline Summary</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>All Breaches</b> — Individual notification within 60 days of discovery.</div>
+        <div class="ctrl-card"><b>500+ Individuals</b> — HHS notification simultaneously with individual notice (within 60 days). Media notice to affected jurisdiction also within 60 days.</div>
+        <div class="ctrl-card"><b>Under 500 Individuals</b> — HHS annual log within 60 days of calendar year end.</div>
+        <div class="ctrl-card"><b>Business Associates</b> — Must notify Covered Entity without unreasonable delay (max 60 days). CE's clock starts when BA notifies.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Civil Penalty Tiers</h3>
+      <div class="tier-grid">
+        <div class="tier-1"><b style="color:#633806">Tier 1 — Did Not Know</b><br><span style="font-size:12px">$100–$50,000/violation. Annual cap: $25,000.</span></div>
+        <div class="tier-1"><b style="color:#633806">Tier 2 — Reasonable Cause</b><br><span style="font-size:12px">$1,000–$50,000/violation. Annual cap: $100,000.</span></div>
+        <div class="tier-3"><b style="color:#501313">Tier 3 — Willful Neglect, Corrected</b><br><span style="font-size:12px">$10,000–$50,000/violation. Annual cap: $250,000.</span></div>
+        <div class="tier-4"><b style="color:#FBEAF0;font-weight:500">Tier 4 — Willful Neglect, Not Corrected</b><br><span style="font-size:12px;color:#FBEAF0">$50,000/violation. Annual cap: $1.9 million.</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers to Remember</h3>
+      <div class="badge-row">
+        <span class="badge badge-pink">Enacted: 1996</span>
+        <span class="badge badge-pink">Privacy Rule effective: 2003</span>
+        <span class="badge badge-pink">Security Rule effective: 2005</span>
+        <span class="badge badge-pink">HITECH Act: 2009</span>
+        <span class="badge badge-pink">Omnibus Rule: 2013</span>
+        <span class="badge badge-pink">18 PHI identifiers</span>
+        <span class="badge badge-pink">30 days: Right of Access response time</span>
+        <span class="badge badge-pink">60 days: Breach notification deadline</span>
+        <span class="badge badge-pink">500+: Triggers HHS + media notification</span>
+        <span class="badge badge-pink">6 years: Accounting of disclosures lookback</span>
+        <span class="badge badge-pink">$1.9M: Max civil penalty per violation category/year</span>
+        <span class="badge badge-pink">10 years: Max criminal sentence (malicious PHI use)</span>
+        <span class="badge badge-pink">3 safeguard types: Administrative, Physical, Technical</span>
+        <span class="badge badge-pink">Enforcement: HHS OCR (civil) + DOJ (criminal) + State AGs</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDPR — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #185FA5; color: #E6F1FB; border-color: #185FA5; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #E6F1FB; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #0C447C; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #185FA5; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #E6F1FB; color: #0C447C; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #185FA5; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-blue { background: #E6F1FB; color: #0C447C; }
+  .badge-teal { background: #E1F5EE; color: #085041; }
+  .badge-amber { background: #FAEEDA; color: #633806; }
+  .badge-coral { background: #FAECE7; color: #4A1B0C; }
+  .badge-green { background: #EAF3DE; color: #27500A; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .penalty-box { background: #FCEBEB; border-left: 3px solid #A32D2D; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .5rem 0; font-size: 13.5px; color: #1a1a18; }
+  @media (max-width: 520px) { .cheat-grid, .control-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day GDPR curriculum for high school students with daily lessons and a final cheat sheet</h2>
+
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>GDPR — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title:"What Is GDPR?",
+    tagline:"The law that protects your digital life",
+    body:`<p>Imagine you posted a photo online, and a company you've never heard of is selling that photo to advertisers — without asking you. That's exactly the kind of thing <span class="key-term">GDPR</span> was created to stop.</p>
+    <p><strong>GDPR</strong> stands for <strong>General Data Protection Regulation</strong>. It's a law created by the <strong>European Union (EU)</strong> that came into effect on <strong>May 25, 2018</strong>. Even though it's a European law, it affects almost every company in the world that deals with people's personal information.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of GDPR as a rulebook for companies. If they want to collect and use information about you, they have to follow the rules — or face serious consequences. It's like how a restaurant can't just add extra charges to your bill without telling you. There are rules they have to follow.</div>
+    <p>GDPR replaced an older, much weaker privacy law from 1995. Back then, smartphones didn't exist, social media didn't exist, and Google was a year away from being founded. The old law was simply outdated.</p>
+    <div class="highlight-box">GDPR gives <em>you</em> — the person whose data is being collected — real power. You get rights, companies get obligations, and regulators get the ability to enforce consequences.</div>`,
+    quiz:{q:"GDPR is a law created by which organization?",opts:["The United States Congress","The European Union","The United Nations","Apple and Google"],ans:1,explain:"GDPR was passed by the European Union (EU) and applies across all EU member states, but its reach extends globally to any company handling EU residents' data."}
+  },
+  {
+    title:"Why Was GDPR Created?",
+    tagline:"The backstory — and why it matters to you",
+    body:`<p>Before GDPR, companies could basically do whatever they wanted with your personal data. They collected it, sold it, shared it, and stored it forever — often without your knowledge.</p>
+    <p>A few things pushed the EU to act:</p>
+    <div class="highlight-box"><strong>Big Tech was getting enormous.</strong> Facebook, Google, Amazon, and others were building massive profiles on people — knowing where you live, what you buy, who your friends are, even your political views.</div>
+    <p>There were also major <span class="key-term">data breaches</span> — where hackers stole millions of people's personal records. Companies weren't protecting data properly, and victims had no recourse.</p>
+    <p>The EU decided enough was enough. They wanted to create one unified, strong law that gave people back control over their own information.</p>
+    <div class="analogy-box"><strong>Think about it this way:</strong> If someone was going through your diary without permission, you'd want a law to stop that. Your digital information — what you search for, what you buy, where you go — is essentially your digital diary. GDPR is the law that protects it.</div>
+    <p>And here's the global twist: even US and Asian companies have to follow GDPR if they serve EU residents. That's why you see cookie consent pop-ups on almost every website today — that's GDPR in action.</p>`,
+    quiz:{q:"What is one reason GDPR was created?",opts:["To help companies collect more data","To give people control over their personal data","To make the internet faster","To create new social media rules"],ans:1,explain:"GDPR was created largely to put the power back in the hands of the individual — you should have control over your own personal information."}
+  },
+  {
+    title:"What Is 'Personal Data'?",
+    tagline:"If it can identify you, it's probably personal data",
+    body:`<p>Before we can understand GDPR's rules, we need to understand what it protects. GDPR uses a very broad definition of <span class="key-term">personal data</span>:</p>
+    <div class="highlight-box"><em>Any information relating to an identified or identifiable natural person.</em></div>
+    <p>That sounds technical, but it's pretty simple: if a piece of information can be used to figure out who you are, it's personal data.</p>
+    <div class="tag-header">Examples of personal data</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Your name</span><span class="badge badge-blue">Your address</span><span class="badge badge-blue">Email address</span><span class="badge badge-blue">Phone number</span><span class="badge badge-blue">Date of birth</span><span class="badge badge-blue">IP address</span><span class="badge badge-blue">Location data</span><span class="badge badge-blue">Photos of you</span><span class="badge badge-blue">Social media posts</span><span class="badge badge-blue">Browsing history</span>
+    </div>
+    <p>Even things that don't seem personal can become personal data when combined. Your ZIP code alone isn't personal — but your ZIP code + age + gender can often identify you pretty specifically.</p>
+    <div class="analogy-box"><strong>The puzzle piece rule:</strong> One piece of a puzzle means nothing. But put enough pieces together and you see the whole picture. GDPR considers combinations of data, not just individual pieces.</div>`,
+    quiz:{q:"Which of these is an example of personal data under GDPR?",opts:["The color blue","A stock photo of a mountain","Your home address","The temperature in Paris"],ans:2,explain:"Your home address clearly identifies or helps locate you — that makes it personal data under GDPR's definition."}
+  },
+  {
+    title:"Special Category Data",
+    tagline:"Some data is so sensitive it gets extra protection",
+    body:`<p>GDPR recognizes that not all personal data is equal. Some types of information are so sensitive that if they leaked out, they could seriously harm a person. These are called <span class="key-term">special category data</span>.</p>
+    <p>Processing this type of data is generally <strong>prohibited</strong> unless there's a very specific legal reason.</p>
+    <div class="tag-header">The 9 special categories</div>
+    <div class="badge-row">
+      <span class="badge badge-coral">Health data</span><span class="badge badge-coral">Racial or ethnic origin</span><span class="badge badge-coral">Political opinions</span><span class="badge badge-coral">Religious beliefs</span><span class="badge badge-coral">Trade union membership</span><span class="badge badge-coral">Genetic data</span><span class="badge badge-coral">Biometric data</span><span class="badge badge-coral">Sexual orientation</span><span class="badge badge-coral">Mental health data</span>
+    </div>
+    <div class="analogy-box"><strong>Why extra protection?</strong> Imagine your doctor's notes were leaked online, or your political views were shared with your employer. This kind of data can lead to discrimination, harassment, or worse.</div>
+    <div class="highlight-box">Under GDPR, children under 16 (or younger in some countries) need a parent or guardian's consent before companies can collect their data for online services.</div>`,
+    quiz:{q:"Which of the following is a 'special category' under GDPR?",opts:["Your favorite TV show","Your health data","Your email address","Your shopping cart history"],ans:1,explain:"Health data is explicitly listed as a special category under GDPR Article 9 because of the serious harm that could result from its misuse."}
+  },
+  {
+    title:"Who Does GDPR Apply To?",
+    tagline:"It's not just a European thing",
+    body:`<p>Here's where GDPR gets really interesting. You might think: "This is a European law — why should a company in Chicago or Tokyo care?" The answer is the <span class="key-term">territorial scope</span>.</p>
+    <p>GDPR applies if <strong>any</strong> of these are true:</p>
+    <div class="highlight-box">1. The company is based in the EU.<br>2. The company <em>offers goods or services</em> to people in the EU.<br>3. The company <em>monitors the behavior</em> of people in the EU.</div>
+    <div class="analogy-box"><strong>Think of it like this:</strong> If a US restaurant opens a branch in France, it has to follow French food safety laws — not just US ones. GDPR works the same way: if you're serving EU residents, you follow EU rules.</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Data Controller — decides WHY and HOW data is used</span>
+      <span class="badge badge-teal">Data Processor — processes data on the Controller's behalf</span>
+    </div>`,
+    quiz:{q:"A company in New York sells products to customers in Germany. Does GDPR apply?",opts:["No — GDPR only applies in Europe","Yes — because they serve EU residents","Only if the company is very large","Only if they collect health data"],ans:1,explain:"GDPR's territorial scope means any company that offers goods or services to EU residents must comply — regardless of where the company is based."}
+  },
+  {
+    title:"The 7 Principles of GDPR",
+    tagline:"The foundation everything else is built on",
+    body:`<p>Every rule in GDPR flows from <span class="key-term">7 core principles</span>. These are found in Article 5 of the regulation, and they're the most important thing to understand about GDPR.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. Lawfulness, Fairness & Transparency</strong><span>Process data legally, fairly, and openly</span></div>
+      <div class="cheat-pill"><strong>2. Purpose Limitation</strong><span>Only use data for its stated purpose</span></div>
+      <div class="cheat-pill"><strong>3. Data Minimisation</strong><span>Collect only what you actually need</span></div>
+      <div class="cheat-pill"><strong>4. Accuracy</strong><span>Keep data correct and up to date</span></div>
+      <div class="cheat-pill"><strong>5. Storage Limitation</strong><span>Don't keep data longer than needed</span></div>
+      <div class="cheat-pill"><strong>6. Integrity & Confidentiality</strong><span>Keep data safe and secure</span></div>
+      <div class="cheat-pill"><strong>7. Accountability</strong><span>Be able to prove you follow the rules</span></div>
+    </div>
+    <div class="analogy-box"><strong>The 7 principles are like the rules of borrowing something.</strong> If a friend lends you their car: you have a good reason (lawful), you only use it to get groceries (purpose), you don't let strangers drive it (minimisation), you return it in good condition (accuracy), and you give it back when you said you would (storage limitation).</div>`,
+    quiz:{q:"How many core principles does GDPR have?",opts:["3","5","7","10"],ans:2,explain:"GDPR has exactly 7 principles laid out in Article 5. They form the backbone of the entire regulation."}
+  },
+  {
+    title:"Principle 1 — Lawfulness, Fairness & Transparency",
+    tagline:"You must have a legal reason, be fair, and be honest",
+    body:`<p>The very first principle has three parts packed into one, and they're all about the <em>basic honesty</em> of how you handle data.</p>
+    <p><strong>Lawfulness</strong> means there must be a valid legal reason to process someone's data. <strong>Fairness</strong> means you're not using data in ways that would harm or surprise people. <strong>Transparency</strong> means people must know what's happening with their data.</p>
+    <div class="highlight-box">Transparency in practice: That long privacy notice you see when you sign up for an app? That's GDPR's transparency requirement in action. Companies must tell you what data they collect, why they need it, and what they'll do with it — in plain language.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> You're asking a classmate to borrow their notes. Lawful = you have a reason (studying). Fair = you won't copy and sell them. Transparent = you told them exactly what you need them for.</div>`,
+    quiz:{q:"What does 'transparency' require under GDPR Principle 1?",opts:["Companies can collect data secretly if needed","People must be clearly told how their data is used","Data can only be used by EU-based companies","Transparency only applies to health data"],ans:1,explain:"Transparency means individuals must be clearly informed about what data is collected, why it's collected, and what it's used for — in plain, understandable language."}
+  },
+  {
+    title:"Principle 2 — Purpose Limitation",
+    tagline:"Use data only for what you said you'd use it for",
+    body:`<p>When you collect someone's data, you must collect it for a <span class="key-term">specific, explicit, and legitimate purpose</span>. And you <strong>cannot then use that data for a completely different purpose</strong> later.</p>
+    <div class="highlight-box"><strong>Real example:</strong> You give your email address to a bookstore so they can send your order confirmation. The bookstore cannot then sell your email to a pharmaceutical company for drug advertisements. The purpose was order confirmation — that's it.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> Your parents give the school your home address so you can receive report cards. The school cannot then give your address to local businesses for advertising. That's a completely different purpose.</div>
+    <p>If the new purpose is very different, the company would need a new lawful basis — like fresh consent from you.</p>`,
+    quiz:{q:"A company collects your phone number for two-factor authentication. Under Purpose Limitation, can they use it for marketing calls?",opts:["Yes, they already have the number","No — marketing is a different purpose than security","Yes, if they ask nicely","Only if you live outside the EU"],ans:1,explain:"Using a phone number collected for security purposes to make marketing calls violates Purpose Limitation — the new use is incompatible with the original purpose."}
+  },
+  {
+    title:"Principle 3 — Data Minimisation",
+    tagline:"Take only what you actually need",
+    body:`<p><span class="key-term">Data minimisation</span> is refreshingly simple: companies should only collect the <em>minimum amount of personal data</em> that is actually necessary to achieve their stated purpose.</p>
+    <div class="highlight-box">The key test: "Do we <em>need</em> this piece of data to do the thing we said we'd do?" If the answer is no — don't collect it.</div>
+    <div class="analogy-box"><strong>Real-world example:</strong> You order a pizza for delivery. The pizza place needs your address. Do they need your date of birth? Your relationship status? Your job title? No. Data minimisation says collect the address — leave everything else alone.</div>
+    <p>Think about apps that ask for permissions they clearly don't need. A flashlight app that wants access to your contacts, location, microphone, and camera? That's a data minimisation violation waiting to happen.</p>`,
+    quiz:{q:"A fitness app asks for your social security number to track your steps. Is this a violation?",opts:["No — they can collect anything they want","Yes — a SSN is not necessary for step tracking","Only if the app is European","No — step tracking is a health issue"],ans:1,explain:"Collecting a social security number for step tracking clearly violates Data Minimisation — the SSN has no bearing on the stated purpose."}
+  },
+  {
+    title:"Principle 4 — Accuracy",
+    tagline:"Keep it correct — and fix it when it's not",
+    body:`<p>Personal data must be <span class="key-term">accurate</span> and, where necessary, kept up to date. Inaccurate data must either be corrected or deleted without delay.</p>
+    <div class="highlight-box">Companies have both the obligation to keep data accurate themselves, AND you as an individual have the right to demand corrections. We'll cover your right to rectification in detail in a few days.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> Your school keeps your emergency contact info on file. If your family moves and they have the old address, that inaccurate data could mean the school can't reach your parents in an emergency. Accuracy isn't just a legal rule — it's common sense.</div>
+    <p>The accuracy principle also covers data that was once accurate but has become outdated. If a company is going to hold your data, they're responsible for keeping it correct.</p>`,
+    quiz:{q:"You moved to a new house. A company still has your old address despite you telling them. This could violate which principle?",opts:["Purpose Limitation","Storage Limitation","Accuracy","Accountability"],ans:2,explain:"Continuing to hold incorrect data after being informed violates the Accuracy principle. Companies are obligated to correct or delete inaccurate personal data."}
+  },
+  {
+    title:"Principle 5 — Storage Limitation",
+    tagline:"Delete it when you no longer need it",
+    body:`<p><span class="key-term">Storage limitation</span> means personal data should not be kept longer than is necessary for the purpose it was collected for. Once you no longer need the data — delete it.</p>
+    <div class="highlight-box">GDPR doesn't set specific retention times for most data. But companies must document how long they keep data and have a process to delete it when that time expires. This is called a <em>retention schedule</em>.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> When you check out a library book, you return it when you're done. You don't keep it for decades "just in case." Data is the same — borrow it for the purpose, then delete it when you're done.</div>
+    <p>A company that has customer records from 20 years ago for people who never came back — and no legal reason to keep them — is almost certainly violating Storage Limitation.</p>`,
+    quiz:{q:"A company keeps all customer data forever 'just in case it's useful someday.' Which principle does this violate?",opts:["Accuracy","Storage Limitation","Integrity & Confidentiality","Lawfulness"],ans:1,explain:"Retaining personal data indefinitely without a specific, ongoing purpose violates the Storage Limitation principle. Data should be deleted when it's no longer needed."}
+  },
+  {
+    title:"Principle 6 — Integrity & Confidentiality",
+    tagline:"Keep it safe — technically and organizationally",
+    body:`<p>This is the <span class="key-term">security principle</span>. Once you have someone's personal data, you are responsible for keeping it safe. GDPR requires "appropriate technical and organisational measures" to protect personal data.</p>
+    <div class="badge-row">
+      <span class="badge badge-coral">Unauthorized access</span><span class="badge badge-coral">Accidental loss</span><span class="badge badge-coral">Destruction</span><span class="badge badge-coral">Damage</span><span class="badge badge-coral">Unlawful processing</span>
+    </div>
+    <div class="analogy-box"><strong>Analogy:</strong> If a friend gives you their house key to water their plants, you have a responsibility not to lose it, not to copy it, and not to give it to strangers. GDPR applies that same responsibility to personal data.</div>
+    <div class="highlight-box">GDPR deliberately doesn't say "use these specific tools." It says use <em>appropriate</em> security. What's appropriate depends on the sensitivity of the data and the risks involved. A hospital storing health records needs much stronger security than a newsletter subscriber list.</div>`,
+    quiz:{q:"Which of these would be an 'organizational measure' under the Integrity & Confidentiality principle?",opts:["Using encrypted hard drives","Installing a firewall","Training employees on how to handle customer data","Using a strong password"],ans:2,explain:"Employee training is an organizational measure — a human/process control. Encryption, firewalls, and passwords are technical measures. Both types are required under GDPR."}
+  },
+  {
+    title:"Principle 7 — Accountability",
+    tagline:"It's not enough to follow the rules — you must prove it",
+    body:`<p>The final principle is what ties everything else together: <span class="key-term">Accountability</span>. Under GDPR, it is not enough to simply say "we follow the rules." You must be able to <em>demonstrate</em> that you follow the rules.</p>
+    <div class="highlight-box">Accountability obligations include: maintaining records of processing activities, training staff, writing and enforcing data protection policies, conducting data protection impact assessments, and appointing a Data Protection Officer (where required).</div>
+    <div class="analogy-box"><strong>Analogy:</strong> Imagine a school says "we're fair to all students." But if a student files a complaint, the school must produce attendance records, grade reports, and disciplinary logs that prove they were fair. Just saying it isn't enough. GDPR works the same way.</div>
+    <p>This is the principle that makes GDPR a true <em>governance</em> framework, not just a checkbox exercise.</p>`,
+    quiz:{q:"Under Accountability, if a regulator asks a company to prove GDPR compliance, what should the company be able to provide?",opts:["A verbal promise from the CEO","Their company website","Documentation, records, policies, and evidence of compliance programs","A letter from a lawyer"],ans:2,explain:"Accountability requires documented proof of compliance — records of processing activities, privacy policies, training records, DPIAs, and more."}
+  },
+  {
+    title:"The 6 Lawful Bases for Processing",
+    tagline:"You must have a legal reason to use someone's data",
+    body:`<p>GDPR provides exactly <strong>6 lawful bases</strong> — and you need at least one of them every time you process personal data.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. Consent</strong><span>The person freely agreed to it</span></div>
+      <div class="cheat-pill"><strong>2. Contract</strong><span>Needed to fulfil a contract with them</span></div>
+      <div class="cheat-pill"><strong>3. Legal Obligation</strong><span>Required by law</span></div>
+      <div class="cheat-pill"><strong>4. Vital Interests</strong><span>To protect someone's life</span></div>
+      <div class="cheat-pill"><strong>5. Public Task</strong><span>Carried out by official authority</span></div>
+      <div class="cheat-pill"><strong>6. Legitimate Interests</strong><span>Genuine business need, balanced vs. your rights</span></div>
+    </div>
+    <div class="analogy-box"><strong>Analogy:</strong> Think of these as 6 different parking permits. You can park (process data) only if you have a valid permit. You can't claim a disabled permit if you don't qualify — and you can't switch permits after the fact.</div>
+    <div class="highlight-box"><strong>Quick examples:</strong> Your bank processes your data under <em>Contract</em>. Your hospital uses <em>Vital Interests</em> and <em>Legal Obligation</em>. A marketing email company uses <em>Consent</em>. The government collects tax data under <em>Legal Obligation</em>.</div>`,
+    quiz:{q:"A company wants to send you marketing emails. Which lawful basis is most commonly used for this?",opts:["Vital Interests","Legal Obligation","Consent","Public Task"],ans:2,explain:"Marketing emails typically rely on Consent as the lawful basis — because you chose to receive them."}
+  },
+  {
+    title:"Consent — What It Really Means",
+    tagline:"A real yes, freely given, fully informed",
+    body:`<p>Under GDPR, consent is not just any "yes." It must meet a high standard. Valid consent must be:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Freely given</strong><span>No pressure — refusing can't cause harm</span></div>
+      <div class="cheat-pill"><strong>Specific</strong><span>For a defined purpose — not a blanket yes</span></div>
+      <div class="cheat-pill"><strong>Informed</strong><span>You know exactly what you're agreeing to</span></div>
+      <div class="cheat-pill"><strong>Unambiguous</strong><span>A clear positive action — no pre-ticked boxes</span></div>
+    </div>
+    <div class="highlight-box"><strong>Pre-ticked boxes are not valid consent.</strong> If a company signs you up for marketing by default and you have to untick a box to opt out — that's not GDPR-compliant. You must actively opt <em>in</em>.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> "Sign this form or you can't use our app" is NOT freely given consent. Real consent means you can say no without losing access to something you're entitled to.</div>
+    <p>You have the <strong>right to withdraw consent at any time</strong>. And withdrawing must be just as easy as giving it. Companies must keep consent on record — proving you consented, when, and what exactly you consented to.</p>`,
+    quiz:{q:"A website has a pre-ticked box that subscribes you to marketing emails. Is this valid GDPR consent?",opts:["Yes — you could have unticked it","No — consent must be an active opt-in","Yes — if it's in the privacy policy","Only if you're over 18"],ans:1,explain:"Pre-ticked boxes are explicitly invalid under GDPR. Consent must be an affirmative, active choice — the person must take a positive action to opt in."}
+  },
+  {
+    title:"Your Right to be Informed",
+    tagline:"You have the right to know what's happening with your data",
+    body:`<p>You have the right to know, at the point your data is collected, all of the following:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Who is collecting it</span><span class="badge badge-blue">Why they need it</span><span class="badge badge-blue">The legal basis for processing</span><span class="badge badge-blue">How long it will be kept</span><span class="badge badge-blue">Who it will be shared with</span><span class="badge badge-blue">Your rights as a data subject</span><span class="badge badge-blue">How to make a complaint</span>
+    </div>
+    <p>This information is usually delivered via a <strong>privacy notice</strong>. But GDPR says it must be in plain, clear, simple language — not buried in legal jargon.</p>
+    <div class="highlight-box">The information must be provided <em>at the time of collection</em> — not six months later. Timing matters.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> Before you take a standardized test, you're told what subjects it covers, how it's scored, and what it's used for. The Right to be Informed works the same way — you deserve to know the facts before you share your personal data.</div>`,
+    quiz:{q:"When must a company provide its privacy notice to a user?",opts:["Whenever the company feels like it","At the time of data collection","Only when the user asks","After the data has been processed"],ans:1,explain:"The Right to be Informed requires that privacy notices are provided at the time data is collected — not retroactively."}
+  },
+  {
+    title:"Right of Access (Subject Access Request)",
+    tagline:"You can ask any company: 'What data do you have on me?'",
+    body:`<p>The <span class="key-term">Right of Access</span>, also known as a <span class="key-term">Subject Access Request (SAR)</span>, lets you ask any organization that holds your personal data to provide a complete copy of it — along with information about how it's being used.</p>
+    <div class="highlight-box">A company must respond to a Subject Access Request within <strong>one month</strong>. In most cases, this service must be provided <em>free of charge</em>.</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">What data they hold about you</span><span class="badge badge-blue">Why they have it</span><span class="badge badge-blue">Who they share it with</span><span class="badge badge-blue">How long they plan to keep it</span><span class="badge badge-blue">Your rights to correct or delete it</span>
+    </div>
+    <div class="analogy-box"><strong>Real-life use:</strong> In 2018, journalist Dylan Curran submitted SARs to Google and Facebook. Google returned 5.5 gigabytes of data. Facebook returned 600MB — including every search, every ad clicked, location history, and call logs. SARs reveal just how much companies store about us.</div>
+    <p>You don't have to give a reason for your SAR. You don't need a lawyer. You just need to ask.</p>`,
+    quiz:{q:"How long does a company have to respond to a Subject Access Request?",opts:["1 week","1 month","3 months","1 year"],ans:1,explain:"GDPR Article 12 requires companies to respond to Subject Access Requests within one calendar month of receiving the request."}
+  },
+  {
+    title:"Right to Rectification",
+    tagline:"You can demand that errors about you are fixed",
+    body:`<p>The <span class="key-term">Right to Rectification</span> gives you the power to demand that inaccurate personal data held about you is corrected — and that incomplete data is filled in.</p>
+    <div class="highlight-box">Companies must correct inaccurate data <strong>within one month</strong> of your request. If complex, they can extend to three months — but must tell you within the first month.</div>
+    <div class="analogy-box"><strong>Why this matters in real life:</strong> Credit scores are based on personal data. If a credit bureau has incorrect information about you — like a debt that isn't yours — your score could be damaged, affecting your ability to get a loan, a job, or an apartment. The Right to Rectification lets you force them to correct the error.</div>
+    <p>If a company shares the corrected data with other organizations, they must inform those organizations about the correction too — so the corrected information flows through the whole chain.</p>`,
+    quiz:{q:"You discover an insurance company has your date of birth wrong on file. Under what GDPR right can you demand they fix it?",opts:["Right to Erasure","Right to Restrict Processing","Right to Rectification","Right of Access"],ans:2,explain:"The Right to Rectification (Article 16) gives you the right to demand that inaccurate or incomplete personal data held about you is corrected within one month."}
+  },
+  {
+    title:"Right to Erasure — The 'Right to be Forgotten'",
+    tagline:"Under certain conditions, you can demand your data is deleted",
+    body:`<p>The <span class="key-term">Right to Erasure</span> allows you to request that a company deletes your personal data. You can request erasure when:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">The data is no longer needed for its original purpose</span><span class="badge badge-teal">You withdraw your consent</span><span class="badge badge-teal">You object to processing and there's no overriding reason to continue</span><span class="badge badge-teal">The data was processed unlawfully</span><span class="badge badge-teal">It must be deleted to comply with a legal obligation</span>
+    </div>
+    <div class="highlight-box">This right is NOT absolute. Companies can refuse erasure if they have a legal obligation to keep the data, if it's needed for legal claims, or if there's a public interest.</div>
+    <div class="analogy-box"><strong>Famous example:</strong> A Spanish man successfully argued that a 16-year-old newspaper article about his debt appearing in Google search results violated his privacy. The EU court ruled Google had to remove the link. This case helped drive the codification of the Right to Erasure in GDPR.</div>`,
+    quiz:{q:"Which of these is a valid reason to REFUSE a right to erasure request?",opts:["The company thinks your data is interesting","The company has a legal obligation to keep the data","The company has had it for less than one year","The request was submitted by email"],ans:1,explain:"Companies can legitimately refuse erasure requests when they have a legal obligation to retain the data — such as financial records required by law."}
+  },
+  {
+    title:"Right to Restrict Processing",
+    tagline:"You can put a temporary freeze on how your data is used",
+    body:`<p>The <span class="key-term">Right to Restrict Processing</span> lets you pause how your data is used while a situation is being resolved — without asking for deletion.</p>
+    <div class="badge-row">
+      <span class="badge badge-amber">You contest the accuracy of the data</span><span class="badge badge-amber">The processing is unlawful but you don't want erasure</span><span class="badge badge-amber">The company no longer needs it, but you need it for a legal claim</span><span class="badge badge-amber">You've objected and await a decision</span>
+    </div>
+    <div class="analogy-box"><strong>Analogy:</strong> You're in a dispute with a bank about a transaction. You don't want the bank to delete its records (you might need them for court), but you also don't want them using those records to report a missed payment to a credit bureau. Restricting processing puts a hold on active use while the dispute is resolved.</div>
+    <div class="highlight-box">When processing is restricted, the company can still store your data — they just can't use it for normal purposes. They must tell you before they lift the restriction.</div>`,
+    quiz:{q:"What is the key difference between Right to Erasure and Right to Restrict Processing?",opts:["They are identical rights","Restrict is permanent; Erasure is temporary","Restrict pauses use of data; Erasure deletes it","Erasure only applies to health data"],ans:2,explain:"Right to Restrict pauses how the data can be used (temporarily), while Right to Erasure requires permanent deletion."}
+  },
+  {
+    title:"Right to Data Portability",
+    tagline:"You can take your data and move it somewhere else",
+    body:`<p>The <span class="key-term">Right to Data Portability</span> allows you to receive your personal data in a structured, machine-readable format and transfer it to another service provider.</p>
+    <div class="highlight-box">This right applies to data you've <em>provided</em> to a company yourself, and only when processing is based on <em>consent</em> or a <em>contract</em> — not other lawful bases.</div>
+    <div class="analogy-box"><strong>Analogy — mobile phone numbers:</strong> Remember when switching phone carriers meant losing your number? Regulators forced carriers to allow number portability. GDPR does the same for your data — you shouldn't be "locked in" to a service just because they're holding your data hostage.</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">Downloading your Spotify history to switch to Apple Music</span><span class="badge badge-teal">Exporting Facebook contacts to a different social network</span><span class="badge badge-teal">Moving fitness data between apps</span><span class="badge badge-teal">Transferring health records between doctors</span>
+    </div>`,
+    quiz:{q:"You want to switch from one music streaming service to another and take all your playlists with you. Which GDPR right supports this?",opts:["Right to Erasure","Right to Restrict Processing","Right to Data Portability","Right to Rectification"],ans:2,explain:"The Right to Data Portability allows you to receive personal data in a machine-readable format and transfer it to a different service."}
+  },
+  {
+    title:"Right to Object",
+    tagline:"You can say 'stop using my data for this'",
+    body:`<p>The <span class="key-term">Right to Object</span> gives you the power to object to the processing of your personal data in certain circumstances.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Direct marketing</strong><span>You can ALWAYS object — no exceptions. Company must stop immediately.</span></div>
+      <div class="cheat-pill"><strong>Legitimate interests / public task</strong><span>You can object, but company can continue with compelling grounds.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Marketing objection is an absolute right.</strong> If you object to direct marketing — email campaigns, phone calls, targeted ads — they have no legal ground to refuse. They must stop. Period.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> You're on a mailing list you never signed up for. You email them and say "stop sending me these." Under GDPR, that's a formal objection — and they must honor it immediately. Before GDPR, many companies simply ignored unsubscribe requests.</div>`,
+    quiz:{q:"You object to a company using your data for marketing. Under GDPR, what must the company do?",opts:["They can ignore it if they have a privacy policy","They must stop using your data for marketing immediately","They can continue if they have a legitimate interest","They must respond within 6 months"],ans:1,explain:"The right to object to direct marketing is absolute under GDPR Article 21. The company must stop immediately — no exceptions."}
+  },
+  {
+    title:"Controllers vs. Processors",
+    tagline:"Who's responsible for what",
+    body:`<p>In the GDPR world, two key roles define who handles data and who is responsible for it.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Data Controller</strong><span>Decides the PURPOSE and MEANS of processing. The one in charge. Most accountability under GDPR.</span></div>
+      <div class="cheat-pill"><strong>Data Processor</strong><span>Processes data on BEHALF of the controller. Follows the controller's instructions.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Restaurant analogy:</strong> A restaurant (Controller) decides what food to prepare and who to serve. They hire a delivery company (Processor) to deliver the food. The restaurant tells the delivery company what to do — the delivery company just follows instructions. If the food is wrong, the restaurant is primarily responsible.</div>
+    <div class="highlight-box"><strong>Real-world examples:</strong><br>
+    — Your doctor's office (Controller) uses cloud software (Processor) to store patient records.<br>
+    — An online store (Controller) uses Stripe (Processor) to handle transactions.<br>
+    — A school (Controller) uses a video platform (Processor) for online classes.</div>`,
+    quiz:{q:"A hospital uses a cloud storage company to store patient records. What is the hospital's role?",opts:["Data Processor","Data Subject","Data Controller","Data Protection Officer"],ans:2,explain:"The hospital decides why and how patient data is stored — that makes them the Data Controller. The cloud storage company follows their instructions, making it the Data Processor."}
+  },
+  {
+    title:"Data Protection Officers (DPOs)",
+    tagline:"The privacy guardian inside an organization",
+    body:`<p>A <span class="key-term">Data Protection Officer (DPO)</span> is an expert in data privacy law whose job is to ensure their organization complies with GDPR.</p>
+    <p>You must appoint a DPO if you are:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">A public authority or body</span><span class="badge badge-blue">An organization that carries out large-scale systematic monitoring of individuals</span><span class="badge badge-blue">An organization that processes special category data at large scale</span>
+    </div>
+    <div class="analogy-box"><strong>Analogy:</strong> Think of a DPO like a school's academic integrity officer. They're not there to help students cheat — they're there to ensure the school's policies are followed and investigate potential violations. They work for the organization but answer to a higher standard of accountability.</div>
+    <div class="highlight-box">Crucially, a DPO must be independent. They cannot be told by management to "look the other way." They report directly to the highest level of management and cannot be fired for doing their job correctly.</div>`,
+    quiz:{q:"Which organizations are REQUIRED to appoint a Data Protection Officer under GDPR?",opts:["All companies with more than 10 employees","Public authorities and organizations that do large-scale data monitoring","Only US-based multinationals","Any company that uses cloud storage"],ans:1,explain:"GDPR Article 37 mandates DPOs for public authorities, organizations doing large-scale systematic monitoring, and those processing special category data at scale."}
+  },
+  {
+    title:"Data Breaches",
+    tagline:"What happens when personal data is stolen or leaked",
+    body:`<p>A <span class="key-term">data breach</span> is any security incident that leads to the unauthorized access, loss, or destruction of personal data. Under GDPR, there are very specific, time-bound obligations when a breach occurs.</p>
+    <div class="highlight-box"><strong>72-hour rule:</strong> If a breach poses a risk to individuals, the Controller must notify the relevant supervisory authority within <strong>72 hours</strong> of becoming aware of it. That's 3 days — very fast.</div>
+    <div class="analogy-box"><strong>Think of it like a fire alarm:</strong> If there's a fire, you don't have 3 weeks to decide whether to call the fire department. You call immediately. GDPR applies the same urgency to data breaches — fast notification lets regulators and individuals take protective action.</div>
+    <p>If the breach poses a <em>high risk</em> to individuals — like financial fraud or identity theft — the company must also <strong>notify affected individuals directly</strong>, without undue delay, covering:</p>
+    <div class="badge-row">
+      <span class="badge badge-coral">What data was involved</span><span class="badge badge-coral">Roughly how many people affected</span><span class="badge badge-coral">Likely consequences</span><span class="badge badge-coral">Measures taken to address it</span>
+    </div>`,
+    quiz:{q:"How quickly must a controller notify the supervisory authority about a data breach?",opts:["24 hours","72 hours","1 week","30 days"],ans:1,explain:"GDPR Article 33 requires notification to the supervisory authority within 72 hours of becoming aware of a breach that poses a risk to individuals' rights and freedoms."}
+  },
+  {
+    title:"Privacy by Design",
+    tagline:"Build privacy in from the start, not as an afterthought",
+    body:`<p><span class="key-term">Privacy by Design</span> means privacy should be built into systems and processes from the very beginning — not added as a patch after the product is already built.</p>
+    <div class="analogy-box"><strong>Building analogy:</strong> When constructing a house, you plan for fire safety in the blueprint — smoke detectors, fire exits, fire-resistant materials. You don't build the house first and make it fire-safe later. Privacy by Design applies the same logic: plan for privacy in the blueprint, not in the patch notes.</div>
+    <p>GDPR also introduces <span class="key-term">Privacy by Default</span>: when a system goes live, the most privacy-protective settings should be the default. Users shouldn't have to dig through menus to turn privacy on.</p>
+    <div class="highlight-box"><strong>Examples of Privacy by Default:</strong> Social media posts default to "Friends only." Apps don't request unnecessary permissions. Marketing emails are opt-in, not opt-out. Location tracking is off unless you turn it on.</div>
+    <p>Article 25 of GDPR enshrines both concepts in law. A company that built first and asked privacy questions later is already behind.</p>`,
+    quiz:{q:"What does 'Privacy by Default' mean in practice?",opts:["Users must actively turn off privacy settings","The most privacy-protective settings should be turned on automatically","Privacy settings only apply to logged-in users","Default settings are set by national governments"],ans:1,explain:"Privacy by Default means the system automatically applies the most privacy-protective settings — maximum protection as the standard starting position."}
+  },
+  {
+    title:"Data Protection Impact Assessments (DPIAs)",
+    tagline:"Check the risks before you start, not after",
+    body:`<p>A <span class="key-term">Data Protection Impact Assessment (DPIA)</span> is a risk assessment that organizations must carry out before beginning any processing that is likely to result in a high risk to individuals.</p>
+    <div class="highlight-box">DPIAs are <strong>mandatory</strong> when processing involves: large-scale processing of special category data, systematic monitoring of public areas (like CCTV networks), automated decision-making with significant effects, or new technology with unknown privacy risks.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> Before a city builds a new road through a residential area, they conduct an environmental impact assessment — checking harm to wildlife, air quality, and residents before they break ground. A DPIA does the same for personal data: assess the harm before you proceed.</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Description of the processing activity</span><span class="badge badge-blue">Assessment of necessity and proportionality</span><span class="badge badge-blue">Identification of risks to individuals</span><span class="badge badge-blue">Measures planned to mitigate those risks</span>
+    </div>
+    <p>If a DPIA reveals a high risk that can't be mitigated, the organization must consult with the supervisory authority <em>before</em> starting processing.</p>`,
+    quiz:{q:"When is a DPIA mandatory under GDPR?",opts:["For every single data processing activity","When processing is likely to result in high risk to individuals","Only when processing health data","Only for organizations with over 500 employees"],ans:1,explain:"DPIAs are required under GDPR Article 35 when processing is likely to result in high risk — large-scale special category processing, systematic public monitoring, or novel technology with privacy implications."}
+  },
+  {
+    title:"International Data Transfers",
+    tagline:"Moving data across borders has strict rules",
+    body:`<p>When data about EU residents is transferred to a country outside the EU, GDPR's strict rules on <span class="key-term">international data transfers</span> kick in. The core concern: once data leaves the EU, EU regulators can no longer directly oversee it.</p>
+    <div class="highlight-box"><strong>Adequacy Decision:</strong> The EU can formally declare a country "adequate" — meaning its laws provide equivalent protection to GDPR. Countries like the UK, Canada, Japan, and Switzerland have adequacy decisions. The US has the EU-US Data Privacy Framework.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> If you lend your car to a friend going to another country, you'd want to know they have a valid driver's license and the roads are safe. You wouldn't lend your car where there are no traffic laws. GDPR applies the same logic to data transfers.</div>
+    <p>If there's no adequacy decision, companies can still transfer data using:</p>
+    <div class="badge-row">
+      <span class="badge badge-teal">Standard Contractual Clauses (SCCs)</span><span class="badge badge-teal">Binding Corporate Rules (BCRs)</span><span class="badge badge-teal">Explicit consent of the data subject</span>
+    </div>`,
+    quiz:{q:"What is an 'adequacy decision' in the context of international data transfers?",opts:["A fine issued for improper data transfers","A formal EU ruling that another country provides equivalent data protection","A consent form signed by the data subject","A contract between two processors"],ans:1,explain:"An adequacy decision is the EU's formal recognition that a specific country's data protection laws are essentially equivalent to GDPR, making transfers to that country safe without additional safeguards."}
+  },
+  {
+    title:"Enforcement — Fines and Penalties",
+    tagline:"GDPR has real teeth — here's what breaking the rules costs",
+    body:`<p>GDPR's enforcement regime was a major departure from the weak, toothless data protection laws that came before it. The fines are deliberately large enough to hurt even the biggest tech companies.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Tier 1 — Up to €10 million or 2% of global annual turnover</strong><span>For: record-keeping failures, not having a DPO, processor obligations</span></div>
+      <div class="cheat-pill"><strong>Tier 2 — Up to €20 million or 4% of global annual turnover</strong><span>For: processing without lawful basis, violating individual rights, international transfer failures</span></div>
+    </div>
+    <div class="penalty-box"><strong>Note:</strong> It's whichever is <em>higher</em> — the fixed euro amount or the percentage of turnover. For a company with $120B+ in annual revenue, 4% is roughly $5 billion — not €20 million.</div>
+    <div class="tag-header">Notable GDPR fines</div>
+    <div class="badge-row">
+      <span class="badge badge-coral">Meta — €1.2 billion (2023) — improper data transfers</span><span class="badge badge-coral">Amazon — €746 million (2021) — advertising data processing</span><span class="badge badge-coral">Google — €50 million (2019) — lack of transparency, consent</span><span class="badge badge-coral">WhatsApp — €225 million (2021) — transparency failures</span>
+    </div>`,
+    quiz:{q:"Under GDPR's Tier 2 fines, what is the maximum penalty?",opts:["€10 million or 2% of global turnover","€20 million or 4% of global turnover","€50 million flat","$1 billion per incident"],ans:1,explain:"Tier 2 GDPR fines (the most serious violations) can reach up to €20 million or 4% of total worldwide annual turnover — whichever is higher."}
+  },
+  {
+    title:"30-Day Review",
+    tagline:"Everything we covered — in one final look",
+    body:`<p>You've made it through all 30 days! Let's take stock of everything you now know about GDPR.</p>
+    <div class="tag-header">The big picture</div>
+    <p>GDPR is the EU's comprehensive data protection law (in force since May 2018). It gives individuals control over their personal data and imposes obligations on any organization that handles it — worldwide.</p>
+    <div class="tag-header">The 7 principles (the heart of GDPR)</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Lawfulness, Fairness & Transparency</span><span class="badge badge-blue">Purpose Limitation</span><span class="badge badge-blue">Data Minimisation</span><span class="badge badge-blue">Accuracy</span><span class="badge badge-blue">Storage Limitation</span><span class="badge badge-blue">Integrity & Confidentiality</span><span class="badge badge-blue">Accountability</span>
+    </div>
+    <div class="tag-header">Your 8 rights as a data subject</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">Right to be Informed</span><span class="badge badge-teal">Right of Access (SAR)</span><span class="badge badge-teal">Right to Rectification</span><span class="badge badge-teal">Right to Erasure</span><span class="badge badge-teal">Right to Restrict Processing</span><span class="badge badge-teal">Right to Data Portability</span><span class="badge badge-teal">Right to Object</span><span class="badge badge-teal">Rights re: Automated Decision-Making</span>
+    </div>
+    <div class="tag-header">Key structural concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-amber">6 Lawful Bases for Processing</span><span class="badge badge-amber">Controllers vs. Processors</span><span class="badge badge-amber">DPOs</span><span class="badge badge-amber">DPIAs</span><span class="badge badge-amber">Privacy by Design & Default</span><span class="badge badge-amber">International Transfers</span><span class="badge badge-amber">Data Breach Notification</span><span class="badge badge-amber">Fines up to 4% global revenue</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button in the day selector above to access your full formatted cheat sheet with all core controls summarized.</div>`,
+    quiz:{q:"Which article of GDPR contains the 7 core principles?",opts:["Article 1","Article 5","Article 13","Article 25"],ans:1,explain:"The 7 core data protection principles are enshrined in Article 5 of the GDPR. They are the foundational rules from which all other GDPR obligations derive."}
+  },
+  {
+    title:"GDPR Cheat Sheet",
+    tagline:"Your complete quick-reference guide",
+    isCheatSheet: true,
+    body:`
+    <div class="cheat-section">
+      <h3>What Is GDPR?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">The General Data Protection Regulation — EU law in force since May 25, 2018. Applies to any organization worldwide that processes personal data of EU residents. Replaces the 1995 Data Protection Directive.</p>
+    </div>
+    <div class="cheat-section">
+      <h3>Personal Data Defined</h3>
+      <p style="font-size:13.5px;color:#6b6b68">Any information relating to an identified or identifiable natural person. Includes: name, address, email, IP address, location, photos, browsing history, device IDs, and combinations of data that together can identify someone.</p>
+      <div class="badge-row" style="margin-top:.5rem">
+        <span class="badge badge-coral">Special categories (Art. 9): health, racial/ethnic origin, political opinions, religion, biometrics, genetics, sexual orientation, trade union membership</span>
+      </div>
+    </div>
+    <div class="cheat-section">
+      <h3>The 7 Principles (Article 5)</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>1. Lawfulness, Fairness & Transparency</b> — Process data legally, fairly, and openly. No hidden or deceptive processing.</div>
+        <div class="ctrl-card"><b>2. Purpose Limitation</b> — Collect for specified, explicit, legitimate purposes. Don't reuse for incompatible purposes.</div>
+        <div class="ctrl-card"><b>3. Data Minimisation</b> — Collect only what is adequate, relevant, and limited to what is necessary.</div>
+        <div class="ctrl-card"><b>4. Accuracy</b> — Keep data accurate and up to date. Inaccurate data must be corrected or deleted promptly.</div>
+        <div class="ctrl-card"><b>5. Storage Limitation</b> — Don't retain data longer than necessary. Implement and follow retention schedules.</div>
+        <div class="ctrl-card"><b>6. Integrity & Confidentiality</b> — Apply appropriate technical and organizational security measures.</div>
+      </div>
+      <div class="ctrl-card" style="margin-top:8px"><b>7. Accountability</b> — Controllers must demonstrate compliance. Document everything — policies, records, assessments, training.</div>
+    </div>
+    <div class="cheat-section">
+      <h3>6 Lawful Bases for Processing (Article 6)</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Consent</b> — Freely given, specific, informed, unambiguous opt-in. Withdrawable at any time.</div>
+        <div class="ctrl-card"><b>Contract</b> — Necessary to perform or prepare a contract with the data subject.</div>
+        <div class="ctrl-card"><b>Legal Obligation</b> — Required by EU or member state law (e.g. tax reporting, employment records).</div>
+        <div class="ctrl-card"><b>Vital Interests</b> — To protect someone's life or physical safety.</div>
+        <div class="ctrl-card"><b>Public Task</b> — Carried out in the exercise of official authority or public interest.</div>
+        <div class="ctrl-card"><b>Legitimate Interests</b> — Genuine business need; must be balanced against individuals' rights (requires balancing test).</div>
+      </div>
+    </div>
+    <div class="cheat-section">
+      <h3>8 Individual Rights</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Right to be Informed (Art. 13/14)</b> — Receive clear privacy notice at point of collection. Who, why, how long, who it's shared with.</div>
+        <div class="ctrl-card"><b>Right of Access / SAR (Art. 15)</b> — Request copy of all personal data held. Company must respond within 1 month, usually free.</div>
+        <div class="ctrl-card"><b>Right to Rectification (Art. 16)</b> — Demand correction of inaccurate or incomplete data. 1-month response deadline.</div>
+        <div class="ctrl-card"><b>Right to Erasure (Art. 17)</b> — "Right to be Forgotten." Request deletion when data is no longer needed, consent withdrawn, or processing unlawful. Not absolute.</div>
+        <div class="ctrl-card"><b>Right to Restrict Processing (Art. 18)</b> — Pause active use of data while accuracy is contested or objection is pending.</div>
+        <div class="ctrl-card"><b>Right to Data Portability (Art. 20)</b> — Receive personal data in structured, machine-readable format. Transfer to another provider. Applies to consent/contract bases only.</div>
+        <div class="ctrl-card"><b>Right to Object (Art. 21)</b> — Object to direct marketing (absolute right) or legitimate interests (company can override with compelling grounds).</div>
+        <div class="ctrl-card"><b>Rights re: Automated Decisions (Art. 22)</b> — Right not to be subject to solely automated decisions with significant legal effects without human oversight.</div>
+      </div>
+    </div>
+    <div class="cheat-section">
+      <h3>Key Roles</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Data Controller</b> — Determines purpose and means of processing. Bears primary GDPR accountability. Must have DPA with Processors.</div>
+        <div class="ctrl-card"><b>Data Processor</b> — Processes on behalf of the Controller. Must follow Controller instructions. Directly liable for its own violations.</div>
+        <div class="ctrl-card"><b>Data Subject</b> — The individual whose personal data is processed. Holder of the 8 rights.</div>
+        <div class="ctrl-card"><b>Data Protection Officer (DPO)</b> — Mandatory for public bodies, large-scale monitoring, and special category processing. Independent. Reports to top management.</div>
+      </div>
+    </div>
+    <div class="cheat-section">
+      <h3>Core Controls at a Glance</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Privacy by Design & Default (Art. 25)</b> — Embed privacy into system design from the start. Default settings must be most privacy-protective.</div>
+        <div class="ctrl-card"><b>DPIA (Art. 35)</b> — Mandatory risk assessment before high-risk processing. Assess necessity, proportionality, and risk mitigation.</div>
+        <div class="ctrl-card"><b>Records of Processing Activities (Art. 30)</b> — Controllers must maintain written records of all processing activities.</div>
+        <div class="ctrl-card"><b>Data Breach Notification (Art. 33/34)</b> — Notify supervisory authority within 72 hours. Notify individuals directly if high risk.</div>
+        <div class="ctrl-card"><b>International Transfers (Art. 44–49)</b> — Data may only leave EU to adequate countries, or via Standard Contractual Clauses, Binding Corporate Rules, or explicit consent.</div>
+        <div class="ctrl-card"><b>Data Processing Agreements (Art. 28)</b> — Mandatory written contracts between Controllers and Processors.</div>
+        <div class="ctrl-card"><b>Consent Management</b> — Freely given, specific, informed, unambiguous. Pre-ticked boxes invalid. Easy to withdraw. Records required.</div>
+        <div class="ctrl-card"><b>Retention Schedules</b> — Document and enforce how long each data category is kept. Delete or anonymize when period expires.</div>
+      </div>
+    </div>
+    <div class="cheat-section">
+      <h3>Enforcement & Fines</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Tier 1</b> — Up to €10 million or 2% global annual turnover (whichever is higher). For: record-keeping, DPO failures, processor obligations, DPIA breaches.</div>
+        <div class="ctrl-card"><b>Tier 2</b> — Up to €20 million or 4% global annual turnover (whichever is higher). For: processing without lawful basis, violating individual rights, international transfer failures.</div>
+      </div>
+      <p style="font-size:12.5px;color:#6b6b68;margin-top:.5rem">Regulators can also issue warnings, reprimands, and temporary or permanent processing bans. Individuals can sue directly for damages.</p>
+    </div>
+    <div class="cheat-section">
+      <h3>Key Dates & Numbers to Remember</h3>
+      <div class="badge-row">
+        <span class="badge badge-blue">In force: May 25, 2018</span>
+        <span class="badge badge-blue">72 hours — breach notification deadline</span>
+        <span class="badge badge-blue">1 month — response to individual rights requests</span>
+        <span class="badge badge-blue">16 — default age of consent for online services</span>
+        <span class="badge badge-blue">7 Principles (Art. 5)</span>
+        <span class="badge badge-blue">6 Lawful Bases (Art. 6)</span>
+        <span class="badge badge-blue">8 Individual Rights</span>
+        <span class="badge badge-blue">4% / €20M — max Tier 2 fine</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMMC 2.0 — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #0C447C; color: #E6F1FB; border-color: #0C447C; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #E6F1FB; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #042C53; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #0C447C; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #0C447C; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #E6F1FB; color: #042C53; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #EEEDFE; border-left: 3px solid #533AB7; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #0C447C; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-blue   { background: #E6F1FB; color: #042C53; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-gray   { background: #F1EFE8; color: #444441; }
+  .badge-pink   { background: #FBEAF0; color: #4B1528; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .level-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .level-1 { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .level-2 { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .level-3 { background: #FAECE7; border: 0.5px solid #F0997B; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .domain-card { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .domain-card b { font-size: 13px; font-weight: 500; color: #0C447C; }
+  @media (max-width: 560px) { .cheat-grid, .control-row, .level-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day CMMC 2.0 curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>CMMC 2.0 — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title: "What Is CMMC?",
+    tagline: "The cybersecurity certification that protects America's defense supply chain",
+    body: `<p>Imagine the US military is developing a new stealth aircraft. To build it, the Pentagon contracts with hundreds of companies across the country — large defense primes like Lockheed Martin, but also thousands of small and mid-size businesses that make specific parts, software, or services. Each of those companies handles sensitive technical blueprints, engineering specifications, and classified data. If a hacker from a foreign nation can break into one of those small businesses and steal those blueprints — the entire program is compromised, without ever touching a classified government network. That's exactly the threat <span class="key-term">CMMC</span> was designed to stop.</p>
+    <p>CMMC stands for <strong>Cybersecurity Maturity Model Certification</strong>. It is a cybersecurity framework and certification program created by the US <strong>Department of Defense (DoD)</strong> to protect sensitive unclassified defense information that flows through the Defense Industrial Base (DIB) — the entire supply chain of companies that work with the Pentagon.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of CMMC like food safety inspections for defense contractors. The FDA doesn't just trust restaurants to serve safe food — it requires independent inspections and certifications. CMMC does the same for cybersecurity: the Pentagon doesn't just trust defense contractors to have good security — it requires them to prove it through verified assessments. If you want to do business with the DoD and handle sensitive data, you need the certification.</div>
+    <div class="highlight-box">The current version is <strong>CMMC 2.0</strong>, finalized in late 2024. CMMC is different from every other framework we've studied because it is <em>contractually required</em> — it will be included in DoD contracts as a condition of award. If you don't meet the required CMMC level for a contract, you literally cannot win that contract, no matter how good your technical proposal is.</div>
+    <p>CMMC covers three certification levels based on the sensitivity of data handled. The framework maps directly to existing federal cybersecurity standards — primarily NIST SP 800-171 — making it the enforcement mechanism for requirements that already existed but were widely ignored.</p>`,
+    quiz: { q: "What makes CMMC unique compared to other cybersecurity frameworks like ISO 27001 or CIS Controls?", opts: ["It has more controls than any other framework", "It is contractually required by the DoD — organizations that don't meet the required CMMC level cannot win DoD contracts, regardless of their technical qualifications", "It only applies to large defense companies", "It is a government regulation that applies to all US companies"], ans: 1, explain: "CMMC is unique because it is contractually required for DoD work. Unlike ISO 27001 or CIS Controls, which are voluntary frameworks adopted for market credibility, CMMC compliance is a contract eligibility requirement. Organizations that handle sensitive DoD information must achieve the appropriate CMMC level or they cannot be awarded DoD contracts." }
+  },
+  {
+    title: "Why Was CMMC Created?",
+    tagline: "The cyber espionage crisis that forced the Pentagon to act",
+    body: `<p>To understand why CMMC exists, you need to understand the scale of cyber theft from America's defense supply chain. For over two decades, foreign adversaries — particularly China and Russia — have systematically stolen sensitive defense technology from US defense contractors, gaining military capabilities worth billions of dollars in research and development without investing a dollar in their own R&D.</p>
+    <div class="highlight-box"><strong>The scale of the problem:</strong> The F-35 fighter jet program — the most expensive weapons program in history — suffered a massive cyber theft. Hackers broke into defense contractor networks and stole detailed engineering specifications covering the aircraft's exhaust system, radar system design, and other technical details. Shortly thereafter, China unveiled a remarkably similar stealth fighter design. The theft didn't come from classified DoD networks — it came from contractor systems that lacked adequate security.</div>
+    <p>Several key failures made the problem worse:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Self-Attestation Failure</strong><span>Before CMMC, DoD contracts required contractors to self-certify NIST SP 800-171 compliance — but with no independent verification. Contractors routinely checked boxes claiming compliance while implementing few or no actual controls. Compliance was fiction.</span></div>
+      <div class="cheat-pill"><strong>Supply Chain Blindness</strong><span>Large prime contractors might have good security, but they subcontracted to thousands of smaller companies. The DoD had no visibility into the security of this extended supply chain — which is exactly where attackers focused.</span></div>
+      <div class="cheat-pill"><strong>Missing Enforcement</strong><span>Existing cybersecurity requirements in DFARS (Defense Federal Acquisition Regulation Supplement) clauses were largely unenforced. Contractors faced minimal consequences for non-compliance. There was no market incentive to invest in security.</span></div>
+      <div class="cheat-pill"><strong>Asymmetric Risk</strong><span>Small defense subcontractors often handled highly sensitive technical data but had budgets and security capabilities far below what the data's sensitivity warranted. They were the path of least resistance into the defense supply chain.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The weakest link problem:</strong> A chain is only as strong as its weakest link. The DoD's classified networks are extraordinarily well-defended. But sensitive technical data flows outside those networks to hundreds of contractors — and attackers go where defenses are weakest. CMMC exists to raise the security floor across the entire supply chain, not just at the prime contractor level.</div>`,
+    quiz: { q: "Why did self-attestation of NIST SP 800-171 compliance fail before CMMC was created?", opts: ["Because NIST SP 800-171 is too difficult to implement", "Because without independent verification, contractors could claim compliance with no enforcement mechanism — creating widespread false attestations with no actual security improvement", "Because defense contractors are not subject to cybersecurity laws", "Because the DoD didn't require cybersecurity controls before CMMC"], ans: 1, explain: "Self-attestation failed because it relied entirely on the honor system with no independent verification and no meaningful enforcement consequences. Research showed that many contractors attesting to compliance had implemented few or none of the required controls. Without third-party verification, the attestation became a paperwork exercise that provided no actual security improvement." }
+  },
+  {
+    title: "The Defense Industrial Base (DIB)",
+    tagline: "Who CMMC applies to — and why it's millions of organizations",
+    body: `<p>CMMC applies to the <span class="key-term">Defense Industrial Base (DIB)</span> — the entire ecosystem of companies that work with the US Department of Defense. This is far larger than most people realize. The DIB includes not just famous defense primes like Boeing, Raytheon, and Northrop Grumman, but hundreds of thousands of smaller companies across virtually every industry that have any DoD contract relationship.</p>
+    <div class="highlight-box">The DoD estimates that approximately <strong>300,000 companies</strong> in the Defense Industrial Base will be subject to CMMC requirements. This includes: large defense contractors, small machine shops making specialized parts, software developers, IT service providers, cloud providers, consultants, and any other company with a contract that involves sensitive DoD information.</div>
+    <p>To understand who is in scope, you need to understand two key concepts:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Prime Contractors</strong><span>Organizations that hold a direct contract with the DoD. They are directly subject to CMMC requirements in their contracts and responsible for flowing down requirements to their subcontractors.</span></div>
+      <div class="cheat-pill"><strong>Subcontractors</strong><span>Organizations that work with primes but may have no direct DoD relationship. If they handle FCI or CUI (we'll define these tomorrow), they must also meet the appropriate CMMC level — the prime flows down the requirement.</span></div>
+      <div class="cheat-pill"><strong>Flow-Down Requirement</strong><span>Prime contractors must include CMMC requirements in contracts with subcontractors who handle covered information. The security obligation flows all the way down the supply chain — from the DoD, through primes, to sub-subs and beyond.</span></div>
+      <div class="cheat-pill"><strong>External Cloud Service Providers</strong><span>Cloud services used to store, process, or transmit DoD sensitive data must also meet specific CMMC requirements. Using an uncertified cloud service to store CUI is itself a compliance failure.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The franchise analogy:</strong> Think of the DoD as a large fast-food franchise. The franchise sets the standards — every restaurant must meet food safety requirements. Prime contractors are franchise owners — they signed the main agreement and must follow the rules. Subcontractors are like ingredient suppliers — they may not deal directly with franchise headquarters, but if their products go into the restaurants, they must meet the same food safety standards. The chain of accountability extends all the way to the smallest supplier.</div>
+    <div class="warning-box"><strong>Geographic scope:</strong> CMMC applies to US defense contractors and subcontractors. Foreign companies doing business with the DoD may also be subject to CMMC requirements depending on their contracts. This is a US government program — it doesn't have the international reach of GDPR, but within the US defense supply chain its reach is extraordinarily broad.</div>`,
+    quiz: { q: "A small software company has a contract to provide accounting software to a large defense prime contractor. The software accesses and stores data that includes defense information. Is this small company subject to CMMC?", opts: ["No — only direct DoD contractors are subject to CMMC", "Yes — if the company handles Federal Contract Information or Controlled Unclassified Information, the prime must flow down CMMC requirements to all subcontractors handling that data", "Only if the software company has more than 50 employees", "Only if the defense prime specifically requests CMMC certification"], ans: 1, explain: "CMMC requirements flow down through the entire defense supply chain. If a subcontractor handles covered defense information (FCI or CUI), the prime must flow down CMMC requirements in the subcontract. The small software company's direct relationship is with the prime, not the DoD — but if it handles covered data, it must meet the required CMMC level." }
+  },
+  {
+    title: "FCI and CUI — The Data CMMC Protects",
+    tagline: "Understanding what makes defense information sensitive and why it matters",
+    body: `<p>CMMC exists to protect two specific categories of sensitive government information. Understanding the difference between <span class="key-term">FCI</span> and <span class="key-term">CUI</span> is fundamental — because which type of data you handle determines which CMMC level you need.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>FCI — Federal Contract Information</strong><span>Information provided by or generated for the Government under a contract to develop or deliver a product or service — but NOT intended for public release. This is essentially any information related to government contract performance that isn't classified and isn't meant to be public.</span></div>
+      <div class="cheat-pill"><strong>CUI — Controlled Unclassified Information</strong><span>Government-created or -possessed information that requires safeguarding or dissemination controls pursuant to law, regulation, or government-wide policy — but isn't classified. More sensitive than FCI but below the classified threshold.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Understanding CUI with examples:</strong> CUI is NOT classified — a nuclear weapon design is classified. But CUI is NOT public either — anyone can look up that classification. CUI is the middle ground: sensitive information that requires protection but hasn't been formally classified. Examples include: detailed engineering drawings for military aircraft components, procurement-sensitive pricing information, personally identifiable information (PII) of military personnel, critical infrastructure security information, law enforcement sensitive information, and technical data for controlled technologies. Think of it as "officially sensitive but not secret."</div>
+    <div class="highlight-box"><strong>The CUI Registry:</strong> The National Archives and Records Administration (NARA) maintains an official CUI Registry that lists all 125+ CUI categories across 20 groupings. Examples include: CTI (Critical Technology Information), PRVCY (Privacy), ITAR (International Traffic in Arms Regulations), Export Controlled, Procurement Sensitive, and many more. Organizations handling DoD contracts must identify which CUI categories are present in their environment.</div>
+    <p>Why this distinction matters for CMMC:</p>
+    <div class="badge-row">
+      <span class="badge badge-green">FCI only → CMMC Level 1 required (17 practices)</span>
+      <span class="badge badge-amber">CUI present → CMMC Level 2 required (110 practices)</span>
+      <span class="badge badge-coral">CUI critical to national security → CMMC Level 3 (110 + 24 additional practices)</span>
+    </div>
+    <div class="warning-box"><strong>The "unclassified doesn't mean unimportant" lesson:</strong> Many organizations make the mistake of thinking that because CUI isn't classified, it doesn't need rigorous protection. This is exactly wrong. CUI is the category of information most targeted by foreign adversaries — because it's accessible outside classified networks but still contains the technical details that give away military capabilities. The F-35 data stolen from contractors was CUI, not classified.</div>`,
+    quiz: { q: "A defense contractor receives detailed technical specifications for a new missile guidance system component. This data is not classified but contains controlled technical information. What type of data is this?", opts: ["FCI — because it is from a government contract", "CUI — specifically export-controlled or CTI (Critical Technology Information), requiring CMMC Level 2 minimum", "This data doesn't require CMMC protection because it's unclassified", "Classified data that doesn't apply to CMMC"], ans: 1, explain: "Detailed technical specifications for defense systems components are Controlled Unclassified Information (CUI) — specifically likely Export Controlled or Critical Technology Information (CTI). Even though it's not classified, CUI requires CMMC Level 2 minimum because of its sensitivity and the harm that could result from its unauthorized disclosure to foreign adversaries." }
+  },
+  {
+    title: "The Three CMMC Levels",
+    tagline: "Foundational, Advanced, and Expert — matching security to risk",
+    body: `<p>CMMC 2.0 organizes its requirements into <span class="key-term">three certification levels</span>, each building on the previous. The level required for a specific contract depends on the sensitivity of the information involved. Understanding these three levels is the core of understanding CMMC.</p>
+    <div class="level-grid">
+      <div class="level-1">
+        <strong style="color:#27500A">Level 1 — Foundational</strong><br>
+        <strong style="font-size:11px;color:#27500A">FCI Only</strong><br>
+        <span style="font-size:12px;color:#1a1a18;display:block;margin-top:4px"><strong>17 practices</strong>. Based on FAR 52.204-21. Annual self-assessment with annual affirmation by company official. Covers basic cyber hygiene. For organizations handling only Federal Contract Information — no CUI.</span>
+      </div>
+      <div class="level-2">
+        <strong style="color:#633806">Level 2 — Advanced</strong><br>
+        <strong style="font-size:11px;color:#633806">CUI Requiring Protection</strong><br>
+        <span style="font-size:12px;color:#1a1a18;display:block;margin-top:4px"><strong>110 practices</strong>. Aligned to NIST SP 800-171. Third-party assessment by C3PAO (every 3 years) for critical programs OR annual self-assessment with affirmation for non-critical. The vast majority of CUI-handling contractors fall here.</span>
+      </div>
+      <div class="level-3">
+        <strong style="color:#4A1B0C">Level 3 — Expert</strong><br>
+        <strong style="font-size:11px;color:#4A1B0C">CUI Critical to National Security</strong><br>
+        <span style="font-size:12px;color:#1a1a18;display:block;margin-top:4px"><strong>110 + 24 additional practices</strong>. Based on NIST SP 800-172. Government-led assessment by DIBCAC. Triennial assessment. Highest-risk programs, critical technologies, and most sensitive CUI. Reserved for a small subset of contractors.</span>
+      </div>
+    </div>
+    <div class="highlight-box"><strong>The key Level 2 split — self-assessment vs. C3PAO:</strong> Level 2 has an important nuance. For most programs, organizations can self-assess (like Level 1) with an annual affirmation. But for programs the DoD designates as "critical" — those involving particularly sensitive CUI or critical technologies — a third-party assessment by a Certified Third-Party Assessment Organization (C3PAO) is required every three years. The DoD determines which contracts require C3PAO assessment vs. self-assessment.</div>
+    <div class="analogy-box"><strong>Driver license analogy:</strong> Level 1 is like a standard driver's license for everyday driving — basic competence, self-reported through the test. Level 2 is like a commercial driver's license — you need independent verification from a certified evaluator because the stakes are higher. Level 3 is like a military pilot's certification — assessed by government experts themselves because the consequences of failure are catastrophic. Each level reflects the actual risk of the information involved.</div>
+    <div class="info-box"><strong>Which level affects most contractors?</strong> The DoD estimates that approximately 80% of contractors in the DIB will be at Level 1 or Level 2 self-assessment. Only a small percentage of contractors handling the most critical programs will require Level 2 C3PAO assessment or Level 3. But that still represents tens of thousands of third-party assessments across the defense supply chain.</div>`,
+    quiz: { q: "A defense contractor handles CUI related to a moderately sensitive program — not designated as critical by the DoD. Which assessment type does CMMC 2.0 require?", opts: ["Level 3 government-led assessment because CUI is involved", "Level 2 with C3PAO third-party assessment because CUI requires independent verification for all programs", "Level 2 with annual self-assessment and affirmation — C3PAO assessment is only required for DoD-designated critical programs", "Level 1 self-assessment because self-assessments are sufficient for all programs"], ans: 2, explain: "For Level 2, the DoD distinguishes between critical and non-critical programs. For programs not designated as critical, contractors can satisfy Level 2 requirements through annual self-assessment with affirmation by a senior official. Third-party C3PAO assessment is required for programs the DoD specifically designates as involving critical CUI or national security priorities." }
+  },
+  {
+    title: "NIST SP 800-171 — The Foundation of CMMC Level 2",
+    tagline: "The federal cybersecurity standard that CMMC enforces",
+    body: `<p>CMMC Level 2 is built almost entirely on <span class="key-term">NIST SP 800-171</span> — the National Institute of Standards and Technology Special Publication 800-171: "Protecting Controlled Unclassified Information in Nonfederal Systems and Organizations." Understanding this document is essential because CMMC Level 2's 110 practices are the 110 requirements of NIST SP 800-171.</p>
+    <div class="highlight-box">NIST SP 800-171 was first published in 2015 and has been contractually required in DoD contracts since 2017 through the DFARS clause 252.204-7012. The problem: it was required but not verified. Contractors self-attested compliance through a Supplier Performance Risk System (SPRS) score, but the DoD had no way to verify those scores. CMMC 2.0 is essentially the enforcement mechanism for a requirement that already existed — adding independent verification to what was previously an honor system.</div>
+    <p>NIST SP 800-171 is organized into <strong>14 families</strong> covering the same security domains as its parent standard, NIST SP 800-53 (the federal government's security standard), but adapted for non-federal organizations:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">AC — Access Control (22 requirements)</span>
+      <span class="badge badge-blue">AT — Awareness and Training (3 requirements)</span>
+      <span class="badge badge-blue">AU — Audit and Accountability (9 requirements)</span>
+      <span class="badge badge-blue">CM — Configuration Management (9 requirements)</span>
+      <span class="badge badge-blue">IA — Identification and Authentication (11 requirements)</span>
+      <span class="badge badge-blue">IR — Incident Response (3 requirements)</span>
+      <span class="badge badge-blue">MA — Maintenance (6 requirements)</span>
+      <span class="badge badge-blue">MP — Media Protection (9 requirements)</span>
+      <span class="badge badge-blue">PE — Physical Protection (6 requirements)</span>
+      <span class="badge badge-blue">PS — Personnel Security (2 requirements)</span>
+      <span class="badge badge-blue">RA — Risk Assessment (3 requirements)</span>
+      <span class="badge badge-blue">CA — Security Assessment (4 requirements)</span>
+      <span class="badge badge-blue">SC — System and Communications Protection (16 requirements)</span>
+      <span class="badge badge-blue">SI — System and Information Integrity (7 requirements)</span>
+    </div>
+    <div class="analogy-box"><strong>NIST 800-171 as the blueprint:</strong> NIST SP 800-171 is to CMMC Level 2 what the building code is to a building inspection. The building code (NIST 800-171) specifies exactly what's required. The building inspector (C3PAO assessor) verifies the building meets the code. Before CMMC, contractors could say "trust me, I followed the code" — CMMC adds the inspector.</div>`,
+    quiz: { q: "NIST SP 800-171 was contractually required in DoD contracts since 2017. Why did the DoD create CMMC if the requirement already existed?", opts: ["Because NIST SP 800-171 was not specific enough about security requirements", "Because self-attestation of NIST SP 800-171 compliance was widely ignored with no verification mechanism — CMMC adds independent assessment to enforce what was already required but unenforced", "Because CMMC has more security requirements than NIST SP 800-171", "Because NIST SP 800-171 only applied to prime contractors"], ans: 1, explain: "CMMC was created because NIST SP 800-171 compliance was already contractually required but widely ignored. Contractors self-attested through SPRS scores that often bore no relationship to actual security posture. CMMC adds the verification mechanism — independent third-party assessment for critical programs — that turns an existing paper requirement into an enforced one." }
+  },
+  {
+    title: "NIST SP 800-172 — Level 3 Enhanced Requirements",
+    tagline: "The advanced standard for the most critical defense programs",
+    body: `<p>CMMC Level 3 builds on the 110 NIST SP 800-171 practices by adding <strong>24 additional practices</strong> from <span class="key-term">NIST SP 800-172</span> — "Enhanced Security Requirements for Protecting Controlled Unclassified Information: A Supplement to NIST Special Publication 800-171."</p>
+    <div class="highlight-box">NIST SP 800-172 was designed specifically for CUI associated with critical programs and high-value assets — information that, if compromised, could cause serious damage to national security. The 24 additional practices address threats from Advanced Persistent Threats (APTs) — sophisticated, well-resourced adversaries (think nation-state hackers) who target the most sensitive defense programs with customized, long-term attack campaigns.</div>
+    <p>The 24 NIST SP 800-172 practices span 5 of the security families:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Access Control (AC)</strong><span>Advanced privilege management, zero trust principles, and dynamic access control that responds to threat intelligence.</span></div>
+      <div class="cheat-pill"><strong>Awareness and Training (AT)</strong><span>Advanced threat awareness training, insider threat programs, and role-specific security training for those handling the most critical information.</span></div>
+      <div class="cheat-pill"><strong>Configuration Management (CM)</strong><span>Automated configuration monitoring, penetration testing of configurations, and continuous validation that systems match their secure baseline.</span></div>
+      <div class="cheat-pill"><strong>Risk Assessment (RA)</strong><span>Advanced threat modeling, threat hunting capabilities, and risk assessment specifically addressing APT tactics, techniques, and procedures.</span></div>
+      <div class="cheat-pill"><strong>System and Communications Protection (SC)</strong><span>Network deception capabilities, advanced network segmentation, and separation of critical CUI from less sensitive information environments.</span></div>
+    </div>
+    <div class="analogy-box"><strong>APT vs. ordinary threats:</strong> Most cyberattacks are opportunistic — like burglars who try doorknobs hoping to find one unlocked. APTs are different — they're like professional bank robbers who study the vault for months, recruit inside help, and use sophisticated tools. NIST SP 800-172's additional practices are specifically designed to defend against this patient, sophisticated, well-resourced threat — because the programs protected at Level 3 are exactly what nation-state actors most want to steal.</div>
+    <div class="info-box"><strong>Level 3 assessment is government-led:</strong> Unlike Level 2 (where C3PAOs conduct assessments), Level 3 assessments are conducted by the Defense Contract Management Agency's Defense Industrial Base Cybersecurity Assessment Center (DIBCAC) — a government entity. Only the government itself has the authority and knowledge to assess the security of the nation's most sensitive defense programs. DIBCAC assessors have security clearances and access to classified threat information that informs their assessment.</div>`,
+    quiz: { q: "Why are CMMC Level 3 assessments conducted by the government (DIBCAC) rather than third-party assessors like C3PAOs?", opts: ["Because DIBCAC assessments are cheaper for contractors", "Because programs requiring Level 3 involve the most sensitive CUI, requiring assessors with security clearances and access to classified threat information that commercial C3PAOs cannot possess", "Because the DoD doesn't trust C3PAOs to conduct any assessments", "Because Level 3 has fewer requirements that can only be verified by government staff"], ans: 1, explain: "DIBCAC conducts Level 3 assessments because the programs involved are so sensitive that assessors need security clearances and access to classified threat intelligence to properly evaluate whether the security posture is adequate. C3PAOs are commercial organizations that cannot access classified information — making them unsuitable for assessing the security of the nation's most critical defense programs." }
+  },
+  {
+    title: "The 17 CMMC Level 1 Practices",
+    tagline: "Basic cyber hygiene — the absolute minimum for any defense contractor",
+    body: `<p>CMMC Level 1 consists of <strong>17 practices</strong> drawn directly from <strong>FAR clause 52.204-21</strong> — the Federal Acquisition Regulation clause that has applied to all federal contractors since 2016. These represent absolute basic cybersecurity hygiene — the minimum any organization handling federal contract information should implement.</p>
+    <div class="highlight-box">Level 1 is self-assessed annually with an affirmation by a senior company official. There is no third-party assessment requirement at Level 1. However, the affirmation is a formal certification — knowingly falsely affirming compliance can expose a company and its senior officials to significant legal liability under the False Claims Act.</div>
+    <p>The 17 Level 1 practices cover 6 domains:</p>
+    <div class="domain-card"><b>Access Control (AC) — 4 practices</b><br>Limit system access to authorized users, processes, and devices. Limit system access to the types of transactions that authorized users are permitted to execute. Control the flow of CUI. Separate duties of individuals to reduce risk of insider threats.</div>
+    <div class="domain-card"><b>Identification and Authentication (IA) — 2 practices</b><br>Identify system users, processes, and devices. Authenticate the identities of those users, processes, and devices before allowing access to systems.</div>
+    <div class="domain-card"><b>Media Protection (MP) — 2 practices</b><br>Sanitize or destroy information system media before disposal or reuse. Protect and control portable electronic media during transport outside designated controlled areas.</div>
+    <div class="domain-card"><b>Physical Protection (PE) — 4 practices</b><br>Limit physical access to systems containing FCI to authorized individuals. Escort visitors and monitor visitor activity. Maintain audit logs of physical access. Control and manage physical access devices.</div>
+    <div class="domain-card"><b>System and Communications Protection (SC) — 2 practices</b><br>Monitor, control, and protect communications at the external boundaries and key internal boundaries. Implement subnetworks for publicly accessible system components that are separated from internal networks.</div>
+    <div class="domain-card"><b>System and Information Integrity (SI) — 3 practices</b><br>Identify, report, and correct information and system flaws promptly. Provide protection from malicious code at appropriate locations. Update malicious code protection mechanisms.</div>
+    <div class="analogy-box"><strong>Level 1 as the security floor:</strong> These 17 practices represent things every organization with computers should be doing — regardless of whether they have defense contracts. Lock computers, identify users, protect removable media, have anti-malware, patch systems. If a company can't implement these basic controls, they have no business handling government information of any kind.</div>`,
+    quiz: { q: "How is CMMC Level 1 compliance verified?", opts: ["Through a C3PAO third-party assessment every 3 years", "Through an annual self-assessment with affirmation by a senior company official — no third-party assessment is required at Level 1", "Through a DIBCAC government assessment", "Level 1 has no verification requirement"], ans: 1, explain: "CMMC Level 1 is verified through an annual self-assessment with affirmation by a senior company official (such as the CEO or equivalent). No third-party C3PAO assessment is required. However, the affirmation is a formal legal certification — false affirmations can result in liability under the False Claims Act, making it more than just a paperwork exercise." }
+  },
+  {
+    title: "The 110 CMMC Level 2 Practices — Domains Overview",
+    tagline: "The comprehensive security requirements for handling CUI",
+    body: `<p>CMMC Level 2's <strong>110 practices</strong> are organized into <strong>14 domains</strong> — exactly the 14 security families from NIST SP 800-171. Each domain addresses a specific aspect of information security. Together, they represent a comprehensive security program that goes far beyond the basic hygiene of Level 1.</p>
+    <div class="domain-card"><b>AC — Access Control (22 practices)</b><br>The largest domain. Controls who can access systems and data, under what conditions, and with what permissions. Includes network access, remote access, mobile access, and enforcement of least privilege.</div>
+    <div class="domain-card"><b>AT — Awareness and Training (3 practices)</b><br>Ensure personnel are aware of security risks, trained to recognize threats, and understand their security responsibilities. Security awareness training is not optional — it is a defined practice requirement.</div>
+    <div class="domain-card"><b>AU — Audit and Accountability (9 practices)</b><br>Create, protect, review, and retain audit logs. Ensure individual user actions can be traced and users are accountable for their activities. Essential for incident investigation and insider threat detection.</div>
+    <div class="domain-card"><b>CM — Configuration Management (9 practices)</b><br>Establish and maintain baselines of system configurations. Control changes to configurations. Prevent unauthorized software installation. Manage the security impact of changes to systems.</div>
+    <div class="domain-card"><b>IA — Identification and Authentication (11 practices)</b><br>Manage identities of users, devices, and processes. Authenticate all entities before granting access. Includes password management, multi-factor authentication requirements, and management of authenticators.</div>
+    <div class="domain-card"><b>IR — Incident Response (3 practices)</b><br>Establish an operational incident-handling capability. Track, document, and report incidents. Test incident response capability. Includes the DoD-specific requirement to report cyber incidents within 72 hours.</div>
+    <div class="domain-card"><b>MA — Maintenance (6 practices)</b><br>Perform maintenance on systems. Control maintenance tools and personnel, especially those accessing systems remotely. Prevents maintenance activities from creating security vulnerabilities.</div>
+    <div class="domain-card"><b>MP — Media Protection (9 practices)</b><br>Protect system media containing CUI — both physical and digital. Control access to media with CUI. Sanitize media before disposal or reuse. Transport media securely.</div>
+    <div class="analogy-box"><strong>Why 110 practices?</strong> The jump from 17 (Level 1) to 110 (Level 2) reflects the dramatically higher sensitivity of CUI vs. FCI. Organizations handling CUI for defense programs need comprehensive security programs — not just basic hygiene. The 110 practices represent what the federal government determined is the minimum adequate protection for sensitive unclassified defense information based on the actual threat environment.</div>`,
+    quiz: { q: "CMMC Level 2's Access Control (AC) domain has 22 practices — the most of any domain. Why does access control receive so much emphasis in the CMMC framework?", opts: ["Because access control is the easiest domain to implement", "Because controlling who can access systems and data is foundational to all other security — most breaches begin with unauthorized access or compromised credentials that grant excessive access", "Because the DoD only cares about who accesses systems, not what they do", "Because AC has the most overlap with Level 1"], ans: 1, explain: "Access control is the most heavily weighted domain because it is foundational to information security. If unauthorized parties can access systems (through stolen credentials, compromised accounts, or poor access controls), all other security controls are undermined. Most successful cyberattacks involve some form of unauthorized access or exploitation of excessive access rights — making robust access control the most important preventive measure." }
+  },
+  {
+    title: "Level 2 Domains (Continued) — MA through SI",
+    tagline: "The remaining six domains that complete the Level 2 framework",
+    body: `<p>Continuing through the remaining six CMMC Level 2 domains — these cover physical protection, personnel security, risk management, security assessment, network and system protection, and system integrity.</p>
+    <div class="domain-card"><b>PE — Physical Protection (6 practices)</b><br>Limit physical access to systems, equipment, and operating environments. Protect and monitor physical infrastructure. Control physical access devices. This extends well beyond what Level 1 requires — comprehensive physical security programs including access logs, escorted visitors, and monitoring of physical access to CUI-containing areas.</div>
+    <div class="domain-card"><b>PS — Personnel Security (2 practices)</b><br>Screen individuals before authorizing access to systems with CUI. Ensure CUI is protected during and after personnel actions (terminations, role changes). Personnel security is often overlooked but insider threats — whether malicious or accidental — are a major source of CUI exposure.</div>
+    <div class="domain-card"><b>RA — Risk Assessment (3 practices)</b><br>Periodically assess the risk to operations, assets, and individuals from unauthorized access, use, disclosure, disruption, modification, or destruction of information. Scan for vulnerabilities in systems periodically. Risk assessment isn't a one-time activity — it's an ongoing process that must account for changing threats and environments.</div>
+    <div class="domain-card"><b>CA — Security Assessment (4 practices)</b><br>Periodically assess the security controls in place to determine effectiveness. Develop and implement plans of action (POA&Ms) for deficiencies. Monitor security controls on an ongoing basis. This domain is what creates the foundation for the CMMC assessment process itself.</div>
+    <div class="domain-card"><b>SC — System and Communications Protection (16 practices)</b><br>Monitor and protect communications. Implement network segmentation. Control the flow of CUI between components. Use encryption for CUI in transit. Implement architectural controls that limit the blast radius of successful attacks. Second largest domain after Access Control.</div>
+    <div class="domain-card"><b>SI — System and Information Integrity (7 practices)</b><br>Identify and correct system flaws promptly. Provide protection against malicious code. Monitor systems to detect attacks and indicators of compromise. Perform periodic scans of systems. Protect against newly discovered vulnerabilities by updating protection mechanisms.</div>
+    <div class="highlight-box"><strong>The CA domain and POA&Ms:</strong> The Security Assessment domain (CA) is particularly important because it requires organizations to formally document security deficiencies as Plans of Action and Milestones (POA&Ms). POA&Ms are the formal mechanism for tracking known security gaps and the plans to address them. They are a central artifact in CMMC assessments — assessors look at them to understand what an organization knows about its own security gaps.</div>`,
+    quiz: { q: "The Risk Assessment (RA) domain requires organizations to 'periodically' scan for vulnerabilities. Why is periodic scanning required rather than a one-time assessment?", opts: ["Because NIST requires it quarterly", "Because new vulnerabilities are discovered continuously — a scan done 6 months ago doesn't reveal vulnerabilities disclosed last week. Continuous vulnerability management requires ongoing scanning to maintain current knowledge of security posture.", "Because periodic scanning satisfies the DoD's documentation requirements", "Because automated scanning tools require periodic calibration"], ans: 1, explain: "Periodic vulnerability scanning is required because the vulnerability landscape changes continuously. New vulnerabilities are disclosed daily through the National Vulnerability Database and vendor security advisories. A vulnerability scan from 6 months ago is meaningless for vulnerabilities discovered last month. Effective vulnerability management requires regular scanning — typically quarterly at minimum — to maintain current awareness of security weaknesses." }
+  },
+  {
+    title: "The System Security Plan (SSP)",
+    tagline: "The foundational document of every CMMC compliance program",
+    body: `<p>The <span class="key-term">System Security Plan (SSP)</span> is the most important compliance document in any CMMC program. It is required for all organizations at Level 1 and above, and it serves as the primary artifact that assessors use to understand and evaluate an organization's security posture. If your CMMC compliance program has a single most critical document — it's the SSP.</p>
+    <div class="highlight-box">The SSP documents: the boundary of the assessed environment (which systems, networks, and locations handle FCI/CUI), the security controls implemented for each CMMC practice, how each practice is implemented (policy, procedure, technical control), any dependencies on external systems or services, roles and responsibilities for security, and the status of implementation for each practice (implemented, planned, or not applicable).</div>
+    <p>Key sections of a comprehensive SSP:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>System Description</strong><span>A description of the assessed system — what it does, what data it processes, who uses it, and how it connects to other systems. The boundary diagram is often the most important part.</span></div>
+      <div class="cheat-pill"><strong>System Boundary</strong><span>A precise definition and diagram of which components (hardware, software, networks, services) are within the assessment scope. The boundary determines what is assessed and what is out of scope.</span></div>
+      <div class="cheat-pill"><strong>Practice Implementation Descriptions</strong><span>For each of the 17, 110, or 134 practices: how the practice is implemented, what policies and procedures support it, what technical controls enforce it, and what evidence of implementation exists.</span></div>
+      <div class="cheat-pill"><strong>Control Gaps and POA&Ms</strong><span>Practices not yet fully implemented are documented as gaps, with associated Plans of Action and Milestones (POA&Ms) describing how and when gaps will be remediated.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The SSP as a security blueprint:</strong> If your company were a building, the SSP would be its architectural plans — showing what's there, how it's built, what safety features exist, and what building codes it meets. An inspector (assessor) reviews the plans first to understand the building before walking through it. Without comprehensive, accurate plans, the inspection becomes much harder — and the inspector is likely to find more problems.</div>
+    <div class="warning-box"><strong>The SSP accuracy obligation:</strong> An SSP that claims a practice is implemented when it isn't is not just a compliance failure — it is a false statement in a federal compliance context. Under CMMC 2.0, SSPs are reviewed by assessors who will verify the claims made in the document. Organizations that knowingly misrepresent their security posture in an SSP may face liability under the False Claims Act, which carries significant financial penalties including triple damages.</div>`,
+    quiz: { q: "What is the primary purpose of the System Security Plan (SSP) in CMMC compliance?", opts: ["To satisfy a paperwork requirement with no practical value", "To document the assessed system boundary, how each CMMC practice is implemented, and any gaps — serving as the primary document assessors use to evaluate security posture", "To replace the need for actual security controls", "To notify the DoD of system changes"], ans: 1, explain: "The SSP is the cornerstone document of CMMC compliance. It defines what is in scope, documents how each practice is implemented, and identifies gaps requiring remediation through POA&Ms. Assessors review the SSP as the primary artifact before and during assessment — it sets the context for everything they examine. An incomplete or inaccurate SSP is one of the most common causes of CMMC assessment failures." }
+  },
+  {
+    title: "Plans of Action and Milestones (POA&Ms)",
+    tagline: "The formal mechanism for managing known security gaps",
+    body: `<p>No organization implementing CMMC Level 2 achieves perfect compliance overnight. The <span class="key-term">Plan of Action and Milestones (POA&M)</span> is the formal mechanism for tracking known security gaps and the plans to address them. Understanding POA&Ms — when they're acceptable and when they're not — is critical for any CMMC compliance program.</p>
+    <div class="highlight-box">A POA&M documents: the specific security practice that is not yet fully implemented, the nature of the deficiency (partially implemented or not implemented), the planned remediation actions, the resources required, any milestones with target completion dates, and the responsible person. POA&Ms transform vague acknowledgments of "we have some gaps" into specific, tracked, management-owned remediation commitments.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>When POA&Ms Are Acceptable</strong><span>CMMC 2.0 allows some practices to have open POA&Ms at the time of assessment — meaning an organization can still achieve certification even if not every practice is fully implemented, as long as gaps are documented and remediation is underway.</span></div>
+      <div class="cheat-pill"><strong>When POA&Ms Are NOT Acceptable</strong><span>CMMC 2.0 identifies certain practices as "not POA&M-able" — they must be fully implemented before certification can be achieved. These include practices the DoD has determined are foundational to the entire security program.</span></div>
+      <div class="cheat-pill"><strong>POA&M Closure Timeline</strong><span>POA&Ms accepted at assessment must be closed within 180 days of the certification date. If POA&Ms are not closed within 180 days, the certification may be suspended or revoked.</span></div>
+      <div class="cheat-pill"><strong>POA&M Value vs. Risk</strong><span>Open POA&Ms represent real security gaps. Assessors evaluate not just whether POA&Ms exist, but whether the remaining gaps create unacceptable risk given the sensitivity of CUI handled. Too many open POA&Ms may prevent certification regardless of the 180-day rule.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The building permit analogy:</strong> When a building inspector finds minor deficiencies — a door that needs adjustment, a fixture that needs replacement — they don't demolish the building. They issue a "punch list" — deficiencies that must be corrected by a specific date for final approval. POA&Ms work the same way: they're the CMMC punch list. But just as a building with a missing fire suppression system won't get a permit regardless of the punch list, certain foundational CMMC practices must be fully implemented before certification is possible.</div>
+    <div class="warning-box"><strong>SPRS Score Connection:</strong> Organizations calculate their NIST SP 800-171 compliance score using the Supplier Performance Risk System (SPRS) scoring methodology. The starting score is 110 points. Each unimplemented or partially implemented practice reduces the score based on its weight. The resulting SPRS score (which can be negative) is submitted to the government and visible to contracting officers. Submitting a falsely inflated SPRS score is a False Claims Act violation.</div>`,
+    quiz: { q: "An organization completes a CMMC Level 2 assessment with 8 practices having open POA&Ms. The C3PAO determines this is within acceptable limits for certification. What must happen within 180 days?", opts: ["Nothing — POA&Ms can remain open indefinitely after certification", "All 8 open POA&Ms must be closed within 180 days of certification or the certification may be suspended or revoked", "The organization must notify the DoD of each open POA&M", "Open POA&Ms automatically close when the next assessment cycle begins"], ans: 1, explain: "CMMC 2.0 requires that open POA&Ms accepted at certification be closed within 180 days of the certification date. This is a hard deadline — if POA&Ms are not remediated and closed within that window, the organization's CMMC certification may be suspended or revoked, which would prevent them from performing work on contracts requiring that certification level." }
+  },
+  {
+    title: "C3PAOs — Certified Third-Party Assessment Organizations",
+    tagline: "The independent auditors of the CMMC ecosystem",
+    body: `<p>For Level 2 programs designated as requiring third-party assessment, the evaluation must be conducted by a <span class="key-term">C3PAO</span> — Certified Third-Party Assessment Organization. C3PAOs are the CMMC equivalent of the SOC 2 CPA firm or the HITRUST External Assessor — independent, certified organizations authorized to conduct official CMMC assessments.</p>
+    <div class="highlight-box">C3PAOs are certified by the <strong>CMMC Accreditation Body (The Cyber AB)</strong> — the nonprofit organization authorized by the DoD to govern the CMMC ecosystem. The Cyber AB accredits C3PAOs, certifies individual assessors (CCAs — Certified CMMC Assessors), and maintains the marketplace of authorized assessment organizations. C3PAOs must themselves meet security requirements and be periodically re-assessed.</div>
+    <p>C3PAO assessment process overview:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Assessment Planning</strong><span>Define scope, assessment methods, schedule, and evidence requirements. Review SSP before on-site assessment. Identify key personnel to interview.</span></div>
+      <div class="cheat-pill"><strong>Evidence Collection</strong><span>Collect policies, procedures, screenshots, configurations, and records. Review audit logs, training records, and other operational evidence demonstrating practice implementation.</span></div>
+      <div class="cheat-pill"><strong>Practice Assessment</strong><span>Evaluate each practice through examination (reviewing documents), interviews (talking to personnel), and testing (technical verification of controls). Not just documentation review — actual validation.</span></div>
+      <div class="cheat-pill"><strong>Findings and Report</strong><span>Document findings for each practice (MET, NOT MET, or MET with POA&M). Submit assessment results through the CMMC Enterprise Mission Assurance Support Service (eMASS) to the DoD.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The independence requirement:</strong> C3PAOs must be independent of the organizations they assess — they cannot have a financial relationship with the assessed organization outside the assessment itself. A C3PAO that helped an organization build its security program cannot assess that same organization — a conflict of interest that would undermine the independence fundamental to credible assessment. This is similar to the SOC 2 requirement that CPA firms cannot audit companies they also consult for in the same assessment period.</div>
+    <div class="info-box"><strong>The assessment market:</strong> As of 2024, the number of authorized C3PAOs is growing but remains limited relative to the hundreds of thousands of contractors who will eventually need assessments. Organizations should expect assessment timelines to extend significantly as CMMC requirements phase in — early movers who engage C3PAOs before mandatory timelines will have significant advantages over those who wait.</div>`,
+    quiz: { q: "Why must C3PAOs be independent of the organizations they assess?", opts: ["Because C3PAOs are too expensive for consulting work", "Because a C3PAO that helped build an organization's security program has an inherent conflict of interest that would undermine the objectivity and credibility of their assessment findings", "Because the DoD requires assessors to be government employees", "Because consulting firms don't understand defense contractor requirements"], ans: 1, explain: "Independence is fundamental to assessment credibility. A C3PAO that designed an organization's security controls has a financial and professional incentive to rate those controls favorably — undermining the independence that makes the assessment trustworthy to the DoD. The same principle applies in financial auditing (auditors can't audit companies they also consult for) and ISO 27001 certification (certification bodies can't certify organizations they helped implement)." }
+  },
+  {
+    title: "The CMMC Assessment Process",
+    tagline: "What actually happens from contract requirement to certification",
+    body: `<p>Understanding the CMMC assessment process end-to-end is essential for any organization preparing for certification. The journey from recognizing a CMMC requirement to holding a valid certification involves multiple phases, stakeholders, and documents.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Phase 1: Identify Requirements</strong><span>Determine which CMMC level is required for target contracts. Review DFARS clauses and contract language. Understand whether self-assessment or C3PAO assessment is required. Map out which systems handle FCI/CUI.</span></div>
+      <div class="cheat-pill"><strong>Phase 2: Scope Definition</strong><span>Define the assessment boundary — which systems, locations, and personnel are in scope. Minimize scope where possible (without gaming the boundary) to reduce assessment burden. External service providers affecting in-scope systems must also comply.</span></div>
+      <div class="cheat-pill"><strong>Phase 3: Gap Assessment</strong><span>Evaluate current security practices against all required CMMC practices. Document gaps in the SSP as POA&Ms. Prioritize remediation by risk and assessment timeline. This phase reveals the true scope of the compliance effort.</span></div>
+      <div class="cheat-pill"><strong>Phase 4: Remediation</strong><span>Implement missing or deficient controls. Update SSP to reflect implemented controls. The most time and resource-intensive phase — typically 6-18 months for Level 2 first-time certification.</span></div>
+      <div class="cheat-pill"><strong>Phase 5: Assessment</strong><span>For Level 2 C3PAO: engage a certified C3PAO. Provide access to systems, personnel, documentation. C3PAO conducts assessment and submits findings to eMASS. CMMC Program Management Office (PMO) reviews. Certificate issued if requirements met.</span></div>
+      <div class="cheat-pill"><strong>Phase 6: Maintenance</strong><span>Continuously operate implemented controls. Close open POA&Ms within 180 days. Prepare for annual affirmations (Level 1/2 self) or triennial recertification (Level 2 C3PAO). Monitor for DoD CMMC requirement updates.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Timeline realities:</strong> A first-time Level 2 assessment for an organization starting from scratch can take 12–24 months from initial gap assessment through certificate issuance. Organizations with existing strong security programs (NIST 800-171 implementations, ISO 27001, etc.) can move faster — but should still budget 6–12 months for assessment preparation and the assessment itself. Attempting to rush a CMMC assessment without adequate preparation typically results in assessment failures and expensive reassessments.</div>
+    <div class="analogy-box"><strong>The driver's test analogy:</strong> The CMMC assessment is like a very rigorous driver's test. You need to study the rules (NIST 800-171), practice the skills (implement the controls), gather your documentation (SSP and evidence), find a certified examiner (C3PAO), pass the test (assessment), and then maintain your license (annual affirmations, ongoing compliance). Trying to take the test before you've actually learned to drive (rushing into assessment before implementing controls) just means failing and starting over.</div>`,
+    quiz: { q: "An organization wants to bid on a DoD contract requiring CMMC Level 2 (C3PAO). They discover the requirement 3 months before the contract award date. Is this a realistic timeline for achieving certification?", opts: ["Yes — 3 months is sufficient for a motivated organization", "No — for a first-time Level 2 certification starting from scratch, 3 months is insufficient. A realistic timeline is 12-24 months, making contract timelines critical planning considerations", "Yes — C3PAOs can expedite assessments for urgent contracts", "It depends on the number of employees"], ans: 1, explain: "Three months is completely insufficient for a first-time Level 2 C3PAO certification. The gap assessment alone often reveals months of remediation work. Implementing 110 practices, documenting them in an SSP, scheduling a C3PAO (who have significant backlogs), completing the assessment, resolving findings, and receiving the certificate typically takes 12-24 months from scratch. CMMC requirements should be identified in contracting opportunities well in advance." }
+  },
+  {
+    title: "CMMC Scoping — Defining What's In and Out",
+    tagline: "The strategic decision that shapes the entire compliance effort",
+    body: `<p><span class="key-term">CMMC scoping</span> is the process of defining the boundary of the assessment — what systems, personnel, locations, and services are included in the CMMC assessment. Scoping decisions have enormous practical impact: a broader scope means more systems to secure, more evidence to collect, and a more complex assessment. A narrower scope can be significantly more manageable — but only if it genuinely reflects where FCI/CUI lives.</p>
+    <div class="highlight-box">The CMMC Assessment Scope guidance identifies five categories of assets for Level 2 scoping: CUI Assets (systems that process, store, or transmit CUI), Security Protection Assets (systems that provide security functions for the assessed environment), Contractor Risk Managed Assets (assets that can reach CUI assets but aren't required to handle CUI), Specialized Assets (OT/SCADA, IoT, test equipment — assessed differently), and Out-of-Scope Assets (systems with no connection to CUI).</div>
+    <p>Common scoping strategies:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Environment Segmentation</strong><span>Create a dedicated, isolated network environment for CUI — separate from the corporate general network. Systems in the CUI environment are in scope; others are out of scope. Dramatically reduces scope but requires investment in segregation.</span></div>
+      <div class="cheat-pill"><strong>Enclave Approach</strong><span>Establish a small, tightly controlled enclave for CUI processing. Only personnel who must access CUI for their work are in the enclave. Can reduce scope to a handful of systems vs. an entire corporate network.</span></div>
+      <div class="cheat-pill"><strong>Cloud Migration</strong><span>Move CUI processing to a CMMC-compliant cloud environment (FedRAMP authorized). The cloud provider handles many security controls, reducing the on-premise scope. Must ensure the cloud service meets CMMC requirements and has a BAA-equivalent agreement.</span></div>
+      <div class="cheat-pill"><strong>Full Environment</strong><span>Some organizations determine that CUI flows throughout their environment — particularly if they don't have strong network segmentation. This makes the entire enterprise in scope — most extensive and expensive approach.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The clean room analogy:</strong> Think of CUI like a biohazardous material in a research lab. You can handle it throughout the entire building (full environment scope) — but that requires every corner of the building to meet safety standards. Or you can build a dedicated clean room (enclave) where the biohazard is handled — then only the clean room and people who work in it need to meet the elevated standards. CMMC scoping works the same way: where can you reasonably contain CUI to minimize the compliance burden while genuinely protecting the data?</div>`,
+    quiz: { q: "A small defense contractor currently has CUI flowing throughout their corporate network, including systems used by HR, accounting, and sales teams that never actually need CUI. What is the most efficient long-term scoping strategy?", opts: ["Include all systems in the CMMC scope — it's simpler than segmenting", "Implement network segmentation to create an isolated CUI environment, limiting scope to only the systems that actually handle CUI — HR, accounting, and sales systems that don't need CUI access can be out of scope", "Exclude CUI-handling from the scope documentation without creating technical controls", "Only include servers in scope — not workstations"], ans: 1, explain: "Network segmentation to create an isolated CUI environment is the most efficient long-term strategy. While the initial investment in segmentation is real, it dramatically reduces the scope of the CMMC assessment — and therefore the ongoing compliance burden. Systems that genuinely don't need CUI access shouldn't be in scope. Including HR, accounting, and sales systems unnecessarily increases scope, cost, and assessment complexity without any security benefit." }
+  },
+  {
+    title: "The CMMC Ecosystem — Key Organizations",
+    tagline: "Who governs, certifies, and oversees CMMC",
+    body: `<p>CMMC involves a complex ecosystem of organizations. Understanding who does what — and how they relate to each other — is essential for navigating the certification process.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>DoD / OUSD(A&S)</strong><span>The Department of Defense — specifically the Office of the Under Secretary of Defense for Acquisition and Sustainability — owns the CMMC program, writes the rules, and enforces requirements through contracts. The ultimate authority in the CMMC ecosystem.</span></div>
+      <div class="cheat-pill"><strong>The Cyber AB</strong><span>The CMMC Accreditation Body — a nonprofit authorized by the DoD to govern the CMMC third-party assessment ecosystem. Accredits C3PAOs, certifies individual assessors, maintains the CMMC marketplace, and sets assessment standards.</span></div>
+      <div class="cheat-pill"><strong>C3PAOs</strong><span>Certified Third-Party Assessment Organizations — organizations accredited by The Cyber AB to conduct official CMMC Level 2 assessments and issue certified assessment reports. Must maintain their own security and be periodically re-assessed.</span></div>
+      <div class="cheat-pill"><strong>DIBCAC</strong><span>Defense Industrial Base Cybersecurity Assessment Center — the DCMA government entity that conducts Level 3 assessments. Also conducts spot-check assessments of Level 2 self-assessors and oversees C3PAO quality.</span></div>
+      <div class="cheat-pill"><strong>CCAs and CCPs</strong><span>Certified CMMC Assessors (CCAs) — individual assessors certified by The Cyber AB who conduct assessments within C3PAOs. Certified CMMC Professionals (CCPs) — consultants who help organizations prepare for CMMC but cannot conduct official assessments.</span></div>
+      <div class="cheat-pill"><strong>OSCs (Organizations Seeking Certification)</strong><span>The defense contractors and subcontractors pursuing CMMC certification. They are responsible for implementing required practices, maintaining their SSP and POA&Ms, and engaging C3PAOs for assessment.</span></div>
+      <div class="cheat-pill"><strong>CMMC PMO</strong><span>The CMMC Program Management Office within the DoD that manages the certification database, oversees the assessment process, and handles adjudication of disputed assessment results.</span></div>
+      <div class="cheat-pill"><strong>eMASS</strong><span>Enterprise Mission Assurance Support Service — the DoD system of record where assessment results are submitted and certification status is tracked. Contracting officers verify CMMC certification status through eMASS.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The DMV analogy:</strong> Think of CMMC like the driver licensing system. The state (DoD) sets the rules. The DMV (Cyber AB) manages the licensing process. Driver's ed schools (C3PAOs) do the formal testing. The police (DIBCAC) enforce the rules and spot-check. Individual drivers (OSCs) must pass the test. The DMV database (eMASS) records who has a valid license. Each party plays a distinct, necessary role in a system designed to ensure drivers (contractors) are actually safe (secure).</div>`,
+    quiz: { q: "What is the role of The Cyber AB (CMMC Accreditation Body) in the CMMC ecosystem?", opts: ["To write the CMMC requirements and contractual rules", "To authorize by the DoD to govern the third-party assessment ecosystem — accrediting C3PAOs, certifying individual assessors, and maintaining assessment standards", "To conduct Level 3 government-led assessments", "To provide free cybersecurity consulting to small defense contractors"], ans: 1, explain: "The Cyber AB is the DoD-authorized nonprofit that governs the CMMC third-party assessment ecosystem. It accredits C3PAOs (determines which organizations can conduct official assessments), certifies individual CCAs (assessors) and CCPs (practitioners), maintains the marketplace of authorized providers, and establishes assessment standards. The DoD sets the requirements; The Cyber AB governs who can verify them." }
+  },
+  {
+    title: "DFARS Clauses — The Legal Hook for CMMC",
+    tagline: "How CMMC requirements get into defense contracts",
+    body: `<p>CMMC requirements reach defense contractors through <span class="key-term">DFARS clauses</span> — Defense Federal Acquisition Regulation Supplement clauses that are incorporated into DoD contracts. Understanding these clauses explains both the legal basis for CMMC and the consequences of non-compliance.</p>
+    <div class="highlight-box"><strong>Key DFARS clauses for CMMC:</strong><br><br><strong>DFARS 252.204-7019</strong> — Notice of NIST SP 800-171 DoD Assessment Requirements: Requires contractors to have a current NIST SP 800-171 assessment and enter the results into the SPRS.<br><br><strong>DFARS 252.204-7020</strong> — NIST SP 800-171 DoD Assessment Requirements: Gives the DoD the right to conduct or commission assessments of contractors' implementation of NIST SP 800-171.<br><br><strong>DFARS 252.204-7021</strong> — Cybersecurity Maturity Model Certification: The primary CMMC clause. Requires contractors to have a CMMC certification at the level specified in the contract and to flow down requirements to subcontractors.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Contract Condition</strong><span>CMMC is a condition of contract award — not a deliverable or a performance standard. If you don't have the required CMMC certification before contract award, you cannot receive the contract. Period.</span></div>
+      <div class="cheat-pill"><strong>Flow-Down Requirement</strong><span>DFARS 252.204-7021 requires prime contractors to include the clause in subcontracts with subcontractors who handle FCI or CUI. The certification requirement flows through the entire supply chain.</span></div>
+      <div class="cheat-pill"><strong>Maintaining Certification</strong><span>Certification must be maintained throughout the contract period. If a contractor's certification lapses or is revoked, they may be unable to perform existing contracts in addition to losing future contract eligibility.</span></div>
+      <div class="cheat-pill"><strong>False Claims Act Risk</strong><span>Falsely certifying CMMC compliance or submitting false SPRS scores exposes companies and individuals to False Claims Act liability — including triple damages (3x the value of the contract) plus civil penalties per false claim.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why contractual enforcement matters:</strong> Before CMMC, security requirements were in contracts but rarely enforced — the DoD didn't have the resources to verify compliance, and the consequences of non-compliance were unclear. CMMC changes this: the certification requirement is binary (you have it or you don't), verification is independent (C3PAO or DIBCAC assessed), and the consequence of non-compliance is straightforward (no contract). This clarity is what makes CMMC actually enforceable.</div>
+    <div class="warning-box"><strong>The False Claims Act and CMMC:</strong> The Department of Justice has explicitly stated that CMMC-related False Claims Act enforcement is a priority. In 2021, the DoJ launched the Civil Cyber-Fraud Initiative — specifically to pursue False Claims Act cases against contractors who submit false cybersecurity certifications. Several settlements have already occurred, with penalties exceeding $1 million in individual cases. The era of casual self-attestation with no accountability is over.</div>`,
+    quiz: { q: "A defense contractor wins a DoD contract in December. In March, their CMMC Level 2 certification expires and they fail to renew it. What are the contract implications?", opts: ["Nothing — certification only needs to be maintained for contract award, not performance", "The contractor may be unable to perform the existing contract and will be ineligible for new contracts requiring that certification level until certification is renewed", "The contractor has 180 days to renew before any consequences", "Only future contracts are affected — existing contracts continue normally"], ans: 1, explain: "CMMC certification must be maintained throughout the contract period — not just at the time of award. If a certification lapses during performance, the contractor may be in breach of contract terms set by the DFARS clause. Contracting officers can verify current certification status in eMASS at any time. Lapsed certification during performance is a serious compliance failure with potential contract consequences." }
+  },
+  {
+    title: "CMMC and the False Claims Act",
+    tagline: "The legal teeth that make CMMC non-compliance genuinely risky",
+    body: `<p>One of the most important things to understand about CMMC — and what truly distinguishes it from voluntary frameworks — is its connection to the <span class="key-term">False Claims Act (FCA)</span>. The FCA is a US federal law that imposes significant financial penalties on individuals and companies that knowingly submit false claims for government payment or make false statements to obtain government contracts.</p>
+    <div class="highlight-box"><strong>How the False Claims Act applies to CMMC:</strong> When a contractor self-attests CMMC Level 1 compliance, submits an SPRS score for NIST 800-171, or has a C3PAO certify Level 2 compliance — they are making formal representations to the federal government. If those representations are knowingly false (the security controls aren't actually implemented as claimed), the contractor may face FCA liability. The FCA provides for triple damages (3x the value of the government contract) plus civil penalties per false claim.</div>
+    <p>The DoJ's Civil Cyber-Fraud Initiative (2021):</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Initiative Purpose</strong><span>Announced in October 2021 by Deputy Attorney General Lisa Monaco. Specifically targets contractors and grantees that fail to meet required cybersecurity standards while still receiving government funds — closing the accountability gap that allowed false security certifications to go unpunished.</span></div>
+      <div class="cheat-pill"><strong>Qui Tam Provisions</strong><span>The False Claims Act has "qui tam" provisions — meaning private citizens (typically employees, competitors, or whistleblowers) can file FCA suits on behalf of the government and receive a portion of any recovery. This creates a powerful private enforcement mechanism alongside government enforcement.</span></div>
+      <div class="cheat-pill"><strong>Real Settlements</strong><span>Aerojet Rocketdyne (2022): $9 million settlement for allegedly overstating cybersecurity compliance. Comprehensive Health Services (2022): $930,000 for alleged cybersecurity failures. The settlements signal that DoJ is actively pursuing cyber FCA cases.</span></div>
+      <div class="cheat-pill"><strong>Individual Liability</strong><span>The FCA can reach beyond corporate liability to individual executives. A CEO who signs false CMMC affirmations may face personal liability in addition to corporate penalties. The senior official affirmation requirement was specifically designed to create individual accountability.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why this changes the calculation:</strong> Before the DoJ's Civil Cyber-Fraud Initiative, the downside risk of overstating security compliance was relatively modest — you might lose a contract or receive a bad past performance rating. Now, knowingly false cybersecurity certifications can expose a company to 3x contract value in damages plus civil penalties per false claim. For a $10 million contract, that's $30 million in potential damages. The economics of non-compliance have changed dramatically.</div>`,
+    quiz: { q: "A disgruntled employee of a defense contractor knows their company has falsely certified CMMC Level 1 compliance while having almost no security controls. What legal mechanism allows this employee to take action on their own?", opts: ["They can report directly to the DoD Inspector General only", "The False Claims Act's qui tam provisions allow private citizens to file FCA suits on behalf of the government and receive a portion of any recovery — creating a powerful private enforcement mechanism", "There is no mechanism for employees to report CMMC fraud", "Only the company's outside counsel can report compliance failures"], ans: 1, explain: "The False Claims Act's qui tam provisions allow private citizens — including employees — to file FCA lawsuits on behalf of the government against companies making false certifications. The whistleblower (relator) can receive 15-30% of any government recovery. This creates a powerful private enforcement mechanism where employees who know about false security certifications have a financial incentive to report them." }
+  },
+  {
+    title: "CMMC 1.0 vs CMMC 2.0 — The Critical Differences",
+    tagline: "How the framework evolved and why the changes matter",
+    body: `<p>CMMC has gone through a significant evolution. CMMC 1.0 was released in 2020 and generated substantial industry pushback. The DoD responded by revising the framework as <span class="key-term">CMMC 2.0</span>, announced in 2021 and finalized in 2024. Understanding what changed — and why — explains the current framework's design choices.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Number of Levels</strong><span>CMMC 1.0: 5 levels (1-5). CMMC 2.0: 3 levels (1-3). The 5-level structure was seen as overly complex with unclear differentiation. Levels 1, 2, and 3 in 2.0 correspond roughly to levels 1, 3, and 5 in 1.0.</span></div>
+      <div class="cheat-pill"><strong>New Practice Requirements</strong><span>CMMC 1.0: 171 practices including 20 CMMC-unique practices not from NIST 800-171. CMMC 2.0: Eliminated the CMMC-unique practices. Level 2 maps exactly to NIST 800-171's 110 requirements. This alignment to existing standards was a major simplification.</span></div>
+      <div class="cheat-pill"><strong>Self-Assessment</strong><span>CMMC 1.0: Required third-party assessment for all levels except Level 1. CMMC 2.0: Allows self-assessment for Level 1 (all) and Level 2 (non-critical programs). This was a significant concession to industry concerns about assessment costs and availability.</span></div>
+      <div class="cheat-pill"><strong>POA&Ms</strong><span>CMMC 1.0: Did not allow POA&Ms at time of assessment — full compliance required. CMMC 2.0: Allows limited POA&Ms at certification with 180-day closure requirement. This acknowledged the practical reality that no organization achieves instant perfect compliance.</span></div>
+      <div class="cheat-pill"><strong>Waiver Process</strong><span>CMMC 2.0: Added a senior DoD official waiver process for extraordinary circumstances (not available in 1.0). Allows the DoD to award contracts to non-certified organizations in rare cases of urgent national security need.</span></div>
+      <div class="cheat-pill"><strong>Rulemaking Timeline</strong><span>CMMC 1.0: Industry uncertainty about implementation timing. CMMC 2.0: Formal rulemaking process (32 CFR and 48 CFR rules) completed in 2024, providing legal certainty about when and how requirements apply.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why 2.0 is better received:</strong> CMMC 1.0 proposed requiring third-party assessments for every contractor at every level — creating a potential bottleneck of millions of assessments with far too few certified assessors. Industry was concerned about cost, timeline, and the availability of qualified assessors. CMMC 2.0's tiered approach — self-assessment for basic programs, C3PAO for critical ones — is more proportionate to actual risk while still addressing the core problem of unverified security claims in critical programs.</div>`,
+    quiz: { q: "What was the most significant concern about CMMC 1.0 that the 2.0 revision addressed?", opts: ["CMMC 1.0 had too few security requirements", "CMMC 1.0 required third-party assessment for all levels — creating an impossible assessment bottleneck with millions of contractors needing assessments and too few certified assessors available", "CMMC 1.0 was too expensive for the DoD to administer", "CMMC 1.0 didn't require any assessment"], ans: 1, explain: "CMMC 1.0's requirement for third-party assessment at nearly all levels was its most criticized aspect. With approximately 300,000 contractors in the DIB, requiring C3PAO assessments across the board would have created an impossible backlog — there simply weren't enough certified assessors. CMMC 2.0 addressed this by allowing self-assessment for Level 1 and non-critical Level 2 programs, reserving third-party assessment for programs where the risk actually justifies that investment." }
+  },
+  {
+    title: "CMMC and Cloud Services",
+    tagline: "How to use cloud computing while maintaining CMMC compliance",
+    body: `<p>Cloud computing creates both opportunities and challenges for CMMC compliance. Organizations that properly leverage cloud services can reduce their compliance burden significantly. Those that don't understand the requirements can inadvertently create major compliance gaps. Understanding <span class="key-term">CMMC cloud requirements</span> is essential for any modern defense contractor.</p>
+    <div class="highlight-box"><strong>The fundamental cloud rule:</strong> Any cloud service used to process, store, or transmit CUI must meet security requirements equivalent to FedRAMP Moderate baseline — the federal government's cloud security standard. Simply putting CUI in a standard commercial cloud service (standard Microsoft 365, standard Google Workspace, standard Dropbox) without ensuring it meets these requirements is a CMMC compliance failure.</div>
+    <p>Cloud service categories for CMMC:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>FedRAMP Authorized (High/Moderate)</strong><span>The gold standard for government cloud. Services with FedRAMP Moderate or High authorization have been independently assessed against NIST SP 800-53 controls. These are explicitly permitted for CUI processing under CMMC.</span></div>
+      <div class="cheat-pill"><strong>FedRAMP Equivalent</strong><span>Cloud services that haven't gone through formal FedRAMP authorization but meet equivalent security requirements. Requires documented evidence of equivalent controls. More complex to verify but available for services important to contractors.</span></div>
+      <div class="cheat-pill"><strong>Government Community Cloud (GCC High)</strong><span>Microsoft 365 Government Community Cloud High — a dedicated cloud environment for US government and defense contractors that meets DoD requirements for CUI. Widely used in the defense industry. Separately licensed from commercial M365.</span></div>
+      <div class="cheat-pill"><strong>Standard Commercial Cloud</strong><span>Standard commercial versions of cloud services (regular AWS, standard M365, Google Workspace) are generally NOT appropriate for CUI without additional security controls and agreements. Many contractors unknowingly store CUI in commercial cloud without understanding the compliance implications.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The GCC High significance:</strong> Many defense contractors use Microsoft 365 for email and collaboration. Standard Microsoft 365 does not meet CUI requirements. Microsoft 365 Government Community Cloud High (GCC High) does — but it's a completely separate service requiring separate licensing, migration, and setup. The difference between standard M365 and GCC High is invisible to end users but represents a critical compliance distinction. Countless contractors have discovered mid-assessment that their email environment stores CUI in a non-compliant cloud environment.</div>
+    <div class="warning-box"><strong>External Service Providers (ESPs) in scope:</strong> Cloud services that can affect the security of in-scope systems — even if they don't directly process CUI — may be in the CMMC assessment scope as "Security Protection Assets." This includes cloud identity providers (Azure AD, Okta), security monitoring services (SOC-as-a-Service), and backup services. ESPs must meet CMMC requirements or have appropriate controls to be used in a CMMC environment.</div>`,
+    quiz: { q: "A defense contractor uses the standard commercial version of Microsoft 365 (not GCC High) to store and share CUI documents via SharePoint. Is this CMMC compliant?", opts: ["Yes — Microsoft 365 is a trusted enterprise cloud service", "No — standard commercial Microsoft 365 does not meet the FedRAMP Moderate equivalent requirement for CUI processing. The contractor must migrate CUI to a compliant environment like Microsoft 365 GCC High", "Only if Microsoft signs a specific agreement with the contractor", "It depends on the sensitivity level of the CUI"], ans: 1, explain: "Standard commercial Microsoft 365 does not meet the government's requirements for CUI processing. Microsoft 365 GCC High is Microsoft's FedRAMP-authorized cloud environment designed for CUI and defense contractor use. Using standard commercial M365 for CUI — even a basic document labeled as CUI — is a CMMC compliance failure. This is one of the most common and overlooked compliance gaps among defense contractors." }
+  },
+  {
+    title: "CMMC and Small Businesses",
+    tagline: "The unique challenges small defense contractors face — and how to address them",
+    body: `<p>CMMC compliance poses particular challenges for small defense contractors and subcontractors. While the DoD has acknowledged these challenges and made some accommodations, the fundamental requirement — that all contractors handling CUI meet Level 2 — applies equally regardless of company size. The security of the defense supply chain cannot be compromised because an organization is small.</p>
+    <div class="highlight-box"><strong>The small business dilemma:</strong> Many small defense subcontractors handle sensitive technical data — CUI — but have IT budgets measured in tens of thousands of dollars rather than millions. Achieving CMMC Level 2 compliance may cost $50,000–$500,000+ depending on the organization's starting point — a potentially prohibitive investment for a $1 million company with thin margins on government contracts. Yet the DoD has determined this investment is necessary because small contractors are often the easiest path into the defense supply chain for attackers.</div>
+    <p>Strategies small businesses use to manage CMMC costs:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Scope Minimization</strong><span>Network segmentation to create a small, isolated CUI environment dramatically reduces assessment scope. A 50-person company might have only 5 people who actually handle CUI — scoping to those 5 people and their systems is far more manageable than scoping the entire company.</span></div>
+      <div class="cheat-pill"><strong>Managed Service Providers</strong><span>CMMC-compliant Managed Service Providers (MSPs) can implement and maintain many CMMC controls on behalf of small contractors. The MSP handles security monitoring, patching, endpoint management, and other technical controls — letting the small business focus on its core competency.</span></div>
+      <div class="cheat-pill"><strong>Cloud-First Approach</strong><span>Moving CUI processing entirely to FedRAMP-authorized cloud environments (Microsoft GCC High, AWS GovCloud) can significantly reduce the on-premise compliance burden. The cloud provider handles many infrastructure-level controls.</span></div>
+      <div class="cheat-pill"><strong>Cost-Sharing Consortium</strong><span>Some small businesses in the same geographic area or industry sector share compliance infrastructure and assessment costs. While each company must individually certify, shared tooling and resources can reduce individual costs.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The market reality:</strong> CMMC compliance costs are real — but so are the business consequences of non-compliance. A small company that invests in CMMC compliance gains a competitive advantage over competitors who haven't. Prime contractors increasingly prefer — and will eventually require — CMMC-certified subcontractors. Early investment in compliance creates a sustainable competitive position in the defense market. Late adopters face higher costs, missed contracts, and potential removal from supply chains.</div>`,
+    quiz: { q: "A 10-person machine shop makes precision parts for defense aircraft under a $500K DoD subcontract. They handle CUI technical specifications. The prime is requiring CMMC Level 2. What is the most cost-effective approach for this small company?", opts: ["Skip CMMC — the contract is too small to justify the investment", "Scope the CMMC environment to only the systems and personnel that actually handle CUI specifications, potentially using a CMMC-compliant MSP for technical controls and a cloud-based CUI environment", "Implement CMMC across the entire company immediately", "Ask the prime contractor to handle their CMMC compliance"], ans: 1, explain: "For a small contractor, scope minimization combined with managed services is typically the most cost-effective approach. If only 3 people actually handle the CUI technical specifications, those 3 people and their systems — potentially in a segregated CUI environment managed by a CMMC-compliant MSP — form the assessment scope. This is dramatically more manageable than applying 110 CMMC Level 2 practices across the entire company's IT environment." }
+  },
+  {
+    title: "CMMC and GRC — Connections to Other Frameworks",
+    tagline: "How CMMC integrates with the rest of your compliance portfolio",
+    body: `<p>CMMC doesn't exist in isolation. Organizations subject to CMMC typically also have obligations under other frameworks — HIPAA, ISO 27001, SOC 2, CIS Controls, or NIST CSF. Understanding how these frameworks interact with CMMC enables efficient integrated compliance programs rather than duplicative parallel efforts.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>CMMC and NIST CSF</strong><span>The NIST Cybersecurity Framework's five functions (Identify, Protect, Detect, Respond, Recover) map across all 14 CMMC Level 2 domains. NIST CSF is used for governance communication; CMMC Level 2 practices are the specific implementation requirements. Organizations can satisfy CMMC while organizing their program using NIST CSF as the governance framework.</span></div>
+      <div class="cheat-pill"><strong>CMMC and ISO 27001</strong><span>ISO 27001 and CMMC Level 2 have substantial overlap — approximately 70% of CMMC Level 2 practices map to ISO 27001 Annex A controls. Organizations with ISO 27001 certification have a strong foundation for CMMC — but must address CMMC-specific requirements (SPRS scoring, government-specific incident reporting, CUI handling) that go beyond ISO 27001.</span></div>
+      <div class="cheat-pill"><strong>CMMC and CIS Controls</strong><span>CIS Controls v8 IG2 and IG3 cover most of the technical practices in CMMC Level 2. CIS Benchmarks implement many of the configuration management requirements. Organizations implementing CIS Controls IG2 are likely 60-70% of the way to CMMC Level 2 for technical controls.</span></div>
+      <div class="cheat-pill"><strong>CMMC and HIPAA</strong><span>Healthcare organizations in the defense supply chain (medical device manufacturers, battlefield medicine contractors) face both CMMC and HIPAA requirements. NIST SP 800-171 and HIPAA Security Rule have substantial overlap — a unified security program can address both, with CMMC-specific and HIPAA-specific requirements handled as supplements.</span></div>
+      <div class="cheat-pill"><strong>CMMC and SOC 2</strong><span>SOC 2 provides security assurance for commercial customers; CMMC provides certification for DoD customers. They address different audiences with different evidence requirements. A defense contractor serving both commercial and government markets typically needs both. SOC 2 evidence can inform CMMC evidence collection but the certification processes are completely separate.</span></div>
+      <div class="cheat-pill"><strong>CMMC and StateRAMP/FedRAMP</strong><span>Cloud service providers used for CMMC environments must be FedRAMP authorized (or equivalent). Organizations that operate cloud services used in the defense supply chain may themselves pursue FedRAMP authorization — making them preferred providers for CMMC-compliant contractors.</span></div>
+    </div>
+    <div class="highlight-box"><strong>The integration opportunity:</strong> Organizations that leverage framework mappings can build one integrated security program that satisfies CMMC Level 2, ISO 27001, and CIS Controls IG2 simultaneously — rather than maintaining three separate compliance programs. The NIST SP 800-171 A (assessment procedures) and NIST SP 800-53 crosswalk make these mappings explicit. Integrated compliance programs reduce cost, reduce audit fatigue, and produce more coherent security programs.</div>`,
+    quiz: { q: "A defense contractor already has ISO 27001 certification. How does this position them for CMMC Level 2 compliance?", opts: ["ISO 27001 certification automatically satisfies CMMC Level 2 requirements", "ISO 27001 provides a strong foundation with approximately 70% overlap, but CMMC-specific requirements (SPRS scoring, CUI handling procedures, DoD-specific incident reporting) must still be implemented and the CMMC assessment is a completely separate process", "ISO 27001 and CMMC are incompatible frameworks", "ISO 27001 only satisfies Level 1 requirements"], ans: 1, explain: "ISO 27001 provides valuable foundation for CMMC — the management system approach, risk assessment methodology, and many Annex A controls overlap substantially with CMMC Level 2. However, CMMC has government-specific requirements (CUI handling, SPRS scoring, DoD incident reporting) that are not covered by ISO 27001. The ISO 27001 ISMS and documented evidence can be leveraged in the CMMC assessment, but ISO 27001 certification does not substitute for CMMC certification." }
+  },
+  {
+    title: "CMMC Incident Reporting — The 72-Hour Rule",
+    tagline: "What defense contractors must do when a cyber incident occurs",
+    body: `<p>Defense contractors subject to CMMC have specific, mandatory incident reporting requirements that differ significantly from commercial cybersecurity incident response. Understanding these requirements is critical — violations can have severe contract consequences beyond the security impact of the incident itself.</p>
+    <div class="highlight-box"><strong>The DFARS 252.204-7012 reporting requirement:</strong> Contractors who experience a cyber incident on systems that process, store, or transmit covered defense information (CDI, which includes CUI) must: report the incident to the DoD within <strong>72 hours</strong> of discovery, preserve images of compromised systems for 90 days (to support DoD forensic analysis), and rapidly report any malicious software discovered.</div>
+    <p>What must be reported in a DoD cyber incident report:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Company name and CAGE code</span>
+      <span class="badge badge-blue">Contract numbers affected</span>
+      <span class="badge badge-blue">Facility CAGE code where incident occurred</span>
+      <span class="badge badge-blue">Date incident was discovered</span>
+      <span class="badge badge-blue">Location of compromise</span>
+      <span class="badge badge-blue">Type of compromise (insider threat, external, etc.)</span>
+      <span class="badge badge-blue">Description of the technique used</span>
+      <span class="badge badge-blue">Description of CUI categories potentially compromised</span>
+      <span class="badge badge-blue">Any known DoD programs associated with the data</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Reporting Portal</strong><span>DoD cyber incidents are reported through the DoD Cyber Crime Center (DC3) at dibnet.dod.mil. The contractor submits the report using a specific online form within 72 hours of discovering the incident.</span></div>
+      <div class="cheat-pill"><strong>Why 72 Hours</strong><span>The 72-hour window enables the DoD to rapidly respond to potential compromises of defense information — coordinating with other government agencies, notifying affected programs, and potentially providing incident response support.</span></div>
+      <div class="cheat-pill"><strong>System Image Preservation</strong><span>Compromised systems must be preserved as forensic images for at least 90 days. The DoD may request access to these images for analysis. Contractors cannot simply re-image compromised systems without first preserving forensic evidence.</span></div>
+      <div class="cheat-pill"><strong>Malware Reporting</strong><span>Any malicious software discovered during a cyber incident must be reported rapidly — even if the malware was stopped before causing damage. The DoD uses this information to track adversary TTPs across the defense supply chain.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Compare to HIPAA and GDPR:</strong> HIPAA requires breach notification within 60 days (for large breaches). GDPR requires supervisory authority notification within 72 hours. CMMC/DFARS also requires 72 hours — but the purpose is different. HIPAA and GDPR notifications protect individuals whose data was compromised. DFARS notifications enable the DoD to respond to potential national security threats. The defense incident reporting is as much about national security intelligence as it is about contract compliance.</div>`,
+    quiz: { q: "A defense contractor discovers at 9 AM Monday that their network was breached and CUI may have been accessed. When must they report to the DoD?", opts: ["Within 60 days — the same as HIPAA", "Within 72 hours of discovery — the report must be submitted to DC3 by 9 AM Thursday at the latest", "Within 24 hours because it involves CUI", "Within 30 days at the end of the calendar month"], ans: 1, explain: "DFARS 252.204-7012 requires reporting cyber incidents to the DoD within 72 hours of discovery. Discovering the breach at 9 AM Monday means the report must be submitted to DC3 (dibnet.dod.mil) by 9 AM Thursday. Additionally, compromised systems must be preserved for 90 days in case the DoD requests forensic analysis." }
+  },
+  {
+    title: "Implementation Priorities — Where to Start",
+    tagline: "A practical roadmap for achieving CMMC compliance",
+    body: `<p>Organizations facing CMMC requirements often feel overwhelmed — 110 practices is a lot. But not all practices are equally difficult or equally urgent. Understanding where to focus first can make the compliance journey manageable. Here's how experienced CMMC professionals approach implementation prioritization.</p>
+    <div class="highlight-box"><strong>The Assessment Score Connection:</strong> NIST SP 800-171 practices are weighted — not all 110 practices have equal value. The DoD scoring methodology assigns point values to each practice. Implementing high-value practices first improves SPRS scores most rapidly and addresses the risks that matter most to the DoD.</div>
+    <p>Prioritized implementation phases:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Phase 1: Foundation (Weeks 1-8)</strong><span>Complete asset inventory (systems, users, data). Identify and scope all CUI. Create or update SSP. Conduct gap assessment against all 110 practices. Create POA&M for all gaps. These activities are prerequisites for everything else.</span></div>
+      <div class="cheat-pill"><strong>Phase 2: Access Control and Authentication (Weeks 8-16)</strong><span>Implement MFA everywhere possible. Enforce least privilege. Disable unused accounts promptly. Implement privileged access management. Control remote access. Access control (22 practices) has the highest practice count and is heavily weighted in scoring.</span></div>
+      <div class="cheat-pill"><strong>Phase 3: Configuration and Vulnerability Management (Weeks 12-24)</strong><span>Establish secure baselines. Implement automated patching. Regular vulnerability scanning and remediation. Configuration management is both high-value and frequently deficient — organizations often have no formal baseline configurations.</span></div>
+      <div class="cheat-pill"><strong>Phase 4: Audit, Monitoring, and Detection (Weeks 16-32)</strong><span>Implement centralized logging (SIEM). Enable audit logging on all CUI systems. Review logs regularly. Implement endpoint detection. These practices enable detection of breaches — critical for a security program that assumes adversaries are attempting to gain access.</span></div>
+      <div class="cheat-pill"><strong>Phase 5: Incident Response and Continuity (Ongoing)</strong><span>Develop and test IR plan. Establish DoD reporting capability. Test backup and recovery. Conduct security awareness training. Train on CUI handling procedures specifically.</span></div>
+      <div class="cheat-pill"><strong>Phase 6: Remaining Practices (Months 6-18)</strong><span>Address remaining practices in order of SPRS score impact. Practices in Media Protection, Physical Protection, Personnel Security, and Maintenance that are partially implemented become fully implemented. Final POA&Ms closed.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The 80/20 rule for CMMC:</strong> In most organizations, roughly 20% of CMMC practices account for 80% of the compliance gap by SPRS score. Focusing remediation on high-weighted practices that are completely absent (not partially implemented) produces the fastest improvement in compliance posture. Access Control, Identification and Authentication, and Audit practices typically represent the highest combined score weight and the most common deficiencies.</div>`,
+    quiz: { q: "Why does CMMC implementation guidance prioritize Access Control and Identification and Authentication practices above other domains?", opts: ["Because these are the easiest practices to implement", "Because these domains have the highest number of practices and heaviest SPRS score weights — and uncontrolled access is the root cause of most security incidents involving CUI compromise", "Because the DoD only audits these domains closely", "Because all other domains depend on access being resolved first"], ans: 1, explain: "Access Control (22 practices) and Identification and Authentication (11 practices) together represent the largest portion of CMMC practices and the heaviest score weights. More importantly, access control failures are the root cause of most CUI compromises — if unauthorized users can access systems, all other security controls are undermined. Prioritizing these domains both maximizes SPRS score improvement and addresses the most critical security risks." }
+  },
+  {
+    title: "CMMC Ongoing Compliance — After Certification",
+    tagline: "What maintaining CMMC compliance actually looks like day-to-day",
+    body: `<p>Achieving CMMC certification is a milestone — but maintaining it is the real work. Certification is not a one-time accomplishment; it's an ongoing operational commitment. Understanding what post-certification compliance actually requires prevents the common failure of organizations who achieve certification but allow their security posture to degrade immediately afterward.</p>
+    <div class="highlight-box"><strong>The continuous compliance reality:</strong> CMMC certification is assessed at a point in time, but compliance requirements are continuous. A control implemented perfectly on assessment day but turned off three months later is a compliance failure — even though it looks fine in the assessment report. Contracting officers, DIBCAC spot checks, and internal compliance programs must verify ongoing operation, not just point-in-time snapshots.</div>
+    <p>Ongoing compliance activities by cadence:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Daily / Continuous</strong><span>Monitor security alerts and logs. Patch critical vulnerabilities as they are disclosed. Maintain access controls (disable accounts promptly). Monitor for CUI-handling violations. Manage security incidents.</span></div>
+      <div class="cheat-pill"><strong>Monthly</strong><span>Review access rights. Update vulnerability scan results. Review security metrics and SPRS score. Update SSP for any system changes. Review and update open POA&Ms.</span></div>
+      <div class="cheat-pill"><strong>Quarterly</strong><span>Conduct vulnerability scans. Review and update risk assessment. Conduct security awareness training touchpoints. Test incident response procedures. Review third-party/cloud provider compliance.</span></div>
+      <div class="cheat-pill"><strong>Annually</strong><span>Annual self-assessment and affirmation (Level 1 and Level 2 self-assessment). Full security awareness training. Review and update SSP comprehensively. Internal audit of CMMC practices. Review all POA&Ms and remediation status.</span></div>
+      <div class="cheat-pill"><strong>Every 3 Years</strong><span>Full C3PAO reassessment (Level 2 critical) or DIBCAC assessment (Level 3). These are the formal reassessment cycles — but preparation should begin 12 months before the scheduled reassessment.</span></div>
+      <div class="cheat-pill"><strong>As Needed (Triggered)</strong><span>Update SSP when systems change. Conduct additional risk assessments when significant changes occur. Report cyber incidents within 72 hours. Flow down new CMMC requirements to subcontractors. Review scope when new CUI types are handled.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The gym membership analogy:</strong> CMMC certification is like completing a fitness assessment. The assessment proves you're currently fit. But maintaining that fitness requires ongoing exercise — daily, weekly, monthly habits. A person who aces a fitness test then stops exercising for a year will fail the next test. CMMC works the same way: the certification proves a point-in-time security posture, and ongoing compliance habits maintain that posture between assessments.</div>`,
+    quiz: { q: "A contractor achieves Level 2 C3PAO certification in January. By October, their IT team has made significant changes to network architecture without updating the SSP. What compliance risk does this create?", opts: ["No risk — the SSP only needs to be updated at the next triennial assessment", "Significant risk — the SSP must reflect the actual system configuration. An outdated SSP that doesn't match current system architecture means the certified security posture no longer describes the actual environment, creating both a compliance gap and a potential security gap", "Risk only if the DoD specifically requests an updated SSP", "This is normal — SSPs are only updated during formal assessment cycles"], ans: 1, explain: "The SSP must reflect the actual system configuration at all times, not just at assessment time. Significant changes to network architecture without SSP updates create a situation where the certified security controls no longer accurately describe the actual environment — potential security gaps may have been introduced by the changes. SSP updates should be a routine part of any change management process, not a periodic documentation exercise." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've completed all 30 days of CMMC! Let's take a final inventory of everything you now know about the Cybersecurity Maturity Model Certification framework.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>CMMC (Cybersecurity Maturity Model Certification) is a DoD cybersecurity certification framework for the Defense Industrial Base. Created to address systemic failures in defense contractor cybersecurity — primarily widespread non-compliance with existing NIST SP 800-171 requirements. Current version: CMMC 2.0, finalized 2024. Three levels based on data sensitivity. Contractually required through DFARS clauses. False Claims Act liability for false certifications.</p>
+    <div class="tag-header">The 3 CMMC Levels</div>
+    <div class="level-grid">
+      <div class="level-1"><strong style="color:#27500A">Level 1 — Foundational</strong><br><span style="font-size:11px">17 practices. FCI only. Annual self-assessment. FAR 52.204-21.</span></div>
+      <div class="level-2"><strong style="color:#633806">Level 2 — Advanced</strong><br><span style="font-size:11px">110 practices. CUI. Self-assess (non-critical) or C3PAO (critical). NIST SP 800-171.</span></div>
+      <div class="level-3"><strong style="color:#4A1B0C">Level 3 — Expert</strong><br><span style="font-size:11px">110 + 24 practices. Critical CUI. DIBCAC government assessment. NIST SP 800-172.</span></div>
+    </div>
+    <div class="tag-header">14 CMMC Level 2 Domains</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">AC — Access Control (22)</span>
+      <span class="badge badge-blue">AT — Awareness and Training (3)</span>
+      <span class="badge badge-blue">AU — Audit and Accountability (9)</span>
+      <span class="badge badge-blue">CM — Configuration Management (9)</span>
+      <span class="badge badge-blue">IA — Identification and Authentication (11)</span>
+      <span class="badge badge-blue">IR — Incident Response (3)</span>
+      <span class="badge badge-blue">MA — Maintenance (6)</span>
+      <span class="badge badge-blue">MP — Media Protection (9)</span>
+      <span class="badge badge-blue">PE — Physical Protection (6)</span>
+      <span class="badge badge-blue">PS — Personnel Security (2)</span>
+      <span class="badge badge-blue">RA — Risk Assessment (3)</span>
+      <span class="badge badge-blue">CA — Security Assessment (4)</span>
+      <span class="badge badge-blue">SC — System and Communications Protection (16)</span>
+      <span class="badge badge-blue">SI — System and Information Integrity (7)</span>
+    </div>
+    <div class="tag-header">Key Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">FCI — Federal Contract Information</span>
+      <span class="badge badge-blue">CUI — Controlled Unclassified Information</span>
+      <span class="badge badge-blue">SSP — System Security Plan</span>
+      <span class="badge badge-blue">POA&M — Plan of Action and Milestones (180-day closure)</span>
+      <span class="badge badge-blue">SPRS — Supplier Performance Risk System score</span>
+      <span class="badge badge-blue">C3PAO — Certified Third-Party Assessment Organization</span>
+      <span class="badge badge-blue">DIBCAC — Level 3 government assessor</span>
+      <span class="badge badge-blue">The Cyber AB — CMMC Accreditation Body</span>
+      <span class="badge badge-blue">72 hours — DoD cyber incident reporting deadline</span>
+      <span class="badge badge-blue">False Claims Act — legal liability for false certifications</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete CMMC cheat sheet with all three levels, 14 domains, key documents, and framework relationships summarized in one place.</div>`,
+    quiz: { q: "CMMC is enforced through which legal mechanism, and what is the most serious legal risk for contractors who falsely certify compliance?", opts: ["CMMC is enforced through federal regulations with administrative penalties only", "CMMC requirements flow through DFARS contractual clauses — non-compliance means contract ineligibility. False certifications create liability under the False Claims Act, including triple damages and civil penalties per false claim", "CMMC is voluntary with no enforcement mechanism", "The DoD can only debar contractors, not pursue financial penalties"], ans: 1, explain: "CMMC requirements are contractual obligations through DFARS clauses — non-compliance means you cannot win or perform DoD contracts requiring that certification level. False certifications (false SPRS scores, false affirmations) create False Claims Act liability: triple damages (3x contract value) plus civil penalties per false claim. The DoJ's Civil Cyber-Fraud Initiative specifically targets false cybersecurity certifications." }
+  },
+  {
+    title: "CMMC 2.0 Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is CMMC?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">Cybersecurity Maturity Model Certification. DoD framework to protect defense supply chain from cyber espionage. Current version: CMMC 2.0, finalized 2024. Three levels based on data sensitivity. Contractually required through DFARS clause 252.204-7021. Applies to ~300,000 Defense Industrial Base (DIB) companies. Built primarily on NIST SP 800-171 (Level 2) and NIST SP 800-172 (Level 3). The enforcement mechanism for cybersecurity requirements already contractually required but widely ignored through self-attestation.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>FCI vs. CUI — Data Categories</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>FCI — Federal Contract Information</b> — Information provided by or generated for the government under a contract, not intended for public release. Triggers CMMC Level 1. FAR 52.204-21 applies.</div>
+        <div class="ctrl-card"><b>CUI — Controlled Unclassified Information</b> — Government information requiring safeguarding per law, regulation, or policy. Not classified but sensitive. Triggers CMMC Level 2 minimum. 125+ CUI categories in 20 groupings per NARA CUI Registry. Examples: CTI, ITAR, Export Controlled, Procurement Sensitive, Privacy.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>3 CMMC Levels</h3>
+      <div class="level-grid">
+        <div class="level-1">
+          <strong style="color:#27500A">Level 1 — Foundational</strong><br>
+          <span style="font-size:12px;color:#1a1a18"><strong>17 practices</strong>. FCI only. Based on FAR 52.204-21. Annual self-assessment. Annual affirmation by senior official. 6 domains: AC, IA, MP, PE, SC, SI. Basic cyber hygiene. All DIB contractors handling FCI must meet Level 1.</span>
+        </div>
+        <div class="level-2">
+          <strong style="color:#633806">Level 2 — Advanced</strong><br>
+          <span style="font-size:12px;color:#1a1a18"><strong>110 practices</strong>. CUI. Based on NIST SP 800-171. 14 domains. Two assessment paths: (a) Annual self-assessment + affirmation for non-critical programs. (b) C3PAO third-party assessment every 3 years for DoD-designated critical programs. POA&Ms allowed (180-day closure).</span>
+        </div>
+        <div class="level-3">
+          <strong style="color:#4A1B0C">Level 3 — Expert</strong><br>
+          <span style="font-size:12px;color:#1a1a18"><strong>110 + 24 additional practices</strong>. Critical CUI. Based on NIST SP 800-171 + NIST SP 800-172. DIBCAC government-led assessment every 3 years. Reserved for most critical programs and national security priorities. APT-focused controls.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>14 Level 2 Domains (110 Practices)</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>AC — Access Control (22)</b> — Largest domain. Who accesses what, how, and under what conditions. Least privilege, network access, remote access, mobile access, wireless.</div>
+        <div class="ctrl-card"><b>AT — Awareness and Training (3)</b> — Security awareness for all personnel. Role-based training. Recognition of threats and social engineering.</div>
+        <div class="ctrl-card"><b>AU — Audit and Accountability (9)</b> — Create, protect, and review audit logs. Ensure individual accountability. Support incident investigation.</div>
+        <div class="ctrl-card"><b>CM — Configuration Management (9)</b> — Secure baselines, change control, unauthorized software prevention, security impact analysis.</div>
+        <div class="ctrl-card"><b>IA — Identification and Authentication (11)</b> — Manage identities, authenticate users/devices/processes, password management, MFA requirements.</div>
+        <div class="ctrl-card"><b>IR — Incident Response (3)</b> — Incident handling capability, tracking and reporting, testing. 72-hour DoD reporting requirement.</div>
+        <div class="ctrl-card"><b>MA — Maintenance (6)</b> — Controlled maintenance, maintenance tools management, remote maintenance controls.</div>
+        <div class="ctrl-card"><b>MP — Media Protection (9)</b> — Control, protect, sanitize, and destroy media containing CUI. Secure transport.</div>
+        <div class="ctrl-card"><b>PE — Physical Protection (6)</b> — Physical access to CUI systems, visitor escort, access logs, physical access devices.</div>
+        <div class="ctrl-card"><b>PS — Personnel Security (2)</b> — Screen individuals before CUI access. Protect CUI during personnel actions.</div>
+        <div class="ctrl-card"><b>RA — Risk Assessment (3)</b> — Periodic risk assessments, vulnerability scanning, risk remediation.</div>
+        <div class="ctrl-card"><b>CA — Security Assessment (4)</b> — Periodically assess controls, develop POA&Ms, monitor ongoing security, plan of action management.</div>
+        <div class="ctrl-card"><b>SC — System and Communications Protection (16)</b> — Network monitoring, boundary protection, CUI flow control, encryption in transit, network segmentation.</div>
+        <div class="ctrl-card"><b>SI — System and Information Integrity (7)</b> — Flaw remediation, malware protection, security alerts, system monitoring, software patches.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Documents</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>System Security Plan (SSP)</b> — Documents system boundary, how each practice is implemented, gaps as POA&Ms. Primary assessment artifact. Must be accurate — false SSP content creates FCA liability.</div>
+        <div class="ctrl-card"><b>Plan of Action and Milestones (POA&M)</b> — Documents unimplemented practices, remediation plans, and target dates. Must be closed within 180 days of certification. Some practices cannot have POA&Ms — must be fully implemented.</div>
+        <div class="ctrl-card"><b>SPRS Score</b> — Supplier Performance Risk System score. Calculated from NIST 800-171 assessment. Starts at 110, reduced for each unimplemented/partial practice. Submitted to government. False SPRS scores = FCA violation.</div>
+        <div class="ctrl-card"><b>Affirmation</b> — Annual senior official certification of Level 1 or Level 2 self-assessment accuracy. Creates individual accountability. False affirmations = FCA exposure for signatories.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The CMMC Ecosystem</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>DoD / OUSD(A&S)</b> — Sets CMMC requirements. Incorporates through DFARS. Enforces through contracts.</div>
+        <div class="ctrl-card"><b>The Cyber AB</b> — Nonprofit accreditation body. Accredits C3PAOs. Certifies CCAs (assessors) and CCPs (practitioners). Maintains marketplace.</div>
+        <div class="ctrl-card"><b>C3PAOs</b> — Certified Third-Party Assessment Organizations. Conduct Level 2 C3PAO assessments. Must be independent of OSC.</div>
+        <div class="ctrl-card"><b>DIBCAC</b> — Defense Industrial Base Cybersecurity Assessment Center. Conducts Level 3 government assessments. Spot-checks self-assessors.</div>
+        <div class="ctrl-card"><b>CCAs / CCPs</b> — Certified CMMC Assessors (conduct assessments within C3PAOs). Certified CMMC Professionals (consultants who help OSCs prepare).</div>
+        <div class="ctrl-card"><b>eMASS</b> — Enterprise Mission Assurance Support Service. DoD system of record for assessment results and certification status. Contracting officers verify here.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Critical Requirements and Deadlines</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>72 Hours</b> — Report DoD cyber incidents to DC3 (dibnet.dod.mil) within 72 hours of discovery. Preserve compromised system images for 90 days.</div>
+        <div class="ctrl-card"><b>180 Days</b> — Close all POA&Ms accepted at certification within 180 days or risk certification suspension/revocation.</div>
+        <div class="ctrl-card"><b>Annual</b> — Level 1 self-assessment + affirmation. Level 2 self-assessment affirmation (non-critical). Annual SPRS score update.</div>
+        <div class="ctrl-card"><b>Every 3 Years</b> — Level 2 C3PAO reassessment (critical programs). Level 3 DIBCAC reassessment.</div>
+        <div class="ctrl-card"><b>FedRAMP Moderate</b> — Minimum cloud standard for CUI processing. Microsoft GCC High, AWS GovCloud are common compliant options.</div>
+        <div class="ctrl-card"><b>False Claims Act</b> — Triple damages + civil penalties per false claim for knowingly false certifications. DoJ Civil Cyber-Fraud Initiative enforces.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>DFARS Clauses</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>DFARS 252.204-7019</b> — Notice of NIST SP 800-171 Assessment Requirements. Requires current assessment in SPRS.</div>
+        <div class="ctrl-card"><b>DFARS 252.204-7020</b> — NIST SP 800-171 Assessment Requirements. DoD right to conduct assessments.</div>
+        <div class="ctrl-card"><b>DFARS 252.204-7012</b> — Safeguarding Covered Defense Information. 72-hour incident reporting, image preservation, malware reporting.</div>
+        <div class="ctrl-card"><b>DFARS 252.204-7021</b> — Primary CMMC clause. Requires CMMC certification at specified level. Flow-down to subcontractors required.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts</h3>
+      <div class="badge-row">
+        <span class="badge badge-blue">~300,000 DIB companies subject to CMMC</span>
+        <span class="badge badge-blue">3 levels: Foundational (17), Advanced (110), Expert (134)</span>
+        <span class="badge badge-blue">14 domains at Level 2</span>
+        <span class="badge badge-blue">72 hours: incident reporting to DoD</span>
+        <span class="badge badge-blue">180 days: POA&M closure after certification</span>
+        <span class="badge badge-blue">90 days: preserve compromised system images</span>
+        <span class="badge badge-blue">3 years: C3PAO assessment cycle (Level 2 critical)</span>
+        <span class="badge badge-blue">SPRS score: starts at 110, reduced per gap</span>
+        <span class="badge badge-blue">NIST SP 800-171: 14 families, 110 requirements = Level 2</span>
+        <span class="badge badge-blue">NIST SP 800-172: 24 additional = Level 3</span>
+        <span class="badge badge-blue">FedRAMP Moderate: minimum cloud standard for CUI</span>
+        <span class="badge badge-blue">FCA triple damages: for false certifications</span>
+        <span class="badge badge-blue">The Cyber AB: accredits C3PAOs and certifies assessors</span>
+        <span class="badge badge-blue">DIBCAC: government body for Level 3 assessments</span>
+        <span class="badge badge-blue">eMASS: DoD system of record for certifications</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

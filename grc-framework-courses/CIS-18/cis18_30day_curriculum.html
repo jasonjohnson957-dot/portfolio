@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIS Controls v8 — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #3C3489; color: #EEEDFE; border-color: #3C3489; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #EEEDFE; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #26215C; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #3C3489; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #3C3489; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #EEEDFE; color: #26215C; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #E6F1FB; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #3C3489; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-purple { background: #EEEDFE; color: #26215C; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-gray   { background: #F1EFE8; color: #444441; }
+  .badge-pink   { background: #FBEAF0; color: #4B1528; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .ctrl-num { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .ctrl-num b { font-size: 13px; font-weight: 500; color: #26215C; }
+  .ig-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .ig1 { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .ig2 { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .ig3 { background: #FAECE7; border: 0.5px solid #F0997B; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  @media (max-width: 560px) { .cheat-grid, .control-row, .ig-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day CIS Controls v8 curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>CIS Controls v8 — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title: "What Are the CIS Controls?",
+    tagline: "The world's most widely adopted cybersecurity best practices",
+    body: `<p>Imagine you're in charge of protecting a school's computer systems. There are thousands of different cybersecurity tools, techniques, and recommendations out there. How do you know which ones actually matter most? Which ones will prevent the most attacks? Where do you start? That's exactly the problem the <span class="key-term">CIS Controls</span> were designed to solve.</p>
+    <p>The CIS Controls — officially called the <strong>CIS Critical Security Controls</strong> — are a prioritized set of best practices for cybersecurity. They are published by the <strong>Center for Internet Security (CIS)</strong>, a nonprofit organization. The current version is <strong>CIS Controls v8</strong>, released in May 2021, which contains <strong>18 Controls</strong> and <strong>153 Safeguards</strong>.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of the CIS Controls like a "most wanted" list for cybersecurity defenses. Just like law enforcement prioritizes the most dangerous criminals first, the CIS Controls prioritize the defenses that stop the most attacks. They're not a random list of everything you could possibly do for security — they're a ranked list of what you <em>must</em> do to prevent the most common, damaging attacks.</div>
+    <p>What makes the CIS Controls unique:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">Evidence-based — developed from real attack data</span>
+      <span class="badge badge-purple">Prioritized — ordered by impact and effectiveness</span>
+      <span class="badge badge-purple">Prescriptive — specific enough to actually implement</span>
+      <span class="badge badge-purple">Free — publicly available at no cost</span>
+      <span class="badge badge-purple">Scalable — tiered for organizations of all sizes</span>
+    </div>
+    <div class="highlight-box">CIS Controls are sometimes called "CIS-18" (referring to the 18 controls in v8) or the "SANS Top 20" (the older name from when there were 20 controls). Both refer to the same framework. CIS Controls v8 is the current standard, and throughout this course, "CIS Controls" means CIS Controls v8 unless otherwise specified.</div>`,
+    quiz: { q: "How many Controls and Safeguards does CIS Controls v8 contain?", opts: ["20 Controls and 200 Safeguards", "18 Controls and 153 Safeguards", "15 Controls and 100 Safeguards", "18 Controls and 200 Safeguards"], ans: 1, explain: "CIS Controls v8, released in May 2021, contains 18 Controls and 153 Safeguards. The 18 Controls represent high-level categories of cybersecurity activity, while the 153 Safeguards are the specific actions organizations take to implement each control." }
+  },
+  {
+    title: "Why Were the CIS Controls Created?",
+    tagline: "How a group of US government security experts changed cybersecurity forever",
+    body: `<p>The story of the CIS Controls begins with a frustrating reality in the early 2000s: organizations were spending enormous amounts of money on cybersecurity — and still getting breached. The problem wasn't a lack of security products or awareness. The problem was that nobody agreed on what to actually do first.</p>
+    <div class="highlight-box"><strong>The original insight (2008):</strong> The CIS Controls were first developed through a collaboration between US government agencies — including the NSA, the Department of Energy, and US Cyber Command — and private sector security experts. They analyzed actual attack data from real intrusions and asked a powerful question: "What are attackers actually doing? And what defenses would have stopped them?" The controls that emerged were directly reverse-engineered from real attacks.</div>
+    <div class="analogy-box"><strong>The doctor analogy:</strong> Imagine if doctors had no agreed-upon protocols for treating common illnesses — every doctor made it up as they went. Medicine fixed this by studying what treatments actually worked and publishing evidence-based guidelines. The CIS Controls did the same for cybersecurity: instead of every organization guessing which security measures to implement, they analyzed what attackers actually do and built a prioritized defense guide based on that evidence.</div>
+    <p>Several key problems drove the creation of the CIS Controls:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Analysis Paralysis</strong><span>Too many security frameworks, standards, and recommendations existed with no clear priority order. Organizations didn't know where to start.</span></div>
+      <div class="cheat-pill"><strong>Compliance vs. Security</strong><span>Organizations were passing compliance audits but still getting breached — proving that checkbox compliance wasn't the same as effective security.</span></div>
+      <div class="cheat-pill"><strong>Attacker Advantage</strong><span>Attackers only need to find one weakness. Defenders felt overwhelmed trying to protect everything equally. A prioritized list of critical defenses was needed.</span></div>
+      <div class="cheat-pill"><strong>Resource Constraints</strong><span>Most organizations — especially small ones — couldn't implement every possible security control. They needed guidance on what mattered most for their limited resources.</span></div>
+    </div>`,
+    quiz: { q: "What was the fundamental methodology behind the original development of the CIS Controls?", opts: ["They were based on the most expensive security products available", "They were reverse-engineered from real attack data — analyzing what attackers actually do and building defenses that would stop those specific attacks", "They were created by copying ISO 27001 into a simpler format", "They were developed by surveying which security tools were most popular"], ans: 1, explain: "The CIS Controls were originally developed by analyzing real intrusion data to understand what attackers actually do — then building defenses specifically designed to stop those attack patterns. This evidence-based, attacker-centric approach is what distinguishes the CIS Controls from frameworks built from theory or regulatory requirements." }
+  },
+  {
+    title: "The Center for Internet Security (CIS)",
+    tagline: "The nonprofit organization behind the world's most used security controls",
+    body: `<p>The <span class="key-term">Center for Internet Security (CIS)</span> is a nonprofit organization founded in 2000 and headquartered in East Greenbush, New York. CIS develops and maintains cybersecurity best practices for both public and private sectors — including not just the CIS Controls but also the widely used CIS Benchmarks (detailed configuration hardening guides).</p>
+    <div class="highlight-box">CIS's mission: "Making the connected world a safer place for people, businesses, and governments through our core competencies of collaboration and innovation." As a nonprofit, CIS makes its core resources — including the CIS Controls and CIS Benchmarks — available free of charge, funded through government contracts, membership fees, and product licensing.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>CIS Controls</strong><span>The 18 prioritized cybersecurity best practices we're studying in this course. Provide the "what to do" at a high level for any organization.</span></div>
+      <div class="cheat-pill"><strong>CIS Benchmarks</strong><span>Detailed technical configuration guides for specific systems — Windows, Linux, AWS, Azure, Kubernetes, browsers, databases. Over 100 benchmarks available free. The most widely accepted system hardening standards in the world.</span></div>
+      <div class="cheat-pill"><strong>CIS-CAT Pro</strong><span>An automated tool that scans systems and measures how well they comply with CIS Benchmarks — identifying configuration gaps and generating remediation reports.</span></div>
+      <div class="cheat-pill"><strong>Multi-State ISAC (MS-ISAC)</strong><span>CIS operates the MS-ISAC, which provides cyber threat intelligence, incident response support, and security services to US state, local, tribal, and territorial governments at no cost.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why "nonprofit" matters for credibility:</strong> Unlike security frameworks published by commercial vendors (who have an incentive to make everything sound necessary so you buy their products), CIS has no financial stake in which specific controls or tools you implement. The CIS Controls recommend defenses, not products — making them one of the most trusted, vendor-neutral security resources available. Any vendor claiming their product "implements the CIS Controls" must be evaluated critically.</div>
+    <div class="info-box"><strong>CIS Controls Community:</strong> The CIS Controls are developed through an open, community-driven process involving hundreds of security professionals from industry, government, and academia who volunteer their expertise. This consensus process ensures the controls reflect practical real-world experience, not just theoretical best practices.</div>`,
+    quiz: { q: "Why does CIS's nonprofit status contribute to the credibility of the CIS Controls?", opts: ["Nonprofits are legally required to produce more accurate security guidance", "CIS has no financial stake in which specific products you implement — making the controls vendor-neutral and trusted as genuinely evidence-based recommendations", "Nonprofits receive government funding that guarantees accuracy", "CIS is affiliated with the US Department of Defense"], ans: 1, explain: "CIS's nonprofit status means it has no financial incentive to recommend specific products or solutions. The CIS Controls recommend security practices, not particular vendors. This vendor-neutrality is a key reason the controls are widely trusted — organizations know the recommendations are based on what actually works, not on commercial relationships." }
+  },
+  {
+    title: "CIS Controls History — From SANS Top 20 to CIS-18",
+    tagline: "How the controls evolved from government intel to a global standard",
+    body: `<p>The CIS Controls have undergone significant evolution over their 15+ year history. Understanding this evolution helps explain why the current v8 structure exists and why it represents a genuine advance over earlier versions.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>2008 — SANS Top 20 (v1)</strong><span>First published as the "Consensus Audit Guidelines" by a consortium of US government agencies and security experts. 20 controls based on attack data from NSA and others. Quickly adopted across government and critical infrastructure.</span></div>
+      <div class="cheat-pill"><strong>2010 — SANS Takes Over</strong><span>The SANS Institute becomes primary publisher. The list becomes known as the "SANS Critical Security Controls" or "SANS Top 20." Gains widespread private sector adoption. Updated periodically as the threat landscape evolves.</span></div>
+      <div class="cheat-pill"><strong>2015 — CIS Assumes Stewardship (v5)</strong><span>The Center for Internet Security takes over maintenance from SANS. The framework is renamed "CIS Critical Security Controls." Maintains 20 controls but with significant content updates.</span></div>
+      <div class="cheat-pill"><strong>2019 — CIS Controls v7.1</strong><span>Major update introducing sub-controls organized by Implementation Group (IG1/IG2/IG3). Expands applicability to organizations of all sizes. Adds coverage of cloud, mobile, and modern IT environments. Still 20 controls.</span></div>
+      <div class="cheat-pill"><strong>2021 — CIS Controls v8 (Current)</strong><span>Most significant restructuring. Controls reduced from 20 to 18. Sub-controls renamed "Safeguards." Implementation Groups retained. Better reflects modern IT environments with cloud and remote work. Activity-centric rather than device-centric.</span></div>
+      <div class="cheat-pill"><strong>Future Versions</strong><span>CIS updates the Controls every 3–5 years as the threat landscape evolves. v8 is the current version as of this writing. Organizations should track CIS's release schedule and plan transitions when new versions are published.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Why v8 reduced from 20 to 18 controls:</strong> The restructuring wasn't just renumbering — it was a fundamental rethinking. Several older controls were merged because their activities naturally belong together in modern IT environments. The move from 20 to 18 reflects consolidation around activities rather than specific technologies, making the framework more applicable across cloud, hybrid, and traditional environments.</div>`,
+    quiz: { q: "What significant change did CIS Controls v8 (2021) make to the framework structure compared to v7?", opts: ["Increased from 18 to 20 controls", "Reduced from 20 to 18 controls and renamed sub-controls as 'Safeguards' — reflecting a more activity-centric approach for modern IT environments", "Added a fourth Implementation Group for critical infrastructure", "Removed the cloud computing controls"], ans: 1, explain: "CIS Controls v8 reduced the controls from 20 to 18 by merging related controls and restructuring around activities rather than specific technologies. Sub-controls were renamed 'Safeguards.' This consolidation makes v8 better suited for modern environments that blend cloud, on-premises, and remote work rather than the device-centric world the earlier versions were designed for." }
+  },
+  {
+    title: "The Architecture of CIS Controls v8",
+    tagline: "Controls, Safeguards, and how they're organized",
+    body: `<p>Before diving into each individual control, it's essential to understand how the CIS Controls framework is structured. Understanding the architecture makes navigating and implementing the controls much more straightforward.</p>
+    <div class="highlight-box"><strong>Two levels of structure:</strong><br><br><strong>Controls (18 total):</strong> High-level categories of cybersecurity activity. Each Control represents a major area of security practice — like "Access Control Management" or "Incident Response Management." Think of Controls as the chapter headings of the cybersecurity playbook.<br><br><strong>Safeguards (153 total):</strong> Specific, actionable security practices within each Control. Each Safeguard describes a specific thing your organization should DO — a concrete security activity. Think of Safeguards as the specific instructions within each chapter.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Safeguard Structure</strong><span>Each Safeguard has: a number (e.g., 1.1, 1.2), a title, a description of the activity, an asset type it protects, a security function it performs, and an Implementation Group assignment.</span></div>
+      <div class="cheat-pill"><strong>Asset Types</strong><span>Each Safeguard applies to a specific type of asset: Devices, Software, Data, Users, Network, or Services. This categorization helps organizations understand what they're protecting with each control.</span></div>
+      <div class="cheat-pill"><strong>Security Functions</strong><span>Each Safeguard maps to one of five security functions borrowed from the NIST Cybersecurity Framework: Identify, Protect, Detect, Respond, or Recover. This mapping helps organizations understand each control's purpose.</span></div>
+      <div class="cheat-pill"><strong>Implementation Groups (IG1/IG2/IG3)</strong><span>Each Safeguard is assigned to one Implementation Group — IG1, IG2, or IG3. This assignment determines which organizations need to implement that Safeguard. We'll cover IGs in detail tomorrow.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Controls vs. Safeguards in practice:</strong> CIS Control 5 is "Account Management." That's the Control — the chapter heading. Safeguard 5.1 says "Establish and Maintain an Inventory of Accounts." Safeguard 5.2 says "Use Unique Passwords." Safeguard 5.3 says "Disable Dormant Accounts." Each Safeguard is a specific, concrete action. The Control is the umbrella concept; the Safeguards are what you actually implement.</div>`,
+    quiz: { q: "What is the difference between a CIS Control and a CIS Safeguard?", opts: ["They are the same thing with different names", "A Control is a high-level category of security activity; a Safeguard is a specific, actionable security practice within that Control", "Controls are for large organizations; Safeguards are for small ones", "Controls are mandatory; Safeguards are optional"], ans: 1, explain: "Controls are high-level categories (the 18 major areas of cybersecurity practice), while Safeguards are specific, concrete actions to take within each Control. CIS v8 has 18 Controls and 153 Safeguards. The Controls answer 'what domain?' and the Safeguards answer 'what specifically should we do?'" }
+  },
+  {
+    title: "Implementation Groups — IG1, IG2, IG3",
+    tagline: "Making CIS Controls work for organizations of every size",
+    body: `<p>One of CIS Controls v8's most important features is the <span class="key-term">Implementation Group (IG)</span> system. This tiered approach acknowledges a fundamental reality: a 10-person dental practice and a national bank should not have identical cybersecurity requirements. The IG system makes the CIS Controls proportionate, practical, and scalable.</p>
+    <div class="ig-grid">
+      <div class="ig1">
+        <strong style="color:#27500A">IG1 — Essential</strong><br>
+        <strong style="font-size:11px;color:#27500A">56 Safeguards</strong><br>
+        <span style="font-size:12px;color:#1a1a18;display:block;margin-top:4px">Small organizations with limited IT expertise. Low data sensitivity. Resource-constrained. Basic "cyber hygiene" — the absolute minimum every organization must do. If you do nothing else, do IG1.</span>
+      </div>
+      <div class="ig2">
+        <strong style="color:#633806">IG2 — Foundational</strong><br>
+        <strong style="font-size:11px;color:#633806">74 Safeguards (includes all IG1)</strong><br>
+        <span style="font-size:12px;color:#1a1a18;display:block;margin-top:4px">Mid-size organizations. Handle sensitive data. Have dedicated IT staff but not necessarily a full security team. Multiple departments with different risk profiles. Moderate budget for security.</span>
+      </div>
+      <div class="ig3">
+        <strong style="color:#4A1B0C">IG3 — Organizational</strong><br>
+        <strong style="font-size:11px;color:#4A1B0C">153 Safeguards (all Safeguards)</strong><br>
+        <span style="font-size:12px;color:#1a1a18;display:block;margin-top:4px">Large organizations. Handle highly sensitive data. Regulated industries. Have dedicated security teams. Subject to complex compliance requirements. Significant resources for security.</span>
+      </div>
+    </div>
+    <div class="highlight-box">IG1 is <em>not</em> optional for any organization — it represents essential cyber hygiene that every organization with computers and internet connectivity should implement. IG2 adds depth for organizations with more resources and responsibility. IG3 represents comprehensive security for organizations with the most sensitive data and highest risk profiles. The IGs are cumulative: IG2 includes all IG1 Safeguards, and IG3 includes all IG1 and IG2 Safeguards.</div>
+    <div class="analogy-box"><strong>The home vs. bank analogy:</strong> Your home has locks on the doors and windows (IG1 — basic security everyone needs). A small business might add an alarm system and a safe (IG2 — more protection for more sensitive assets). A bank has armed guards, vaults, surveillance cameras, and intrusion detection (IG3 — maximum protection for the most sensitive assets). Each level builds on the last, proportionate to risk.</div>`,
+    quiz: { q: "A 15-person medical billing company handles PHI but has only one part-time IT person. Which CIS Implementation Group is the baseline for their security program?", opts: ["IG3 — because they handle medical data", "IG1 — as the essential baseline every organization must implement, with IG2 as the next target given their PHI handling", "IG2 only — IG1 is too basic", "No IG applies — they should use HIPAA instead"], ans: 1, explain: "IG1 is the essential baseline every organization must implement — it represents the minimum cyber hygiene regardless of size or sector. Given that the company handles PHI, IG2 should be their near-term target (since they handle sensitive data), but IG1 is the starting point. The IGs are cumulative — you always start with IG1 and build up." }
+  },
+  {
+    title: "CIS Control 1 — Inventory and Control of Enterprise Assets",
+    tagline: "You can't protect what you don't know you have",
+    body: `<p><span class="key-term">CIS Control 1</span> is the logical foundation of the entire framework: <strong>Inventory and Control of Enterprise Assets</strong>. You cannot protect systems you don't know exist. You cannot patch vulnerabilities on devices that aren't in your inventory. You cannot detect unauthorized access to assets you've never documented. Everything in cybersecurity starts here.</p>
+    <div class="highlight-box">CIS Control 1 requires: actively managing (inventorying, tracking, and correcting) all enterprise assets — including end-user devices, network devices, IoT devices, and servers. Both connected to the enterprise network AND those with the potential to connect. The goal is that only authorized and managed assets are allowed to connect.</div>
+    <p>Key Safeguards in Control 1:</p>
+    <div class="ctrl-num"><b>1.1</b> — Establish and Maintain Detailed Enterprise Asset Inventory: Maintain an accurate, detailed, and up-to-date inventory of all enterprise assets — hardware addresses, IP addresses, asset type, owner, and department. Update at least monthly or when new assets are added. [IG1]</div>
+    <div class="ctrl-num"><b>1.2</b> — Address Unauthorized Assets: Ensure unauthorized assets are either removed, quarantined, or added to the inventory with documented exceptions. If a device isn't in the inventory, it shouldn't be on the network. [IG1]</div>
+    <div class="ctrl-num"><b>1.3</b> — Utilize an Active Discovery Tool: Use an active discovery tool to identify assets that connect to enterprise infrastructure. Passive tools alone miss devices that are turned off or intermittently connected. [IG2]</div>
+    <div class="ctrl-num"><b>1.4</b> — Use Dynamic Host Configuration Protocol (DHCP) Logging to Update Enterprise Asset Inventory: Use DHCP server logs to update the asset inventory automatically when devices connect. [IG2]</div>
+    <div class="ctrl-num"><b>1.5</b> — Use a Passive Asset Discovery Tool: Use passive monitoring to capture assets that active scanning might miss — particularly IoT devices that may not respond to active probes. [IG3]</div>
+    <div class="analogy-box"><strong>The hospital supply room analogy:</strong> A hospital that doesn't know exactly what medical equipment it has — where each device is, who's responsible for it, whether it's been calibrated recently — cannot function safely. A surgeon can't use equipment that's been lost, an unaccounted-for device could harbor infection, and equipment can't be maintained without an accurate inventory. IT assets work exactly the same way: without a complete inventory, security is impossible.</div>`,
+    quiz: { q: "Why is CIS Control 1 (Asset Inventory) considered the foundation of the entire CIS Controls framework?", opts: ["Because it is the most expensive control to implement", "Because you cannot protect, patch, monitor, or respond to incidents involving assets you don't know exist — inventory is the prerequisite for all other security activities", "Because asset inventory is required by all regulations", "Because Control 1 has the most Safeguards"], ans: 1, explain: "Control 1 is foundational because every other security activity depends on knowing what you're protecting. You can't patch vulnerabilities on unknown devices, can't monitor traffic from untracked assets, can't respond to incidents involving devices you don't know exist, and can't control access to systems that aren't inventoried. Asset inventory is the prerequisite for all subsequent security controls." }
+  },
+  {
+    title: "CIS Control 2 — Inventory and Control of Software Assets",
+    tagline: "If you don't know what software is running, you can't secure it",
+    body: `<p><span class="key-term">CIS Control 2</span> extends the inventory concept from hardware to software: <strong>Inventory and Control of Software Assets</strong>. Just as unknown hardware devices are a security risk, unknown and unauthorized software creates significant attack surface — through vulnerabilities in unpatched applications, malware disguised as legitimate software, or unlicensed software with hidden risks.</p>
+    <div class="highlight-box">Control 2 requires: actively managing all software on enterprise assets — including operating systems and applications — so that only authorized software is installed. Unauthorized software must be prevented from installation or immediately detected and removed. This concept is called "whitelisting" or more precisely, "allowlisting."</div>
+    <p>Key Safeguards in Control 2:</p>
+    <div class="ctrl-num"><b>2.1</b> — Establish and Maintain a Software Inventory: Maintain an inventory of all authorized software on all enterprise assets — title, publisher, initial install/use date, and business purpose. Review and update at least monthly. [IG1]</div>
+    <div class="ctrl-num"><b>2.2</b> — Ensure Authorized Software is Currently Supported: Only use software supported by the vendor with active security updates. Unsupported software cannot receive security patches — it becomes permanently vulnerable. [IG1]</div>
+    <div class="ctrl-num"><b>2.3</b> — Address Unauthorized Software: Ensure unauthorized software is either removed or documented as an approved exception. Active scanning for unauthorized software should be conducted. [IG1]</div>
+    <div class="ctrl-num"><b>2.4</b> — Utilize Automated Software Inventory Tools: Use software inventory tools to automate the detection and tracking of installed software across all enterprise assets. [IG2]</div>
+    <div class="ctrl-num"><b>2.5</b> — Allowlist Authorized Software: Use technical controls to ensure only explicitly authorized software can execute on enterprise assets. Block or quarantine unauthorized executable attempts. [IG3]</div>
+    <div class="analogy-box"><strong>The "shadow IT" problem:</strong> An employee downloads a free file-sharing app to work more efficiently. Nobody authorized it, nobody knows it's there, and it hasn't been checked for security vulnerabilities or data privacy risks. This is shadow IT — unauthorized software running on enterprise systems. Control 2 requires organizations to actively prevent and detect this, because unauthorized software is one of the most common initial attack vectors.</div>`,
+    quiz: { q: "CIS Control 2 requires that organizations only use software that is 'currently supported.' Why is unsupported software such a significant security risk?", opts: ["Because unsupported software is slower", "Because software vendors stop releasing security patches for unsupported products — meaning any newly discovered vulnerabilities can never be fixed, leaving the software permanently exploitable", "Because unsupported software violates software licensing laws", "Because CIS doesn't certify unsupported software"], ans: 1, explain: "When software reaches end-of-life (becomes unsupported), the vendor stops releasing security patches. Any new vulnerabilities discovered after that point can never be officially fixed, creating permanently exploitable security holes. Attackers specifically target organizations running unsupported software because they know those vulnerabilities can never be patched." }
+  },
+  {
+    title: "CIS Control 3 — Data Protection",
+    tagline: "Identifying, classifying, and securing your most valuable information",
+    body: `<p><span class="key-term">CIS Control 3</span> — <strong>Data Protection</strong> — focuses on developing processes and technical controls to identify, classify, securely handle, retain, and dispose of data. Assets matter; software matters; but ultimately, <em>data</em> is what attackers are really after. This control ensures that data itself is treated as the critical asset it is.</p>
+    <div class="highlight-box">Control 3 is built on the concept of data classification — recognizing that not all data deserves equal protection. A company's public press releases need minimal protection. Customer credit card numbers need maximum protection. A data protection program must first understand what data exists, then apply proportionate controls based on sensitivity.</div>
+    <p>Key Safeguards in Control 3:</p>
+    <div class="ctrl-num"><b>3.1</b> — Establish and Maintain a Data Management Process: Establish a data management process — including data inventory, data sensitivity classification, data handling requirements, and data retention and disposal schedules. [IG1]</div>
+    <div class="ctrl-num"><b>3.2</b> — Establish and Maintain a Data Inventory: Document all data collection, processing, and storage locations — including third parties who hold organizational data. Update at least annually. [IG1]</div>
+    <div class="ctrl-num"><b>3.3</b> — Configure Data Access Control Lists: Configure data access control lists — restricting access to data based on user's need. Not everyone in the organization should see everything. [IG1]</div>
+    <div class="ctrl-num"><b>3.4</b> — Enforce Data Retention: Retain data according to legal and regulatory requirements. Delete data that is no longer needed to reduce the attack surface. [IG1]</div>
+    <div class="ctrl-num"><b>3.5</b> — Securely Dispose of Data: Use a secure data disposal process. Ensure that sensitive data cannot be recovered from decommissioned devices or deleted files. [IG1]</div>
+    <div class="ctrl-num"><b>3.6</b> — Encrypt Data on End-User Devices: Encrypt data on end-user devices that contain sensitive data — using full disk encryption on laptops, for example. [IG1]</div>
+    <div class="ctrl-num"><b>3.11</b> — Encrypt Sensitive Data in Transit: Encrypt sensitive data when transmitted across networks, using TLS or equivalent protocols. Never transmit sensitive data in cleartext. [IG2]</div>
+    <div class="analogy-box"><strong>Why "delete when done" matters:</strong> Every piece of data you store is a potential liability — it can be stolen, it costs money to protect, and it creates compliance obligations. Control 3's data retention requirements reflect a simple principle: don't keep data longer than you need it. The data you don't have can never be breached.</div>`,
+    quiz: { q: "CIS Control 3 requires encrypting data on end-user devices. Why is this specifically important for laptops?", opts: ["Laptops are more likely to have viruses", "Laptops are frequently lost or stolen — encryption ensures that even if physical access is gained, the data cannot be read without the encryption key", "Laptops use less powerful processors that need encryption", "Only laptops are covered by data privacy regulations"], ans: 1, explain: "Full disk encryption on laptops is critical because laptops are frequently lost or stolen — left in cars, forgotten in airports, or taken in physical break-ins. Without encryption, anyone who obtains the physical device has complete access to all its data. With encryption, the data is unreadable without the correct credentials, even with physical access to the hardware." }
+  },
+  {
+    title: "CIS Control 4 — Secure Configuration",
+    tagline: "Default settings are almost always insecure — lock things down",
+    body: `<p><span class="key-term">CIS Control 4</span> — <strong>Secure Configuration of Enterprise Assets and Software</strong> — addresses one of the most pervasive and preventable security problems: insecure default configurations. Systems, operating systems, applications, and network devices come "out of the box" configured for ease of use and broad compatibility — not for security. Fixing this is Control 4's mission.</p>
+    <div class="highlight-box">Default configurations are inherently dangerous because they are: publicly documented (attackers know exactly what the defaults are), designed for maximum compatibility (not minimum attack surface), and often include unnecessary services, open ports, weak passwords, and disabled security features. Control 4 requires establishing and maintaining secure configuration standards for all enterprise assets.</div>
+    <p>Key Safeguards in Control 4:</p>
+    <div class="ctrl-num"><b>4.1</b> — Establish and Maintain a Secure Configuration Process: Develop and document a secure configuration process for enterprise assets — hardware and software. Define who is responsible, how frequently configurations are reviewed, and how deviations are handled. [IG1]</div>
+    <div class="ctrl-num"><b>4.2</b> — Establish and Maintain a Secure Configuration Process for Network Infrastructure: Specifically address network devices — routers, switches, firewalls, wireless access points. Network infrastructure misconfigurations are a primary attack vector. [IG1]</div>
+    <div class="ctrl-num"><b>4.3</b> — Configure Automatic Session Locking on Enterprise Assets: Configure automatic session locking after a period of inactivity — preventing unauthorized access to unattended systems. [IG1]</div>
+    <div class="ctrl-num"><b>4.4</b> — Implement and Manage a Firewall on Servers: Install and manage firewalls on all servers — not just at the network perimeter. Host-based firewalls provide protection even when perimeter defenses fail. [IG1]</div>
+    <div class="ctrl-num"><b>4.7</b> — Manage Default Accounts on Enterprise Assets and Software: Manage default accounts — including disabling unused default accounts, changing default passwords, and removing unnecessary default services. [IG1]</div>
+    <div class="analogy-box"><strong>The new router analogy:</strong> Every home router comes with a default username and password — usually "admin/admin" or something equally weak, published in the manual. Attackers know every manufacturer's defaults. If you never change these, anyone who accesses your network can take control of your router in seconds. CIS Control 4 applies this principle systematically across every device and application in an organization.</div>
+    <div class="info-box"><strong>CIS Benchmarks are the implementation guide for Control 4:</strong> CIS publishes over 100 detailed Benchmarks — configuration guides for specific operating systems, cloud platforms, databases, and applications. These Benchmarks are the detailed technical specifications that organizations use to implement Control 4's secure configuration requirements.</div>`,
+    quiz: { q: "Why are default configurations considered insecure in enterprise environments?", opts: ["Because they are too new to have been tested", "Because defaults are publicly documented, designed for maximum compatibility rather than security, and often include unnecessary services and weak credentials that attackers know and exploit", "Because defaults use too much bandwidth", "Because CIS hasn't approved them"], ans: 1, explain: "Default configurations are publicly documented in manufacturer manuals and online resources — attackers know exactly what every system's default settings are. They're designed for broad compatibility and ease of use, not security, meaning they often include unnecessary services (creating attack surface), weak default passwords (easily guessed), and disabled security features (deliberately relaxed for convenience)." }
+  },
+  {
+    title: "CIS Control 5 — Account Management",
+    tagline: "Controlling the keys to your kingdom",
+    body: `<p><span class="key-term">CIS Control 5</span> — <strong>Account Management</strong> — covers the complete lifecycle of user accounts: creation, maintenance, use, and termination. Compromised accounts are consistently one of the top attack vectors. Whether through stolen credentials, weak passwords, or forgotten dormant accounts, attackers frequently gain initial access through account-related weaknesses.</p>
+    <div class="highlight-box">Account management means: knowing every account that exists, ensuring each account belongs to a known person with a business need, ensuring each account has only the access it needs, ensuring accounts are promptly disabled when no longer needed, and ensuring all accounts use strong authentication. Essentially: the right people have the right access at the right time — and nothing more.</div>
+    <p>Key Safeguards in Control 5:</p>
+    <div class="ctrl-num"><b>5.1</b> — Establish and Maintain an Inventory of Accounts: Maintain an inventory of all accounts — user, administrator, and service accounts — including the account's purpose and authorized approver. [IG1]</div>
+    <div class="ctrl-num"><b>5.2</b> — Use Unique Passwords: Require unique, complex passwords for all accounts. Use a password manager to enable truly unique passwords across all systems without expecting humans to memorize them. [IG1]</div>
+    <div class="ctrl-num"><b>5.3</b> — Disable Dormant Accounts: Disable accounts that have not been used in 45 days. Former employees, contractors, and service accounts for decommissioned systems are common sources of dormant accounts. [IG1]</div>
+    <div class="ctrl-num"><b>5.4</b> — Restrict Administrator Privileges to Dedicated Administrator Accounts: Use separate accounts for administrative tasks. Administrators should use a standard account for everyday tasks and an admin account only when performing privileged operations. [IG1]</div>
+    <div class="ctrl-num"><b>5.5</b> — Establish and Maintain an Inventory of Service Accounts: Track service accounts (non-human accounts used by applications and automated processes) separately. Service accounts are frequently overlooked and become persistent backdoors. [IG2]</div>
+    <div class="ctrl-num"><b>5.6</b> — Centralize Account Management: Centralize account management through a directory — such as Active Directory or LDAP — enabling consistent authentication, access control, and auditing across all systems. [IG2]</div>
+    <div class="analogy-box"><strong>The master key analogy:</strong> Imagine a hotel where housekeeping staff all have master keys that open every room — even though each staff member only cleans specific floors. If one key is stolen, the entire hotel is compromised. Good key management means each person gets a key to exactly what they need — nothing more. CIS Control 5 applies this principle to digital accounts.</div>`,
+    quiz: { q: "An employee leaves the company but their accounts aren't disabled for two months. Which CIS Control 5 Safeguard specifically addresses this risk?", opts: ["5.1 — Account inventory", "5.2 — Unique passwords", "5.3 — Disable dormant accounts after 45 days", "5.4 — Restrict administrator privileges"], ans: 2, explain: "Safeguard 5.3 requires disabling accounts that haven't been used within 45 days. A former employee's account left active for months is a classic dormant account — it provides no business value but creates significant security risk if the former employee (or an attacker who obtained their credentials) attempts access." }
+  },
+  {
+    title: "CIS Control 6 — Access Control Management",
+    tagline: "Making sure people can only access what they actually need",
+    body: `<p><span class="key-term">CIS Control 6</span> — <strong>Access Control Management</strong> — goes beyond account existence to control what each account can actually access and do. While Control 5 manages accounts, Control 6 manages permissions — implementing the principle of least privilege across the organization's systems and data.</p>
+    <div class="highlight-box"><strong>Principle of Least Privilege:</strong> Every user, service, and application should have only the minimum permissions necessary to perform its function — nothing more. This limits the damage an attacker can do with compromised credentials. If an attacker compromises a marketing employee's account, they shouldn't automatically have access to financial systems or customer databases that marketing doesn't need.</div>
+    <p>Key Safeguards in Control 6:</p>
+    <div class="ctrl-num"><b>6.1</b> — Establish an Access Granting Process: Establish a formal process for granting access to enterprise assets — requiring documented business justification, appropriate approval, and defined access levels. Don't grant access ad hoc without review. [IG1]</div>
+    <div class="ctrl-num"><b>6.2</b> — Establish an Access Revoking Process: Establish a formal process for revoking access — triggered by role changes, terminations, or when access is no longer needed. Access revocation should be as prompt and systematic as access granting. [IG1]</div>
+    <div class="ctrl-num"><b>6.3</b> — Require MFA for Externally-Exposed Applications: Require multi-factor authentication for all externally exposed applications — anything accessible from the internet. MFA dramatically reduces the risk of account compromise from stolen passwords. [IG1]</div>
+    <div class="ctrl-num"><b>6.4</b> — Require MFA for Remote Network Access: Require MFA for remote network access — VPNs, remote desktop, and similar remote access methods. [IG1]</div>
+    <div class="ctrl-num"><b>6.5</b> — Require MFA for Administrative Access: Require MFA for all administrative access — even on trusted internal networks. Admin accounts are the most valuable targets; they deserve the strongest authentication. [IG2]</div>
+    <div class="ctrl-num"><b>6.6</b> — Establish and Maintain an Inventory of Authentication and Authorization Systems: Track all systems that manage authentication (identity providers, MFA systems, single sign-on platforms). Understand the authentication landscape to ensure no gaps. [IG2]</div>
+    <div class="ctrl-num"><b>6.7</b> — Centralize Access Control: Centralize access control through an identity and access management (IAM) system — providing consistent access policies across all systems and enabling rapid access revocation when needed. [IG3]</div>
+    <div class="analogy-box"><strong>Why MFA is IG1 (essential for everyone):</strong> Passwords alone are consistently the weakest link in security. They're reused, stolen, guessed, or phished. MFA adds a second factor — something you have (a phone, a hardware token) in addition to something you know (your password). Even if an attacker steals your password, they can't authenticate without the second factor. MFA is one of the highest-ROI security controls that exists.</div>`,
+    quiz: { q: "CIS Control 6 places multi-factor authentication (MFA) for externally-exposed applications in IG1 — the essential baseline for all organizations. Why is MFA considered so fundamental?", opts: ["Because MFA is required by all government regulations", "Because passwords alone are consistently compromised through phishing, breaches, and reuse — MFA provides a second layer that prevents account takeover even when passwords are stolen", "Because MFA is inexpensive and easy to implement", "Because external applications are always more vulnerable than internal ones"], ans: 1, explain: "MFA is in IG1 because it is one of the single most effective controls against account compromise. Passwords are routinely stolen through phishing, credential stuffing, and data breaches. MFA means that even with a stolen password, an attacker cannot authenticate without the second factor — making it essential for any externally accessible application." }
+  },
+  {
+    title: "CIS Control 7 — Continuous Vulnerability Management",
+    tagline: "Finding and fixing security holes before attackers exploit them",
+    body: `<p><span class="key-term">CIS Control 7</span> — <strong>Continuous Vulnerability Management</strong> — addresses the ongoing process of identifying, assessing, and remediating security vulnerabilities in enterprise assets. New vulnerabilities are discovered every day. Attackers know about them within hours. Organizations that don't have a systematic vulnerability management program are in a constant state of unknown — and therefore unmitigated — risk.</p>
+    <div class="highlight-box">The vulnerability management lifecycle: Discover new vulnerabilities (via scanning and threat intelligence) → Assess severity and risk in your specific environment → Prioritize based on risk → Remediate by patching, configuring, or mitigating → Verify the fix worked → Monitor for new vulnerabilities. This process must be continuous — not an annual exercise.</div>
+    <p>Key Safeguards in Control 7:</p>
+    <div class="ctrl-num"><b>7.1</b> — Establish and Maintain a Vulnerability Management Process: Document the vulnerability management process — how vulnerabilities are identified, prioritized, and remediated. Assign ownership. Define timelines. [IG1]</div>
+    <div class="ctrl-num"><b>7.2</b> — Establish and Maintain a Remediation Process: Establish remediation timelines based on severity. Critical vulnerabilities require faster remediation than low-severity ones. Document deviations with risk acceptance rationale. [IG1]</div>
+    <div class="ctrl-num"><b>7.3</b> — Perform Automated Operating System Patch Management: Use automated tools to ensure operating systems receive security patches in a timely manner — without requiring manual intervention for every system. [IG1]</div>
+    <div class="ctrl-num"><b>7.4</b> — Perform Automated Application Patch Management: Apply the same automated patching approach to applications — browsers, office software, plugins, and all enterprise applications. [IG1]</div>
+    <div class="ctrl-num"><b>7.5</b> — Perform Automated Vulnerability Scans of Internal Enterprise Assets: Conduct quarterly vulnerability scans of all internal systems — using authenticated scanning for complete visibility into missing patches and misconfigurations. [IG2]</div>
+    <div class="ctrl-num"><b>7.6</b> — Perform Automated Vulnerability Scans of Externally-Exposed Enterprise Assets: Scan external-facing systems more frequently than internal ones — monthly at minimum. External assets are directly exposed to attackers. [IG2]</div>
+    <div class="ctrl-num"><b>7.7</b> — Remediate Detected Vulnerabilities: After scanning, actually fix what's found. Scanning without remediation creates a detailed map of weaknesses with no benefit — and potential liability if breached. [IG2]</div>
+    <div class="analogy-box"><strong>The "patch window" reality:</strong> When a vendor releases a security patch, they are simultaneously telling the entire world — including attackers — that a vulnerability existed. Attackers use this information to craft exploits targeting unpatched systems. Historically, attackers begin exploiting newly disclosed vulnerabilities within 24–48 hours of public disclosure. Organizations that take 30–90 days to patch critical vulnerabilities are leaving known doors open for extended periods.</div>`,
+    quiz: { q: "Why is vulnerability scanning without remediation potentially harmful?", opts: ["It wastes bandwidth", "It creates a detailed, documented map of an organization's security weaknesses — and if that documentation falls into the wrong hands or the organization is breached, it demonstrates known risks were not addressed", "Scanning tools can introduce new vulnerabilities", "It violates CIS guidance"], ans: 1, explain: "Scanning without remediation creates documented evidence that an organization knew about specific vulnerabilities and chose not to fix them — a problematic situation legally, regulatorily, and reputationally. It's worse than not scanning because you have a record of known, unaddressed risks. Scanning must always be paired with an active remediation program." }
+  },
+  {
+    title: "CIS Control 8 — Audit Log Management",
+    tagline: "Recording everything that matters — then actually reviewing it",
+    body: `<p><span class="key-term">CIS Control 8</span> — <strong>Audit Log Management</strong> — requires collecting, managing, protecting, and reviewing audit logs from enterprise assets. Logs are the security camera footage of your digital environment. Without them, you cannot detect attacks in progress, investigate incidents after the fact, or demonstrate compliance with security requirements.</p>
+    <div class="highlight-box">The two failure modes of audit logging: (1) Not collecting logs at all — you're flying blind. (2) Collecting logs but never reviewing them — you have terabytes of data that tells you nothing because nobody looks at it. Control 8 addresses both: collect the right logs AND actively review and alert on them.</div>
+    <p>Key Safeguards in Control 8:</p>
+    <div class="ctrl-num"><b>8.1</b> — Establish and Maintain an Audit Log Management Process: Document what events are logged, how logs are stored, how long they're retained, and who reviews them. An ad hoc logging approach is not a logging strategy. [IG1]</div>
+    <div class="ctrl-num"><b>8.2</b> — Collect Audit Logs: Collect audit logs covering authentication events, file access, system configuration changes, and network connections. Collect logs from all critical systems. [IG1]</div>
+    <div class="ctrl-num"><b>8.3</b> — Ensure Adequate Audit Log Storage: Allocate sufficient storage for audit logs based on your log volume and retention requirements. Running out of log storage silently stops logging — often unnoticed until an incident occurs. [IG1]</div>
+    <div class="ctrl-num"><b>8.4</b> — Standardize Time Synchronization: Synchronize all enterprise asset clocks to a consistent time source (NTP). Logs from systems with different times are nearly impossible to correlate during incident investigations. [IG1]</div>
+    <div class="ctrl-num"><b>8.5</b> — Collect Detailed Audit Logs: Collect detailed event data beyond basic authentication — including command execution, file modifications, network connections, and privilege escalation. [IG2]</div>
+    <div class="ctrl-num"><b>8.9</b> — Centralize Audit Logs: Collect all logs into a centralized log management system (SIEM — Security Information and Event Management). Centralization enables correlation, analysis, and alerting across all sources. [IG2]</div>
+    <div class="ctrl-num"><b>8.11</b> — Conduct Audit Log Reviews: Conduct reviews of audit logs to identify anomalies or abnormal events. Automated alerting on known bad patterns should be supplemented by periodic human review. [IG2]</div>
+    <div class="analogy-box"><strong>The time-sync lesson from real incidents:</strong> During a major 2011 cyberattack on RSA Security, investigators found that some systems' clocks were off by several hours. Correlating logs from different systems — essential for reconstructing the attack — was significantly hampered because timestamps didn't align. A simple NTP synchronization requirement (Safeguard 8.4) prevents this entirely preventable investigation challenge.</div>`,
+    quiz: { q: "CIS Control 8 includes requiring time synchronization across all systems (Safeguard 8.4). Why is this a security requirement, not just an administrative convenience?", opts: ["Because it makes backups more efficient", "Because logs from systems with inconsistent clocks cannot be accurately correlated during incident investigation — making it impossible to reconstruct the timeline of an attack", "Because regulatory requirements mandate accurate clocks", "Because attackers can only exploit systems with incorrect time settings"], ans: 1, explain: "During incident investigations, analysts must reconstruct the exact sequence of events across many systems. If System A's logs say an event happened at 2:00 PM and System B's logs say it happened at 3:47 PM because the clock is wrong, the investigation timeline becomes unreliable or impossible to construct. Time synchronization is a forensic prerequisite that seems minor until you need it." }
+  },
+  {
+    title: "CIS Controls 9 and 10 — Email, Web, and Malware Defenses",
+    tagline: "Protecting the most common attack paths into your organization",
+    body: `<p><span class="key-term">CIS Control 9</span> — <strong>Email and Web Browser Protections</strong> — and <span class="key-term">CIS Control 10</span> — <strong>Malware Defenses</strong> — together address the most common initial attack vectors into organizations: malicious emails (phishing), malicious websites, and malware delivered through both channels.</p>
+    <div class="highlight-box"><strong>Why email and web browsing are the top attack vectors:</strong> Studies consistently show that 90%+ of cyberattacks begin with a phishing email or a malicious website visit. Attackers focus their energy on these vectors because they're the most reliable path to reaching human users — who remain the weakest link in most organizations' security posture.</div>
+    <p>Key Control 9 Safeguards:</p>
+    <div class="ctrl-num"><b>9.1</b> — Ensure Use of Only Fully Supported Browsers and Email Clients: Use only browsers and email clients that receive active security updates. Old browsers and email clients contain known, unpatched vulnerabilities. [IG1]</div>
+    <div class="ctrl-num"><b>9.2</b> — Use DNS Filtering Services: Use DNS filtering to block access to known malicious websites — before the connection is established. DNS filtering is highly effective against command-and-control traffic and drive-by downloads. [IG1]</div>
+    <div class="ctrl-num"><b>9.3</b> — Maintain and Enforce Network-Based URL Filters: Block access to uncategorized websites and known malicious URLs at the network level. [IG2]</div>
+    <div class="ctrl-num"><b>9.4</b> — Restrict Unnecessary or Unauthorized Browser and Email Client Extensions: Extensions add functionality but also attack surface. Limit browser extensions to those explicitly authorized for business use. [IG2]</div>
+    <div class="ctrl-num"><b>9.6</b> — Block Unnecessary File Types: Configure email to block unnecessary file attachment types — executable files (.exe, .bat, .com), macro-enabled documents, and other commonly-weaponized file formats. [IG2]</div>
+    <p>Key Control 10 Safeguards:</p>
+    <div class="ctrl-num"><b>10.1</b> — Deploy and Maintain Anti-Malware Software: Deploy anti-malware software on all enterprise assets — endpoints, servers, and email gateways. Configure to update automatically. [IG1]</div>
+    <div class="ctrl-num"><b>10.2</b> — Configure Automatic Anti-Malware Signature Updates: Ensure anti-malware signatures update automatically and frequently. Stale signature files miss new malware variants. [IG1]</div>
+    <div class="ctrl-num"><b>10.7</b> — Use Behavior-Based Anti-Malware: Supplement signature-based detection with behavior-based tools that can detect novel threats not yet in signature databases. [IG2]</div>
+    <div class="analogy-box"><strong>DNS filtering as an invisible shield:</strong> When a user clicks a malicious link, DNS filtering can block the connection before it reaches the malicious site — the user sees a "site blocked" message instead of a malware delivery page. Because DNS filtering works at the network level, it protects users even when they make mistakes, without requiring perfect human judgment every time.</div>`,
+    quiz: { q: "Why does CIS place DNS filtering (Control 9, Safeguard 9.2) in IG1 — the essential baseline every organization must implement?", opts: ["Because DNS filtering is required by law", "Because DNS filtering is a high-impact, low-cost control that blocks access to known malicious sites before connections are established — protecting even unsophisticated users from common web-based attacks", "Because DNS filtering prevents all malware", "Because DNS filtering is the only way to block phishing emails"], ans: 1, explain: "DNS filtering is in IG1 because it is highly effective at low cost — it blocks connections to known malicious domains before any content is downloaded, protecting users even when they click malicious links. It's a network-level control that works automatically without requiring user awareness or action, making it one of the most high-ROI security controls available." }
+  },
+  {
+    title: "CIS Controls 11 and 12 — Data Recovery and Network Management",
+    tagline: "Bouncing back from attacks and defending your network infrastructure",
+    body: `<p><span class="key-term">CIS Control 11</span> — <strong>Data Recovery</strong> — and <span class="key-term">CIS Control 12</span> — <strong>Network Infrastructure Management</strong> — address two distinct but equally critical security domains: the ability to recover when things go wrong, and the protection of network infrastructure that attackers increasingly target.</p>
+    <div class="highlight-box"><strong>Control 11: Data Recovery</strong> — Ransomware has made data recovery the most business-critical security control for many organizations. Organizations that maintain tested, isolated backups can recover from ransomware without paying a ransom. Those that don't face the choice between paying attackers or losing their data permanently.</div>
+    <p>Key Control 11 Safeguards:</p>
+    <div class="ctrl-num"><b>11.1</b> — Establish and Maintain a Data Recovery Process: Document the data recovery process — what gets backed up, how often, where backups are stored, and how recovery is performed. [IG1]</div>
+    <div class="ctrl-num"><b>11.2</b> — Perform Automated Backups: Automate backups of in-scope enterprise assets. Rely on automated processes, not manual backup routines that are easily forgotten. [IG1]</div>
+    <div class="ctrl-num"><b>11.3</b> — Protect Recovery Data: Protect backup data using the principle of least privilege and encryption. Attackers specifically target backup systems — if they can destroy your backups, ransomware becomes your only recovery option. [IG1]</div>
+    <div class="ctrl-num"><b>11.4</b> — Establish and Maintain an Isolated Instance of Recovery Data: Maintain at least one backup instance in a location not continuously accessible to the rest of the network. Air-gapped or offline backups survive even complete ransomware incidents. [IG1]</div>
+    <div class="ctrl-num"><b>11.5</b> — Test Data Recovery: Test data recovery at least quarterly. Many organizations discover their backups don't actually work during an incident — the worst time to find out. [IG2]</div>
+    <p>Key Control 12 Safeguards — Network Infrastructure Management:</p>
+    <div class="ctrl-num"><b>12.1</b> — Ensure Network Infrastructure is Up-to-Date: Ensure network devices run supported, patched firmware. Unpatched network devices are prime targets because they provide access to everything behind them. [IG1]</div>
+    <div class="ctrl-num"><b>12.2</b> — Establish and Maintain a Secure Network Architecture: Segment the network — separate sensitive systems from general networks. A flat network where every device can reach every other device is an attacker's dream. [IG2]</div>
+    <div class="ctrl-num"><b>12.6</b> — Use of Secure Network Management and Communication Protocols: Use encrypted protocols for all network management traffic — SSH instead of Telnet, HTTPS instead of HTTP, SNMPv3 instead of SNMP v1/2. [IG2]</div>
+    <div class="analogy-box"><strong>The 3-2-1 backup rule:</strong> Data recovery best practice follows the "3-2-1 rule" — 3 copies of data, on 2 different media types, with 1 copy off-site (or isolated). Control 11's requirement for an isolated instance directly reflects this rule. Organizations that followed 3-2-1 during the WannaCry ransomware attack recovered quickly. Those that didn't faced weeks of downtime or paid ransoms.</div>`,
+    quiz: { q: "CIS Control 11 requires maintaining 'an isolated instance of recovery data.' Why is this specifically important against ransomware attacks?", opts: ["Because isolated backups are faster to restore from", "Because ransomware often specifically seeks out and encrypts backup files — an isolated backup that ransomware cannot reach is the only way to recover without paying the ransom", "Because regulatory requirements mandate isolated backups", "Because regular backups are too large to store economically"], ans: 1, explain: "Modern ransomware specifically hunts for and encrypts backup files to eliminate recovery options and force ransom payment. An isolated backup — one not continuously connected to the main network — cannot be reached by ransomware. This is the critical difference between 'we got ransomwared but recovered in 4 hours' and 'we got ransomwared and paid $5 million or lost all our data.'" }
+  },
+  {
+    title: "CIS Control 13 — Network Monitoring and Defense",
+    tagline: "Detecting attackers who are already inside your network",
+    body: `<p><span class="key-term">CIS Control 13</span> — <strong>Network Monitoring and Defense</strong> — focuses on operating processes and tooling to establish comprehensive network monitoring and defense against threats. The assumption behind Control 13 is critical: not all attackers will be stopped at the perimeter. Some will get through. Network monitoring detects them before they can cause catastrophic damage.</p>
+    <div class="highlight-box">The average "dwell time" — the time between an attacker first accessing a network and being detected — has historically been measured in months, not days. Attackers who operate undetected for months can cause vastly more damage than those detected in hours. Network monitoring dramatically reduces dwell time by identifying suspicious behavior as it occurs.</div>
+    <p>Key Safeguards in Control 13:</p>
+    <div class="ctrl-num"><b>13.1</b> — Centralize Security Event Alerting: Centralize security event alerting across enterprise assets using a SIEM or log aggregation platform. Aggregate events from multiple sources to detect patterns invisible in individual logs. [IG1]</div>
+    <div class="ctrl-num"><b>13.2</b> — Deploy a Host-Based Intrusion Detection Solution: Deploy HIDS (Host-based Intrusion Detection Systems) to detect malicious activity at the individual device level. [IG2]</div>
+    <div class="ctrl-num"><b>13.3</b> — Deploy a Network Intrusion Detection Solution: Deploy NIDS (Network Intrusion Detection Systems) to monitor network traffic for known attack patterns and anomalous behavior. [IG2]</div>
+    <div class="ctrl-num"><b>13.4</b> — Perform Traffic Filtering Between Network Segments: Implement and enforce traffic filtering rules between network segments — not just between the internet and internal network. East-west traffic (between internal systems) requires filtering too. [IG2]</div>
+    <div class="ctrl-num"><b>13.6</b> — Collect Network Traffic Flow Logs: Collect NetFlow or equivalent traffic flow logs from all network devices. Flow logs show who communicated with whom and when — essential for identifying command-and-control communications. [IG2]</div>
+    <div class="ctrl-num"><b>13.7</b> — Deploy a Host-Based Intrusion Prevention Solution: Upgrade from detection to active prevention at the host level — automatically blocking detected malicious activity. [IG3]</div>
+    <div class="ctrl-num"><b>13.8</b> — Deploy a Network Intrusion Prevention Solution: Upgrade from network detection to active network prevention — automatically blocking known attack traffic patterns. [IG3]</div>
+    <div class="analogy-box"><strong>The "assume breach" mindset:</strong> Control 13 embodies the "assume breach" security philosophy — operate as if attackers will eventually get past your defenses, and build your capability to detect and respond when they do. Organizations focused entirely on prevention with no detection capability discover breaches months or years later, often from external parties (customers, law enforcement, journalists), not from their own monitoring.</div>`,
+    quiz: { q: "The average historical 'dwell time' for attackers inside a network before detection has been measured in months. What does investing in Control 13 (Network Monitoring) directly address?", opts: ["It prevents attackers from entering the network in the first place", "It reduces dwell time by detecting suspicious behavior as it occurs — so attackers are discovered in hours or days rather than months, limiting the damage they can cause", "It stops ransomware from executing", "It prevents data exfiltration through encryption"], ans: 1, explain: "Network monitoring directly attacks the dwell time problem. While prevention controls aim to stop attacks before they start, monitoring detects attackers who get through — catching them early in the kill chain before they can accomplish their objectives. An attacker detected in day 2 causes dramatically less damage than one discovered in month 6." }
+  },
+  {
+    title: "CIS Control 14 — Security Awareness and Skills Training",
+    tagline: "Your people are both the biggest vulnerability and the best defense",
+    body: `<p><span class="key-term">CIS Control 14</span> — <strong>Security Awareness and Skills Training</strong> — addresses the human element of cybersecurity. Despite all the technical controls covered in previous lessons, humans remain the most exploited vulnerability in almost every organization. Phishing, social engineering, and insider threats all exploit human psychology rather than technical weaknesses. Training is the only way to address this.</p>
+    <div class="highlight-box">Control 14 goes beyond generic annual "check-the-box" security awareness training. It requires: role-specific training for different job functions, training that addresses the actual threats employees face, regular reinforcement and testing (phishing simulations), and metrics to demonstrate training effectiveness. The goal is genuine security competence, not compliance theater.</div>
+    <p>Key Safeguards in Control 14:</p>
+    <div class="ctrl-num"><b>14.1</b> — Establish and Maintain a Security Awareness Program: Develop and maintain a comprehensive security awareness program — not just annual training, but an ongoing program with regular touchpoints and diverse learning formats. [IG1]</div>
+    <div class="ctrl-num"><b>14.2</b> — Train Workforce Members to Recognize Social Engineering Attacks: Train all staff to recognize phishing, vishing (voice phishing), smishing (text phishing), and other social engineering techniques that bypass technical controls. [IG1]</div>
+    <div class="ctrl-num"><b>14.3</b> — Train Workforce Members on Authentication Best Practices: Train employees on strong password practices, MFA usage, and the dangers of credential sharing and password reuse. [IG1]</div>
+    <div class="ctrl-num"><b>14.4</b> — Train Workforce on Data Handling Best Practices: Ensure employees understand data classification, proper data handling, and the legal and organizational consequences of mishandling sensitive data. [IG1]</div>
+    <div class="ctrl-num"><b>14.5</b> — Train Workforce Members on Causes of Unintentional Data Exposure: Train on accidental data exposure scenarios — emailing sensitive data to wrong recipients, leaving documents in public printers, working on sensitive data in public spaces. [IG1]</div>
+    <div class="ctrl-num"><b>14.8</b> — Conduct Role-Specific Security Awareness and Skills Training: Provide role-specific training beyond general awareness — developers need secure coding training, system administrators need privileged access security, executives need targeted spear-phishing awareness. [IG2]</div>
+    <div class="ctrl-num"><b>14.9</b> — Conduct Phishing Simulations: Regularly run phishing simulation campaigns — sending simulated phishing emails to employees and measuring click rates. Use results to target additional training for vulnerable groups. [IG2]</div>
+    <div class="analogy-box"><strong>Why phishing simulations work:</strong> Telling someone "don't click suspicious links" is abstract. Showing someone that they personally clicked a simulated phishing email last month makes the risk concrete and personal. Phishing simulations consistently show that well-designed programs reduce click rates on simulated phishing emails by 60–80% over 12 months — a measurable security improvement from a purely human-focused intervention.</div>`,
+    quiz: { q: "What distinguishes effective security awareness training (as required by CIS Control 14) from ineffective 'check-the-box' annual training?", opts: ["Duration — effective training must be at least 8 hours", "Ongoing reinforcement, role-specific content, phishing simulations, and measured outcomes — versus generic annual compliance training with no follow-up or measurement of effectiveness", "Cost — more expensive training is more effective", "Mandatory completion — all staff must pass the training"], ans: 1, explain: "Effective security awareness training per CIS Control 14 is ongoing (not just annual), role-specific (developers get different training than executives), tested with simulations, and measured for effectiveness. Generic annual compliance training that everyone sits through and immediately forgets does not produce behavior change — which is the actual security goal." }
+  },
+  {
+    title: "CIS Control 15 — Service Provider Management",
+    tagline: "Your security is only as strong as your weakest vendor",
+    body: `<p><span class="key-term">CIS Control 15</span> — <strong>Service Provider Management</strong> — addresses the security risks that come from third-party service providers. Modern organizations rely on dozens or hundreds of external service providers — cloud platforms, SaaS applications, managed security services, outsourced IT, and specialized vendors. Each one represents a potential attack vector into your organization.</p>
+    <div class="highlight-box"><strong>The supply chain attack reality:</strong> The 2020 SolarWinds attack compromised over 18,000 organizations — including US government agencies — by inserting malicious code into a trusted software update from a widely-used vendor. Organizations with perfect internal security were breached through a third-party they trusted implicitly. Control 15 addresses this exact risk: extending your security requirements to the organizations you depend on.</div>
+    <p>Key Safeguards in Control 15:</p>
+    <div class="ctrl-num"><b>15.1</b> — Establish and Maintain an Inventory of Service Providers: Maintain a list of all third-party service providers, including what services they provide, what data they access, and what systems they connect to. [IG1]</div>
+    <div class="ctrl-num"><b>15.2</b> — Establish and Maintain a Service Provider Management Policy: Create a formal policy governing how service providers are evaluated, selected, monitored, and terminated — with security requirements clearly defined. [IG1]</div>
+    <div class="ctrl-num"><b>15.3</b> — Classify Service Providers: Classify service providers by the sensitivity of the data they access and the criticality of the services they provide. Higher-risk providers warrant more rigorous assessment and monitoring. [IG2]</div>
+    <div class="ctrl-num"><b>15.4</b> — Ensure Service Provider Contracts Include Security Requirements: Include security requirements in all service provider contracts — required security standards, right-to-audit clauses, breach notification requirements, and data handling obligations. [IG2]</div>
+    <div class="ctrl-num"><b>15.5</b> — Assess Service Providers: Assess providers before engaging them and periodically thereafter. Review their SOC 2 reports, HITRUST certifications, or other assurance documentation. Request security questionnaires for providers without certifications. [IG2]</div>
+    <div class="ctrl-num"><b>15.6</b> — Monitor Service Providers: Monitor service providers for security incidents, certifications lapsing, and material changes to their security posture. A provider that passed assessment two years ago may have deteriorated significantly. [IG3]</div>
+    <div class="analogy-box"><strong>Security is a chain:</strong> A security program is only as strong as its weakest link — and that link is often a third-party provider who has access to your systems or data. Most organizations rigorously secure their own environments while treating vendor access as an afterthought. Control 15 requires treating vendor security with the same rigor as internal security — because attackers don't distinguish between "your" systems and your vendor's systems if they both lead to your data.</div>`,
+    quiz: { q: "The SolarWinds supply chain attack of 2020 compromised thousands of organizations through a trusted vendor's software update. Which CIS Control directly addresses this type of risk?", opts: ["Control 7 — Vulnerability Management", "Control 4 — Secure Configuration", "Control 15 — Service Provider Management", "Control 13 — Network Monitoring"], ans: 2, explain: "CIS Control 15 (Service Provider Management) directly addresses supply chain risks — the security practices of organizations that have access to your systems or data. The SolarWinds attack succeeded because organizations trusted software updates from a vendor without verifying their security. Control 15 requires assessing, monitoring, and contractually binding service providers to security standards." }
+  },
+  {
+    title: "CIS Control 16 — Application Software Security",
+    tagline: "Building security into applications from the very beginning",
+    body: `<p><span class="key-term">CIS Control 16</span> — <strong>Application Software Security</strong> — addresses the security of custom and third-party applications. Software vulnerabilities are among the most common attack vectors: SQL injection, cross-site scripting, authentication weaknesses, and insecure APIs give attackers direct access to systems and data that all other controls are trying to protect.</p>
+    <div class="highlight-box">Control 16 is built on a core principle: security must be designed into applications, not bolted on after the fact. The cost of fixing a security flaw in production code is estimated to be 100 times higher than fixing it during design. Security testing after code is written finds flaws but misses architectural vulnerabilities baked into the design.</div>
+    <p>Key Safeguards in Control 16:</p>
+    <div class="ctrl-num"><b>16.1</b> — Establish and Maintain a Secure Application Development Process: Establish a secure Software Development Lifecycle (SDLC) — including security requirements, threat modeling, secure coding standards, and security testing requirements at each phase. [IG2]</div>
+    <div class="ctrl-num"><b>16.2</b> — Establish and Maintain a Process to Accept and Address Software Vulnerabilities: Create a process for receiving, evaluating, and addressing vulnerability reports from internal security teams or external researchers. [IG2]</div>
+    <div class="ctrl-num"><b>16.3</b> — Perform Root Cause Analysis on Security Vulnerabilities: When vulnerabilities are found, investigate why they occurred — not just how to fix the specific instance. Root cause analysis prevents the same class of vulnerability from appearing repeatedly. [IG2]</div>
+    <div class="ctrl-num"><b>16.4</b> — Establish and Manage an Application Inventory: Maintain an inventory of custom-developed and third-party applications — including version, update schedule, and responsible owner. [IG2]</div>
+    <div class="ctrl-num"><b>16.5</b> — Use Up-to-Date and Trusted Third-Party Software Components: Ensure third-party software components (libraries, frameworks, APIs) are up-to-date and from reputable sources. Vulnerable third-party components are responsible for a significant percentage of application security breaches. [IG2]</div>
+    <div class="ctrl-num"><b>16.6</b> — Establish and Maintain a Severity Rating System for Software Vulnerabilities: Define severity ratings for software vulnerabilities to prioritize remediation. Not all vulnerabilities require the same urgency of response. [IG2]</div>
+    <div class="ctrl-num"><b>16.8</b> — Separate Production and Non-Production Systems: Keep development, testing, and production environments separate. Using real customer data in test environments is a common, serious security violation. [IG2]</div>
+    <div class="ctrl-num"><b>16.12</b> — Implement Code-Level Security Checks: Use static analysis (SAST), dynamic analysis (DAST), and software composition analysis (SCA) tools during development to identify vulnerabilities before deployment. [IG3]</div>
+    <div class="analogy-box"><strong>The Log4Shell lesson:</strong> In December 2021, a vulnerability was discovered in Log4j — a Java logging library used in millions of applications worldwide. The vulnerability allowed remote code execution with a single line of input. Organizations that maintained an inventory of their software components (Control 16.4/16.5) could rapidly identify affected systems. Those with no software inventory spent weeks or months discovering they were vulnerable, often after being breached.</div>`,
+    quiz: { q: "CIS Control 16 emphasizes keeping third-party software components (libraries, frameworks) up-to-date. Why was this made a specific IG2 Safeguard?", opts: ["Because third-party code is always poorly written", "Because vulnerable third-party components are a leading source of application security breaches — the Log4Shell vulnerability affected millions of applications that used a single vulnerable logging library", "Because third-party components cost more to license when outdated", "Because CIS certifies third-party software vendors"], ans: 1, explain: "Third-party components — libraries, frameworks, and SDKs included in applications — are frequently vulnerable and often untracked. Log4Shell (2021) demonstrated this at catastrophic scale: a single vulnerable library in millions of applications worldwide created one of the largest security events in history. Organizations that tracked their components (Control 16.4) could identify and patch affected systems; those that didn't faced weeks of frantic discovery work." }
+  },
+  {
+    title: "CIS Control 17 — Incident Response Management",
+    tagline: "What to do when — not if — a security incident occurs",
+    body: `<p><span class="key-term">CIS Control 17</span> — <strong>Incident Response Management</strong> — addresses how organizations prepare for, detect, contain, eradicate, and recover from security incidents. The question is not whether your organization will face a security incident — it's whether you'll be prepared to respond effectively when one occurs. Organizations without an incident response plan consistently suffer more damage, longer downtime, and higher costs from incidents.</p>
+    <div class="highlight-box">An incident response plan is NOT a document you write once, file away, and hope you never need. It is a living capability that must be exercised regularly, updated as your environment changes, and tested before you actually need it. Organizations that discover their IR plan has never been tested typically discover its flaws during an actual incident — the worst time to learn.</div>
+    <p>Key Safeguards in Control 17:</p>
+    <div class="ctrl-num"><b>17.1</b> — Designate Personnel to Manage Incident Handling: Designate specific people responsible for managing security incidents — not ad hoc responders discovered during the crisis. Everyone in the organization should know who to call when they suspect an incident. [IG1]</div>
+    <div class="ctrl-num"><b>17.2</b> — Establish and Maintain Contact Information for Reporting Security Incidents: Maintain up-to-date contact information for internal IR teams, external IR vendors, law enforcement contacts, and regulatory bodies that require breach notification. [IG1]</div>
+    <div class="ctrl-num"><b>17.3</b> — Establish and Maintain an Enterprise Security Incident Response Program: Document an enterprise-wide incident response plan — covering detection, escalation, containment, eradication, recovery, and post-incident review. [IG1]</div>
+    <div class="ctrl-num"><b>17.4</b> — Establish and Maintain an Incident Severity Definition Schema: Define what constitutes different severity levels of incidents — ensuring consistent response prioritization. Not every alert is a critical incident; not every critical incident is treated with appropriate urgency. [IG1]</div>
+    <div class="ctrl-num"><b>17.5</b> — Assign Key Roles and Responsibilities: Clearly assign incident response roles — who leads, who communicates with leadership, who handles technical containment, who manages legal and regulatory notifications. [IG2]</div>
+    <div class="ctrl-num"><b>17.6</b> — Define Mechanisms for Communicating During Incident Response: Plan how the IR team will communicate when normal systems may be compromised. If email is compromised, you need an out-of-band communication channel — secure messaging, phone trees, pre-established bridge lines. [IG2]</div>
+    <div class="ctrl-num"><b>17.7</b> — Conduct Routine Incident Response Exercises: Run tabletop exercises and simulated incident scenarios at least annually. Test whether the plan actually works before you depend on it during a real crisis. [IG2]</div>
+    <div class="analogy-box"><strong>The fire drill analogy:</strong> Schools don't assume children will naturally know what to do during a fire — they run fire drills. Regular practice means that when a real emergency occurs, the response is automatic rather than panicked. Incident response exercises serve the same function: practicing the response until it becomes muscle memory ensures the team doesn't improvise under pressure when the stakes are highest.</div>`,
+    quiz: { q: "CIS Control 17 emphasizes having out-of-band communication channels during incident response. Why can't the IR team simply use regular email and internal chat during a security incident?", opts: ["Because email is too slow during emergencies", "Because if the incident involves compromise of email or communication systems, the IR team would be communicating through channels the attacker can monitor or disrupt — defeating the response effort", "Because external parties can't receive internal email", "Because CIS prohibits email use during incidents"], ans: 1, explain: "If an attacker has compromised email systems (a common occurrence in advanced attacks), the IR team using email to coordinate their response gives the attacker visibility into the response strategy — and potentially the ability to disrupt it. Out-of-band communication (phone, secure messaging apps, pre-established conference bridges) ensures the response continues even when primary systems are compromised." }
+  },
+  {
+    title: "CIS Control 18 — Penetration Testing",
+    tagline: "Hiring friendly attackers to find your weaknesses before real ones do",
+    body: `<p><span class="key-term">CIS Control 18</span> — <strong>Penetration Testing</strong> — is the final control in the framework, and it serves as the ultimate validation of all the previous controls. Penetration testing (pen testing) involves simulating real-world attacks against your organization to identify vulnerabilities, misconfigurations, and control gaps that automated scanning and assessments miss.</p>
+    <div class="highlight-box">Penetration testing answers the question that no other assessment can fully address: "If a skilled attacker tried to compromise our systems today, could they succeed — and how far could they get?" Vulnerability scanning finds known vulnerabilities. Penetration testing finds the creative, chained exploits that skilled attackers actually use — combining multiple weaknesses to achieve objectives that no single vulnerability would enable.</div>
+    <p>Key Safeguards in Control 18:</p>
+    <div class="ctrl-num"><b>18.1</b> — Establish and Maintain a Penetration Testing Program: Develop a repeatable penetration testing program with defined scope, objectives, methodology, and remediation processes. Ad hoc pen tests with no follow-through provide limited value. [IG2]</div>
+    <div class="ctrl-num"><b>18.2</b> — Perform Periodic External Penetration Tests: Conduct external penetration tests — attacking internet-facing systems from an outside perspective — at least annually. For IG3 organizations, more frequent testing is expected. [IG2]</div>
+    <div class="ctrl-num"><b>18.3</b> — Remediate Penetration Test Findings: Fix what pen testers find. Conducting a pen test and not remediating findings is arguably worse than not testing — you have documented proof of exploitable vulnerabilities. [IG2]</div>
+    <div class="ctrl-num"><b>18.4</b> — Validate Security Measures: Validate that security measures that are expected to stop certain attacks actually do stop them. Use pen testing to confirm that defenses work, not just that they're configured. [IG3]</div>
+    <div class="ctrl-num"><b>18.5</b> — Perform Periodic Internal Penetration Tests: Conduct internal penetration tests — simulating an attacker already inside the network (a compromised employee workstation or a breach of perimeter defenses). Internal tests reveal how far an attacker could pivot once they're inside. [IG3]</div>
+    <div class="analogy-box"><strong>Why pen testing is in IG2 (not IG3):</strong> Penetration testing might seem like a luxury for large organizations — but it's in IG2 because mid-size organizations with sensitive data absolutely need to know whether their controls actually work. A small healthcare organization that implements all the other CIS Controls but never tests them might discover significant gaps only when a real attacker exploits them. Annual external pen testing at IG2 is a practical, essential validation of the entire security program.</div>
+    <div class="warning-box"><strong>Red Team vs. Pen Test:</strong> A penetration test typically has a defined scope, timeline, and specific targets. A red team exercise is more open-ended — it simulates a sophisticated attacker operating covertly over an extended period, using any means necessary to achieve specific objectives (like exfiltrating data). Red team exercises reveal gaps in detection and response as well as prevention.</div>`,
+    quiz: { q: "Why is penetration testing considered the ultimate validation of all other CIS Controls?", opts: ["Because penetration testing is legally required for compliance", "Because pen testing actively attempts to exploit the same weaknesses real attackers would use — revealing whether the controls implemented through Controls 1–17 actually prevent sophisticated, chained attacks in practice", "Because penetration testing finds all vulnerabilities that scanners miss", "Because it's the most expensive control, making it the most reliable"], ans: 1, explain: "Penetration testing validates whether all the other controls actually work in practice — not just whether they're configured or documented. A pen test might reveal that while all 17 previous controls were implemented, a specific combination of weaknesses allows an attacker to compromise the environment anyway. It's the difference between having a lock and knowing whether that lock can be picked." }
+  },
+  {
+    title: "CIS Controls and NIST Cybersecurity Framework",
+    tagline: "How CIS Controls and NIST CSF work together",
+    body: `<p>The <span class="key-term">NIST Cybersecurity Framework (NIST CSF)</span> and the CIS Controls are the two most widely used cybersecurity frameworks in the United States. Understanding how they relate — and how to use both — is essential for any security professional.</p>
+    <div class="highlight-box"><strong>The key difference:</strong> NIST CSF is a high-level governance framework — it organizes security activities into five functions (Identify, Protect, Detect, Respond, Recover) and provides a way to communicate about cybersecurity risk at the executive and board level. CIS Controls are a prescriptive implementation guide — they tell you specifically what to do. NIST CSF answers "what domains of security do we need to address?" CIS Controls answer "specifically how do we address them?"</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>NIST CSF Functions</strong><span>Identify, Protect, Detect, Respond, Recover. Each function contains categories and subcategories. Excellent for governance conversations, maturity assessments, and program design. Less prescriptive about specific implementations.</span></div>
+      <div class="cheat-pill"><strong>CIS Controls</strong><span>18 specific controls with 153 specific safeguards. Each safeguard maps to a NIST CSF function. Prescriptive and implementable. Excellent for operational security teams that need to know specifically what to do.</span></div>
+    </div>
+    <div class="highlight-box"><strong>The official mapping:</strong> CIS publishes an official mapping document showing exactly how each CIS Safeguard maps to NIST CSF subcategories. This means organizations can use CIS Controls as their implementation guide and NIST CSF as their governance and communication framework simultaneously — the same activities satisfy both frameworks.</div>
+    <div class="analogy-box"><strong>Using both frameworks together:</strong> A CISO uses NIST CSF to present the security program to the board: "We've assessed our maturity across all five NIST functions and identified gaps in our Detect and Respond capabilities." The security team uses CIS Controls to know specifically what to implement: "To improve our Detect capabilities, we need to fully implement CIS Controls 8 (Audit Log Management) and 13 (Network Monitoring)." NIST CSF provides the strategic narrative; CIS Controls provide the tactical roadmap.</div>
+    <div class="badge-row">
+      <span class="badge badge-purple">CIS Control 1–2 → NIST Identify</span>
+      <span class="badge badge-purple">CIS Control 3–12 → NIST Protect</span>
+      <span class="badge badge-purple">CIS Control 8, 13 → NIST Detect</span>
+      <span class="badge badge-purple">CIS Control 17 → NIST Respond</span>
+      <span class="badge badge-purple">CIS Control 11 → NIST Recover</span>
+    </div>`,
+    quiz: { q: "An organization's board asks the CISO to present the cybersecurity program using NIST CSF. The security team implements the actual controls using CIS Controls v8. Why does this dual-framework approach make sense?", opts: ["Because NIST and CIS are the same framework", "Because NIST CSF provides the strategic governance language for board communication while CIS Controls provide the specific, implementable technical guidance — they are complementary, not competing", "Because regulatory requirements mandate both frameworks", "Because CIS Controls only apply to IG3 organizations"], ans: 1, explain: "NIST CSF and CIS Controls serve different audiences and purposes. NIST CSF's five functions and maturity model provide a governance language that boards and executives understand. CIS Controls tell security teams specifically what to implement. Using NIST CSF for governance and CIS Controls for implementation is a highly efficient approach because CIS maintains official mappings between the two frameworks." }
+  },
+  {
+    title: "CIS Controls and HIPAA, HITRUST, SOC 2",
+    tagline: "How CIS Controls connect to the frameworks we've already studied",
+    body: `<p>One of the most practical aspects of the CIS Controls is how they integrate with other frameworks you've studied in this series. Understanding these connections allows compliance professionals to build unified programs that satisfy multiple frameworks simultaneously.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>CIS Controls and HIPAA</strong><span>CIS Controls IG1 and IG2 address most HIPAA Security Rule requirements. The HIPAA Security Rule's administrative safeguards map to CIS Controls 3, 5, 14, 17. Physical safeguards map to Controls 3, 4. Technical safeguards map to Controls 1, 4, 5, 6, 8, 13. CIS publishes an official HIPAA mapping guide.</span></div>
+      <div class="cheat-pill"><strong>CIS Controls and HITRUST CSF</strong><span>HITRUST CSF maps to CIS Controls extensively. HITRUST's 19 control categories align with CIS Controls' 18 controls. Organizations implementing CIS Controls IG2-IG3 have a strong foundation for HITRUST r2 certification — the controls overlap significantly.</span></div>
+      <div class="cheat-pill"><strong>CIS Controls and SOC 2</strong><span>CIS publishes an official mapping of CIS Controls to SOC 2 Trust Services Criteria. The Common Criteria in SOC 2 (CC1–CC9) map heavily to CIS Controls 1–8 and 14–17. SOC 2 auditors increasingly accept CIS Controls implementation as evidence of Trust Services Criteria compliance.</span></div>
+      <div class="cheat-pill"><strong>CIS Controls and ISO 27001</strong><span>ISO 27001 Annex A controls map to CIS Controls throughout the framework. Organizations pursuing ISO 27001 certification find CIS Controls implementation provides much of the control evidence required. CIS publishes an ISO 27001 mapping guide.</span></div>
+    </div>
+    <div class="highlight-box"><strong>The "build once, satisfy many" principle:</strong> CIS Controls aren't just a standalone framework — they are a practical implementation path that simultaneously satisfies requirements from HIPAA, HITRUST, SOC 2, ISO 27001, and NIST CSF. Organizations that implement CIS Controls IG2-IG3 rigorously have the security program foundation to pursue any of these frameworks' certification or compliance requirements.</div>
+    <div class="analogy-box"><strong>CIS Controls as the implementation layer:</strong> In the framework ecosystem, CIS Controls occupy a unique position as the practical implementation guide that sits beneath higher-level frameworks. Where HIPAA says "implement appropriate safeguards for ePHI" and ISO 27001 says "implement access controls," CIS Controls say specifically "require MFA for external applications, disable dormant accounts within 45 days, use unique passwords, centralize account management." The CIS Controls answer the "how" that other frameworks leave open.</div>`,
+    quiz: { q: "A healthcare organization wants to implement a security program that simultaneously satisfies HIPAA Security Rule requirements and positions them for HITRUST r2 certification. Why are CIS Controls an efficient starting point?", opts: ["Because CIS Controls are legally required for HIPAA compliance", "Because CIS Controls implementations map to both HIPAA Security Rule requirements and HITRUST CSF controls — building toward both simultaneously rather than maintaining separate programs", "Because CIS replaces the need for HIPAA compliance", "Because HITRUST requires CIS Controls certification first"], ans: 1, explain: "CIS Controls map to HIPAA Security Rule requirements AND HITRUST CSF controls simultaneously. A healthcare organization that implements CIS Controls IG1-IG2 has addressed most HIPAA Security Rule safeguards AND built the foundation of the HITRUST control categories — using one set of security activities to progress toward both compliance frameworks rather than building separate programs for each." }
+  },
+  {
+    title: "CIS Benchmarks — The Configuration Companion",
+    tagline: "The detailed technical specifications that make Control 4 real",
+    body: `<p>The CIS Controls answer <em>what</em> to secure. The <span class="key-term">CIS Benchmarks</span> answer <em>exactly how</em> to configure specific systems securely. While the CIS Controls are the strategic framework, Benchmarks are the detailed technical playbooks — and they're arguably as important as the Controls themselves for practical security implementation.</p>
+    <div class="highlight-box">CIS publishes over 100 freely available Benchmark documents covering: operating systems (Windows, Linux, macOS), cloud platforms (AWS, Azure, Google Cloud), applications (browsers, office suites, databases, web servers), network devices (Cisco, Juniper, Palo Alto), mobile devices, and more. Each Benchmark contains hundreds of specific configuration recommendations with rationale, audit steps, and remediation guidance.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Two Profile Levels</strong><span>Level 1: Essential security settings that are broadly applicable and relatively easy to implement without significant operational impact. Level 2: More restrictive settings that provide additional security but may impact functionality — appropriate for high-security environments.</span></div>
+      <div class="cheat-pill"><strong>Benchmark Structure</strong><span>Each recommendation in a Benchmark includes: the setting name, a description of the risk it addresses, how to audit whether the setting is currently correct, how to remediate if it's not, and what NIST/CIS Controls it maps to.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Benchmarks as the recipe book:</strong> If the CIS Controls are the nutrition guidelines ("eat more vegetables, less sugar, exercise regularly"), CIS Benchmarks are the specific recipes ("slice 200g of broccoli, steam for 7 minutes at 212°F, add 5ml of olive oil"). Controls give the objective; Benchmarks give the step-by-step instructions for achieving it in a specific environment.</div>
+    <p>Common Benchmarks used in enterprise environments:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">CIS Microsoft Windows Server 2022 Benchmark</span>
+      <span class="badge badge-purple">CIS Red Hat Enterprise Linux 9 Benchmark</span>
+      <span class="badge badge-purple">CIS Amazon Web Services Foundations Benchmark</span>
+      <span class="badge badge-purple">CIS Microsoft Azure Foundations Benchmark</span>
+      <span class="badge badge-purple">CIS Kubernetes Benchmark</span>
+      <span class="badge badge-purple">CIS Google Chrome Browser Benchmark</span>
+      <span class="badge badge-purple">CIS Microsoft 365 Foundations Benchmark</span>
+    </div>
+    <div class="info-box"><strong>CIS-CAT Pro:</strong> CIS also offers CIS-CAT Pro — an automated assessment tool that scans systems and generates reports showing which Benchmark recommendations are and aren't implemented. Rather than manually checking hundreds of configuration settings, CIS-CAT Pro automates the audit process and produces actionable remediation reports. This is the practical tool that makes Benchmark compliance achievable at scale.</div>`,
+    quiz: { q: "What is the relationship between CIS Controls and CIS Benchmarks?", opts: ["They are the same thing with different names", "CIS Controls define what security activities to perform (the 'what'); CIS Benchmarks provide specific technical configuration guidance for particular systems (the 'how'). Together they provide a complete implementation path.", "CIS Benchmarks are for large organizations; CIS Controls are for small ones", "CIS Benchmarks replace CIS Controls for organizations using cloud computing"], ans: 1, explain: "CIS Controls and CIS Benchmarks are complementary. CIS Control 4 requires 'Secure Configuration of Enterprise Assets' — the Benchmark for Windows Server 2022 tells you specifically which hundreds of settings to configure, what values to use, and how to verify compliance. Controls provide the framework; Benchmarks provide the technical specifications." }
+  },
+  {
+    title: "Building a CIS Controls-Based Security Program",
+    tagline: "How to actually implement CIS Controls from the ground up",
+    body: `<p>Understanding the CIS Controls conceptually is important. Knowing how to actually implement them in a real organization is what separates GRC professionals who create value from those who just know the frameworks. Here's what a CIS Controls implementation program actually looks like.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Step 1: Determine Your Implementation Group</strong><span>Honestly assess which IG fits your organization: size, IT resources, data sensitivity, and regulatory requirements. This determines your initial scope — don't overreach to IG3 if you're not there, but don't undersell IG2 requirements if you handle sensitive data.</span></div>
+      <div class="cheat-pill"><strong>Step 2: Perform a Gap Assessment</strong><span>For each Safeguard in your target IG, assess current implementation status: Not Implemented, Partially Implemented, or Fully Implemented. This creates your prioritized work list and establishes a baseline to measure progress against.</span></div>
+      <div class="cheat-pill"><strong>Step 3: Prioritize Remediation</strong><span>Not all gaps are equal. Prioritize by: risk impact (what damage could exploitation cause?), ease of implementation (quick wins first build momentum), and interdependencies (Controls 1 and 2 enable many others). IG1 gaps always precede IG2 gaps in priority.</span></div>
+      <div class="cheat-pill"><strong>Step 4: Build a Roadmap</strong><span>Create a 12–24 month implementation roadmap with specific milestones, owners, and resource requirements. Security programs without plans don't get funded; plans without milestones don't get completed. The roadmap is your management communication tool.</span></div>
+      <div class="cheat-pill"><strong>Step 5: Implement by Priority</strong><span>Execute the roadmap. Assign control ownership to specific individuals. Use CIS Benchmarks for detailed technical implementation. Document everything — policies, procedures, configurations, and evidence of implementation.</span></div>
+      <div class="cheat-pill"><strong>Step 6: Measure and Report</strong><span>Establish metrics for each control area. How many assets are in inventory? What percentage of systems have MFA? What's the average patch time? Report metrics to leadership regularly — security programs with visible metrics get continued investment.</span></div>
+      <div class="cheat-pill"><strong>Step 7: Validate Through Testing</strong><span>Conduct vulnerability scanning (Control 7) and penetration testing (Control 18) to validate that implemented controls actually work. Adjust the program based on test results. Testing reveals gaps that documentation reviews miss.</span></div>
+      <div class="cheat-pill"><strong>Step 8: Continuously Improve</strong><span>Security is not a destination — it's a continuous journey. Review the program annually, reassess against updated CIS Controls versions, incorporate lessons from incidents, and mature toward the next IG level as resources and capabilities grow.</span></div>
+    </div>
+    <div class="highlight-box"><strong>IG1 first, always:</strong> The most common mistake in CIS Controls implementation is attempting to skip IG1 to directly implement more sophisticated controls. IG1 represents the essential foundation — without knowing what assets you have (Control 1), you can't meaningfully implement any other control. Start with IG1, complete it, then expand to IG2.</div>`,
+    quiz: { q: "An organization starts implementing CIS Controls but skips Controls 1 and 2 (Asset and Software Inventory) because they seem basic, focusing instead on more advanced controls. What fundamental problem does this create?", opts: ["No problem — the order of implementation doesn't matter", "Every other control depends on knowing what assets and software exist. Without inventory (Controls 1 and 2), you can't patch what you don't know you have, monitor systems you haven't found, or revoke access to untracked accounts", "It violates CIS licensing requirements", "It makes the assessment more expensive"], ans: 1, explain: "Controls 1 and 2 are foundational precisely because they enable everything else. Without an asset inventory, you don't know which systems need patches (Control 7), which systems to log (Control 8), which systems to monitor (Control 13), or which services to account for (Control 15). Skipping the foundation and building on air is a recipe for security program failure." }
+  },
+  {
+    title: "Measuring CIS Controls Maturity",
+    tagline: "How to know if your security program is actually getting better",
+    body: `<p>Implementing the CIS Controls is valuable. Measuring whether implementation is actually working — and demonstrating progress to leadership — is what transforms a security activity into a security program. <span class="key-term">Measuring maturity</span> requires both quantitative metrics and qualitative assessments.</p>
+    <div class="highlight-box">CIS provides official guidance on measuring CIS Controls implementation through its <strong>CIS Controls Implementation Guide</strong> and the <strong>CIS Risk Assessment Method (CRAM)</strong>. Organizations can also use the CMMI maturity model levels (1–5) adapted to CIS Controls contexts, or commercial tools that automate CIS Controls measurement.</div>
+    <p>Key metrics for each control area:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Control 1 — Asset Inventory</strong><span>% of known assets in inventory. # of unauthorized devices discovered monthly. Age of most recent inventory update.</span></div>
+      <div class="cheat-pill"><strong>Control 5 — Account Management</strong><span>% of accounts with MFA enabled. # of dormant accounts discovered. Time to disable terminated employee accounts.</span></div>
+      <div class="cheat-pill"><strong>Control 7 — Vulnerability Management</strong><span>Mean time to remediate critical vulnerabilities. % of systems scanned monthly. # of open critical vulnerabilities by age.</span></div>
+      <div class="cheat-pill"><strong>Control 14 — Security Training</strong><span>% of employees completing annual training. Phishing simulation click rates over time. # of security incidents attributed to user error.</span></div>
+      <div class="cheat-pill"><strong>Control 17 — Incident Response</strong><span>Mean time to detect security incidents. Mean time to contain incidents. # of IR exercises conducted per year.</span></div>
+      <div class="cheat-pill"><strong>Control 18 — Penetration Testing</strong><span>Date of last pen test. # of critical findings from most recent test. % of prior pen test findings remediated.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Metrics drive behavior:</strong> What gets measured gets managed. Organizations that only measure "did we complete the training?" find that employees rush through training without retaining anything. Organizations that measure phishing simulation click rates over time see genuine behavior change because employees know they're being tested — and improvement is visible and celebrated. The right metrics drive the right behaviors.</div>
+    <div class="info-box"><strong>The CIS Controls Assessment Tool:</strong> CIS offers a free self-assessment tool that allows organizations to rate their implementation of each Safeguard, calculates an overall implementation score, identifies priority gaps, and generates reports suitable for leadership and board presentations. This structured approach makes the gap assessment phase of implementation dramatically more efficient.</div>`,
+    quiz: { q: "An organization's phishing simulation click rate drops from 32% to 8% over 18 months of the security awareness program. What does this metric demonstrate?", opts: ["Nothing — simulation results don't reflect real-world behavior", "Measurable improvement in employee security behavior — the security awareness program (Control 14) is producing genuine behavior change that reduces one of the most significant attack vectors", "That employees are cheating on the simulations", "That the organization needs less security training now"], ans: 1, explain: "A phishing simulation click rate reduction from 32% to 8% demonstrates genuine behavior change — employees are recognizing and avoiding simulated phishing attacks at a dramatically higher rate. This is exactly the measurable outcome that CIS Control 14's training program is designed to produce. It also quantifies the reduced risk exposure: instead of 1 in 3 employees clicking malicious links, now fewer than 1 in 12 do." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've completed all 30 days of CIS Controls v8! Let's take a final inventory of everything you now know about the world's most widely adopted cybersecurity best practice framework.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>CIS Controls v8 (released May 2021) is a prioritized set of 18 Controls and 153 Safeguards published free by the Center for Internet Security (CIS). Originally developed from real attack data by US government security agencies starting in 2008. Evidence-based, prescriptive, and scalable through three Implementation Groups. Maps to NIST CSF, HIPAA, HITRUST, SOC 2, ISO 27001, and other major frameworks simultaneously.</p>
+    <div class="tag-header">3 Implementation Groups</div>
+    <div class="ig-grid">
+      <div class="ig1"><strong style="color:#27500A">IG1 — Essential</strong><br><span style="font-size:11px">56 Safeguards. Small orgs. Basic cyber hygiene. Mandatory baseline for ALL organizations.</span></div>
+      <div class="ig2"><strong style="color:#633806">IG2 — Foundational</strong><br><span style="font-size:11px">74 additional Safeguards. Mid-size orgs. Sensitive data. Dedicated IT staff.</span></div>
+      <div class="ig3"><strong style="color:#4A1B0C">IG3 — Organizational</strong><br><span style="font-size:11px">All 153 Safeguards. Large orgs. Regulated industries. Dedicated security teams.</span></div>
+    </div>
+    <div class="tag-header">The 18 Controls</div>
+    <div class="badge-row">
+      <span class="badge badge-purple">1 — Enterprise Asset Inventory</span>
+      <span class="badge badge-purple">2 — Software Asset Inventory</span>
+      <span class="badge badge-purple">3 — Data Protection</span>
+      <span class="badge badge-purple">4 — Secure Configuration</span>
+      <span class="badge badge-purple">5 — Account Management</span>
+      <span class="badge badge-purple">6 — Access Control Management</span>
+      <span class="badge badge-purple">7 — Continuous Vulnerability Management</span>
+      <span class="badge badge-purple">8 — Audit Log Management</span>
+      <span class="badge badge-purple">9 — Email and Web Browser Protections</span>
+      <span class="badge badge-purple">10 — Malware Defenses</span>
+      <span class="badge badge-purple">11 — Data Recovery</span>
+      <span class="badge badge-purple">12 — Network Infrastructure Management</span>
+      <span class="badge badge-purple">13 — Network Monitoring and Defense</span>
+      <span class="badge badge-purple">14 — Security Awareness and Skills Training</span>
+      <span class="badge badge-purple">15 — Service Provider Management</span>
+      <span class="badge badge-purple">16 — Application Software Security</span>
+      <span class="badge badge-purple">17 — Incident Response Management</span>
+      <span class="badge badge-purple">18 — Penetration Testing</span>
+    </div>
+    <div class="tag-header">Key Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">153 Safeguards (specific actions)</span>
+      <span class="badge badge-teal">5 Security Functions: Identify, Protect, Detect, Respond, Recover</span>
+      <span class="badge badge-teal">6 Asset Types: Devices, Software, Data, Users, Network, Services</span>
+      <span class="badge badge-teal">CIS Benchmarks = detailed config guides</span>
+      <span class="badge badge-teal">CIS-CAT Pro = automated compliance tool</span>
+      <span class="badge badge-teal">NIST CSF maps fully to CIS Controls</span>
+      <span class="badge badge-teal">Free — publicly available from CIS</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete CIS Controls cheat sheet with all 18 controls, the 3 Implementation Groups, key safeguards, and framework mappings summarized in one place.</div>`,
+    quiz: { q: "Which organization publishes the CIS Controls, and in what year was version 8 (the current version) released?", opts: ["NIST — released in 2018", "The Center for Internet Security (CIS) — released May 2021", "ISACA — released in 2020", "The US Department of Defense — released in 2022"], ans: 1, explain: "CIS Controls v8 was published by the Center for Internet Security (CIS) in May 2021. CIS is a nonprofit organization headquartered in East Greenbush, New York, founded in 2000. The framework is publicly available for free, which has contributed significantly to its widespread global adoption." }
+  },
+  {
+    title: "CIS Controls v8 Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Are CIS Controls v8?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">CIS Critical Security Controls v8. Published by the Center for Internet Security (CIS) — a nonprofit organization. Released May 2021. 18 Controls and 153 Safeguards. Free and publicly available. Evidence-based: originally developed from real attack data analyzed by US government security agencies. Prioritized: ordered by security impact. Scalable: three Implementation Groups for organizations of all sizes. Maps to: NIST CSF, HIPAA, HITRUST, SOC 2, ISO 27001, PCI-DSS, and more.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>3 Implementation Groups</h3>
+      <div class="ig-grid">
+        <div class="ig1"><strong style="color:#27500A">IG1 — Essential</strong><br><span style="font-size:12px;color:#1a1a18">56 Safeguards. Small organizations with limited IT resources and lower data sensitivity. Basic cyber hygiene. MANDATORY BASELINE for every organization regardless of size. If nothing else, implement IG1.</span></div>
+        <div class="ig2"><strong style="color:#633806">IG2 — Foundational</strong><br><span style="font-size:12px;color:#1a1a18">74 additional Safeguards (130 total including IG1). Mid-size organizations. Handle sensitive data. Have dedicated IT staff. Multiple departments. Includes IG1 + foundational security practices.</span></div>
+        <div class="ig3"><strong style="color:#4A1B0C">IG3 — Organizational</strong><br><span style="font-size:12px;color:#1a1a18">23 additional Safeguards (all 153). Large organizations. Regulated industries. Sensitive/critical data. Dedicated security teams. Full control implementation required. Includes all IG1 + IG2 Safeguards.</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The 18 Controls — Quick Reference</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>01 — Enterprise Asset Inventory</b> — Know every device. Unauthorized devices = unmanaged risk. Active and passive discovery. Monthly updates. IG1 start.</div>
+        <div class="ctrl-card"><b>02 — Software Asset Inventory</b> — Know every application. Only supported, authorized software. Allowlisting for IG3. Monthly updates.</div>
+        <div class="ctrl-card"><b>03 — Data Protection</b> — Classify, restrict, encrypt, and delete data. Encrypt at rest (IG1) and in transit (IG2). Secure disposal. Data retention schedules.</div>
+        <div class="ctrl-card"><b>04 — Secure Configuration</b> — Harden everything. Change defaults. Use CIS Benchmarks. Automate config monitoring. Disable unused services and ports.</div>
+        <div class="ctrl-card"><b>05 — Account Management</b> — Inventory all accounts. Unique passwords. Disable dormant accounts (45 days). Separate admin accounts. Service account inventory.</div>
+        <div class="ctrl-card"><b>06 — Access Control Management</b> — Least privilege. Formal grant/revoke processes. MFA for external apps (IG1). MFA for remote access (IG1). MFA for admin (IG2). Centralize IAM.</div>
+        <div class="ctrl-card"><b>07 — Continuous Vulnerability Management</b> — Automated patching (OS and apps). Quarterly internal scans (IG2). Monthly external scans (IG2). Remediate findings. Risk-based prioritization.</div>
+        <div class="ctrl-card"><b>08 — Audit Log Management</b> — Collect logs everywhere. Adequate storage. Time synchronization (NTP). Centralize in SIEM (IG2). Review and alert. Protect log integrity.</div>
+        <div class="ctrl-card"><b>09 — Email and Web Browser Protections</b> — Supported browsers only. DNS filtering (IG1). URL filtering (IG2). Block dangerous file types. Restrict browser extensions. Anti-phishing controls.</div>
+        <div class="ctrl-card"><b>10 — Malware Defenses</b> — Deploy anti-malware everywhere. Auto-update signatures. Behavior-based detection (IG2). Scan removable media. Disable autorun.</div>
+        <div class="ctrl-card"><b>11 — Data Recovery</b> — Automate backups. Protect backup data. Isolated/offline backup (IG1). Test recovery quarterly (IG2). Follow 3-2-1 rule. Ransomware resilience.</div>
+        <div class="ctrl-card"><b>12 — Network Infrastructure Management</b> — Keep network devices patched. Secure network architecture. Segment networks (IG2). Encrypted management protocols. Document network topology.</div>
+        <div class="ctrl-card"><b>13 — Network Monitoring and Defense</b> — Centralize security event alerting. HIDS (IG2). NIDS (IG2). Traffic filtering between segments. NetFlow logs (IG2). HIPS/NIPS (IG3). Reduce dwell time.</div>
+        <div class="ctrl-card"><b>14 — Security Awareness Training</b> — Ongoing program, not just annual. Train on: social engineering, authentication, data handling, accidental exposure. Role-specific training (IG2). Phishing simulations (IG2). Measure effectiveness.</div>
+        <div class="ctrl-card"><b>15 — Service Provider Management</b> — Inventory all providers. Classify by risk. Security requirements in contracts (IG2). Assess before engaging (IG2). Monitor ongoing. Supply chain security.</div>
+        <div class="ctrl-card"><b>16 — Application Software Security</b> — Secure SDLC (IG2). Root cause analysis of vulns. Current third-party components. Separate prod/dev. SAST/DAST/SCA (IG3). Software inventory.</div>
+        <div class="ctrl-card"><b>17 — Incident Response Management</b> — Designate IR team. Document IR plan. Severity schema. Assign roles. Out-of-band comms. Annual tabletop exercises (IG2). Post-incident review.</div>
+        <div class="ctrl-card"><b>18 — Penetration Testing</b> — Annual external pen test (IG2). Remediate findings. Internal pen test (IG3). Validate security controls work. Red team exercises for mature orgs. Test the whole stack.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>5 Security Functions (NIST CSF Mapping)</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>IDENTIFY</b> — Know your assets, risks, and responsibilities. CIS Controls 1 (Assets), 2 (Software), 3 (Data), 7 (Vulnerabilities), 15 (Vendors), 17 (IR Planning).</div>
+        <div class="ctrl-card"><b>PROTECT</b> — Implement safeguards to limit impact. CIS Controls 3 (Data), 4 (Config), 5 (Accounts), 6 (Access), 9 (Email/Web), 10 (Malware), 11 (Recovery), 12 (Network), 14 (Training), 16 (AppSec).</div>
+        <div class="ctrl-card"><b>DETECT</b> — Identify cybersecurity events. CIS Controls 7 (Vuln Scanning), 8 (Audit Logs), 13 (Network Monitoring), 18 (Pen Testing reveals gaps).</div>
+        <div class="ctrl-card"><b>RESPOND</b> — Take action when incidents occur. CIS Control 17 (Incident Response Management).</div>
+        <div class="ctrl-card"><b>RECOVER</b> — Restore capabilities after incidents. CIS Control 11 (Data Recovery), Control 12 (Network continuity), Control 17 (post-incident lessons).</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Framework Relationships</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>NIST CSF</b> — CIS publishes official mapping. CIS Controls = prescriptive implementation layer; NIST CSF = governance/communication layer. Use together: NIST for boards, CIS for teams.</div>
+        <div class="ctrl-card"><b>HIPAA</b> — IG1+IG2 addresses most HIPAA Security Rule requirements. Official CIS-HIPAA mapping available. Controls 3, 4, 5, 6, 8, 13 most directly relevant.</div>
+        <div class="ctrl-card"><b>HITRUST CSF</b> — Significant overlap between HITRUST 19 categories and CIS 18 controls. IG2-IG3 implementation supports HITRUST r2 certification preparation.</div>
+        <div class="ctrl-card"><b>SOC 2</b> — Official CIS-SOC 2 mapping available. CC1–CC9 align with CIS Controls 1–8 and 14–17. SOC 2 auditors accept CIS Controls implementation as evidence.</div>
+        <div class="ctrl-card"><b>ISO 27001</b> — Official mapping available. ISO 27001 Annex A controls map throughout CIS Controls. CIS Controls IG2-IG3 builds ISO 27001 certification foundation.</div>
+        <div class="ctrl-card"><b>CIS Benchmarks</b> — 100+ detailed technical configuration guides for specific systems. The "how" to CIS Controls' "what." Level 1 (broad applicability) and Level 2 (high-security). Free from CIS. CIS-CAT Pro automates compliance checking.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts</h3>
+      <div class="badge-row">
+        <span class="badge badge-purple">Published by: CIS (Center for Internet Security) — nonprofit</span>
+        <span class="badge badge-purple">Current version: v8, released May 2021</span>
+        <span class="badge badge-purple">18 Controls</span>
+        <span class="badge badge-purple">153 total Safeguards</span>
+        <span class="badge badge-purple">IG1: 56 Safeguards (essential baseline)</span>
+        <span class="badge badge-purple">IG2: 74 additional Safeguards (130 total)</span>
+        <span class="badge badge-purple">IG3: 23 additional Safeguards (all 153)</span>
+        <span class="badge badge-purple">FREE — publicly available at cisecurity.org</span>
+        <span class="badge badge-purple">Originally developed from real US government attack data (2008)</span>
+        <span class="badge badge-purple">Formerly "SANS Top 20" — CIS took stewardship in 2015</span>
+        <span class="badge badge-purple">6 Asset Types: Devices, Software, Data, Users, Network, Services</span>
+        <span class="badge badge-purple">5 Security Functions: Identify, Protect, Detect, Respond, Recover</span>
+        <span class="badge badge-purple">MFA for external apps: IG1 (Safeguard 6.3)</span>
+        <span class="badge badge-purple">Disable dormant accounts: 45 days (Safeguard 5.3)</span>
+        <span class="badge badge-purple">External pen test: annually, IG2 (Safeguard 18.2)</span>
+        <span class="badge badge-purple">100+ CIS Benchmarks available free</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

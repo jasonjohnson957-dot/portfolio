@@ -1,0 +1,22 @@
+Additional GRC publications to read:
+
+NIST SP 800-221 		Governing and Managing ICT Risk Programs Within an Enterprise Risk Portfolio
+NIST IR 8286 			Integrating Cybersecurity and Enterprise Risk Management (ERM)
+NIST IR 8286A 			Identifying and Estimating Cybersecurity Risk for Enterprise Risk Management
+NIST IR 8286B 			Prioritizing Cybersecurity Risk for Enterprise Risk Management
+NIST IR 8286C-upd1 		Staging Cybersecurity Risks for Enterprise Risk Management and Governance Oversight
+NIST IR 8286D 			Using Business Impact Analysis to Inform Risk Prioritization and Response
+NIST SP 800-39 			Managing Information Security Risk Organization, Mission, and Information System View
+NIST SP 800-12 			An Introduction to Information Security
+NIST SP 800-160, Volume 1: 	Engineering Trustworthy Secure Systems
+NIST SP 800-160, Volume 2:	Developing Cyber-Resilient Systems: A Systems Security Engineering Approach
+NIST SP 800-161r1-upd1 		Cybersecurity Supply Chain Risk Management Practices for Systems and Organizations
+NIST SP 800-50r1 		Building a Cybersecurity and Privacy Learning Program
+NIST SP 800-55v1 		Measurement Guide for Information Security Volume 1 — Identifying and Selecting Measures
+NIST SP 800-55v2 		Measurement Guide for Information Security Volume 2 — Developing an Information Security Measurement Program
+NIST SP 800-61r3 		Incident Response Recommendations and Considerations for Cybersecurity Risk Management
+NIST SP 800-100 r1 		Information Security Handbook: A Guide for Managers
+NIST SP 800-88 r2 		Guidelines for Media Sanitization
+NIST SP 800-50 r1 		Building a Cybersecurity and Privacy Learning Program
+NIST SP 800-207 		Zero Trust Architecture
+NIST SP 800-181 r1 		Workforce Framework for Cybersecurity (NICE Framework)

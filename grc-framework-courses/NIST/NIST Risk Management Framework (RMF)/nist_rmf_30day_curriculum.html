@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIST RMF — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #2D5A27; color: #E8F4E6; border-color: #2D5A27; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #E8F4E6; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #1A3618; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #2D5A27; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #2D5A27; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #E8F4E6; color: #1A3618; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #E6F1FB; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #2D5A27; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-forest { background: #E8F4E6; color: #1A3618; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-gray   { background: #F1EFE8; color: #444441; }
+  .badge-pink   { background: #FBEAF0; color: #4B1528; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .step-card { background: #E8F4E6; border: 0.5px solid #8FBE8A; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .step-card b { font-size: 13px; font-weight: 500; color: #1A3618; }
+  .impact-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .impact-low  { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .impact-mod  { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .impact-high { background: #FAECE7; border: 0.5px solid #F0997B; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  @media (max-width: 560px) { .cheat-grid, .control-row, .impact-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day NIST RMF curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>NIST RMF — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+<script>
+const days = [
+  {
+    title: "What Is the NIST Risk Management Framework?",
+    tagline: "The federal government's structured process for authorizing and securing information systems",
+    body: `<p>Imagine the US Department of Veterans Affairs is deploying a new electronic health records system that will store medical histories for 20 million veterans. Before that system can go live, somebody in the federal government has to officially answer: "Is this system secure enough to operate — given what it stores and the risks it faces?" That official answer, and the rigorous process required to reach it, is exactly what the <span class="key-term">NIST Risk Management Framework</span> provides.</p>
+    <p>The NIST RMF is a structured, seven-step process published by the National Institute of Standards and Technology that federal agencies and their contractors use to manage security and privacy risk for information systems. Formally documented in <strong>NIST Special Publication 800-37 Revision 2</strong> (published December 2018), the RMF provides a disciplined, structured, and flexible process for integrating security and privacy into the system development lifecycle and into organizational risk management processes.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of the NIST RMF like the FAA certification process for a new aircraft. Before any commercial aircraft can carry passengers, it must go through a rigorous certification process — designers document what the aircraft does, engineers assess safety risks, inspectors verify that safety controls work, and an FAA official formally authorizes it for flight based on the evidence. NIST RMF does the same for federal information systems: document the system, assess risks, implement controls, verify they work, and get an official authorization to operate. No shortcuts, no assumptions — documented evidence at every step.</div>
+    <div class="highlight-box">Key facts about NIST RMF: Documented in NIST SP 800-37 Rev 2 (2018). Mandatory for federal agencies under FISMA (Federal Information Security Modernization Act). 7 steps: Prepare, Categorize, Select, Implement, Assess, Authorize, Monitor. Produces an Authorization to Operate (ATO) — the official government approval for a system to handle federal data. Widely adopted beyond federal government by contractors, healthcare organizations, and regulated industries. Free to use — publicly available from NIST.</div>
+    <p>While NIST CSF (which we studied previously) is the <em>strategic governance</em> framework — the "what to achieve" — NIST RMF is the <em>operational process</em> framework — the "how to do it" for specific systems. CSF is enterprise-wide; RMF is system-by-system. Both are essential for a complete federal cybersecurity program, and they work together in ways we'll explore throughout this course.</p>`,
+    quiz: { q: "What does the NIST Risk Management Framework primarily produce as its key output for each information system?", opts: ["A security score from 1 to 100", "An Authorization to Operate (ATO) — the official government approval for a system to process federal information, based on documented evidence of adequate security controls", "A FISMA compliance certificate", "A cybersecurity maturity rating"], ans: 1, explain: "The NIST RMF's primary output for each system is an Authorization to Operate (ATO) — the formal decision by an Authorizing Official that a system's security risks are acceptable given its security controls and the data it handles. The ATO is the culmination of the RMF process: documented evidence reviewed and a risk acceptance decision made by an accountable official." }
+  },
+  {
+    title: "Why Was the NIST RMF Created?",
+    tagline: "The federal security crisis that demanded a disciplined, documented approach",
+    body: `<p>The NIST RMF didn't emerge from abstract policy discussions. It was built in response to a fundamental and growing problem: the federal government was operating increasingly sophisticated, interconnected information systems — holding sensitive data on hundreds of millions of Americans — with no consistent, disciplined process for determining whether those systems were actually secure enough to trust.</p>
+    <div class="highlight-box"><strong>The FISMA mandate (2002 and 2014):</strong> The Federal Information Security Management Act of 2002 — updated as the Federal Information Security Modernization Act in 2014 — established that each federal agency head is responsible for information security within their agency. FISMA required agencies to develop security programs, conduct risk assessments, implement controls, and report annually to OMB. The NIST RMF became the primary process through which agencies demonstrate FISMA compliance for individual systems.</div>
+    <p>Several converging problems drove the need for a structured risk management process:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Inconsistent Security Practices</strong><span>Before RMF, different agencies and systems used wildly different approaches to security assessment. There was no common methodology for determining what "secure enough" meant or how to prove it — making government-wide security reporting meaningless.</span></div>
+      <div class="cheat-pill"><strong>Checklist-Only Compliance</strong><span>Early federal security requirements devolved into checkbox exercises with no meaningful risk evaluation. Systems received security approvals based on documentation reviews rather than evidence that controls actually worked. "Paper compliance" was the norm.</span></div>
+      <div class="cheat-pill"><strong>Disconnected Security and Mission</strong><span>Security was treated as a separate technical activity with no connection to mission impact. Agencies didn't systematically evaluate how security failures would affect their ability to deliver services — making risk prioritization impossible.</span></div>
+      <div class="cheat-pill"><strong>No Lifecycle Integration</strong><span>Security was an afterthought added to systems after development — expensive, ineffective, and disruptive. There was no consistent way to integrate security requirements into system design from the beginning.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The pre-RMF era in practice:</strong> Before a consistent RMF approach, a federal agency might approve a sensitive system for operations based on: "The IT manager reviewed the security policy and signed off." No documented risk assessment, no control testing, no formal accountability, no evidence of what risks were accepted or why. The OPM data breach (2015), which exposed 21.5 million federal employee background investigation records, was partly attributed to inadequate security management of exactly this kind — systems operating without rigorous, evidenced security review processes.</span></div>
+    <p>The NIST RMF emerged from collaboration between NIST, the National Security Agency (NSA), the Office of the Director of National Intelligence (ODNI), and the Department of Defense — bringing together expertise from both civilian and national security contexts to create a unified federal security standard.</p>`,
+    quiz: { q: "The NIST RMF was designed to solve 'paper compliance' in federal cybersecurity. What does that term mean?", opts: ["Using paper documents instead of digital records", "Security approvals granted based on documentation reviews rather than evidence that controls actually work — systems receiving authorizations without genuine risk assessment or tested controls", "Compliance with printing and paper management requirements", "Using paper-based policy documents instead of automated compliance tools"], ans: 1, explain: "Paper compliance means security approvals based purely on the existence of documents rather than evidence of genuine security. A system could pass a security review by having the right policies written down — regardless of whether those policies were followed or the controls actually worked. NIST RMF replaced this with an evidence-based process requiring documented testing of implemented controls, formal risk assessment, and accountable authorization decisions." }
+  },
+  {
+    title: "FISMA — The Law Behind the Framework",
+    tagline: "Understanding the legislation that makes RMF mandatory for federal agencies",
+    body: `<p>To fully understand the NIST RMF, you must understand <span class="key-term">FISMA</span> — the Federal Information Security Modernization Act. FISMA is the legislation that makes the RMF not just recommended guidance but a legal obligation for federal agencies. Without FISMA, RMF would be just another voluntary framework. With FISMA, it's the law.</p>
+    <div class="highlight-box">FISMA (2014 update to the 2002 original) establishes: each agency head is responsible for information security; agencies must develop and maintain security programs covering all operations and assets; NIST develops standards and guidelines for federal information security (the technical implementation); the Office of Management and Budget (OMB) oversees agency-wide implementation; agencies report annually to OMB and Congress on their information security posture. The RMF is the NIST-developed process through which agencies fulfill their FISMA obligations system by system.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>FISMA Scope</strong><span>Applies to all federal agencies and their contractors that operate or use federal information systems. "Federal information system" means any system used by a federal agency — whether built by the government or procured from contractors. This brings hundreds of thousands of systems under FISMA/RMF scope.</span></div>
+      <div class="cheat-pill"><strong>Annual Reporting</strong><span>Agencies must report annually to OMB on their FISMA compliance — system inventories, authorization statuses, security assessment results, and continuous monitoring program effectiveness. Congress and OMB use these reports to track government-wide cybersecurity posture.</span></div>
+      <div class="cheat-pill"><strong>Agency Accountability</strong><span>FISMA creates clear accountability: agency heads are personally responsible for information security. This makes the RMF's authorization step — where an Authorizing Official personally accepts residual risk — a direct implementation of FISMA's accountability requirement.</span></div>
+      <div class="cheat-pill"><strong>Inspector General Oversight</strong><span>Each agency's Inspector General (IG) conducts independent annual evaluations of FISMA compliance — reviewing whether security programs are adequate, whether systems have current ATOs, and whether continuous monitoring programs are effective. IG findings have real consequences for agency leadership.</span></div>
+    </div>
+    <div class="info-box"><strong>The FISMA-RMF-SP 800-53 stack:</strong> FISMA is the law that mandates federal information security. NIST RMF (SP 800-37) is the process for implementing FISMA for each system. NIST SP 800-53 is the control catalog that provides the specific security controls implemented during RMF. These three documents work together as a stack: FISMA says "secure your systems," RMF says "here's how to document and authorize security," and SP 800-53 says "here are the specific controls to implement." Understanding this stack is essential for anyone working in federal IT security.</div>
+    <div class="analogy-box"><strong>FISMA at the VA:</strong> The Department of Veterans Affairs operates hundreds of information systems — electronic health records, benefits processing, claims management, financial systems. Every one of those systems must have a current Authorization to Operate issued through the RMF process, be included in the VA's FISMA system inventory, have implemented NIST SP 800-53 controls appropriate for its impact level, and be part of the VA's continuous monitoring program. The VA's CISO reports annually to OMB on the status of all these systems. This is FISMA in action across one of the federal government's largest, most complex IT environments.</div>`,
+    quiz: { q: "Which organization is ultimately responsible for FISMA compliance at a federal agency?", opts: ["The agency's Chief Information Security Officer (CISO)", "The NIST team that published the RMF", "The agency head (Secretary, Administrator, or equivalent) — who bears personal accountability for the agency's information security program", "The Office of Management and Budget (OMB)"], ans: 2, explain: "FISMA places ultimate responsibility for information security on the agency head — the Secretary of a cabinet department, Administrator of an independent agency, or equivalent. This creates personal accountability at the top of each agency. The CISO manages the program day-to-day, but the agency head is the accountable official whose signature on policy documents represents their personal commitment to the program's adequacy." }
+  },
+  {
+    title: "The 7-Step RMF Framework Overview",
+    tagline: "The complete lifecycle from system planning to ongoing operation",
+    body: `<p>The NIST RMF organizes its work into <span class="key-term">seven sequential steps</span>, each producing specific artifacts that feed into subsequent steps. Understanding the complete framework before diving into individual steps provides essential context — each step's outputs become the inputs for the next, creating a coherent, traceable chain of evidence from system description through authorization and ongoing monitoring.</p>
+    <div class="step-card"><b>Step 1 — PREPARE:</b> Establish the organizational and system-level context, roles, and strategy for managing security and privacy risk. This step — added in SP 800-37 Rev 2 (2018) — ensures the organization is ready to execute RMF before beginning work on any specific system.</div>
+    <div class="step-card"><b>Step 2 — CATEGORIZE:</b> Classify the information system and the information it processes, stores, or transmits based on an impact analysis of potential security breaches. Determines the overall impact level: Low, Moderate, or High. Uses FIPS 199 and SP 800-60.</div>
+    <div class="step-card"><b>Step 3 — SELECT:</b> Choose an appropriate set of NIST SP 800-53 security controls based on the system's impact level (control baseline), then tailor that baseline to the specific system environment, threats, and organizational requirements.</div>
+    <div class="step-card"><b>Step 4 — IMPLEMENT:</b> Actually deploy and document the selected security controls in the information system and its environment of operation. Implementation includes both technical controls and the policies, procedures, and organizational practices that support them.</div>
+    <div class="step-card"><b>Step 5 — ASSESS:</b> Independently evaluate the implemented security controls to determine whether they are implemented correctly, operating as intended, and producing the desired security outcome. Produces the Security Assessment Report (SAR).</div>
+    <div class="step-card"><b>Step 6 — AUTHORIZE:</b> The Authorizing Official reviews the complete authorization package — SSP, SAR, and POA&M — and makes a risk-based decision about whether to authorize the system to operate. Issues the Authorization to Operate (ATO) or denial.</div>
+    <div class="step-card"><b>Step 7 — MONITOR:</b> Continuously track security controls, system changes, and the threat environment. Report on security status. Update the authorization when changes occur. Assess ongoing security posture and support the risk management decision to continue operations.</div>
+    <div class="analogy-box"><strong>The house-building analogy:</strong> Building a house follows a similar progression: Prepare (get permits, hire an architect, hire contractors — set up the project). Categorize (assess what the house needs — is it a weekend cabin or a home with young children and elderly parents?). Select (choose building codes and safety features appropriate for those needs). Implement (actually build it per the plans). Assess (have an inspector verify everything was built correctly). Authorize (the inspector signs off that the house is safe to occupy). Monitor (annual safety checks, fix issues, report major changes). Each step depends on the previous, and skipping any one undermines the whole.</div>`,
+    quiz: { q: "Which step was added to NIST RMF in SP 800-37 Revision 2 (2018) that was not present in the original framework?", opts: ["Step 2 — Categorize", "Step 1 — Prepare, which establishes organizational and system-level context and readiness before beginning the RMF process for any specific system", "Step 6 — Authorize", "Step 7 — Monitor"], ans: 1, explain: "Step 1 (Prepare) was added in SP 800-37 Rev 2 (2018). The original RMF started with Categorize. The Prepare step was added to address a critical gap: organizations were executing RMF tasks without first ensuring they had the necessary governance structures, roles, resources, and enterprise-level risk management context to do so effectively. Prepare ensures organizational readiness before system-specific work begins." }
+  },
+  {
+    title: "Impact Levels — Low, Moderate, and High",
+    tagline: "How federal agencies determine how much security protection a system needs",
+    body: `<p>One of the most foundational concepts in NIST RMF is the system <span class="key-term">impact level</span> — a classification that determines which security control baseline a system must implement. Getting the impact level right is essential: too low means insufficient protection for sensitive information; too high means excessive cost and operational burden for systems that don't warrant it.</p>
+    <div class="highlight-box">Impact levels are derived from Federal Information Processing Standard (FIPS) 199 — "Standards for Security Categorization of Federal Information and Information Systems." FIPS 199 defines the three impact levels based on the potential impact if confidentiality, integrity, or availability of information were compromised. The system's overall impact level is determined by taking the highest impact rating across any of the three security objectives (the "high watermark" principle).</div>
+    <div class="impact-grid">
+      <div class="impact-low">
+        <strong style="color:#27500A">LOW Impact</strong><br>
+        <span style="font-size:12px;color:#1a1a18">The loss of CIA would have a <strong>limited adverse effect</strong> on operations, assets, or individuals. Examples: public-facing websites, internal scheduling systems, non-sensitive administrative applications. Implements the Low security control baseline from SP 800-53.</span>
+      </div>
+      <div class="impact-mod">
+        <strong style="color:#633806">MODERATE Impact</strong><span> (most common)</span><br>
+        <span style="font-size:12px;color:#1a1a18">The loss of CIA would have a <strong>serious adverse effect</strong> on operations, assets, or individuals. Examples: most general-purpose federal systems handling PII, benefits systems, financial processing. Implements the Moderate baseline. ~80% of federal systems are Moderate.</span>
+      </div>
+      <div class="impact-high">
+        <strong style="color:#4A1B0C">HIGH Impact</strong><br>
+        <span style="font-size:12px;color:#1a1a18">The loss of CIA would have a <strong>severe or catastrophic adverse effect</strong> on operations, assets, or individuals. Examples: systems containing classified-adjacent data, critical infrastructure control systems, systems where compromise could cause loss of life. Implements the comprehensive High baseline.</span>
+      </div>
+    </div>
+    <p>The three security objectives evaluated for each impact level:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Confidentiality Impact</strong><span>What would happen if unauthorized parties accessed the information? PII, health records, financial data, and national security information all carry significant confidentiality impact. The severity depends on the number of individuals affected and the nature of the information.</span></div>
+      <div class="cheat-pill"><strong>Integrity Impact</strong><span>What would happen if information were modified or destroyed without authorization? Financial systems have high integrity impact — altered payment amounts have direct financial consequences. Medical records have high integrity impact — wrong information could lead to incorrect treatment.</span></div>
+      <div class="cheat-pill"><strong>Availability Impact</strong><span>What would happen if the system were unavailable when needed? A VA healthcare scheduling system has high availability impact if downtime delays veteran care. An internal reporting system may have only low availability impact if downtime is merely inconvenient.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The high watermark principle in practice:</strong> A VA health benefits system processes veteran PII (Moderate confidentiality), payment data (High integrity), and must be available 24/7 for claims processing (Moderate availability). The system's overall impact level is HIGH — because the integrity rating is High, and FIPS 199's high watermark principle takes the highest individual rating as the system's overall rating. This system must implement the High control baseline from SP 800-53.</div>`,
+    quiz: { q: "A federal HR system contains employee Social Security numbers and salary data (Moderate confidentiality), payroll calculation data where errors could have major financial impact (High integrity), and is available during business hours only with limited impact if down overnight (Low availability). What is the system's overall FIPS 199 impact level?", opts: ["Moderate — the majority of ratings are Moderate or lower", "High — the high watermark principle means the highest individual rating determines the overall system impact level", "Low — the average of the three ratings is Low", "The system must be assessed separately for each objective with no overall rating"], ans: 1, explain: "The FIPS 199 high watermark principle means the overall system impact level equals the highest individual rating across all three security objectives. This HR system has Low, Moderate, and High ratings — so the system is classified as High overall. It must implement the High control baseline from SP 800-53, regardless of the fact that two of three objectives are rated below High." }
+  },
+  {
+    title: "FIPS 199 and FIPS 200 — The Standards That Define Federal Security",
+    tagline: "The two foundational FIPS publications that anchor the entire RMF process",
+    body: `<p>Two Federal Information Processing Standards underpin the entire NIST RMF process. <span class="key-term">FIPS 199</span> defines how to categorize systems, and <span class="key-term">FIPS 200</span> defines the minimum security requirements that categorized systems must meet. Together, they translate "the system handles sensitive data" into "the system must implement these specific security requirements."</p>
+    <div class="highlight-box"><strong>FIPS 199 — Standards for Security Categorization (2004):</strong> Provides the standard methodology for categorizing federal information and information systems. Requires agencies to consider all types of information processed by a system and evaluate potential impacts to confidentiality, integrity, and availability. The result is a security category expressed as: SC System = {(confidentiality, impact), (integrity, impact), (availability, impact)}. For example: SC Veterans Health Records = {(confidentiality, High), (integrity, High), (availability, Moderate)}.</div>
+    <div class="highlight-box"><strong>FIPS 200 — Minimum Security Requirements for Federal Information and Information Systems (2006):</strong> Specifies minimum security requirements for federal information systems in 17 security-related areas. These 17 areas align with the security control families in NIST SP 800-53. FIPS 200 establishes the "what" — the categories of security that must be addressed. SP 800-53 provides the "how" — the specific controls that satisfy those requirements.</div>
+    <p>The 17 security-related areas in FIPS 200:</p>
+    <div class="badge-row">
+      <span class="badge badge-forest">Access Control (AC)</span>
+      <span class="badge badge-forest">Awareness and Training (AT)</span>
+      <span class="badge badge-forest">Audit and Accountability (AU)</span>
+      <span class="badge badge-forest">Certification, Accreditation, Assessment (CA)</span>
+      <span class="badge badge-forest">Configuration Management (CM)</span>
+      <span class="badge badge-forest">Contingency Planning (CP)</span>
+      <span class="badge badge-forest">Identification and Authentication (IA)</span>
+      <span class="badge badge-forest">Incident Response (IR)</span>
+      <span class="badge badge-forest">Maintenance (MA)</span>
+      <span class="badge badge-forest">Media Protection (MP)</span>
+      <span class="badge badge-forest">Physical and Environmental Protection (PE)</span>
+      <span class="badge badge-forest">Planning (PL)</span>
+      <span class="badge badge-forest">Personnel Security (PS)</span>
+      <span class="badge badge-forest">Risk Assessment (RA)</span>
+      <span class="badge badge-forest">System and Services Acquisition (SA)</span>
+      <span class="badge badge-forest">System and Communications Protection (SC)</span>
+      <span class="badge badge-forest">System and Information Integrity (SI)</span>
+    </div>
+    <div class="analogy-box"><strong>FIPS as building codes:</strong> FIPS 199 is like the zoning classification of a building (residential, commercial, industrial — Low, Moderate, High). FIPS 200 is like the list of building code categories that must be addressed (fire safety, electrical, plumbing, structural — the 17 security areas). NIST SP 800-53 is like the detailed building code specifications for each category (specific fire suppression requirements, wire gauge minimums, pipe standards — the actual controls). Each layer gets more specific, from classification through requirements to specific implementation guidance.</div>`,
+    quiz: { q: "What is the relationship between FIPS 200 and NIST SP 800-53?", opts: ["They are the same document with different names", "FIPS 200 establishes the 17 minimum security requirement categories that federal systems must address; SP 800-53 provides the specific security controls that satisfy those requirements for each impact level", "FIPS 200 replaces SP 800-53 for unclassified systems", "SP 800-53 is a simplified version of FIPS 200 for small agencies"], ans: 1, explain: "FIPS 200 defines the minimum security requirement categories (17 areas like Access Control, Incident Response, Configuration Management) that federal information systems must address. It establishes the 'what must be covered.' NIST SP 800-53 provides the specific security controls — organized into control families corresponding to the FIPS 200 areas — that agencies implement to satisfy those minimum requirements. FIPS 200 is the requirement; SP 800-53 is the implementation guidance." }
+  },
+  {
+    title: "Step 1 — PREPARE (Organization Level)",
+    tagline: "Getting the organization ready before beginning system-level RMF work",
+    body: `<p><span class="key-term">PREPARE</span> was added to the RMF in SP 800-37 Revision 2 to address a critical gap in earlier implementations: organizations were executing RMF tasks for individual systems without the organizational foundations necessary to do so effectively. Step 1 ensures those foundations exist. It operates at two levels — organization level (today's lesson) and system level (tomorrow).</p>
+    <div class="highlight-box">Organization-level Prepare activities establish the governance infrastructure that makes system-level RMF work coherent, consistent, and connected to enterprise risk management. Without these foundations, individual system authorizations become isolated technical exercises rather than integrated components of an enterprise risk management program.</div>
+    <p>Key organization-level Prepare activities:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Assign Key Roles</strong><span>Formally designate and document: Authorizing Officials, Chief Information Officer, Chief Information Security Officer, Senior Agency Information Security Officer, and System Owners for each in-scope system. Clear accountability is the foundation of effective RMF.</span></div>
+      <div class="cheat-pill"><strong>Establish Risk Management Strategy</strong><span>Document the organization's approach to managing information security risk — risk tolerance, risk appetite, risk acceptance criteria, and how risk management connects to mission objectives. This strategy shapes risk decisions throughout individual system authorizations.</span></div>
+      <div class="cheat-pill"><strong>Conduct Organizational Risk Assessment</strong><span>Identify threats to the organization, vulnerabilities across the enterprise, and the potential impact of security failures on mission. This enterprise-level view informs system-level risk assessments and helps prioritize security investments.</span></div>
+      <div class="cheat-pill"><strong>Establish a Control Baseline</strong><span>Determine organization-wide security control requirements that apply to all systems (common controls) and the process for tailoring baselines for individual systems. Organization-wide decisions made here prevent redundant work system-by-system.</span></div>
+      <div class="cheat-pill"><strong>Prioritize Systems</strong><span>Identify and prioritize information systems based on criticality to mission. High-priority, high-impact systems receive more rigorous oversight and monitoring. Prioritization enables appropriate allocation of scarce security resources.</span></div>
+      <div class="cheat-pill"><strong>Establish Continuous Monitoring Strategy</strong><span>Define the organization-level approach to ongoing monitoring — which controls are monitored organization-wide, at what frequency, and how monitoring results feed into authorization decisions. Monitoring strategy is most effective when defined before individual systems are authorized.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why organization-level Prepare matters for the VA:</strong> The VA operates hundreds of information systems. If each system's RMF team independently answered "what are our risk tolerance levels?" and "how do we handle common controls like physical security?" — they would produce hundreds of inconsistent answers. Organization-level Prepare establishes enterprise-wide answers that every system team uses consistently. This dramatically reduces redundancy, ensures policy coherence, and gives the VA CIO a unified picture of enterprise security posture.</div>`,
+    quiz: { q: "Why was organization-level Prepare added to the RMF rather than starting directly with system-level Categorize?", opts: ["To create more bureaucratic requirements and documentation", "Because organizations executing RMF without enterprise governance foundations — risk strategy, assigned roles, enterprise monitoring approach — produced inconsistent, disconnected system authorizations that didn't add up to a coherent organizational security posture", "Because FISMA specifically requires an organizational preparation phase", "Because Categorize is too difficult to begin without Prepare"], ans: 1, explain: "Organization-level Prepare was added because RMF implementations without enterprise foundations produced isolated, inconsistent system authorizations that couldn't be aggregated into a meaningful organizational security picture. Each system team made independent decisions about risk tolerance, common controls, and monitoring that should be made once at the enterprise level. Prepare ensures the governance context that makes system-level work coherent and consistent across the organization." }
+  },
+  {
+    title: "Step 1 — PREPARE (System Level) and RMF Roles",
+    tagline: "Setting up individual systems and understanding who does what in RMF",
+    body: `<p>After organization-level Prepare establishes enterprise foundations, system-level <span class="key-term">Prepare</span> activities set up the specific context, roles, and strategy for a particular information system about to undergo the RMF process. This is where abstract organizational strategy meets the concrete reality of a specific system.</p>
+    <div class="highlight-box">System-level Prepare establishes: the system's purpose and criticality within the organization's mission, the boundary defining what is "in" vs. "out" of the system's authorization scope, the security requirements that apply based on the system's mission and data, the stakeholders whose interests the system serves, and a strategy for managing the system's security throughout its lifecycle.</div>
+    <p>The key RMF roles — understanding who does what:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Authorizing Official (AO)</strong><span>The senior official who accepts responsibility for operating an information system at an acceptable level of risk. Makes the final ATO decision based on the authorization package. Has the authority and accountability to accept risk on behalf of the organization. Cannot be delegated below a certain seniority level.</span></div>
+      <div class="cheat-pill"><strong>System Owner (SO)</strong><span>The individual responsible for the overall procurement, development, integration, modification, operation, maintenance, and retirement of the information system. The system owner has operational responsibility and is the primary point of accountability for the system's security posture.</span></div>
+      <div class="cheat-pill"><strong>Information System Security Officer (ISSO)</strong><span>The individual responsible for ensuring the appropriate operational security posture is maintained for an information system. The ISSO is the day-to-day security manager for the system — monitors controls, tracks findings, updates documentation, and is the primary technical security contact for the system.</span></div>
+      <div class="cheat-pill"><strong>Information System Security Manager (ISSM)</strong><span>Oversees the security of multiple systems within a program or organization. The ISSM provides management oversight above the ISSO level — ensuring consistent security practices across related systems and serving as the security liaison between system teams and the CISO/AO.</span></div>
+      <div class="cheat-pill"><strong>Security Control Assessor (SCA)</strong><span>The individual or group responsible for independently assessing the security controls in an information system. The SCA must be independent from the system development and operations team to provide objective assessment. Produces the Security Assessment Report (SAR).</span></div>
+      <div class="cheat-pill"><strong>Common Control Provider</strong><span>An organizational entity responsible for implementing, maintaining, and monitoring security controls that are inherited by multiple information systems. Physical security, network infrastructure security, and identity management are common examples of inherited controls.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The AO role in perspective:</strong> The Authorizing Official is arguably the most important role in RMF because they personally accept risk. At the VA, an AO might be an Assistant Secretary or a Deputy Under Secretary — a senior political appointee or senior career official. When they sign an ATO, they are making a documented, formal statement: "I have reviewed the evidence, I understand the remaining risks, and I accept that this system can operate." If something goes wrong, the ATO trail shows that a named, senior official made an informed risk decision. This accountability structure is FISMA's most important governance contribution.</div>`,
+    quiz: { q: "What makes the Authorizing Official (AO) role unique and critically important in the RMF process?", opts: ["The AO reviews the most technical security documentation", "The AO personally accepts responsibility for operating a system at an acceptable level of risk — making the formal risk acceptance decision based on evidence and being accountable if that decision proves wrong", "The AO manages the day-to-day security of the system", "The AO independently tests security controls for effectiveness"], ans: 1, explain: "The AO's uniqueness lies in personal risk acceptance. Unlike other RMF roles that perform technical activities, the AO makes a governance decision: 'Based on the evidence presented, I accept that this system can operate with its current security posture.' This formal accountability — a named senior official who personally accepts risk — is FISMA's mechanism for ensuring that risk decisions are made by people with the authority and accountability to make them, not buried in technical documentation." }
+  },
+  {
+    title: "Step 2 — CATEGORIZE",
+    tagline: "Formally classifying the system and information to determine the protection level needed",
+    body: `<p><span class="key-term">CATEGORIZE</span> is the step where the system's security baseline is determined. The categorization decision — Low, Moderate, or High — drives control selection in the next step, shapes the entire authorization effort, and determines the rigor of assessment and monitoring. Getting categorization right is foundational; getting it wrong — in either direction — creates problems throughout the entire RMF lifecycle.</p>
+    <div class="highlight-box">Categorization process: (1) Identify all types of information the system processes, stores, or transmits. (2) Use NIST SP 800-60 to map each information type to its provisional impact ratings. (3) Evaluate whether the provisional ratings should be adjusted based on organizational factors. (4) Apply the high watermark principle across all information types and all three security objectives (CIA). (5) Document the resulting security category and the reasoning behind any adjustments. (6) Have the security category reviewed and approved by the System Owner and Authorizing Official.</div>
+    <p>NIST SP 800-60 — the information type catalog:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>What SP 800-60 Does</strong><span>NIST SP 800-60 (Volumes I and II) maps specific information types to provisional CIA impact ratings. Volume I provides the methodology. Volume II contains the catalog — hundreds of specific government information types, each with default confidentiality, integrity, and availability impact ratings.</span></div>
+      <div class="cheat-pill"><strong>Information Type Examples</strong><span>SP 800-60 categorizes information types like: "Health and Human Services - General" (Moderate/Moderate/Moderate), "Law Enforcement - Criminal Investigations" (High/High/Moderate), "Budget Formulation" (Moderate/High/Low). Agencies look up each information type their system handles and start with SP 800-60's provisional ratings.</span></div>
+      <div class="cheat-pill"><strong>Adjustment Authority</strong><span>Provisional ratings from SP 800-60 can be adjusted up or down based on organizational mission factors, local threat environment, or operational requirements. Adjustments must be documented and justified — the decision trail is part of the security documentation auditors examine.</span></div>
+      <div class="cheat-pill"><strong>System Categorization Form</strong><span>The output of Categorize is a completed System Categorization form showing: all information types, each type's CIA ratings, any adjustments, and the final system impact level. This form is a required component of the System Security Plan and the authorization package.</span></div>
+    </div>
+    <div class="warning-box"><strong>The undercategorization risk:</strong> One of the most common and dangerous RMF failures is deliberate undercategorization — intentionally rating a system lower than warranted to avoid the cost and effort of higher-baseline control implementation. A Moderate system falsely categorized as Low implements fewer controls, undergoes less rigorous assessment, and requires less ongoing monitoring. When the system is eventually breached — as the OPM breach demonstrated — the inadequate security posture is traceable to the flawed categorization decision. Authorizing Officials who sign off on undercategorized systems bear accountability for that decision.</div>`,
+    quiz: { q: "A new federal system will process veterans' health records (High confidentiality due to privacy), prescription data where errors could cause patient harm (High integrity), and appointment scheduling where downtime for a few hours is inconvenient but not critical (Low availability). What is the correct FIPS 199 system categorization?", opts: ["Moderate — take the average of High, High, and Low", "Low — the availability rating is Low so the system is operational-focused", "High — applying the high watermark principle, the highest individual rating (High, from confidentiality and integrity) determines the overall system impact level", "Moderate-High — a hybrid rating between the two dominant values"], ans: 2, explain: "Applying the FIPS 199 high watermark principle: the system has Confidentiality = High, Integrity = High, Availability = Low. The high watermark principle takes the highest individual rating across all three objectives as the system's overall impact level. High is the highest rating present, so this system is classified as High overall — requiring the High control baseline from SP 800-53 — even though Availability is Low." }
+  },
+  {
+    title: "Step 3 — SELECT",
+    tagline: "Choosing the right security controls for the system's risk level",
+    body: `<p><span class="key-term">SELECT</span> is where the system's impact level is translated into a specific set of security controls. The categorization determines which baseline to start with; selection refines that baseline to fit the specific system's characteristics, environment, and organizational requirements. At the end of this step, the system team knows exactly which security controls they must implement.</p>
+    <div class="highlight-box"><strong>The three-stage selection process:</strong><br><br><strong>Stage 1 — Identify the baseline:</strong> Based on the FIPS 199 impact level, select the appropriate SP 800-53 control baseline (Low, Moderate, or High). The baseline is a predefined starting set of controls selected by NIST as appropriate for that impact level. Low baseline has fewer controls; High baseline is the most comprehensive.<br><br><strong>Stage 2 — Tailor the baseline:</strong> Adjust the baseline for the specific system. This includes: scoping to remove controls not applicable to the system (a system with no wireless access doesn't need wireless security controls), compensating controls (alternative controls that achieve equivalent protection when baseline controls can't be implemented), supplementing with additional controls for unique risks, and adjusting control parameters.<br><br><strong>Stage 3 — Identify inherited controls:</strong> Determine which controls are provided by common control providers (the organization's shared infrastructure) rather than implemented by the system team. Inherited controls reduce the system-level implementation burden and promote consistency.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Low Baseline</strong><span>Applies to Low-impact systems. The smallest set of controls — protecting against the most common threats with basic security measures. Appropriate for systems where breaches would have limited organizational or individual impact.</span></div>
+      <div class="cheat-pill"><strong>Moderate Baseline</strong><span>Applies to Moderate-impact systems (~80% of federal systems). More controls than Low, covering a broader threat range with greater control depth. Required for most general-purpose government systems handling PII, financial data, and internal operations.</span></div>
+      <div class="cheat-pill"><strong>High Baseline</strong><span>Applies to High-impact systems. The most comprehensive set — all controls from lower baselines plus additional controls for high-consequence systems. Required for systems where compromise could cause severe or catastrophic harm to individuals or operations.</span></div>
+      <div class="cheat-pill"><strong>Privacy Controls</strong><span>SP 800-53 Rev 5 integrates privacy controls throughout the catalog alongside security controls. Systems that process Personally Identifiable Information (PII) must consider privacy controls in the selection step — not as a separate program, but integrated with security control selection.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Tailoring in practice:</strong> A federal system running entirely in the cloud with no physical hardware owned by the agency can scope out physical protection controls (like "protect backup tapes in a secure facility") — the cloud provider handles those. But the agency must document this scoping decision in the System Security Plan, verify the cloud provider's physical controls are adequate (through FedRAMP authorization — more on this later), and include appropriate inherited control documentation. Scoping isn't elimination; it's appropriate allocation of control responsibility between the system and its environment.</div>`,
+    quiz: { q: "During the SELECT step, a system team determines that a standard SP 800-53 baseline control cannot be implemented due to a technical constraint, but they implement an alternative control that achieves equivalent protection. What is this called?", opts: ["Control elimination — the control is removed from scope", "A compensating control — an alternative security measure that provides equivalent or comparable protection to the baseline control when the baseline control cannot be implemented as specified", "Control deferral — the control will be implemented in a future system version", "A control waiver — the control requirement is officially waived by the AO"], ans: 1, explain: "A compensating control is an alternative security measure implemented when the specified baseline control cannot be implemented due to technical, operational, or other constraints. Compensating controls must be documented in the System Security Plan, provide equivalent security protection to the original control, and be accepted by the Authorizing Official. They are not waivers — they represent alternative approaches to achieving the same security objective." }
+  },
+  {
+    title: "NIST SP 800-53 — The Security Control Catalog",
+    tagline: "The comprehensive library of security and privacy controls at the heart of RMF",
+    body: `<p><span class="key-term">NIST SP 800-53</span> — "Security and Privacy Controls for Information Systems and Organizations" — is the most important technical reference document in the entire federal cybersecurity ecosystem. Currently at Revision 5 (2020), it is the catalog of security and privacy controls from which federal agencies select controls during the RMF SELECT step. Understanding its structure is essential for anyone working in federal IT security.</p>
+    <div class="highlight-box">SP 800-53 Rev 5 contains over 1,000 individual controls and control enhancements organized into 20 control families. Each control has: an identifier (e.g., AC-2), a title, a description of the required activity or outcome, supplemental guidance, and control enhancements (additional requirements for higher-impact systems). The catalog is deliberately comprehensive — not every control applies to every system, which is why the baseline and tailoring process in SELECT is necessary.</div>
+    <p>The 20 SP 800-53 Control Families:</p>
+    <div class="badge-row">
+      <span class="badge badge-forest">AC — Access Control</span>
+      <span class="badge badge-forest">AT — Awareness and Training</span>
+      <span class="badge badge-forest">AU — Audit and Accountability</span>
+      <span class="badge badge-forest">CA — Assessment, Authorization, and Monitoring</span>
+      <span class="badge badge-forest">CM — Configuration Management</span>
+      <span class="badge badge-forest">CP — Contingency Planning</span>
+      <span class="badge badge-forest">IA — Identification and Authentication</span>
+      <span class="badge badge-forest">IR — Incident Response</span>
+      <span class="badge badge-forest">MA — Maintenance</span>
+      <span class="badge badge-forest">MP — Media Protection</span>
+      <span class="badge badge-forest">PE — Physical and Environmental Protection</span>
+      <span class="badge badge-forest">PL — Planning</span>
+      <span class="badge badge-forest">PM — Program Management</span>
+      <span class="badge badge-forest">PS — Personnel Security</span>
+      <span class="badge badge-forest">PT — Personally Identifiable Information Processing and Transparency</span>
+      <span class="badge badge-forest">RA — Risk Assessment</span>
+      <span class="badge badge-forest">SA — System and Services Acquisition</span>
+      <span class="badge badge-forest">SC — System and Communications Protection</span>
+      <span class="badge badge-forest">SI — System and Information Integrity</span>
+      <span class="badge badge-forest">SR — Supply Chain Risk Management</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Rev 5 Major Changes</strong><span>SP 800-53 Rev 5 (2020) added: the PT family (PII Processing and Transparency) integrating privacy controls; the SR family (Supply Chain Risk Management) addressing software and hardware supply chain security; and harmonized the catalog with ISO 27001 Annex A controls to better support international adoption.</span></div>
+      <div class="cheat-pill"><strong>NIST SP 800-53B — Control Baselines</strong><span>SP 800-53B is a companion document published separately from the main catalog. It contains the Low, Moderate, and High control baselines — the pre-selected subsets of SP 800-53 controls appropriate for each impact level. This separation allows NIST to update baselines independently of the full control catalog.</span></div>
+    </div>
+    <div class="analogy-box"><strong>SP 800-53 as the master parts catalog:</strong> Think of SP 800-53 like an automotive parts catalog. The catalog contains every possible part (control) for building secure systems. The baseline is like a pre-configured parts list for a specific type of vehicle (Low = economy car, Moderate = standard sedan, High = armored vehicle). Tailoring is like customizing the standard build for specific conditions — adding snow tires for cold climates, removing towing packages for city driving. You start with the standard build and adjust for your specific needs.</div>`,
+    quiz: { q: "What important change did SP 800-53 Revision 5 make that aligned it with privacy requirements?", opts: ["It removed all privacy-related controls to create a separate privacy standard", "It added the PT (Personally Identifiable Information Processing and Transparency) control family, integrating privacy controls directly into the security control catalog rather than treating security and privacy as separate programs", "It made all privacy controls mandatory for every system regardless of impact level", "It delegated all privacy control requirements to NIST SP 800-171"], ans: 1, explain: "SP 800-53 Rev 5 added the PT (PII Processing and Transparency) control family, integrating privacy controls directly into the security catalog. Previous versions addressed security and privacy somewhat separately. Rev 5 reflects the recognition that cybersecurity and privacy risk management are increasingly inseparable — systems that handle PII must address both security controls that protect PII from breach and privacy controls that ensure PII is processed appropriately with proper transparency to data subjects." }
+  },
+  {
+    title: "Step 4 — IMPLEMENT",
+    tagline: "Actually deploying security controls and documenting how they work",
+    body: `<p><span class="key-term">IMPLEMENT</span> is where planning becomes reality. After SELECT identifies which controls the system needs, IMPLEMENT actually deploys those controls and documents how each one is implemented in the specific system environment. This step is the most resource-intensive in the RMF process — it encompasses all the actual security engineering, policy development, and organizational change required to secure the system.</p>
+    <div class="highlight-box">Implementation includes both technical and non-technical activities: deploying technical controls (configuring access controls, implementing encryption, installing intrusion detection), developing policies and procedures (acceptable use policy, incident response procedures, configuration management policy), training personnel (awareness training, role-specific training for security staff), and documenting all of these in the System Security Plan.</div>
+    <p>Categories of control implementation:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>System-Specific Controls</strong><span>Controls implemented directly by and for the specific information system. Examples: the application's authentication mechanism, the database's access control configuration, the system's specific backup procedures. The system team is responsible for implementing and maintaining these.</span></div>
+      <div class="cheat-pill"><strong>Hybrid Controls</strong><span>Controls that are partially implemented by the system and partially inherited from common control providers. Example: an organization-wide incident response policy (inherited) + system-specific incident response procedures (system-specific). Both parts must be implemented and documented.</span></div>
+      <div class="cheat-pill"><strong>Inherited (Common) Controls</strong><span>Controls provided by the organization's shared infrastructure that the system inherits rather than implements itself. Physical security of the data center, network perimeter defenses, and enterprise identity management are typical inherited controls. Must be verified as adequate for the system's impact level.</span></div>
+      <div class="cheat-pill"><strong>Control Implementation Statements</strong><span>For each control, the System Security Plan must include an implementation statement — a description of how the control is implemented in this specific system. Not a generic description from SP 800-53, but a specific description of what the system actually does to satisfy the control.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Implementation vs. documentation:</strong> A critical IMPLEMENT principle is that implementation and documentation must happen together — not implementation first and documentation "later." Systems routinely implemented security controls competently but failed to document them adequately, then struggled in assessment because auditors couldn't verify what was implemented. In RMF, undocumented controls are treated as unimplemented controls. The System Security Plan is built concurrently with the implementation, not written retrospectively as a description of what was built.</div>
+    <div class="warning-box"><strong>The inherited control verification trap:</strong> Organizations often assume that inheriting a control from a common control provider means the control is fully addressed for their system. This is incorrect. The system team must verify that the inherited control is actually operating at the level required for their system's impact rating. An inherited physical security control adequate for a Low-impact system may be insufficient for a High-impact system using the same facility. Inherited ≠ adequate — it must be verified.</div>`,
+    quiz: { q: "During IMPLEMENT, a system team writes detailed control implementation statements for all selected controls. Why must these statements describe what the system actually does rather than copying text from SP 800-53?", opts: ["To meet a word count requirement in the SSP template", "Because assessors verify implementation statements against actual system configurations — statements that describe what should be done rather than what is done cannot be verified, resulting in assessment findings regardless of actual security posture", "Because NIST copyright restrictions prevent copying from SP 800-53", "Because system-specific statements are only required for High-impact systems"], ans: 1, explain: "Control implementation statements must describe what the specific system actually does because Security Control Assessors verify these statements against actual configurations, system logs, and interviews during the ASSESS step. A statement saying 'access to the system is restricted to authorized users per AC-2 requirements' cannot be verified against anything specific. A statement saying 'the system uses Active Directory groups to restrict access; the HRSystem_Admins group contains only 5 named individuals whose access is reviewed quarterly by the System Owner' gives assessors specific, verifiable claims to test." }
+  },
+  {
+    title: "The System Security Plan (SSP)",
+    tagline: "The master security document that describes how a system is protected",
+    body: `<p>The <span class="key-term">System Security Plan (SSP)</span> is the central document of the NIST RMF process. Every other RMF artifact either feeds into the SSP or is derived from it. The SSP is the complete, authoritative description of an information system's security posture — what the system does, what information it handles, who is responsible for it, and how every selected security control is implemented.</p>
+    <div class="highlight-box">The SSP serves multiple critical functions: it is the primary input for the Security Control Assessor's work during ASSESS; it is the key document reviewed by the Authorizing Official during AUTHORIZE; it is the baseline against which configuration changes are tracked during MONITOR; and it is the official record that demonstrates FISMA compliance during Inspector General evaluations. An incomplete or inaccurate SSP undermines every subsequent RMF step.</div>
+    <p>Required SSP contents:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>System Identification</strong><span>System name, unique identifier (eMASS/CSAM number), system owner, AO, categorization level, operational status, deployment model, and a description of the system's purpose and mission contribution.</span></div>
+      <div class="cheat-pill"><strong>System Environment and Boundaries</strong><span>Network diagram showing system components and connections. System boundary definition — what is "inside" the authorization boundary. External connections to other systems. Data flow diagrams. Hardware inventory. Software inventory.</span></div>
+      <div class="cheat-pill"><strong>Information Types and Security Categorization</strong><span>All information types the system processes with their SP 800-60 provisional ratings, any adjustments, and the resulting system categorization per FIPS 199. The documented rationale for the final impact level.</span></div>
+      <div class="cheat-pill"><strong>Control Implementation Statements</strong><span>For every selected security control: the implementation status (implemented, planned, inherited, not applicable), who is responsible (system team or common control provider), and a specific narrative description of how the control is implemented in this system.</span></div>
+      <div class="cheat-pill"><strong>Roles and Responsibilities</strong><span>Named individuals in each RMF role for the system: System Owner, ISSO, Authorizing Official, Security Control Assessor. Contact information. Responsibility matrices for security activities.</span></div>
+      <div class="cheat-pill"><strong>Interconnections and Dependencies</strong><span>Memoranda of Understanding (MOUs) or Interconnection Security Agreements (ISAs) for connections to external systems. Dependencies on common controls. Third-party service dependencies affecting security.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The SSP as a living document:</strong> Unlike documents that are written once and filed, the SSP must be kept current throughout the system's operational lifetime. Every time a control is implemented differently, a system component changes, a new connection is established, or personnel change — the SSP must be updated. An SSP that describes how a system was configured three years ago but not how it operates today is not just wrong — it is actively misleading to anyone who relies on it for security decisions, including the Authorizing Official who issued the ATO based on an accurate document.</div>`,
+    quiz: { q: "An assessor preparing to evaluate a system's controls reviews its SSP and finds the control implementation statements are generic copies from SP 800-53 rather than system-specific descriptions. What problem does this create?", opts: ["No problem — generic statements satisfy the SSP requirement", "The assessor cannot verify the claims — generic statements don't describe what the specific system actually does, making it impossible to test whether implementation is correct, and the assessment will likely result in numerous findings", "The assessor must return the SSP to NIST for review", "Only the AO can determine if generic statements are acceptable"], ans: 1, explain: "Generic implementation statements — copied from SP 800-53 rather than describing what the specific system does — cannot be assessed. Assessors test implementation by examining actual configurations, system artifacts, and personnel who perform security activities. A statement like 'the system implements access controls' gives assessors nothing to test. The assessment will produce findings for every control that can't be verified against specific system evidence, creating remediation work that could have been avoided by writing accurate SSP statements during IMPLEMENT." }
+  },
+  {
+    title: "Step 5 — ASSESS",
+    tagline: "Independent testing to verify that security controls actually work as documented",
+    body: `<p><span class="key-term">ASSESS</span> is where the RMF process transforms from self-reported security into independently verified security. During ASSESS, a Security Control Assessor (SCA) — who must be independent of the system development and operations team — tests the implemented controls to determine whether they are implemented correctly, operating as intended, and producing the desired security outcomes. This is the quality control step that gives the authorization decision its credibility.</p>
+    <div class="highlight-box">The ASSESS process uses three assessment methods defined in NIST SP 800-53A (the assessment procedures companion to SP 800-53):<br><br><strong>Examine:</strong> Review of documentation, artifacts, and specifications. Checking whether policies, procedures, and configuration documents say the right things and are current.<br><br><strong>Interview:</strong> Discussions with personnel who implement, manage, or use the control. Verifying that people know their responsibilities and perform them correctly in practice, not just in documentation.<br><br><strong>Test:</strong> Directly exercising controls to verify they operate as intended. Running tests against systems, attempting access with unauthorized credentials, simulating incidents, reviewing actual log output.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Assessment Planning</strong><span>Before testing begins: define the assessment scope (which controls are assessed, which are inherited and verified vs. tested), assessment methods for each control, schedule, evidence requirements, and roles. Assessment planning is documented in the Security Assessment Plan (SAP) — reviewed and approved before assessment begins.</span></div>
+      <div class="cheat-pill"><strong>Assessment Execution</strong><span>The SCA team examines documentation, interviews personnel, and tests controls following the Security Assessment Plan. Findings are documented as: Satisfied (control is implemented correctly), Other Than Satisfied (control has deficiencies), or Not Applicable. Evidence is collected supporting each determination.</span></div>
+      <div class="cheat-pill"><strong>Security Assessment Report (SAR)</strong><span>The primary output of ASSESS. Documents all assessment findings — including what was tested, how it was tested, what evidence was reviewed, and the assessor's determination for each control. The SAR is one of the three components of the authorization package reviewed by the AO.</span></div>
+      <div class="cheat-pill"><strong>Assessment Depth and Coverage</strong><span>Not all controls receive identical testing. High-impact systems receive more rigorous assessment — more controls tested, deeper testing of each control, more evidence required. The assessment plan calibrates depth and coverage to the system's impact level and risk profile.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why independence matters in ASSESS:</strong> If the team that built and operates a system also assessed whether their own security controls work, there would be powerful incentives (conscious or unconscious) to overlook problems, interpret ambiguous situations charitably, and avoid findings that reflect poorly on their own work. Assessment independence ensures that findings are objective and that Authorizing Officials receive an honest picture of security posture — not a self-serving one. This independence is non-negotiable in NIST RMF.</div>`,
+    quiz: { q: "An assessor tests a system's Multi-Factor Authentication control by attempting to log in with only a username and password (without the second factor). The login succeeds. How should the assessor document this finding?", opts: ["Satisfied — the login was possible, so the authentication control exists", "Other Than Satisfied — the control is not implemented correctly because MFA should prevent login with only one factor, and this test demonstrates the control is not operating as intended", "Deferred — the system team should fix it before the finding is documented", "Not Applicable — MFA testing requires specialized tools"], ans: 1, explain: "A successful login without the required second authentication factor demonstrates conclusively that the MFA control is not working as intended. The assessor should document this as 'Other Than Satisfied' with a finding that describes: the control requirement (MFA required for all logins), the test performed (login attempted with password only), the result (login succeeded without MFA), and the impact (authentication bypass risk). This finding will go into the SAR and then into the POA&M for remediation." }
+  },
+  {
+    title: "Plan of Action and Milestones (POA&M)",
+    tagline: "The formal mechanism for tracking and remediating security deficiencies",
+    body: `<p>The <span class="key-term">Plan of Action and Milestones (POA&M)</span> is one of the most important ongoing security management documents in the federal government. Every security control finding that is "Other Than Satisfied" in the assessment — every gap, every weakness, every improperly implemented control — goes into the POA&M with a plan for remediation. The POA&M transforms a list of security problems into a managed, accountable remediation program.</p>
+    <div class="highlight-box">A POA&M entry documents: the specific weakness or deficiency identified, the security control(s) affected, the resources required for remediation, the milestone dates by which remediation activities will be completed, the responsible organization and individual, the scheduled completion date, and the status of remediation progress. POA&Ms are living documents — updated regularly as remediation work progresses and new findings emerge.</div>
+    <p>Why POA&Ms are central to FISMA compliance:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>FISMA Reporting</strong><span>Agencies must include POA&M status in their annual FISMA reports to OMB. The number of open POA&M items, their severity, and whether items are being closed on schedule are key metrics in government-wide cybersecurity reporting. Chronically open POA&Ms are a red flag in IG reviews.</span></div>
+      <div class="cheat-pill"><strong>Authorization Decisions</strong><span>AOs review POA&Ms as part of the authorization package. An AO may grant authorization with open POA&Ms if the residual risk is acceptable — but they formally accept that risk and establish expectations for closure timelines. POA&Ms that aren't being worked are a basis for revoking authorization.</span></div>
+      <div class="cheat-pill"><strong>Continuous Monitoring Input</strong><span>During MONITOR, newly discovered vulnerabilities, configuration changes that introduce weaknesses, and threat intelligence that identifies relevant exposures all generate new POA&M entries. The POA&M backlog reflects the ongoing accumulation of known security gaps and their management status.</span></div>
+      <div class="cheat-pill"><strong>Management Visibility</strong><span>Senior leaders use POA&M dashboards to understand security risk posture across the systems they are accountable for. Age of POA&M items (how long has a weakness been known and unresolved?), severity distribution, and closure rate are key management metrics for cybersecurity risk oversight.</span></div>
+    </div>
+    <div class="analogy-box"><strong>POA&M vs. a bug tracker:</strong> Software development teams use bug trackers — a list of known code problems with priority, assignment, and status. POA&Ms are the security equivalent: a tracked, managed list of known security weaknesses with accountability, timelines, and status. The key difference: leaving bugs in the bug tracker is a normal part of software development. Leaving critical security weaknesses in the POA&M without active remediation creates increasing risk to federal data and eventually becomes a basis for losing authorization to operate. POA&Ms are managed with urgency that bug trackers rarely receive.</div>`,
+    quiz: { q: "An Authorizing Official reviews an authorization package and sees that 15 POA&M items remain open, including 3 rated 'High' severity. What options does the AO have?", opts: ["The AO must deny authorization — no system with open POA&Ms can be authorized", "The AO can grant authorization (accepting the residual risk from open POA&Ms), grant authorization with conditions (requiring closure of High items within a specific timeframe), or deny authorization if the risk from open items is unacceptable", "The AO must wait until all POA&Ms are closed before making any authorization decision", "Open POA&Ms are automatically waived at authorization if the system passes assessment"], ans: 1, explain: "AOs have discretion in their authorization decisions even with open POA&Ms. They may grant full authorization if they judge the residual risk from open items is acceptable given the mission need. They may grant conditional authorization requiring specific POA&Ms be closed within defined timeframes. Or they may deny authorization if High-severity open items represent unacceptable risk. The AO documents their risk acceptance decision — whatever it is — making the reasoning transparent and the individual accountable." }
+  },
+  {
+    title: "Step 6 — AUTHORIZE",
+    tagline: "The formal risk acceptance decision that allows a system to operate",
+    body: `<p><span class="key-term">AUTHORIZE</span> is the step where documented security evidence is transformed into a formal risk decision. Everything the RMF has produced — the categorization, the selected and implemented controls, the assessment findings, the POA&M — is compiled into an authorization package and reviewed by the Authorizing Official, who makes the formal determination: is the risk acceptable? Can this system operate?</p>
+    <div class="highlight-box"><strong>The Authorization Package:</strong> The three-document package that the AO reviews:<br><br><strong>System Security Plan (SSP):</strong> The complete description of the system — what it does, what information it handles, and how all security controls are implemented.<br><br><strong>Security Assessment Report (SAR):</strong> The independent assessor's findings — which controls are implemented correctly, which have deficiencies, and what evidence supports each determination.<br><br><strong>Plan of Action and Milestones (POA&M):</strong> The documented plan for addressing each deficiency identified in the SAR — with timelines, resources, and responsible parties.</div>
+    <p>The Authorization decision outcomes:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Authorization to Operate (ATO)</strong><span>The AO formally approves the system to operate for a specified period (typically 1-3 years) under the current security posture. The ATO is issued as a signed authorization decision document — a formal, dated record of the risk acceptance decision with the AO's name attached.</span></div>
+      <div class="cheat-pill"><strong>Authorization to Operate (ATO) with Conditions</strong><span>The AO authorizes operation but with specific conditions that must be met — typically closing certain POA&M items within defined timeframes or implementing specific compensating controls. Failure to meet conditions can result in ATO suspension.</span></div>
+      <div class="cheat-pill"><strong>Denial of Authorization to Operate (DATO)</strong><span>The AO determines that the risk is too high to accept and the system cannot operate in its current state. Significant remediation is required before resubmission. DATOs are relatively rare but have serious operational consequences for agencies that were planning to deploy the system.</span></div>
+      <div class="cheat-pill"><strong>ATO Duration and Expiration</strong><span>ATOs typically have a defined validity period. If the system's security posture changes significantly, if critical vulnerabilities are discovered, or if the ATO period expires without reauthorization, the ATO may be suspended or revoked. Operating without a current ATO is itself a FISMA compliance failure.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The ATO as a formal risk acceptance:</strong> The most important thing about an ATO is that it is explicitly not a statement that the system is perfect or risk-free. The ATO says: "Given the implemented controls, the remaining vulnerabilities documented in the SAR and POA&M, and the mission need for this system — I, [AO name and title], formally accept the residual risk and authorize this system to operate." The ATO is a documented, accountable risk acceptance — not a security certification. The person signing it owns the decision and is accountable for its consequences.</div>`,
+    quiz: { q: "An ATO is often described as 'risk acceptance' rather than 'security certification.' Why is this distinction important?", opts: ["Because ATOs are cheaper to issue than certifications", "Because an ATO means a named, accountable official has formally accepted that the system's residual risks are acceptable for mission purposes — not that the system is perfect or free of vulnerabilities. This distinction makes the decision-maker visible and accountable.", "Because security certifications require NIST approval, not just agency approval", "Because ATOs expire while certifications are permanent"], ans: 1, explain: "The distinction between risk acceptance and security certification is fundamental to RMF integrity. If an ATO were a certification of security perfection, no system would ever get one — all systems have some vulnerabilities. Instead, an ATO is a documented, formal statement that a named senior official has reviewed the evidence, understands the remaining risks, and accepts them as appropriate for the mission. This accountability — knowing that a specific person made the risk decision and owns the consequences — is what gives the authorization process its governance value." }
+  },
+  {
+    title: "Step 7 — MONITOR",
+    tagline: "Ongoing security oversight to maintain the validity of the authorization",
+    body: `<p><span class="key-term">MONITOR</span> is the final RMF step — but it's also the longest and in many ways the most important. Once a system receives an ATO, security monitoring ensures that the security posture that justified that ATO continues to be maintained as the system evolves, the threat landscape changes, and the organization's environment shifts. Security is not static; MONITOR makes it continuous.</p>
+    <div class="highlight-box"><strong>The shift to ongoing authorization:</strong> SP 800-37 Rev 2 introduced the concept of <em>ongoing authorization</em> — moving away from "authorize once, operate for three years" to a model where monitoring data continuously informs the authorization decision. If monitoring reveals that security has degraded significantly, the AO may need to revisit the authorization before the formal period expires. The goal is that authorization reflects actual current security posture, not a security posture that existed at assessment time years ago.</div>
+    <p>Key MONITOR activities:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Continuous Control Monitoring</strong><span>Not all controls need monitoring at the same frequency. A continuous monitoring strategy defines which controls are monitored continuously (authentication logs, vulnerability scans), monthly (patch status), quarterly (access reviews), or annually (policy reviews). Frequency is based on control volatility and risk.</span></div>
+      <div class="cheat-pill"><strong>Security Status Reporting</strong><span>Regular reporting to the AO and CISO on security posture — monitoring results, new vulnerabilities, POA&M progress, and any significant changes that might affect the authorization decision. Reporting frequency and format defined in the monitoring strategy.</span></div>
+      <div class="cheat-pill"><strong>System and Environment Changes</strong><span>Tracking and assessing the security impact of changes to the system (new components, configuration changes, software updates) and the environment (new threats, changes to shared infrastructure, organizational changes). Significant changes may require reauthorization.</span></div>
+      <div class="cheat-pill"><strong>Ongoing Risk Assessments</strong><span>Periodic reassessment of risks based on new threat intelligence, newly discovered vulnerabilities, changed operational context, or post-incident analysis. Risk profiles evolve — the monitoring program must ensure the ATO continues to reflect current risk reality.</span></div>
+      <div class="cheat-pill"><strong>POA&M Management</strong><span>Tracking remediation progress on existing POA&M items. Adding new POA&M items for issues discovered during monitoring. Verifying that remediated items are actually fixed. Reporting POA&M status to the AO and CISO as part of the security posture picture.</span></div>
+      <div class="cheat-pill"><strong>Decommission and Removal</strong><span>When a system reaches end of life, MONITOR includes procedures for secure decommissioning — ensuring data is properly disposed of, connections are terminated, accounts are removed, and the system is properly removed from the authorization inventory.</span></div>
+    </div>
+    <div class="analogy-box"><strong>MONITOR as continuous health management:</strong> An ATO is like a physical health exam that says "you're healthy enough to work this job." But the exam is only accurate on exam day — a person who passes a health exam could develop a serious condition six months later. Continuous monitoring is like ongoing health tracking — blood pressure monitoring, annual checkups, symptom tracking. It ensures that the health status that justified the initial clearance continues to reflect current health reality. If significant health changes occur, the clearance may need to be reassessed — just as significant security changes may require ATO reassessment.</div>`,
+    quiz: { q: "What is 'ongoing authorization' as introduced in SP 800-37 Rev 2, and how does it differ from traditional periodic reauthorization?", opts: ["Ongoing authorization means ATOs never expire", "Ongoing authorization means the authorization decision is continuously informed by monitoring data rather than being based solely on periodic point-in-time assessments — significant security changes revealed by monitoring may trigger authorization review before the formal period expires", "Ongoing authorization eliminates the need for formal ATOs", "Ongoing authorization requires monthly AO reviews of all systems"], ans: 1, explain: "Ongoing authorization shifts the model from 'authorized until expiry date' to 'authorization continuously supported by monitoring evidence.' Traditional periodic reauthorization assessed security at a point in time every 3 years. If security degraded significantly in year 2, the system continued operating with an ATO based on 2-year-old evidence. Ongoing authorization means monitoring continuously validates the authorization — significant security degradation detected through monitoring can trigger early authorization review rather than waiting for the scheduled reauthorization date." }
+  },
+  {
+    title: "Continuous Monitoring Strategy and ISCM",
+    tagline: "Building the ongoing monitoring program that keeps authorizations current",
+    body: `<p>Effective continuous monitoring doesn't happen by accident — it requires a deliberate, documented <span class="key-term">Information Security Continuous Monitoring (ISCM)</span> strategy. NIST SP 800-137 provides the framework for ISCM programs, defining how organizations should structure their ongoing monitoring to provide meaningful, timely security posture information to those who need it.</p>
+    <div class="highlight-box"><strong>The ISCM lifecycle (NIST SP 800-137):</strong> Define monitoring strategy → Establish measures and metrics → Implement monitoring programs → Analyze data and report → Respond to findings → Review and update the monitoring program. This is itself a continuous cycle — the monitoring program must be reviewed and improved just as the security program it monitors is continuously improved.</div>
+    <p>Continuous monitoring strategy components:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Monitoring Frequencies</strong><span>Different controls have different monitoring frequencies based on volatility and risk. Real-time/continuous: authentication logs, network traffic anomaly detection. Daily: vulnerability scan results, system availability. Weekly: patch compliance. Monthly: user access reviews. Quarterly: configuration compliance scans. Annually: full control assessments.</span></div>
+      <div class="cheat-pill"><strong>Automation and Tooling</strong><span>ISCM at scale requires automation. Security Information and Event Management (SIEM) systems aggregate logs. Vulnerability scanners continuously assess patch status. Configuration compliance tools verify system hardening. Automated reporting dashboards surface status to appropriate decision-makers in near real time.</span></div>
+      <div class="cheat-pill"><strong>Metrics and Measures</strong><span>ISCM generates quantitative security metrics: percentage of systems with current patches, number of days since last vulnerability scan, POA&M closure rate, mean time to remediate critical findings. These metrics provide objective evidence of security posture trend and are key inputs to the annual FISMA report.</span></div>
+      <div class="cheat-pill"><strong>Reporting Structure</strong><span>ISCM reporting flows upward: ISSO reports to ISSM reports to CISO reports to AO and agency leadership. Each level receives information appropriate to their role and accountability — technical details at ISSO level, risk management summaries at AO level, strategic security posture at CISO/leadership level.</span></div>
+    </div>
+    <div class="info-box"><strong>CDM — Continuous Diagnostics and Mitigation:</strong> The Department of Homeland Security (DHS) / CISA operates the CDM Program — a government-wide continuous monitoring program that provides federal agencies with standardized tools and capabilities for asset management, identity management, network security, and data protection monitoring. CDM provides agencies with dashboards showing real-time security posture and feeds data into government-wide cybersecurity situational awareness. CDM participation is strongly encouraged for federal agencies and directly supports ISCM program requirements.</div>`,
+    quiz: { q: "Why does an effective continuous monitoring strategy specify different monitoring frequencies for different controls?", opts: ["To create an appearance of comprehensive monitoring while reducing actual work", "Because security controls have different volatility and risk levels — a firewall rule set changes less frequently than user access rights, so monitoring frequencies should be calibrated to the speed at which each control can realistically change and the risk of an undetected change", "Because FISMA requires quarterly monitoring for all controls", "To allow agencies to skip monitoring of difficult controls"], ans: 1, explain: "Different controls have different rates of change and different risk consequences if they drift. User access rights change frequently (new hires, role changes, terminations) and unauthorized access has high risk — warranting monthly or even more frequent review. Firewall rule sets change less frequently and should be monitored accordingly. Monitoring everything at the same frequency either over-monitors stable controls (wasting resources) or under-monitors dynamic ones (creating risk windows). Risk-calibrated monitoring frequency is both more effective and more efficient." }
+  },
+  {
+    title: "The Authorization Package — Putting It All Together",
+    tagline: "The three-document case for why a system should be authorized to operate",
+    body: `<p>The <span class="key-term">authorization package</span> is the complete body of evidence that the Authorizing Official reviews when making the authorization decision. It tells the complete security story of a system in three documents — and the quality, completeness, and honesty of that package directly determine the quality of the authorization decision.</p>
+    <div class="highlight-box">The three-document authorization package:<br><br><strong>System Security Plan (SSP):</strong> The "what we did" document — describes the system, its information, its security categorization, and how all security controls are implemented. The complete security architecture and implementation record.<br><br><strong>Security Assessment Report (SAR):</strong> The "how we know it's working" document — independent assessment findings showing which controls are implemented correctly, which have deficiencies, and the evidence supporting each determination.<br><br><strong>Plan of Action and Milestones (POA&M):</strong> The "what we know is broken and our plan to fix it" document — formal tracking of identified deficiencies with remediation plans, resources, and timelines.</div>
+    <p>How these documents tell the security story together:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>SSP → SAR Connection</strong><span>The SAR tests the specific claims made in the SSP. If the SSP says "MFA is implemented for all privileged access" the SAR includes a test of that specific claim. The SAR essentially audits the SSP — verifying that what was documented is what was implemented.</span></div>
+      <div class="cheat-pill"><strong>SAR → POA&M Connection</strong><span>Every "Other Than Satisfied" finding in the SAR generates a POA&M entry. The POA&M is directly derived from the SAR — it's the remediation response to each assessment finding. An AO reviewing the SAR and POA&M together sees exactly what's broken and what the plan is to fix it.</span></div>
+      <div class="cheat-pill"><strong>POA&M → Risk Decision</strong><span>The AO uses the POA&M to assess residual risk — if all High findings have clear, credible remediation plans with near-term completion dates, that's a different risk picture than High findings with vague plans and distant completion dates. POA&M quality directly influences the authorization decision.</span></div>
+      <div class="cheat-pill"><strong>Executive Summary</strong><span>Large authorization packages include an executive summary for the AO — condensing hundreds of pages of technical documentation into a risk-focused summary: system purpose, overall security posture, most significant findings, residual risk level, and the recommended authorization decision. The AO may review the full package or focus on the executive summary plus specific areas of concern.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The criminal trial analogy:</strong> An authorization package is like a legal case file. The SSP is the defendant's own statement — "here's who I am and what I do." The SAR is the prosecution's case — "here's what the investigation found." The POA&M is the defendant's response — "here are the problems we acknowledge and our plan to address them." The AO is the judge making a decision based on the complete record. A strong case has consistent, coherent, detailed evidence. A weak case has gaps, contradictions, and vague promises. The authorization decision quality reflects the package quality.</div>`,
+    quiz: { q: "Why is the SAR described as 'auditing the SSP' in the authorization package relationship?", opts: ["Because NIST requires the SAR to be written in audit format", "Because the SAR tests the specific security claims made in the SSP — if the SSP says a control is implemented a certain way, the SAR tests that specific claim and documents whether it is actually implemented as described, providing independent verification of SSP accuracy", "Because only auditors are authorized to write SARs", "Because the SAR replaces the SSP for authorization purposes"], ans: 1, explain: "The SAR audits the SSP by testing the specific implementation claims made in it. The SSP says 'here's how we implemented every security control.' The SAR says 'here's what we found when we independently tested every implementation claim you made.' When SAR findings are consistent with SSP claims, they validate the SSP. When SAR findings contradict SSP claims, they reveal either inaccurate documentation or controls that aren't working as described — both of which are significant findings that affect the authorization decision." }
+  },
+  {
+    title: "RMF Roles in Practice — The Human Ecosystem",
+    tagline: "How the people responsible for RMF actually work together",
+    body: `<p>Understanding RMF roles in theory is one thing — understanding how they interact in practice is essential for anyone who will work in or around a federal security program. The roles create an interconnected ecosystem of accountability that — when functioning well — produces genuine security. When it malfunctions — usually due to accountability gaps or role ambiguity — it produces the paper compliance the RMF was designed to eliminate.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>The AO and ISSO Relationship</strong><span>The AO makes risk decisions; the ISSO provides the security posture information that makes those decisions possible. ISSOs who provide inaccurate or optimistically-framed security status reports undermine the AO's ability to make good decisions. The AO who expects honest, timely information — and responds constructively to bad news — creates the conditions for good ISSO performance.</span></div>
+      <div class="cheat-pill"><strong>The ISSO and System Owner Tension</strong><span>System Owners want their systems to function with minimum friction. ISSOs want security controls that may introduce friction. This inherent tension is healthy when managed well — the System Owner's mission perspective and the ISSO's security perspective together produce better decisions than either alone. When System Owners override ISSO concerns without proper risk acceptance, security deteriorates.</span></div>
+      <div class="cheat-pill"><strong>The SCA Independence Challenge</strong><span>Security Control Assessors must be independent of the system team — but they often work in the same organization, know the system team personally, and face implicit pressure to avoid findings that delay authorizations. Maintaining genuine independence requires both organizational structure (reporting to a different chain of command) and personal integrity.</span></div>
+      <div class="cheat-pill"><strong>Common Control Providers and System Owners</strong><span>When system security depends on inherited controls from a common control provider — the organization's network security team, the data center physical security team — the System Owner inherits both the benefit and the risk. If the common control provider's inherited control fails, the systems that inherited it are vulnerable. ISAs and coordination agreements must address this dependency clearly.</span></div>
+      <div class="cheat-pill"><strong>The CISO's Role Across Systems</strong><span>The agency CISO sees the enterprise security picture — not just individual systems but the aggregate risk posture across all authorized systems. The CISO uses POA&M dashboards, monitoring reports, and authorization statuses to identify systemic problems (the same control failing across multiple systems), allocate security resources, and advise leadership on enterprise risk.</span></div>
+      <div class="cheat-pill"><strong>Contractors in the RMF</strong><span>Much federal IT work is performed by contractors. Contractors may serve as ISSOs, System Owners, SCAs, and technical implementors. FISMA accountability still rests with federal officials — a contractor ISSO cannot replace a federal CISO's accountability. The government-contractor RMF relationship requires careful definition of authorities, deliverables, and accountability.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The role ecosystem at the VA:</strong> For a VA patient data system: the System Owner might be an IT project manager responsible for the EHR's technical operation. The ISSO might be a federal employee or contractor maintaining daily security oversight. The AO is likely a senior VA official — perhaps an Assistant Secretary — who accepted risk. The SCA team might be an independent assessment team from a different VA component. The CISO provides enterprise oversight. Each role serves a distinct function; the ecosystem only works when all roles are filled by people who take their responsibilities seriously.</div>`,
+    quiz: { q: "A System Owner pressures an ISSO to omit a significant security finding from the SSP to avoid delaying the system's authorization. Why is this problematic beyond just inaccurate documentation?", opts: ["It delays the system's eventual deployment when the finding is later discovered", "It corrupts the risk decision the AO makes — the AO accepts risk based on complete information, and omitting a significant finding means the AO unknowingly accepts greater risk than they were told. This can constitute fraud in federal programs and undermines the entire RMF accountability structure.", "It creates extra work for the SCA during assessment", "It violates data classification requirements for security documentation"], ans: 1, explain: "Omitting significant findings from an SSP corrupts the AO's risk decision — the AO thinks they're accepting the risk profile documented in the package, but they're actually accepting greater undisclosed risk. Beyond the ethical violation, this can constitute fraud in federal programs (false statements to federal officials) and potentially False Claims Act violations for contractors. The RMF's accountability structure depends on honest documentation. When that's violated, the authorization decision becomes meaningless — and the people responsible face serious professional and legal consequences." }
+  },
+  {
+    title: "FedRAMP — RMF for Cloud Service Providers",
+    tagline: "How the federal government authorizes cloud services at scale",
+    body: `<p>The rise of cloud computing created a fundamental challenge for the NIST RMF: if every federal agency independently assessed the same cloud service provider using RMF, the government would produce hundreds of redundant assessments of the same infrastructure. <span class="key-term">FedRAMP</span> — the Federal Risk and Authorization Management Program — solves this through a "do it once, use it many times" authorization model for cloud services.</p>
+    <div class="highlight-box"><strong>What FedRAMP is:</strong> FedRAMP is a government-wide program (jointly managed by GSA, DHS, DOD, and NIST) that provides a standardized approach to security authorization for cloud products and services. Cloud service providers undergo a rigorous FedRAMP assessment once, receive a FedRAMP authorization, and federal agencies can then leverage (reuse) that authorization rather than independently assessing the same cloud service. Mandatory for federal agencies using cloud services — agencies must use FedRAMP-authorized cloud services for federal data.</div>
+    <p>FedRAMP authorization paths:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Agency Authorization</strong><span>A specific federal agency sponsors the cloud service provider's authorization, conducting their own assessment (using a FedRAMP-accredited Third Party Assessment Organization, or 3PAO) and issuing an Agency ATO. Other agencies can then leverage this authorization, reducing their own assessment burden.</span></div>
+      <div class="cheat-pill"><strong>Joint Authorization Board (JAB) Authorization</strong><span>The JAB — comprising CIOs from DoD, DHS, and GSA — can issue a Provisional ATO (P-ATO) for cloud services with broad government applicability. JAB authorizations represent the highest level of FedRAMP review rigor and are most widely accepted across agencies.</span></div>
+      <div class="cheat-pill"><strong>FedRAMP Baseline Levels</strong><span>FedRAMP has three baselines corresponding to FIPS 199 impact levels: FedRAMP Low, FedRAMP Moderate (most common — required for systems with limited-sensitivity government data), and FedRAMP High (required for the most sensitive federal data). Commercial cloud providers typically pursue Moderate first.</span></div>
+      <div class="cheat-pill"><strong>3PAOs — Third Party Assessment Organizations</strong><span>FedRAMP assessments must be conducted by accredited 3PAOs — independent organizations certified by the FedRAMP program office to conduct FedRAMP assessments. 3PAOs for FedRAMP play the same role as Security Control Assessors in traditional RMF — independent, rigorous, evidence-based.</span></div>
+    </div>
+    <div class="analogy-box"><strong>FedRAMP's "do once, use many times" value:</strong> Before FedRAMP, if 50 federal agencies wanted to use the same cloud storage service, each would independently assess it — 50 separate assessments of the same infrastructure, producing 50 separate (and potentially inconsistent) authorization packages. FedRAMP means the cloud service is assessed once rigorously by a 3PAO, authorized once (by JAB or a sponsoring agency), and all 50 agencies leverage that single authorization. The cloud provider saves enormous compliance cost. The government saves enormous assessment cost. And security is actually better — one rigorous assessment is more thorough than 50 cursory ones.</div>`,
+    quiz: { q: "A federal agency wants to use a cloud storage service that doesn't have FedRAMP authorization to store Moderate-impact government data. What must happen before the agency can use this service?", opts: ["The agency can use any commercial cloud service as long as they perform their own security review", "The cloud service must obtain FedRAMP Moderate authorization (through either the JAB or agency authorization path) before the agency can use it for Moderate-impact federal data — this is a mandatory requirement for federal cloud adoption", "The agency can proceed with a waiver from their CISO", "FedRAMP only applies to agencies with more than 10,000 employees"], ans: 1, explain: "FedRAMP authorization is mandatory for federal agencies using cloud services to handle federal data. A cloud service without FedRAMP Moderate authorization cannot be used for Moderate-impact government data — the agency must either require the cloud provider to pursue FedRAMP authorization, find an already-authorized alternative service, or obtain a formal exception (which requires significant justification and senior approval). This requirement exists because unassessed cloud environments represent unquantified risk to federal information." }
+  },
+  {
+    title: "RMF and the System Development Lifecycle (SDLC)",
+    tagline: "Integrating security from the very beginning — not bolted on at the end",
+    body: `<p>One of the NIST RMF's most important design principles — and one of the most commonly violated in practice — is the integration of security throughout the <span class="key-term">System Development Lifecycle (SDLC)</span>. Security addressed from the beginning of system design is dramatically less expensive, more effective, and less disruptive than security retrofitted onto a finished system.</p>
+    <div class="highlight-box"><strong>The SDLC phases and RMF integration:</strong><br><br><strong>Initiation Phase:</strong> Begin Prepare activities. Define mission, data types, potential categorization. Identify security requirements early so they can drive design decisions.<br><br><strong>Development/Acquisition Phase:</strong> Complete Categorize and Select. Security requirements become system requirements. Security controls are designed into the system architecture, not added after. This is where security is cheapest to implement.<br><br><strong>Implementation Phase:</strong> Implement and Assess. Deploy controls as the system is built, not after. Begin assessment of implemented components. Identify and address issues before the system goes live.<br><br><strong>Operations/Maintenance Phase:</strong> Authorize and Monitor. Ongoing operation with continuous monitoring. Configuration management, change management, and ongoing assessment.<br><br><strong>Disposition Phase:</strong> Secure decommissioning. Data sanitization. Authorization closure. Remove system from authorization inventory.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Security Early is Security Cheap</strong><span>Research consistently shows security costs increase dramatically when addressed later in development. A design flaw caught during requirements review costs 30x less to fix than the same flaw found during operations. RMF integration from the start drives security into the system's foundation.</span></div>
+      <div class="cheat-pill"><strong>The "bake vs. bolt" principle</strong><span>"Baking in" security from the beginning means security features are fundamental to how the system works — authentication, access control, and encryption are integral to the design. "Bolting on" security after the fact means adding security controls to a system not designed for them — usually more expensive and less effective.</span></div>
+      <div class="cheat-pill"><strong>Agile and RMF</strong><span>Modern development often uses agile methodologies with rapid iteration. RMF integration in agile environments uses continuous assessment and ongoing authorization rather than point-in-time assessment. Controls are assessed sprint-by-sprint as features are built, rather than in one large assessment at project completion.</span></div>
+      <div class="cheat-pill"><strong>DevSecOps</strong><span>The federal government increasingly adopts DevSecOps — development, security, and operations integrated throughout the lifecycle. DevSecOps automates security testing (SAST/DAST tools), configuration compliance checks, and vulnerability scanning in the CI/CD pipeline — making RMF continuous monitoring integral to the deployment process.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The renovation vs. new construction analogy:</strong> Adding security to a finished system is like renovating a house to add earthquake resistance — expensive, disruptive, and often less effective than designing it in from the start. Building security into a new system is like constructing an earthquake-resistant building from the ground up — the same structural principles cost less and work better when they're in the foundation rather than bolted onto finished walls. SDLC integration is the "build it right" principle for federal information security.</div>`,
+    quiz: { q: "A federal IT project is pressured to complete development before performing security categorization and control selection. What risk does this create?", opts: ["Minimal risk — security can always be added during the assessment phase", "Significant risk — security requirements not identified during design may require expensive architectural changes later, and controls not designed into the system architecture may be less effective or impossible to implement without major rework", "Only documentation risk — the SSP can be written after deployment", "Only timeline risk — the ATO might be delayed"], ans: 1, explain: "Delaying security until after development is one of the most costly and common federal IT mistakes. Design decisions made without security requirements often create architectural constraints that make required controls expensive or impossible to implement without significant rework. Access control built into an authentication framework is fundamentally different from access control bolted onto a system designed without it. The cost of retrofitting security onto completed systems consistently exceeds the cost of designing it in from the start." }
+  },
+  {
+    title: "RMF, NIST CSF 2.0, and the Broader NIST Ecosystem",
+    tagline: "How RMF fits into the complete NIST cybersecurity framework landscape",
+    body: `<p>The NIST RMF doesn't exist in isolation — it's one component of a rich ecosystem of NIST publications that together address cybersecurity risk management at multiple levels. Understanding how RMF relates to NIST CSF 2.0 and other key publications is essential for GRC professionals who work across both strategic governance and operational security contexts.</p>
+    <div class="highlight-box"><strong>CSF 2.0 and RMF — Strategic vs. Operational:</strong> NIST CSF 2.0 is the enterprise governance framework — it provides the strategic language for managing cybersecurity risk at the organizational level, communicating with boards, and establishing risk management programs. NIST RMF is the operational process — it provides the specific, step-by-step process for authorizing individual information systems. They work at different levels of the same organization simultaneously: CSF governs the enterprise; RMF authorizes each system within it.</div>
+    <p>How CSF functions map to RMF steps:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>GOVERN → Prepare</strong><span>CSF's GOVERN function (risk strategy, roles, policy, oversight) maps directly to RMF's Prepare step. An organization that has implemented CSF GOVERN has many of the organizational and system-level Prepare activities already established. GOVERN at enterprise level; Prepare at system level.</span></div>
+      <div class="cheat-pill"><strong>IDENTIFY → Categorize + Select</strong><span>CSF's IDENTIFY function (asset management, risk assessment) provides the enterprise context that informs RMF Categorize (what information types does the system handle? what risks does it face?) and Select (which controls address the identified risks?).</span></div>
+      <div class="cheat-pill"><strong>PROTECT → Implement</strong><span>CSF's PROTECT function describes what security outcomes should be achieved. RMF's Implement step is how those outcomes are specifically deployed and documented for a given system using SP 800-53 controls.</span></div>
+      <div class="cheat-pill"><strong>DETECT + RESPOND + RECOVER → Monitor</strong><span>CSF's DETECT, RESPOND, and RECOVER functions describe ongoing security capabilities. RMF's Monitor step operationalizes these — implementing the continuous monitoring program, incident response procedures, and recovery plans that fulfill these CSF outcomes at the system level.</span></div>
+    </div>
+    <p>Other key NIST publications that work alongside RMF:</p>
+    <div class="badge-row">
+      <span class="badge badge-forest">SP 800-30 — Risk Assessment Guide (used in Categorize and Prepare)</span>
+      <span class="badge badge-forest">SP 800-39 — Organization-Wide Risk Management (enterprise context for RMF)</span>
+      <span class="badge badge-forest">SP 800-53A — Assessment Procedures (used by SCAs in Assess)</span>
+      <span class="badge badge-forest">SP 800-60 — Information Type Catalog (used in Categorize)</span>
+      <span class="badge badge-forest">SP 800-128 — Configuration Management (used in Implement and Monitor)</span>
+      <span class="badge badge-forest">SP 800-137 — Continuous Monitoring (used in Monitor)</span>
+      <span class="badge badge-forest">SP 800-161 — Supply Chain Risk Management (used in Select and Monitor)</span>
+    </div>`,
+    quiz: { q: "An organization has implemented NIST CSF 2.0's GOVERN function comprehensively — risk strategy, roles, policies, and supply chain risk management are all documented and active. How does this benefit their RMF implementation for individual systems?", opts: ["There is no relationship — CSF and RMF are independent frameworks", "CSF GOVERN outcomes directly support RMF Prepare activities — the risk strategy, defined roles, and policies established at the enterprise level through GOVERN provide the organizational foundation that individual system Prepare activities build on, reducing redundant work and ensuring consistency", "CSF GOVERN replaces the need for RMF Prepare", "CSF GOVERN only benefits federal agencies with more than 1,000 employees"], ans: 1, explain: "CSF GOVERN and RMF Prepare address the same governance needs at different levels. GOVERN establishes organizational-level risk strategy, roles, and policies. RMF Prepare establishes system-level security context building on those organizational foundations. An organization with strong CSF GOVERN already has defined risk appetite, established roles, and active monitoring strategy — all of which RMF Prepare at the system level references and builds on. This prevents redundant work and ensures individual system security decisions align with enterprise risk management strategy." }
+  },
+  {
+    title: "RMF and CMMC — How They Relate",
+    tagline: "Defense contractors navigating two rigorous security frameworks simultaneously",
+    body: `<p>Defense contractors who work with federal civilian agencies and the Department of Defense simultaneously face two different security authorization frameworks: <span class="key-term">NIST RMF</span> (for federal civilian systems) and <span class="key-term">CMMC</span> (for DoD CUI protection). Understanding how these frameworks relate enables contractors to build integrated compliance programs rather than parallel, duplicative ones.</p>
+    <div class="highlight-box"><strong>The key distinction:</strong> NIST RMF is a system authorization process — it produces an ATO for a specific information system operated by or for a federal agency. CMMC is an organizational certification — it certifies that an organization's security program meets the required level for handling CUI across all their DoD work. RMF authorizes specific systems; CMMC certifies organizational security programs.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Control Overlap</strong><span>CMMC Level 2's 110 practices (from NIST SP 800-171) and RMF's NIST SP 800-53 controls share significant content — both are derived from the same NIST control catalog. An organization implementing CMMC Level 2 has implemented most of the controls they would need for a NIST RMF Moderate authorization. Mapping between frameworks enables integrated implementation.</span></div>
+      <div class="cheat-pill"><strong>Different Audiences</strong><span>RMF is used when a contractor operates a federal information system — they go through RMF to get an ATO for that system. CMMC is required when a contractor handles CUI in their own environment as part of DoD work — they get CMMC certified to prove their own security program is adequate. Both may apply to the same contractor simultaneously.</span></div>
+      <div class="cheat-pill"><strong>Documentation Synergy</strong><span>Many RMF artifacts serve CMMC purposes. An SSP for an RMF-authorized system can serve as the system security plan for CMMC. POA&Ms required by both frameworks can be unified. Assessment evidence collected for RMF assessment overlaps with evidence needed for CMMC assessment. Integrated documentation reduces total compliance burden.</span></div>
+      <div class="cheat-pill"><strong>Assessment Bodies</strong><span>RMF assessments are performed by Security Control Assessors — government employees or contractors hired by the system owner's agency. CMMC Level 2 (critical programs) requires C3PAO assessment by organizations accredited by The Cyber AB. These are different assessment ecosystems with different accreditation and oversight structures.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The contractor that bridges both worlds:</strong> A defense IT contractor might operate a federal system for the VA (requiring RMF/FISMA compliance with an ATO) and simultaneously handle CUI from DARPA contracts in their own environment (requiring CMMC Level 2 certification). They implement SP 800-53 controls for the VA system and SP 800-171 controls for their CMMC program. Because both control sets derive from the same NIST catalog, their security team's expertise transfers across both frameworks — and shared documentation infrastructure serves both compliance programs simultaneously. This is the real-world integration benefit of understanding how these frameworks connect.</div>`,
+    quiz: { q: "A defense contractor receives an RMF Authorization to Operate for a federal system they operate for a government agency. Does this ATO satisfy their CMMC Level 2 requirement for protecting CUI in their own environment?", opts: ["Yes — any federal security authorization satisfies CMMC requirements", "No — an ATO is a system authorization for a specific federal system; CMMC is an organizational certification for the contractor's own environment handling CUI. They address different scopes and are issued by different authorities", "Yes — RMF is a higher standard than CMMC so it automatically satisfies it", "Only if the ATO was issued by DoD rather than a civilian agency"], ans: 1, explain: "An RMF ATO and CMMC certification are different things addressing different scopes. An ATO authorizes a specific system for operation based on its security controls. CMMC certifies that the contractor's own organizational security program is adequate for handling CUI in their facilities and systems. A contractor can have an ATO for a system they operate for the government and still need CMMC certification for their own environment where they handle DoD CUI. Both may be required simultaneously for the same contractor." }
+  },
+  {
+    title: "RMF at the Department of Veterans Affairs",
+    tagline: "Applying RMF concepts in the largest integrated healthcare system in the US",
+    body: `<p>The Department of Veterans Affairs is one of the most complex FISMA environments in the federal government — and one of the most consequential. The VA operates the nation's largest integrated healthcare system, a massive benefits administration program, and extensive research capabilities. Every information system supporting these missions must go through NIST RMF. Understanding RMF in the VA context makes the framework concrete and directly relevant for Jason's current work.</p>
+    <div class="highlight-box">The VA's information security environment: Over 1,000 unique information systems in the FISMA inventory. Electronic health records for 9+ million enrolled veterans. Benefits processing systems handling billions of dollars in compensation and pension payments. Research networks supporting clinical trials. Systems spanning healthcare, financial services, HR, and administration — each with different data types, different impact levels, and different risk profiles. The VA CISO oversees one of the most demanding FISMA environments in the federal government.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>VistA and EHR Modernization</strong><span>The VA's legacy EHR system (VistA) and its replacement (the Oracle Cerner-based modernization) represent the most significant FISMA challenge in VA history. Each deployment of the new EHR system at a medical center requires its own RMF work — categorization, control selection, implementation, assessment, and authorization. The nationwide rollout involves hundreds of individual authorization activities.</span></div>
+      <div class="cheat-pill"><strong>Veterans PII — High Impact</strong><span>Veterans' health records contain some of the most sensitive PII in the federal government — diagnoses, psychiatric records, substance abuse treatment, sexual assault reporting, military trauma. Most VA health information systems are categorized High for confidentiality, creating demanding control requirements across the healthcare IT portfolio.</span></div>
+      <div class="cheat-pill"><strong>Privacy Act Overlap</strong><span>VA systems must comply with both FISMA/RMF and the Privacy Act of 1974. RMF's PT (PII Processing and Transparency) controls in SP 800-53 directly address Privacy Act requirements. The VA's Privacy Officer and CISO must coordinate to ensure privacy controls in the RMF process address both security and Privacy Act obligations simultaneously.</span></div>
+      <div class="cheat-pill"><strong>VA Inspector General Reviews</strong><span>The VA Inspector General (VAOIG) conducts annual FISMA evaluations — assessing whether VA's information security program is adequate, whether systems have current ATOs, and whether continuous monitoring is effective. VAOIG findings are public, reported to Congress, and directly affect VA leadership accountability. Poor FISMA ratings have career consequences.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The relevance to Jason's work:</strong> As a team lead in IT compliance at the VA, Jason works within the FISMA/RMF ecosystem daily — whether tracking POA&Ms, supporting ATO processes, working with ISSOs on security documentation, reviewing control implementations, or preparing for IG evaluations. NIST RMF isn't an abstract framework in the VA context — it's the operational reality of how the VA demonstrates that the systems serving veterans are secure enough to trust with their most sensitive health and benefits information.</div>`,
+    quiz: { q: "A VA medical center deploys a new telehealth application that processes veterans' mental health session notes, psychiatric diagnoses, and medication prescriptions. What FIPS 199 impact level should this system likely receive, and why?", opts: ["Low — telehealth is a modern, cloud-based technology with modern security", "High — veterans' mental health records carry extremely high confidentiality sensitivity (stigmatized diagnoses, privacy implications), high integrity requirements (incorrect data could harm patient care), making High the appropriate categorization under FIPS 199's high watermark principle", "Moderate — as a standard healthcare system with typical patient data", "The impact level doesn't matter because the system is hosted by a vendor, not VA directly"], ans: 1, explain: "A VA telehealth application with mental health records would likely be categorized High under FIPS 199. Mental health records, psychiatric diagnoses, and substance abuse information carry the highest confidentiality sensitivity in healthcare — unauthorized disclosure could devastate careers, relationships, and veteran welfare. Integrity requirements are high — incorrect psychiatric medication data could cause serious harm. Applying the high watermark principle to these CIA ratings produces a High overall categorization, requiring the High SP 800-53 baseline regardless of the system's technology stack or hosting arrangement." }
+  },
+  {
+    title: "Building a Complete RMF Compliance Program",
+    tagline: "What it actually takes to stand up and sustain an effective RMF program",
+    body: `<p>Understanding individual RMF steps is necessary but not sufficient. Professionals working in federal cybersecurity need to understand what a complete, functioning RMF compliance program looks like — from organizational setup through continuous monitoring at scale. This is the operational reality of federal information security management.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Build the Organizational Foundation</strong><span>Before anything else: formally designate all RMF roles (AOs, ISSOs, System Owners, SCA teams). Train every person in their role responsibilities. Establish the reporting structure from ISSO through ISSM to CISO. Document the organization's risk management strategy and risk tolerance. None of the system-level work is coherent without these foundations.</span></div>
+      <div class="cheat-pill"><strong>Build the System Inventory</strong><span>Establish and maintain a complete, accurate inventory of all information systems subject to FISMA. For each system: name, owner, AO, authorization status, expiration date, categorization level, and key security contacts. The system inventory is the backbone of FISMA reporting and ATO tracking. An incomplete inventory means unknown authorization gaps.</span></div>
+      <div class="cheat-pill"><strong>Standardize Common Controls</strong><span>Identify security controls provided organization-wide — physical security, network perimeter, identity management, patch management. Formally authorize these as common controls, document them, and assess them once. Systems can then inherit them rather than each duplicating the work. Common control programs can dramatically reduce per-system authorization effort.</span></div>
+      <div class="cheat-pill"><strong>Implement an ISCM Program</strong><span>Stand up the continuous monitoring infrastructure: SIEM for centralized log management, vulnerability scanning tools, configuration compliance monitoring, POA&M tracking system, and security dashboards. Without automated ISCM tooling, continuous monitoring becomes manually impossible at scale. The CDM program provides many of these tools to federal agencies.</span></div>
+      <div class="cheat-pill"><strong>Prioritize the ATO Portfolio</strong><span>Not all systems have equal priority. High-impact systems, mission-critical systems, and systems with expired or expiring ATOs deserve prioritized attention. A risk-based prioritization of the authorization portfolio ensures limited security resources are applied where they matter most — not spread evenly across all systems regardless of risk.</span></div>
+      <div class="cheat-pill"><strong>Manage POA&Ms as a Program</strong><span>POA&Ms are not just documentation — they're the remediation program. Track them in a centralized system. Report closure rates, average age, and severity distribution to senior leadership. Set realistic but firm closure timelines. Celebrate closures as genuine security improvements. POA&Ms that age indefinitely signal a broken remediation program.</span></div>
+      <div class="cheat-pill"><strong>Prepare for IG Evaluations</strong><span>Annual IG FISMA evaluations assess the entire program — ATO coverage, monitoring effectiveness, POA&M management, and incident response. Prepare year-round rather than scrambling before the evaluation. Maintain evidence of monitoring, assessment, and remediation activities continuously. An IG audit should reveal what you already know, not discover what you missed.</span></div>
+      <div class="cheat-pill"><strong>Integrate with SDLC Processes</strong><span>Ensure security is integrated into IT project management from initiation. Security requirements must be identified at project kickoff, not added during deployment. Gate reviews that include RMF progress checks prevent the "security at the end" pattern that creates expensive, disruptive retrofitting and delayed authorizations.</span></div>
+    </div>
+    <div class="highlight-box"><strong>The most common RMF program failure:</strong> Operating systems without current ATOs — sometimes called "operating under expired authorization" or just informally as systems that have "fallen off the ATO train." Organizations with large, complex IT portfolios often have systems operating without a current ATO, usually because the reauthorization effort got deprioritized as other work competed for resources. IG evaluations consistently identify ATO coverage gaps as one of the most significant FISMA compliance weaknesses. Maintaining a current ATO for every system is the minimum viable FISMA compliance condition.</div>`,
+    quiz: { q: "An agency has 200 information systems but only 140 have current ATOs. The remaining 60 have expired ATOs. Under FISMA, what does this represent?", opts: ["Acceptable compliance — some expiration is normal in a large portfolio", "A significant FISMA compliance failure — all information systems must have current ATOs. Operating 60 systems without current authorization means the agency's leadership has not formally accepted the risk of operating those systems, which is both a compliance violation and a governance failure", "An administrative backlog that can be resolved with additional documentation", "An issue only for High-impact systems — Low and Moderate systems don't require current ATOs"], ans: 1, explain: "Every information system subject to FISMA must have a current, valid Authorization to Operate. Operating 60 systems without current ATOs means 60 systems are handling federal information without a senior official formally accepting the risk — a direct FISMA compliance failure. IG evaluations will flag this prominently, and the finding will appear in the agency's annual FISMA report to OMB and Congress. The agency CISO and leadership face accountability for this gap. Resolving it requires either obtaining current ATOs or formally decommissioning systems that cannot be authorized." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've completed all 30 days of NIST RMF! Let's take a final inventory of what you now know about the federal government's foundational process for authorizing and securing information systems.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>NIST RMF (Risk Management Framework) is the federal government's structured, 7-step process for managing security and privacy risk in information systems. Documented in NIST SP 800-37 Rev 2 (2018). Mandatory for federal agencies under FISMA. Produces an Authorization to Operate (ATO) — the formal government approval for a system to handle federal data. Free, publicly available from NIST. Widely adopted beyond federal government by contractors, state agencies, and regulated industries.</p>
+    <div class="tag-header">The 7 Steps</div>
+    <div class="step-card"><b>1 — PREPARE:</b> Establish organizational and system-level context, roles, and risk management strategy (NEW in Rev 2).</div>
+    <div class="step-card"><b>2 — CATEGORIZE:</b> Classify system and information using FIPS 199 (Low/Moderate/High impact levels).</div>
+    <div class="step-card"><b>3 — SELECT:</b> Choose SP 800-53 security control baseline; tailor and supplement for the system; identify inherited controls.</div>
+    <div class="step-card"><b>4 — IMPLEMENT:</b> Deploy security controls and document implementation in the System Security Plan (SSP).</div>
+    <div class="step-card"><b>5 — ASSESS:</b> Independently test controls using Examine/Interview/Test methods; produce Security Assessment Report (SAR).</div>
+    <div class="step-card"><b>6 — AUTHORIZE:</b> AO reviews SSP + SAR + POA&M and issues ATO (or DATO). Formal risk acceptance decision.</div>
+    <div class="step-card"><b>7 — MONITOR:</b> Ongoing control monitoring, POA&M management, change management, security status reporting.</div>
+    <div class="tag-header">Key Documents</div>
+    <div class="badge-row">
+      <span class="badge badge-forest">SSP — System Security Plan</span>
+      <span class="badge badge-forest">SAR — Security Assessment Report</span>
+      <span class="badge badge-forest">POA&M — Plan of Action and Milestones</span>
+      <span class="badge badge-forest">ATO — Authorization to Operate</span>
+      <span class="badge badge-forest">SAP — Security Assessment Plan</span>
+    </div>
+    <div class="tag-header">Key Roles</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">AO — Authorizing Official (accepts risk)</span>
+      <span class="badge badge-blue">SO — System Owner (operational responsibility)</span>
+      <span class="badge badge-blue">ISSO — Information System Security Officer (daily security)</span>
+      <span class="badge badge-blue">ISSM — Information System Security Manager (oversight)</span>
+      <span class="badge badge-blue">SCA — Security Control Assessor (independent testing)</span>
+    </div>
+    <div class="tag-header">Key Standards</div>
+    <div class="badge-row">
+      <span class="badge badge-green">FISMA — the law requiring RMF</span>
+      <span class="badge badge-green">FIPS 199 — categorization standard</span>
+      <span class="badge badge-green">FIPS 200 — minimum security requirements</span>
+      <span class="badge badge-green">SP 800-53 — security control catalog (20 families)</span>
+      <span class="badge badge-green">SP 800-53A — assessment procedures</span>
+      <span class="badge badge-green">SP 800-60 — information type catalog</span>
+      <span class="badge badge-green">SP 800-137 — continuous monitoring</span>
+      <span class="badge badge-green">FedRAMP — cloud service authorization</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete NIST RMF cheat sheet — all 7 steps, key documents, key roles, impact levels, SP 800-53 control families, and framework relationships in one comprehensive reference.</div>`,
+    quiz: { q: "What is the primary output that distinguishes NIST RMF from other cybersecurity frameworks like NIST CSF 2.0 or ISO 27001?", opts: ["A cybersecurity maturity score", "An Authorization to Operate (ATO) — a formal, signed decision by an accountable Authorizing Official that a specific system's residual security risks are acceptable for mission purposes, based on documented evidence", "A certification that an organization follows best practices", "An annual FISMA compliance report"], ans: 1, explain: "NIST RMF's unique output is the Authorization to Operate — a formal, documented risk acceptance decision for a specific system signed by an accountable Authorizing Official. This differs fundamentally from CSF 2.0 (which produces a profile showing security posture), ISO 27001 (which produces an organizational certification), or CIS Controls (which guides security improvement). The ATO is a system-specific, accountability-creating, evidence-based authorization decision — the federal government's mechanism for formally accepting security risk at the system level." }
+  },
+  {
+    title: "NIST RMF Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is NIST RMF?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">NIST Risk Management Framework. Federal government's structured 7-step process for managing security and privacy risk in information systems. Documented in NIST SP 800-37 Revision 2 (December 2018). Mandatory for federal agencies under FISMA (Federal Information Security Modernization Act). Produces an Authorization to Operate (ATO) — the formal government approval for a system to process federal information. Free, publicly available from NIST. Widely adopted by federal contractors, state/local agencies, and regulated industries. Works alongside NIST CSF 2.0 (enterprise governance) and NIST SP 800-53 (control catalog).</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The 7 Steps</h3>
+      <div class="step-card"><b>Step 1 — PREPARE (NEW in Rev 2)</b><br><span style="font-size:12px;color:#1a1a18">Organization level: designate roles, establish risk management strategy, organizational risk assessment, prioritize systems, establish monitoring strategy, identify common controls. System level: define system purpose, establish authorization boundary, identify security requirements, identify stakeholders. Purpose: ensure organizational and system readiness before RMF begins.</span></div>
+      <div class="step-card"><b>Step 2 — CATEGORIZE</b><br><span style="font-size:12px;color:#1a1a18">Classify the system and information it handles using FIPS 199. Identify all information types using SP 800-60. Evaluate confidentiality, integrity, and availability impact for each. Apply high watermark principle. Document security category: SC System = {(C, impact), (I, impact), (A, impact)}. Review and approval by System Owner and AO. Output: Completed System Categorization (Low, Moderate, or High).</span></div>
+      <div class="step-card"><b>Step 3 — SELECT</b><br><span style="font-size:12px;color:#1a1a18">Identify applicable SP 800-53 baseline (Low/Moderate/High) from SP 800-53B. Tailor: scope (remove N/A controls), supplement (add controls for unique risks), adjust parameters. Identify inherited controls from common control providers. Document compensating controls where baseline controls cannot be implemented. Output: Selected, tailored control set documented in SSP.</span></div>
+      <div class="step-card"><b>Step 4 — IMPLEMENT</b><br><span style="font-size:12px;color:#1a1a18">Deploy all selected security controls. Document implementation in System Security Plan — specific, verifiable implementation statements for each control. Includes technical controls, policies, procedures, and training. Classify controls as system-specific, hybrid, or inherited. Document is concurrent with implementation — not retrospective. Output: Implemented controls + completed SSP draft.</span></div>
+      <div class="step-card"><b>Step 5 — ASSESS</b><br><span style="font-size:12px;color:#1a1a18">Independent Security Control Assessor (SCA) evaluates controls using SP 800-53A procedures. Three methods: Examine (documentation review), Interview (personnel discussions), Test (technical control verification). Findings: Satisfied or Other Than Satisfied. Produces Security Assessment Plan (SAP) before assessment and Security Assessment Report (SAR) after. Assessment depth proportionate to system impact level.</span></div>
+      <div class="step-card"><b>Step 6 — AUTHORIZE</b><br><span style="font-size:12px;color:#1a1a18">AO reviews complete authorization package: SSP + SAR + POA&M. AO makes formal risk-based decision: Authorization to Operate (ATO) — risk acceptable, system may operate; ATO with Conditions — authorization with specific requirements; Denial of Authorization to Operate (DATO) — risk unacceptable. ATO documents residual risk acceptance with AO name, date, and typically 1-3 year validity. Operating without a current ATO is a FISMA violation.</span></div>
+      <div class="step-card"><b>Step 7 — MONITOR</b><br><span style="font-size:12px;color:#1a1a18">Ongoing: continuous control monitoring per ISCM strategy (SP 800-137), POA&M management and closure tracking, change management (assess security impact of system/environment changes), security status reporting to AO and CISO, ongoing risk assessments, maintaining current SSP. Supports ongoing authorization concept. Feeds into annual FISMA reporting. Includes secure decommissioning when system reaches end of life.</span></div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Impact Levels (FIPS 199)</h3>
+      <div class="impact-grid">
+        <div class="impact-low"><strong style="color:#27500A">LOW</strong><br><span style="font-size:12px">Limited adverse effect on operations, assets, or individuals. Basic cyber hygiene. Smallest SP 800-53 baseline. Less common — most systems are Moderate.</span></div>
+        <div class="impact-mod"><strong style="color:#633806">MODERATE (Most Common ~80%)</strong><br><span style="font-size:12px">Serious adverse effect. General-purpose federal systems, PII, financial processing. Moderate SP 800-53 baseline. Most federal general-purpose systems.</span></div>
+        <div class="impact-high"><strong style="color:#4A1B0C">HIGH</strong><br><span style="font-size:12px">Severe or catastrophic adverse effect. Health/safety critical systems, critical infrastructure, severe mission impact. Comprehensive High baseline. Strictest monitoring.</span></div>
+      </div>
+      <p style="font-size:12.5px;color:#6b6b68;margin-top:.5rem"><strong>High Watermark Principle:</strong> System impact level = highest individual rating across Confidentiality, Integrity, and Availability. SC = {(C, H), (I, M), (A, L)} → System = HIGH.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Documents</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>SSP — System Security Plan</b> — Complete system description: purpose, boundary, information types, categorization, ALL control implementation statements, roles, interconnections. Primary input to assessment and authorization. Must be kept current throughout operations.</div>
+        <div class="ctrl-card"><b>SAR — Security Assessment Report</b> — Independent assessor's findings for all controls: Satisfied or Other Than Satisfied. Assessment methods, evidence reviewed, findings rationale. One of three authorization package documents reviewed by AO.</div>
+        <div class="ctrl-card"><b>POA&M — Plan of Action and Milestones</b> — Tracked remediation plan for every control deficiency. Contains: weakness description, affected control, remediation steps, resources required, milestone dates, responsible party, status. Required by FISMA. AOs accept risk based on POA&M quality.</div>
+        <div class="ctrl-card"><b>ATO — Authorization to Operate</b> — Signed decision document from AO formally accepting residual risk and authorizing system operation. Includes AO name, date, validity period. Not a security certification — a formal risk acceptance. DATO = Denial of ATO.</div>
+        <div class="ctrl-card"><b>SAP — Security Assessment Plan</b> — Documents assessment scope, methods, schedule, and evidence requirements before assessment begins. Reviewed and approved before assessment starts. Defines what will be examined, interviewed, and tested.</div>
+        <div class="ctrl-card"><b>System Categorization</b> — Completed FIPS 199 form showing all information types, CIA ratings per SP 800-60, adjustments, and final impact level. Required SSP component. Approved by System Owner and AO.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Roles</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Authorizing Official (AO)</b> — Senior official who formally accepts risk and issues ATO. Cannot be delegated below certain seniority. Personally accountable for authorization decision. Reviews SSP + SAR + POA&M.</div>
+        <div class="ctrl-card"><b>System Owner (SO)</b> — Responsible for overall system procurement, operation, maintenance. Primary accountability for system's security posture. Works closely with ISSO. Often the program manager or IT project lead.</div>
+        <div class="ctrl-card"><b>ISSO — Information System Security Officer</b> — Day-to-day security manager for the system. Maintains SSP, tracks POA&Ms, monitors controls, coordinates assessments, reports to ISSM. Primary technical security contact.</div>
+        <div class="ctrl-card"><b>ISSM — Information System Security Manager</b> — Oversees security of multiple systems/programs. Management layer above ISSO. Liaison between system teams and CISO/AO. Ensures policy consistency across systems.</div>
+        <div class="ctrl-card"><b>Security Control Assessor (SCA)</b> — Independently tests controls during ASSESS. Must be independent of system development/operations. Produces SAR. Independence is non-negotiable for assessment credibility.</div>
+        <div class="ctrl-card"><b>Common Control Provider</b> — Provides inherited controls used by multiple systems (physical security, network infrastructure, enterprise identity management). Must document, assess, and maintain these controls for inheriting systems.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>SP 800-53 Rev 5 — 20 Control Families</h3>
+      <div class="badge-row">
+        <span class="badge badge-forest">AC — Access Control</span>
+        <span class="badge badge-forest">AT — Awareness and Training</span>
+        <span class="badge badge-forest">AU — Audit and Accountability</span>
+        <span class="badge badge-forest">CA — Assessment, Authorization, and Monitoring</span>
+        <span class="badge badge-forest">CM — Configuration Management</span>
+        <span class="badge badge-forest">CP — Contingency Planning</span>
+        <span class="badge badge-forest">IA — Identification and Authentication</span>
+        <span class="badge badge-forest">IR — Incident Response</span>
+        <span class="badge badge-forest">MA — Maintenance</span>
+        <span class="badge badge-forest">MP — Media Protection</span>
+        <span class="badge badge-forest">PE — Physical and Environmental Protection</span>
+        <span class="badge badge-forest">PL — Planning</span>
+        <span class="badge badge-forest">PM — Program Management</span>
+        <span class="badge badge-forest">PS — Personnel Security</span>
+        <span class="badge badge-forest">PT — PII Processing and Transparency (new in Rev 5)</span>
+        <span class="badge badge-forest">RA — Risk Assessment</span>
+        <span class="badge badge-forest">SA — System and Services Acquisition</span>
+        <span class="badge badge-forest">SC — System and Communications Protection</span>
+        <span class="badge badge-forest">SI — System and Information Integrity</span>
+        <span class="badge badge-forest">SR — Supply Chain Risk Management (new in Rev 5)</span>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Framework Relationships</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>NIST CSF 2.0</b> — Enterprise governance (what to achieve); RMF is operational process (how to authorize individual systems). CSF GOVERN → RMF Prepare; CSF IDENTIFY → Categorize+Select; CSF PROTECT → Implement; CSF DETECT/RESPOND/RECOVER → Monitor. Both operate simultaneously at different levels.</div>
+        <div class="ctrl-card"><b>NIST SP 800-53</b> — The security control catalog used in SELECT and IMPLEMENT. SP 800-53A provides assessment procedures for ASSESS. SP 800-53B provides the baselines. Together these form the core technical implementation standard for RMF.</div>
+        <div class="ctrl-card"><b>CMMC</b> — CMMC is organizational certification for DoD CUI; RMF is system authorization for federal systems. SP 800-171 (CMMC Level 2) derived from SP 800-53. Significant control overlap enables integrated compliance programs for contractors working with both DoD and civilian agencies.</div>
+        <div class="ctrl-card"><b>FedRAMP</b> — RMF for cloud services. "Do once, use many" authorization for cloud providers. FedRAMP Low/Moderate/High baselines correspond to FIPS 199 levels. 3PAOs conduct FedRAMP assessments. Mandatory for federal agencies using cloud services for federal data. JAB P-ATOs highest recognition.</div>
+        <div class="ctrl-card"><b>FISMA</b> — The law that mandates RMF for federal agencies. Agency heads personally responsible. Annual OMB reporting. IG evaluations assess program quality. ATO coverage, monitoring effectiveness, and POA&M management are primary FISMA metrics. Non-compliance has congressional visibility.</div>
+        <div class="ctrl-card"><b>ISO 27001</b> — ISO 27001's PDCA-based ISMS and SP 800-37's RMF address similar problems (systematic risk management) for different audiences (international enterprise vs. US federal). ISO 27001 Annex A maps to SP 800-53 control families. Organizations can use both: ISO 27001 for market credibility, RMF for FISMA compliance.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts</h3>
+      <div class="badge-row">
+        <span class="badge badge-forest">SP 800-37 Rev 2: December 2018 (current)</span>
+        <span class="badge badge-forest">7 steps: Prepare, Categorize, Select, Implement, Assess, Authorize, Monitor</span>
+        <span class="badge badge-forest">3 impact levels: Low, Moderate (most common ~80%), High</span>
+        <span class="badge badge-forest">3 authorization package documents: SSP + SAR + POA&M</span>
+        <span class="badge badge-forest">3 assessment methods: Examine, Interview, Test (SP 800-53A)</span>
+        <span class="badge badge-forest">FIPS 199: security categorization standard</span>
+        <span class="badge badge-forest">FIPS 200: 17 minimum security requirement areas</span>
+        <span class="badge badge-forest">SP 800-53 Rev 5: 20 control families, 1,000+ controls</span>
+        <span class="badge badge-forest">SP 800-53B: Low, Moderate, High control baselines</span>
+        <span class="badge badge-forest">SP 800-60 Vol I&II: information type catalog for Categorize</span>
+        <span class="badge badge-forest">SP 800-137: continuous monitoring (ISCM) framework</span>
+        <span class="badge badge-forest">SP 800-53A: assessment procedures companion to 800-53</span>
+        <span class="badge badge-forest">ATO = risk acceptance (not security certification)</span>
+        <span class="badge badge-forest">DATO = Denial of Authorization to Operate</span>
+        <span class="badge badge-forest">ATO without current date = FISMA compliance failure</span>
+        <span class="badge badge-forest">FedRAMP = cloud authorization (JAB P-ATO = highest)</span>
+        <span class="badge badge-forest">ISCM = Information Security Continuous Monitoring</span>
+        <span class="badge badge-forest">CDM = CISA's Continuous Diagnostics and Mitigation Program</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

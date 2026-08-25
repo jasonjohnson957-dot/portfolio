@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOC 2 — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #185FA5; color: #E6F1FB; border-color: #185FA5; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #E6F1FB; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #0C447C; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #185FA5; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #E6F1FB; color: #0C447C; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #185FA5; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-gray   { background: #F1EFE8; color: #444441; }
+  .badge-pink   { background: #FBEAF0; color: #4B1528; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .tsc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .tsc-security     { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .tsc-availability { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .tsc-integrity    { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .tsc-confidential { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .tsc-privacy      { background: #FBEAF0; border: 0.5px solid #ED93B1; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .cc-card { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .6rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .cc-card b { font-size: 13px; font-weight: 500; color: #0C447C; }
+  @media (max-width: 520px) { .cheat-grid, .control-row, .tsc-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day SOC 2 curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>SOC 2 — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title: "What Is SOC 2?",
+    tagline: "The trust certificate that says 'your data is safe with us'",
+    body: `<p>Imagine your school uses a cloud software company to store every student's grades, attendance records, and personal information. How do you know that company is protecting your data responsibly? How does the school know? That's exactly the problem <span class="key-term">SOC 2</span> was designed to solve.</p>
+    <p>SOC 2 stands for <strong>System and Organization Controls 2</strong>. It is an auditing standard created by the <strong>AICPA</strong> (American Institute of Certified Public Accountants) that evaluates whether a service organization's controls properly protect the data they handle on behalf of their customers.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of SOC 2 like a restaurant health inspection. The health inspector doesn't just take the restaurant's word that the kitchen is clean — they come in, examine the actual conditions, and issue an official report. SOC 2 does the same for data security: an independent auditor examines a company's systems and controls, then issues an official report that customers and business partners can trust.</div>
+    <p>Unlike laws like GDPR, SOC 2 is <strong>voluntary</strong> — no law requires it. But in practice, it has become a <em>de facto requirement</em> in the technology industry. If you're a software company that wants to sell to enterprise customers, hospitals, banks, or government agencies, those customers will almost certainly demand a SOC 2 report before signing a contract.</p>
+    <div class="highlight-box">SOC 2 is not a product certification or a checklist. It is an <em>independent audit opinion</em> — a qualified auditor's professional judgment that your controls are operating effectively. That independent credibility is what makes it valuable.</div>`,
+    quiz: { q: "What organization created and maintains the SOC 2 auditing standard?", opts: ["ISACA", "The European Union", "AICPA (American Institute of Certified Public Accountants)", "NIST (National Institute of Standards and Technology)"], ans: 2, explain: "SOC 2 was created by the AICPA — the American Institute of Certified Public Accountants. The AICPA is the professional organization for US accountants and auditors, which is why SOC 2 reports are issued by licensed CPA firms." }
+  },
+  {
+    title: "Why Was SOC 2 Created?",
+    tagline: "The cloud computing explosion that changed everything",
+    body: `<p>To understand why SOC 2 exists, we need to understand what the business world looked like before cloud computing. In the early 2000s, most companies ran their own software on their own servers. Your data stayed in your building.</p>
+    <p>Then everything changed. Companies like Salesforce, Amazon Web Services, and Google started offering services where your data was stored in <em>someone else's</em> computers — in "the cloud." Suddenly, businesses were handing their most sensitive information to outside companies they had little visibility into.</p>
+    <div class="highlight-box"><strong>The problem this created:</strong> How does a business know whether the cloud provider handling its customer data is actually secure? They can't visit every data center. They can't read every line of code. They can't inspect every server. They needed an independent, standardized way to assess trust.</div>
+    <div class="analogy-box"><strong>Think about it like this:</strong> When you buy food at a grocery store, you don't personally test every product for safety. You trust that food safety inspectors have done that work and that the store would be shut down if something was wrong. SOC 2 creates that same trusted inspector role for cloud and technology service providers. Customers don't have to audit every vendor themselves — they can rely on the SOC 2 report.</div>
+    <p>Before SOC 2 (which replaced older standards like SAS 70 and SOC 1 for technology companies), every large enterprise was sending different questionnaires to every vendor — a massive, inefficient duplication of effort. SOC 2 created a single standard that could satisfy the security questions of many customers at once.</p>`,
+    quiz: { q: "Which major business trend most directly drove the creation and widespread adoption of SOC 2?", opts: ["The invention of the internet in the 1990s", "The rise of cloud computing — companies storing data on external providers' systems", "The Sarbanes-Oxley Act requiring financial controls", "GDPR requiring data protection in Europe"], ans: 1, explain: "The rise of cloud computing created the need for SOC 2. When businesses began storing their data in third-party cloud systems, they needed a standardized way to assess whether those providers were protecting data properly — SOC 2 fills that need." }
+  },
+  {
+    title: "SOC 1, SOC 2, and SOC 3 — What's the Difference?",
+    tagline: "Three reports, three purposes — knowing which one you need",
+    body: `<p>The AICPA actually has a family of SOC (System and Organization Controls) reports. Understanding the difference between SOC 1, SOC 2, and SOC 3 is essential — they serve completely different purposes and audiences.</p>
+    <div class="tsc-grid">
+      <div class="tsc-security"><strong style="color:#501313">SOC 1 — Financial Controls</strong><br><span style="font-size:12px;color:#1a1a18">Focuses on internal controls over <em>financial reporting</em>. Used when a service organization's systems could affect a customer's financial statements. Example: payroll processors, accounts receivable companies, pension fund administrators. Required for SOX compliance.</span></div>
+      <div class="tsc-availability"><strong style="color:#0C447C">SOC 2 — Security & Trust Controls</strong><br><span style="font-size:12px;color:#1a1a18">Focuses on controls over <em>security, availability, processing integrity, confidentiality, and privacy</em>. Used by technology companies and cloud providers. The most widely requested report in the tech industry today.</span></div>
+    </div>
+    <div class="tsc-grid">
+      <div class="tsc-integrity"><strong style="color:#633806">SOC 3 — Public Summary Report</strong><br><span style="font-size:12px;color:#1a1a18">A <em>simplified, publicly shareable</em> version of a SOC 2 report. Contains only the auditor's opinion — no detailed control descriptions or test results. Used on websites and marketing materials as a trust signal. Like a badge that says "we passed our SOC 2."</span></div>
+      <div class="tsc-confidential"><strong style="color:#3C3489">SOC 2+ (Emerging)</strong><br><span style="font-size:12px;color:#1a1a18">A SOC 2 that also covers additional frameworks like HIPAA, PCI-DSS, ISO 27001, or NIST. Allows one audit to satisfy multiple compliance requirements simultaneously. Increasingly common.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Simple version:</strong> SOC 1 = "Can we trust your systems won't mess up our financial books?" SOC 2 = "Can we trust your systems to keep our data safe and private?" SOC 3 = "Can we show the world that you passed your SOC 2?" Most technology companies need SOC 2. Companies that handle payroll or financial processing often need both SOC 1 and SOC 2.</div>
+    <div class="highlight-box">SOC 2 reports are <strong>confidential</strong> — shared only with customers and prospects under NDA. SOC 3 reports are <strong>public</strong> — they can be posted on a company's website. This is why you can find SOC 3 badges on company websites but never their full SOC 2 reports.</div>`,
+    quiz: { q: "A cloud software company wants to post proof of their security audit on their public website. Which SOC report type is designed for this?", opts: ["SOC 1 — it covers financial controls", "SOC 2 — it's the detailed audit report", "SOC 3 — it's the publicly shareable summary version", "SOC 2+ — it covers multiple frameworks"], ans: 2, explain: "SOC 3 is the publicly shareable, simplified version of a SOC 2 report. It contains only the auditor's opinion — no confidential control details — making it safe to post on a website as a public trust signal." }
+  },
+  {
+    title: "The AICPA and Trust Services Criteria",
+    tagline: "The authority behind SOC 2 and the rulebook it uses",
+    body: `<p>To truly understand SOC 2, you need to understand the organization behind it and the rulebook it follows. SOC 2 audits are governed by the AICPA's <span class="key-term">Trust Services Criteria (TSC)</span> — the specific standards that auditors use to evaluate a company's controls.</p>
+    <div class="highlight-box">The Trust Services Criteria were most recently updated in 2017 (with 2022 supplemental guidance). They replaced the older "Trust Services Principles" and represent the AICPA's comprehensive framework for evaluating the security, availability, processing integrity, confidentiality, and privacy of technology systems.</div>
+    <p>The TSC has two parts:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Common Criteria (CC)</strong><span>Controls that apply regardless of which Trust Services Categories are in scope. These cover security fundamentals: control environment, risk assessment, monitoring, logical access, system operations, change management, and risk mitigation. Based on COSO's Internal Control framework.</span></div>
+      <div class="cheat-pill"><strong>Additional Criteria</strong><span>Supplemental criteria that only apply when a specific Trust Services Category (Availability, Processing Integrity, Confidentiality, or Privacy) is included in the audit scope. Each category has its own specific additional criteria.</span></div>
+    </div>
+    <div class="analogy-box"><strong>TSC analogy:</strong> Think of the Trust Services Criteria like a building code. Common Criteria are the universal rules every building must follow: foundations, fire exits, structural integrity. Additional Criteria are the specialized rules that only apply to certain building types: hospitals need sterile room standards, restaurants need kitchen ventilation codes, schools need certain safety features. The specific "category" being audited determines which additional rules apply on top of the universal ones.</div>
+    <p>AICPA licenses and trains qualified CPA firms to perform SOC 2 audits. Only licensed CPA firms can issue SOC 2 reports — because SOC 2 is ultimately an <em>attestation</em> — a formal professional opinion issued under AICPA standards.</p>`,
+    quiz: { q: "What are the 'Common Criteria' in the SOC 2 Trust Services framework?", opts: ["Criteria specific to privacy and data protection only", "Controls that apply to all SOC 2 audits regardless of which Trust Services Categories are in scope", "Criteria that only apply to financial companies", "Optional guidelines that companies can choose to follow or ignore"], ans: 1, explain: "Common Criteria (CC) are the baseline controls that apply to every SOC 2 audit, regardless of scope. They cover security fundamentals like control environment, risk assessment, logical access, and change management. Additional criteria only apply when specific categories like Availability or Privacy are in scope." }
+  },
+  {
+    title: "The 5 Trust Services Categories — Overview",
+    tagline: "The five areas SOC 2 can evaluate",
+    body: `<p>The heart of SOC 2 is its <span class="key-term">5 Trust Services Categories</span> — the five areas of control that a SOC 2 audit can cover. Understanding these categories is fundamental to everything else in SOC 2.</p>
+    <div class="tsc-grid">
+      <div class="tsc-security"><strong style="color:#501313">Security</strong><br><span style="font-size:12px;color:#1a1a18">MANDATORY. Always required. Protects information and systems from unauthorized access, disclosure, or damage. The foundation of every SOC 2 audit.</span></div>
+      <div class="tsc-availability"><strong style="color:#0C447C">Availability</strong><br><span style="font-size:12px;color:#1a1a18">OPTIONAL. Systems are available for operation and use as agreed. Critical for cloud providers with uptime commitments.</span></div>
+      <div class="tsc-integrity"><strong style="color:#633806">Processing Integrity</strong><br><span style="font-size:12px;color:#1a1a18">OPTIONAL. System processing is complete, valid, accurate, timely, and authorized. Critical for payment processors and financial systems.</span></div>
+      <div class="tsc-confidential"><strong style="color:#3C3489">Confidentiality</strong><br><span style="font-size:12px;color:#1a1a18">OPTIONAL. Information designated as confidential is protected as committed. Important for companies handling trade secrets, legal documents, or sensitive business data.</span></div>
+      <div class="tsc-privacy"><strong style="color:#4B1528">Privacy</strong><br><span style="font-size:12px;color:#1a1a18">OPTIONAL. Personal information is collected, used, retained, and disposed of in conformity with commitments and AICPA privacy criteria. Important for companies handling consumer personal data.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Security is the only mandatory category.</strong> Every SOC 2 report must include Security. The other four are optional — a company chooses which additional categories to include based on what their customers care about and what their systems do. A company might do a SOC 2 covering only Security + Availability. Another might cover all five.</div>
+    <div class="analogy-box"><strong>Menu analogy:</strong> Think of SOC 2 like a restaurant with a fixed starter (Security) that every table must order, plus four optional side dishes (Availability, Processing Integrity, Confidentiality, Privacy). Every customer gets the starter. The sides depend on what the customer specifically needs. A healthcare company might add Privacy. A payment processor might add Processing Integrity. A critical infrastructure company might add Availability.</div>`,
+    quiz: { q: "Which of the 5 Trust Services Categories is mandatory in every SOC 2 audit?", opts: ["Availability", "Privacy", "Security", "Confidentiality"], ans: 2, explain: "Security is the only mandatory Trust Services Category in SOC 2. Every SOC 2 report must cover Security (also called the Common Criteria). The other four categories — Availability, Processing Integrity, Confidentiality, and Privacy — are optional and chosen based on the company's services and customer requirements." }
+  },
+  {
+    title: "Security — The Foundation",
+    tagline: "The one category every SOC 2 must include",
+    body: `<p>The <span class="key-term">Security category</span> (also called the Common Criteria) is the mandatory foundation of every SOC 2 audit. It evaluates whether a company's information and systems are protected against unauthorized access, disclosure, use, modification, or destruction.</p>
+    <p>Security controls are organized into 9 Common Criteria groupings (CC1 through CC9), which we'll cover in depth over the next several days. At a high level, they address:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Who can access your systems (access control)</span>
+      <span class="badge badge-blue">How you identify and respond to security threats</span>
+      <span class="badge badge-blue">How you manage changes to your systems safely</span>
+      <span class="badge badge-blue">How you monitor for security events</span>
+      <span class="badge badge-blue">Your organization's security culture and structure</span>
+      <span class="badge badge-blue">How you assess and mitigate risk</span>
+    </div>
+    <div class="analogy-box"><strong>Security as a foundation analogy:</strong> Security is like the foundation and locks of a building. Every building needs a foundation and doors that lock — that's non-negotiable. Whether the building also needs a fireproof vault (confidentiality), 24/7 guard service (availability), or a security camera system that never misses a frame (processing integrity) depends on what the building is used for. But no special purpose justifies skipping the foundation.</div>
+    <div class="highlight-box">The Security category is based on COSO's Internal Control — Integrated Framework, one of the world's most widely used internal controls frameworks. This is why SOC 2's Common Criteria feel familiar to anyone who has worked with COSO, COBIT, or Sarbanes-Oxley IT controls.</div>
+    <p>When people refer to a company being "SOC 2 certified" (technically it's "SOC 2 compliant" — there's no certification), they almost always mean the Security category has been audited and found effective. The other four categories are supplementary.</p>`,
+    quiz: { q: "Why is Security the mandatory foundation of every SOC 2 audit?", opts: ["Because it is the cheapest category to audit", "Because without security controls, none of the other trust properties (availability, integrity, confidentiality, privacy) can be reliably achieved", "Because only financial companies need the other categories", "Because GDPR requires it"], ans: 1, explain: "Security is foundational because if systems aren't protected from unauthorized access and tampering, you cannot reliably guarantee availability, processing integrity, confidentiality, or privacy. Security is the prerequisite that enables all other trust properties." }
+  },
+  {
+    title: "Availability",
+    tagline: "Will your systems be there when customers need them?",
+    body: `<p>The <span class="key-term">Availability category</span> evaluates whether a company's systems are available for operation and use as committed or agreed. In simpler terms: when customers need the service, is it actually running?</p>
+    <div class="highlight-box">Availability focuses on <em>operational performance and system uptime</em> — not on security availability (which is already covered under the Security category). The question is: does the company have the right processes to prevent unplanned downtime and recover quickly when disruptions occur?</div>
+    <p>Key controls evaluated under Availability include:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Uptime Monitoring</strong><span>Does the company continuously monitor whether its systems are up and running? Are they alerted immediately when something goes down?</span></div>
+      <div class="cheat-pill"><strong>Capacity Planning</strong><span>Is there enough computing power, storage, and bandwidth to handle current and future demand — including unexpected spikes?</span></div>
+      <div class="cheat-pill"><strong>Backup and Recovery</strong><span>Are data backups performed regularly and tested? Can the company restore data quickly if it is lost or corrupted?</span></div>
+      <div class="cheat-pill"><strong>Incident Response for Outages</strong><span>Does the company have a tested plan for responding to major outages, including communication to customers?</span></div>
+      <div class="cheat-pill"><strong>Business Continuity / Disaster Recovery</strong><span>Can the business continue operating if a data center is destroyed, a natural disaster strikes, or a cyber attack takes down primary systems?</span></div>
+      <div class="cheat-pill"><strong>SLA Monitoring</strong><span>Does the company track and report on its uptime commitments (Service Level Agreements) and address gaps when targets are missed?</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why Availability matters:</strong> Imagine a hospital whose electronic patient records system goes offline during surgery. Or a bank whose payment processing system is down on payday. Or an airline whose reservation system crashes the day before Thanksgiving. For these organizations, Availability isn't just a nice-to-have — it's literally a matter of life, livelihood, and safety. SOC 2 Availability audits ask: do you have the processes to prevent and recover from this?</div>`,
+    quiz: { q: "A software company commits to 99.9% uptime in its customer contracts. Which SOC 2 category directly evaluates whether the company has controls to meet this commitment?", opts: ["Security", "Processing Integrity", "Availability", "Confidentiality"], ans: 2, explain: "The Availability category evaluates whether a company has the controls to ensure systems are available as committed. Uptime commitments, capacity planning, backup/recovery, and business continuity all fall under Availability." }
+  },
+  {
+    title: "Processing Integrity",
+    tagline: "Is your data being processed completely, accurately, and on time?",
+    body: `<p>The <span class="key-term">Processing Integrity category</span> evaluates whether a company's system processing is complete, valid, accurate, timely, and authorized. It asks a simple but critical question: when data goes into your system, does it come out correctly?</p>
+    <div class="highlight-box">Processing Integrity is especially critical for companies whose systems handle <em>financial transactions, calculations, or data transformations</em> where errors could have significant consequences. Think: payment processors, payroll systems, tax software, healthcare billing systems, stock trading platforms.</div>
+    <p>The five elements of Processing Integrity:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Complete</strong><span>All transactions are processed — nothing is dropped, skipped, or lost in the system.</span></div>
+      <div class="cheat-pill"><strong>Valid</strong><span>Only legitimate, authorized transactions are accepted. Invalid inputs are rejected with appropriate error handling.</span></div>
+      <div class="cheat-pill"><strong>Accurate</strong><span>Calculations and transformations produce correct results. Data is not distorted by errors in processing logic.</span></div>
+      <div class="cheat-pill"><strong>Timely</strong><span>Processing occurs within the timeframes committed to customers. Delayed processing is caught and addressed.</span></div>
+      <div class="cheat-pill"><strong>Authorized</strong><span>Only approved users and processes can initiate or modify transactions. Unauthorized processing is prevented.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Real-world example:</strong> Imagine you submit a $500 payment through an app. Processing Integrity controls ensure: the payment was actually sent ($500 — not $5,000 or $50), it was sent exactly once (not twice), it was sent to the right person, it was sent in a reasonable time, and only you were able to authorize it. Any failure in any of these would be a Processing Integrity control failure — and potentially a very expensive one.</div>
+    <p>Processing Integrity is NOT about data confidentiality (that's Confidentiality) or whether systems are up (that's Availability). It's purely about whether the system's calculations and data transformations work as intended.</p>`,
+    quiz: { q: "A payroll company accidentally processes paychecks twice, paying every employee double. Which SOC 2 category's controls failed?", opts: ["Security — unauthorized access occurred", "Availability — the system went down", "Processing Integrity — transactions were not processed completely and accurately", "Confidentiality — salary data was exposed"], ans: 2, explain: "This is a Processing Integrity failure — specifically, completeness and accuracy. Transactions should be processed exactly once, producing correct results. Duplicate payment processing is a classic Processing Integrity control failure." }
+  },
+  {
+    title: "Confidentiality",
+    tagline: "Protecting sensitive information from the wrong eyes",
+    body: `<p>The <span class="key-term">Confidentiality category</span> evaluates whether information designated as confidential is collected, stored, used, and disposed of in accordance with the organization's commitments and the criteria established. In simple terms: is sensitive information kept properly secret?</p>
+    <div class="highlight-box">Confidentiality is about <em>information the organization has promised to keep secret</em> — whether through contracts, policies, or professional obligations. This includes trade secrets, intellectual property, proprietary business information, legal documents, financial projections, and any other data the company has agreed to protect.</div>
+    <p>Confidentiality controls include:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Encryption of data at rest and in transit</span>
+      <span class="badge badge-blue">Access controls limiting who can see confidential data</span>
+      <span class="badge badge-blue">Data classification — labeling what is confidential</span>
+      <span class="badge badge-blue">Non-disclosure agreements with employees and contractors</span>
+      <span class="badge badge-blue">Secure disposal of confidential information</span>
+      <span class="badge badge-blue">Controls preventing accidental sharing or leakage</span>
+    </div>
+    <div class="analogy-box"><strong>Confidentiality vs. Privacy — a critical distinction:</strong> Confidentiality protects <em>business information</em> a company promises to keep secret (trade secrets, client data, financial forecasts). Privacy protects <em>personal information</em> about individuals (names, addresses, health data, social security numbers). A company's product roadmap is confidential. Your social security number is private. Both matter — but SOC 2 treats them differently.</div>
+    <div class="warning-box"><strong>Why this matters in practice:</strong> A law firm stores its clients' legal strategy documents with a cloud provider. The firm has a professional obligation to keep those documents confidential. If the cloud provider's controls allow employees to access client legal files without authorization — that's a Confidentiality failure, even if no data was actually stolen. The controls themselves must be adequate.</div>`,
+    quiz: { q: "A cloud storage company stores clients' trade secret product designs. Which SOC 2 category specifically evaluates whether these are being kept properly secret?", opts: ["Security — because it covers all controls", "Availability — because the files must be accessible", "Processing Integrity — because the files must be accurate", "Confidentiality — which covers information designated as confidential"], ans: 3, explain: "Confidentiality specifically covers information that has been designated as confidential — including trade secrets, proprietary business data, and any information a company has committed to keep secret. Security is the foundation; Confidentiality adds specific controls for information protection commitments." }
+  },
+  {
+    title: "Privacy",
+    tagline: "Protecting personal information about individuals",
+    body: `<p>The <span class="key-term">Privacy category</span> evaluates whether personal information is collected, used, retained, disclosed, and disposed of in conformity with the organization's privacy notice and the AICPA's privacy criteria. It's the SOC 2 category most closely aligned with GDPR and other data privacy laws.</p>
+    <div class="highlight-box">The SOC 2 Privacy category is based on the AICPA's <strong>Generally Accepted Privacy Principles (GAPP)</strong>, which cover 10 aspects of privacy management: notice, choice and consent, collection, use and retention, access, disclosure and notification, security, quality, monitoring and enforcement.</div>
+    <p>Key questions the Privacy category answers:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Notice</strong><span>Do individuals know their personal information is being collected, and what it will be used for?</span></div>
+      <div class="cheat-pill"><strong>Choice and Consent</strong><span>Do individuals have the ability to choose how their information is used, and did they consent?</span></div>
+      <div class="cheat-pill"><strong>Collection Limitation</strong><span>Is only the necessary personal information collected? (Like GDPR's data minimisation.)</span></div>
+      <div class="cheat-pill"><strong>Use and Retention</strong><span>Is personal information used only as stated, and deleted when no longer needed?</span></div>
+      <div class="cheat-pill"><strong>Access</strong><span>Can individuals view and correct their own personal information?</span></div>
+      <div class="cheat-pill"><strong>Disclosure</strong><span>Is personal information shared only with authorized parties? Are affected individuals notified of breaches?</span></div>
+    </div>
+    <div class="analogy-box"><strong>Privacy vs. Confidentiality recap:</strong> Your employer's salary budget spreadsheet = Confidential (business secret). Your personal salary information in that spreadsheet = Private (personal data about you as an individual). SOC 2 Privacy focuses on the individual's data and their rights over it — making it the SOC 2 category most directly connected to GDPR, CCPA, and other privacy laws.</div>`,
+    quiz: { q: "A company collects users' email addresses for account creation but then also sells them to advertisers without telling users. Which SOC 2 category's criteria does this violate?", opts: ["Security", "Availability", "Processing Integrity", "Privacy"], ans: 3, explain: "This violates the Privacy category. The AICPA's privacy criteria require that personal information is used only as stated in the company's privacy notice, and that individuals are given choice and consent over how their information is used. Selling emails without disclosure violates notice, choice, and use limitation criteria." }
+  },
+  {
+    title: "SOC 2 Type I vs. Type II",
+    tagline: "A snapshot vs. a movie — the most important distinction in SOC 2",
+    body: `<p>There are two types of SOC 2 reports, and the difference between them is one of the most important things to understand: <span class="key-term">Type I</span> and <span class="key-term">Type II</span>.</p>
+    <div class="tsc-grid">
+      <div class="tsc-security"><strong style="color:#501313">SOC 2 Type I</strong><br><span style="font-size:12px;color:#1a1a18"><strong>A snapshot in time.</strong> The auditor evaluates whether controls are <em>suitably designed</em> as of a specific date. It asks: "Are the controls you described the right ones for the job?" Does NOT test whether controls actually worked over time.</span></div>
+      <div class="tsc-availability"><strong style="color:#0C447C">SOC 2 Type II</strong><br><span style="font-size:12px;color:#1a1a18"><strong>A film over a period.</strong> The auditor evaluates whether controls are suitably designed AND <em>operating effectively</em> over a period of time (typically 6–12 months). Tests actual evidence that controls worked. Far more valuable and widely requested.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The ultimate analogy:</strong> Imagine you're hiring a new employee. A Type I report is like checking whether they have the right qualifications on their resume — the right degree, the right credentials. A Type II report is like a full background check plus calling their previous employers to verify they actually did what they said — over the past year. Both tell you something; Type II tells you much more.</div>
+    <div class="highlight-box"><strong>What most customers actually want:</strong> Enterprise customers, banks, healthcare organizations, and government agencies almost always require a <em>SOC 2 Type II</em> report. A Type I is often used as a stepping stone — a company just starting their SOC 2 journey may get a Type I first to prove their controls are designed correctly, then pursue a Type II the following year once controls have been operating for a sufficient observation period.</div>
+    <p>The audit period for a Type II report is typically <strong>six months minimum</strong>, with many companies using a full 12-month period. The report is issued after the period ends and covers the entire observation window — showing that controls worked consistently, not just on audit day.</p>`,
+    quiz: { q: "A customer says 'We need your SOC 2 Type II before we can sign the contract.' What are they specifically asking for?", opts: ["A report showing controls are designed correctly as of today", "A report showing controls were suitably designed AND operating effectively over an audit period (typically 6-12 months)", "A public SOC 3 badge they can show their board", "A SOC 1 covering financial controls"], ans: 1, explain: "SOC 2 Type II evaluates both design (are the controls the right ones?) AND operating effectiveness (did they actually work consistently over a defined period?). This is the gold standard that enterprise customers require — because it proves controls worked in practice, not just on paper." }
+  },
+  {
+    title: "The Common Criteria — CC1 Control Environment",
+    tagline: "The tone at the top — governance and integrity",
+    body: `<p>Now we dive into the 9 Common Criteria groupings that form the backbone of every SOC 2 audit. These are the controls that every company must have, regardless of which Trust Services Categories they've selected.</p>
+    <p><span class="key-term">CC1 — Control Environment</span> is the first and most foundational grouping. It evaluates whether the organization has the right governance structure, ethical values, and management commitment to support effective internal controls.</p>
+    <div class="cc-card"><b>CC1.1</b> — The entity demonstrates a commitment to integrity and ethical values.</div>
+    <div class="cc-card"><b>CC1.2</b> — The board of directors demonstrates independence from management and exercises oversight of the development and performance of internal control.</div>
+    <div class="cc-card"><b>CC1.3</b> — Management establishes structures, reporting lines, and appropriate authorities and responsibilities in pursuit of objectives.</div>
+    <div class="cc-card"><b>CC1.4</b> — The organization demonstrates a commitment to attract, develop, and retain competent individuals in alignment with objectives.</div>
+    <div class="cc-card"><b>CC1.5</b> — The organization holds individuals accountable for their internal control responsibilities.</div>
+    <div class="analogy-box"><strong>Why CC1 matters most:</strong> Every good governance framework — COBIT, COSO, SOC 2 — starts with the control environment because it's the soil everything else grows in. If leadership doesn't genuinely care about security, if ethical shortcuts are tolerated, or if nobody is held accountable — all the technical controls in the world won't matter. You can have the best lock on your front door, but if your employees prop it open for convenience, the lock is useless.</div>
+    <div class="highlight-box">Auditors assess CC1 by reviewing governance documents, board minutes, organizational charts, HR policies, training records, and employee handbooks — and sometimes by interviewing employees at multiple levels to understand whether the "tone at the top" actually filters down through the organization.</div>`,
+    quiz: { q: "During a SOC 2 audit, the auditor reviews board meeting minutes, the company code of conduct, and HR policies about accountability. Which Common Criteria grouping is being assessed?", opts: ["CC3 — Risk Assessment", "CC6 — Logical and Physical Access", "CC1 — Control Environment", "CC8 — Change Management"], ans: 2, explain: "CC1 (Control Environment) is assessed through governance documents, board oversight evidence, accountability structures, and HR policies. It evaluates the organizational foundation — ethical commitment, governance structure, and accountability — that makes all other controls possible." }
+  },
+  {
+    title: "CC2 — Communication and Information",
+    tagline: "The right information reaching the right people at the right time",
+    body: `<p><span class="key-term">CC2 — Communication and Information</span> evaluates whether the organization generates and uses relevant, quality information to support internal control functions — and whether it communicates internally and externally as needed.</p>
+    <p>CC2 has three sub-criteria:</p>
+    <div class="cc-card"><b>CC2.1</b> — The entity obtains or generates and uses relevant, quality information to support the functioning of internal control. (The right data must exist and be trustworthy.)</div>
+    <div class="cc-card"><b>CC2.2</b> — The entity internally communicates information, including objectives and responsibilities for internal control, necessary to support the functioning of internal control. (Employees know what's expected.)</div>
+    <div class="cc-card"><b>CC2.3</b> — The entity communicates with external parties regarding matters affecting the functioning of internal control. (Customers, regulators, and vendors get the right information.)</div>
+    <div class="analogy-box"><strong>Real-world example:</strong> A company's security team discovers a new phishing threat targeting employees. CC2.2 requires that this information reaches the right people quickly — security awareness training is updated, employees are alerted, and management is briefed. CC2.3 requires that if this threat could affect customers, they are notified appropriately. If the information stays trapped in the security team's inbox, CC2 is failing.</div>
+    <div class="highlight-box">CC2 is often where companies fail in subtle ways. They have great policies — but policies that nobody reads. They have security alerts — but alerts that go to a shared inbox nobody monitors. They have incident reporting procedures — but employees don't know the procedure exists. Information and communication controls require that the right information actually flows to the right people, not just that it theoretically could.</div>`,
+    quiz: { q: "Employees at a company don't know about the security policies they're supposed to follow because nobody ever communicated them. Which Common Criteria grouping is failing?", opts: ["CC1 — Control Environment", "CC2 — Communication and Information", "CC6 — Logical and Physical Access", "CC9 — Risk Mitigation"], ans: 1, explain: "CC2 (Communication and Information) includes the requirement that internal control information — including objectives and responsibilities — is communicated to the people who need it. Policies that exist but are never communicated to employees represent a CC2 failure." }
+  },
+  {
+    title: "CC3 — Risk Assessment",
+    tagline: "Identifying what could go wrong before it does",
+    body: `<p><span class="key-term">CC3 — Risk Assessment</span> evaluates whether the organization has a formal process for identifying, analyzing, and managing risks that could prevent it from achieving its security objectives.</p>
+    <div class="cc-card"><b>CC3.1</b> — The entity specifies objectives with sufficient clarity to enable the identification and assessment of risks relating to objectives.</div>
+    <div class="cc-card"><b>CC3.2</b> — The entity identifies risks to the achievement of its objectives across the entity and analyzes risks as a basis for determining how the risks should be managed.</div>
+    <div class="cc-card"><b>CC3.3</b> — The entity considers the potential for fraud in assessing risks to the achievement of objectives.</div>
+    <div class="cc-card"><b>CC3.4</b> — The entity identifies and assesses changes that could significantly impact the system of internal control.</div>
+    <div class="analogy-box"><strong>Risk assessment analogy:</strong> Before a pilot takes off, they do a pre-flight checklist — fuel level, weather conditions, mechanical checks, air traffic. They're not just hoping for the best; they're systematically identifying things that could go wrong before they become disasters at 30,000 feet. CC3 requires companies to have that same systematic "pre-flight" approach to security risks: identify them, analyze them, and decide how to handle them — before something goes wrong.</div>
+    <div class="highlight-box">CC3.3's explicit mention of <strong>fraud</strong> reflects SOC 2's roots in accounting. Fraud risk in IT contexts includes: employees intentionally bypassing controls, falsifying transaction records, unauthorized access for financial gain, and social engineering attacks. Organizations must specifically think about whether malicious insiders could exploit their systems — not just external attackers.</div>
+    <p>Risk assessments under CC3 should be formal, documented, and repeated regularly — at least annually and whenever significant changes occur (new systems, new services, mergers, major regulatory changes).</p>`,
+    quiz: { q: "A company performs a formal annual review to identify, analyze, and prioritize security threats to its systems. Which Common Criteria grouping does this directly fulfill?", opts: ["CC1 — Control Environment", "CC2 — Communication and Information", "CC3 — Risk Assessment", "CC4 — Monitoring Activities"], ans: 2, explain: "CC3 (Risk Assessment) requires a formal process for identifying and analyzing risks. An annual formal risk review directly fulfills this criterion. The key words are 'formal,' 'documented,' and 'repeated regularly' — informal or one-time risk assessments don't fully satisfy CC3." }
+  },
+  {
+    title: "CC4 — Monitoring Activities",
+    tagline: "Watching the watchers — verifying that controls actually work",
+    body: `<p><span class="key-term">CC4 — Monitoring Activities</span> evaluates whether the organization continuously monitors its internal controls to verify they are functioning as intended and whether identified deficiencies are corrected promptly.</p>
+    <div class="cc-card"><b>CC4.1</b> — The entity selects, develops, and performs ongoing and/or separate evaluations to ascertain whether the components of internal control are present and functioning.</div>
+    <div class="cc-card"><b>CC4.2</b> — The entity evaluates and communicates internal control deficiencies in a timely manner to those parties responsible for taking corrective action, including senior management and the board as appropriate.</div>
+    <div class="analogy-box"><strong>Why monitoring matters:</strong> Having a good lock on your door doesn't mean the lock works — you have to periodically check that the mechanism hasn't broken, that the key still fits, that nobody has tampered with it. CC4 requires organizations to regularly verify their controls are still working as designed. A control that was effective six months ago might have been accidentally disabled, bypassed, or rendered ineffective by a system update.</div>
+    <div class="highlight-box">CC4 monitoring takes two forms: <strong>ongoing monitoring</strong> (continuous, automated checks — like security alerts that fire in real time when something unusual happens) and <strong>separate evaluations</strong> (periodic, deliberate reviews — like quarterly access rights reviews or annual penetration tests). Both are needed. Continuous monitoring catches day-to-day drift; periodic evaluations catch systemic issues that build up slowly.</div>
+    <p>CC4.2 is particularly important: it's not enough to find deficiencies — you must escalate them to the right people and track correction. A finding that was identified and never remediated is arguably worse than a finding that was never identified — because it proves the monitoring program isn't driving improvement.</p>`,
+    quiz: { q: "A company's automated system alerts fire whenever an employee attempts to access a restricted system after hours. This is an example of which type of CC4 monitoring?", opts: ["Separate evaluation — because it happens at specific intervals", "Ongoing monitoring — because it is continuous and automated", "Risk assessment — because it identifies threats", "Change management — because access control changed"], ans: 1, explain: "Automated real-time alerts are a form of ongoing monitoring — continuous, automated checks that function 24/7. Separate evaluations are periodic deliberate reviews like annual penetration tests. Both types are required under CC4 to verify controls are working." }
+  },
+  {
+    title: "CC5 — Control Activities",
+    tagline: "The specific actions taken to enforce policies and mitigate risk",
+    body: `<p><span class="key-term">CC5 — Control Activities</span> evaluates whether the organization selects and develops control activities that mitigate identified risks to the achievement of objectives — and whether technology is used effectively to support these activities.</p>
+    <div class="cc-card"><b>CC5.1</b> — The entity selects and develops control activities that contribute to the mitigation of risks to the achievement of objectives to acceptable levels.</div>
+    <div class="cc-card"><b>CC5.2</b> — The entity also selects and develops general control activities over technology to support the achievement of objectives.</div>
+    <div class="cc-card"><b>CC5.3</b> — The entity deploys control activities through policies that establish what is expected and in procedures that put policies into action.</div>
+    <div class="analogy-box"><strong>CC5 in plain English:</strong> CC3 identified the risks. CC5 says: now what are you <em>doing</em> about them? Control activities are the specific things you do to reduce risk — multi-factor authentication, firewall rules, encryption, background checks for employees, software vulnerability scanning. They're the actual countermeasures, not just the identification of the problem.</div>
+    <p>Examples of control activities under CC5:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Multi-factor authentication (MFA) on all privileged accounts</span>
+      <span class="badge badge-blue">Automated vulnerability scanning run weekly</span>
+      <span class="badge badge-blue">Data encryption at rest using AES-256</span>
+      <span class="badge badge-blue">Annual security awareness training for all employees</span>
+      <span class="badge badge-blue">Software development code review before deployment</span>
+      <span class="badge badge-blue">Vendor security assessments before onboarding new suppliers</span>
+    </div>
+    <div class="highlight-box">CC5.3 emphasizes that control activities must be <em>deployed through policies and procedures</em> — not just described in a document. A control that's written down but never implemented is not a control. Auditors look for evidence that control activities are actually performed — logs, screenshots, signed acknowledgments, audit trails — not just that they're described in a policy manual.</div>`,
+    quiz: { q: "After identifying that unauthorized access is a major risk, a company implements multi-factor authentication and a password manager for all employees. This is an example of which Common Criteria?", opts: ["CC3 — Risk Assessment (identifying the risk)", "CC5 — Control Activities (taking action to mitigate the risk)", "CC4 — Monitoring Activities (verifying controls work)", "CC1 — Control Environment (governance commitment)"], ans: 1, explain: "CC5 (Control Activities) covers the specific actions taken to mitigate identified risks. Implementing MFA and password management are control activities — the countermeasures deployed in response to the risk identified in CC3." }
+  },
+  {
+    title: "CC6 — Logical and Physical Access Controls",
+    tagline: "Who gets in — to the systems and to the building",
+    body: `<p><span class="key-term">CC6 — Logical and Physical Access Controls</span> is one of the most detailed and frequently tested Common Criteria groupings. It evaluates controls over who can access IT systems (logical access) and physical facilities (physical access).</p>
+    <p>CC6 has 8 sub-criteria — the most of any grouping:</p>
+    <div class="cc-card"><b>CC6.1</b> — The entity implements logical access security software, infrastructure, and architectures over protected information assets.</div>
+    <div class="cc-card"><b>CC6.2</b> — Prior to issuing system credentials, the entity registers and authorizes new internal and external users.</div>
+    <div class="cc-card"><b>CC6.3</b> — The entity removes access to protected information assets when appropriate (e.g., employee termination).</div>
+    <div class="cc-card"><b>CC6.4</b> — The entity restricts physical access to facilities and protected information assets.</div>
+    <div class="cc-card"><b>CC6.5</b> — The entity discontinues logical and physical protections over physical assets only after the ability to read or recover data is diminished (data destruction before disposal).</div>
+    <div class="cc-card"><b>CC6.6</b> — The entity implements logical access security measures to protect against threats from sources outside its system boundaries (external threat protection).</div>
+    <div class="cc-card"><b>CC6.7</b> — The entity restricts the transmission, movement, and removal of information to authorized internal and external users.</div>
+    <div class="cc-card"><b>CC6.8</b> — The entity implements controls to prevent or detect and act upon the introduction of unauthorized or malicious software (malware protection).</div>
+    <div class="analogy-box"><strong>CC6 in practice:</strong> CC6.3 is particularly commonly violated. When an employee is terminated, do you immediately revoke all their system access — email, VPN, cloud systems, code repositories? Or does their account sit active for weeks because IT wasn't notified? Former employee access is one of the most common sources of data breaches.</div>`,
+    quiz: { q: "An employee is terminated on Friday. The following Monday, their former manager notices the employee's login credentials still work. Which CC6 sub-criterion has failed?", opts: ["CC6.1 — Logical access architecture", "CC6.2 — User registration and authorization", "CC6.3 — Removing access when no longer appropriate", "CC6.6 — External threat protection"], ans: 2, explain: "CC6.3 requires that access to protected assets is removed promptly when no longer appropriate — including upon employee termination. Active credentials for a terminated employee represent a direct CC6.3 control failure and a significant security risk." }
+  },
+  {
+    title: "CC7 — System Operations",
+    tagline: "Detecting and responding to security events in real time",
+    body: `<p><span class="key-term">CC7 — System Operations</span> evaluates whether the organization detects and responds to security events and operational errors effectively. While CC6 is about preventing unauthorized access, CC7 is about detecting it when it happens anyway — and responding appropriately.</p>
+    <div class="cc-card"><b>CC7.1</b> — The entity uses detection and monitoring procedures to identify changes to configurations or the environment that could have security implications.</div>
+    <div class="cc-card"><b>CC7.2</b> — The entity monitors system components and the operation of those components for anomalies that are indicative of malicious acts, natural disasters, and errors affecting the entity's ability to meet its objectives.</div>
+    <div class="cc-card"><b>CC7.3</b> — The entity evaluates security events to determine whether they could or have resulted in a failure of the entity to meet its objectives (incident classification).</div>
+    <div class="cc-card"><b>CC7.4</b> — The entity responds to identified security incidents by executing a defined incident response program.</div>
+    <div class="cc-card"><b>CC7.5</b> — The entity identifies, develops, and implements activities to recover from identified security incidents.</div>
+    <div class="analogy-box"><strong>The smoke detector analogy:</strong> CC6 is about installing fire-resistant materials and locked doors. CC7 is about the smoke detector, the sprinkler system, the fire department call, the evacuation plan, and rebuilding after the fire. Prevention is important — but you also need detection, response, and recovery. The best security programs assume that something will eventually get through the defenses.</div>
+    <div class="highlight-box">CC7.4's incident response program must be <em>documented and tested</em> — not improvised when a crisis hits. Auditors look for evidence of tabletop exercises, incident response drills, and post-incident reviews. A company that has never practiced its incident response plan is unlikely to execute it well during an actual emergency.</div>`,
+    quiz: { q: "A company's security team receives an automated alert about unusual login attempts at 3 AM, classifies it as a potential breach, and activates their incident response plan. Which CC7 sub-criteria are being demonstrated?", opts: ["CC7.1 and CC7.2 only", "CC7.2, CC7.3, and CC7.4", "CC7.5 only — because they're recovering from an incident", "CC6.6 — because external threats are involved"], ans: 1, explain: "CC7.2 covers monitoring for anomalies (the unusual login alert). CC7.3 covers evaluating whether the event represents a security incident (classifying as a potential breach). CC7.4 covers executing the incident response program. All three are demonstrated in this scenario." }
+  },
+  {
+    title: "CC8 — Change Management",
+    tagline: "Ensuring system changes don't accidentally break security",
+    body: `<p><span class="key-term">CC8 — Change Management</span> evaluates whether the organization manages changes to its systems in a way that maintains security, availability, and integrity. This is one of the most operationally critical criteria — because most security incidents and outages are caused by poorly managed changes.</p>
+    <div class="cc-card"><b>CC8.1</b> — The entity authorizes, designs, develops or acquires, configures, documents, tests, approves, and implements changes to infrastructure, data, software, and procedures to meet its objectives.</div>
+    <div class="highlight-box">CC8.1 is comprehensive — it covers the entire change lifecycle: authorization (is this change approved?), design (is it planned properly?), testing (is it tested before production?), approval (who signed off?), and implementation (was it deployed as planned?). A change that skips any of these steps is a control failure.</div>
+    <p>Why change management matters so much:</p>
+    <div class="badge-row">
+      <span class="badge badge-red">80% of IT outages are caused by changes (industry estimates)</span>
+      <span class="badge badge-red">Unauthorized changes are a common vector for insider threats</span>
+      <span class="badge badge-red">Unreviewed code changes are a top source of security vulnerabilities</span>
+      <span class="badge badge-red">Untested changes can introduce data integrity errors</span>
+    </div>
+    <div class="analogy-box"><strong>Change management analogy:</strong> Imagine an airline that lets mechanics make whatever changes they want to aircraft without approval, documentation, or testing. One mechanic decides to "improve" the fuel system. Without a change management process, nobody knows it happened until the plane is in the air. IT change management applies the same rigor to software and infrastructure as aviation applies to aircraft maintenance: every change must be authorized, documented, tested, and reviewed before it goes into production.</div>
+    <p>Emergency changes — urgent fixes needed outside the normal approval process — are a special challenge. SOC 2 requires that even emergency changes have a documented rationale and are reviewed after-the-fact to ensure they were appropriate.</p>`,
+    quiz: { q: "A developer deploys a code update directly to the production environment without going through the change approval process. Under CC8, this is:", opts: ["Acceptable if the change is small", "A change management control failure — all changes require authorization and review", "Only a problem if the change causes an outage", "Fine as long as the developer documents it afterward"], ans: 1, explain: "CC8 requires that all changes are authorized, documented, tested, and approved before implementation. A direct deployment to production that bypasses the change management process is a CC8 control failure, regardless of the change size or outcome." }
+  },
+  {
+    title: "CC9 — Risk Mitigation",
+    tagline: "Reducing risk through vendor management and business disruption planning",
+    body: `<p><span class="key-term">CC9 — Risk Mitigation</span> evaluates how the organization selects and manages vendors and business partners to reduce risk, and whether it has identified and assessed potential business disruptions. This is the final Common Criteria grouping and covers the risk that comes from outside the organization.</p>
+    <div class="cc-card"><b>CC9.1</b> — The entity identifies, selects, and develops risk mitigation activities for risks arising from potential business disruptions.</div>
+    <div class="cc-card"><b>CC9.2</b> — The entity assesses and manages risks associated with vendors and business partners.</div>
+    <div class="analogy-box"><strong>The supply chain risk reality:</strong> In 2020, the SolarWinds attack compromised over 18,000 organizations — including US government agencies — by inserting malicious code into a software update from a trusted vendor. The companies themselves had good security. Their vendor was compromised. This is exactly the risk CC9.2 addresses: your security is only as strong as your weakest vendor's security.</div>
+    <div class="highlight-box">Under CC9.2, companies must: identify all vendors and business partners who have access to systems or data, assess the security practices of those vendors (often via questionnaires or asking for their own SOC 2 reports!), contractually require adequate security from vendors, and monitor vendors on an ongoing basis. This is called a <strong>vendor risk management program</strong> — and it's a key requirement for SOC 2 compliance.</div>
+    <p>CC9.1 for business disruption connects closely with the Availability category — but CC9.1 is specifically about <em>identifying and planning for</em> disruptions, while Availability criteria evaluate the controls that actually ensure uptime. CC9.1 is the planning; the Availability criteria are the execution.</p>`,
+    quiz: { q: "A software company gives its cloud hosting vendor access to its production systems. Under which CC criterion must the company assess and manage the security risk this creates?", opts: ["CC6.2 — User registration", "CC7.4 — Incident response", "CC8.1 — Change management", "CC9.2 — Vendor and business partner risk management"], ans: 3, explain: "CC9.2 specifically requires that organizations assess and manage risks associated with vendors and business partners — particularly those with access to protected systems or data. This is the foundation of a vendor risk management program." }
+  },
+  {
+    title: "The SOC 2 Audit Process",
+    tagline: "What actually happens during a SOC 2 audit — step by step",
+    body: `<p>Understanding what the actual <span class="key-term">SOC 2 audit process</span> looks like from start to finish is essential for anyone working in compliance or technology. It's not a single day of inspection — it's a months-long process with multiple phases.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Phase 1: Scoping (1–2 months before audit)</strong><span>Define which Trust Services Categories are in scope. Identify which systems and services are covered. Determine the audit period (Type II). Agree on the audit timeline with the auditing firm.</span></div>
+      <div class="cheat-pill"><strong>Phase 2: Readiness Assessment (optional but recommended)</strong><span>An optional pre-audit review to identify gaps before the formal audit begins. Like a practice run. Helps companies fix problems before the auditor sees them.</span></div>
+      <div class="cheat-pill"><strong>Phase 3: Fieldwork (ongoing during audit period)</strong><span>The auditor requests evidence — screenshots, policies, logs, configurations, personnel records. They conduct interviews with key staff. They test specific controls by sampling transactions, reviewing access lists, and checking configurations.</span></div>
+      <div class="cheat-pill"><strong>Phase 4: Findings and Management Response</strong><span>The auditor identifies any control deficiencies. Management responds to findings, explaining context or describing remediation plans. A collaborative process before the report is finalized.</span></div>
+      <div class="cheat-pill"><strong>Phase 5: Report Issuance</strong><span>The auditor issues the final SOC 2 report — typically 30–100+ pages. Includes the auditor's opinion, description of the system, control descriptions, and test results.</span></div>
+      <div class="cheat-pill"><strong>Phase 6: Report Distribution</strong><span>The report is shared with customers and prospects under NDA. A SOC 3 summary may be published publicly. The company begins preparing for next year's audit.</span></div>
+    </div>
+    <div class="highlight-box">A full SOC 2 Type II audit typically takes <strong>6–18 months total</strong> from starting preparations to receiving the final report. Companies that are new to SOC 2 often spend 6–12 months building their compliance program before even starting the formal audit period.</div>`,
+    quiz: { q: "During a SOC 2 audit, the auditor asks for access logs, screenshots of security configurations, and signed employee security training acknowledgments. Which phase of the audit process is this?", opts: ["Phase 1: Scoping", "Phase 2: Readiness Assessment", "Phase 3: Fieldwork — gathering evidence", "Phase 5: Report Issuance"], ans: 2, explain: "This is Phase 3: Fieldwork. During fieldwork, the auditor requests evidence (logs, screenshots, policies, records) and tests controls to verify they operated as described. This is the core examination phase of the audit." }
+  },
+  {
+    title: "The SOC 2 Report — What's Inside",
+    tagline: "Reading and understanding the document that customers rely on",
+    body: `<p>A SOC 2 report is a formal professional document that follows a standardized structure. Understanding what's inside — and what to look for — is essential for both companies preparing for an audit and customers evaluating vendor SOC 2 reports.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Section 1: Independent Service Auditor's Report</strong><span>The auditor's formal opinion. Most important part. States whether controls were suitably designed (Type I) and/or operating effectively (Type II). Look for: "unqualified opinion" = passed. "Qualified opinion" = issues found.</span></div>
+      <div class="cheat-pill"><strong>Section 2: Management's Assertion</strong><span>A statement by the company's management asserting that their description of the system is fairly presented and controls were effective. Management takes responsibility for the system description.</span></div>
+      <div class="cheat-pill"><strong>Section 3: System Description</strong><span>A detailed description of the service organization's system — infrastructure, software, people, procedures, and data. This is where companies describe what they do and how their controls work. Often 20–50 pages.</span></div>
+      <div class="cheat-pill"><strong>Section 4: Trust Services Criteria and Related Controls</strong><span>The heart of the report. Each criterion is listed, the company's controls for that criterion are described, the auditor's tests are described, and the test results are shown. This is where specific findings or exceptions appear.</span></div>
+    </div>
+    <div class="highlight-box">When reading a SOC 2 report, experienced security professionals go straight to: (1) the auditor's opinion for any qualifications, (2) the exceptions/findings column in Section 4 for any failed tests, and (3) the Complementary User Entity Controls section for anything the <em>customer</em> is responsible for. We'll cover that last point in the next lesson.</div>
+    <div class="analogy-box"><strong>The exception column matters most:</strong> A SOC 2 report with zero exceptions is ideal but rare for large, complex organizations. What matters is the <em>nature</em> of exceptions — minor administrative gaps (didn't complete one training on time) are very different from critical control failures (anyone could access customer data without authentication). Customers reading SOC 2 reports should focus on whether exceptions affect the controls that protect <em>their</em> data.</div>`,
+    quiz: { q: "You're reading a vendor's SOC 2 report and the auditor's opinion says it is 'qualified.' What does this mean?", opts: ["The auditors are fully qualified CPA professionals", "The report covers all 5 Trust Services Categories", "The auditors found issues or exceptions that limited their ability to issue an unqualified (clean) opinion", "The report was completed within the standard timeframe"], ans: 2, explain: "A 'qualified' auditor's opinion means the auditors found exceptions or issues that prevented them from issuing a fully clean ('unqualified') opinion. It's a signal that some controls did not operate effectively during the audit period. An unqualified opinion is what you want to see." }
+  },
+  {
+    title: "Complementary User Entity Controls (CUECs)",
+    tagline: "The controls the customer is responsible for — not the vendor",
+    body: `<p>One of the most important and often-overlooked parts of any SOC 2 report is the section on <span class="key-term">Complementary User Entity Controls (CUECs)</span>. These are controls that the service organization's (vendor's) system is designed to work with — but that must be implemented by the <em>customer</em> to be effective.</p>
+    <div class="highlight-box">Think of CUECs as the vendor saying: "Our system is designed to be secure — but only if you, the customer, do your part." A SOC 2 report only covers the vendor's controls. It says nothing about whether the customer has implemented the necessary complementary controls on their end.</div>
+    <div class="analogy-box"><strong>Lock-and-key analogy:</strong> A bank provides you with a high-security safe (the vendor's SOC 2-covered service). The safe has excellent controls — time locks, combination locks, tamper detection. But if you write the combination on a sticky note attached to the safe (the customer's failure), the safe's excellent controls are useless. CUECs are the "don't write the combination on the safe" instructions for software systems.</div>
+    <p>Common examples of CUECs in cloud software SOC 2 reports:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Customers are responsible for managing their own user access and permissions</span>
+      <span class="badge badge-blue">Customers must implement MFA on their accounts</span>
+      <span class="badge badge-blue">Customers are responsible for the security of their own network connections</span>
+      <span class="badge badge-blue">Customers must notify the vendor when employees are terminated</span>
+      <span class="badge badge-blue">Customers are responsible for the data they input into the system</span>
+    </div>
+    <div class="warning-box"><strong>Why CUECs matter for compliance programs:</strong> If a company passes a SOC 2 audit but their customers haven't implemented the required CUECs, a breach could still occur — and the SOC 2 report won't protect either party. Enterprise compliance teams must read every vendor's CUECs and verify their own organization has implemented all of them. This is a key part of vendor risk management.</div>`,
+    quiz: { q: "A cloud provider's SOC 2 report states: 'Users are responsible for managing access rights for their own employees.' A customer ignores this and lets former employees' accounts remain active. If a breach occurs through those accounts, what best describes the situation?", opts: ["The vendor failed — their SOC 2 should have prevented this", "The customer failed to implement a required Complementary User Entity Control (CUEC)", "The SOC 2 auditors made an error", "This is the Privacy category's responsibility, not Security"], ans: 1, explain: "CUECs are controls the customer is responsible for implementing. The vendor's SOC 2 covered their own controls. The customer's failure to manage their own user access (a clearly stated CUEC) is the customer's responsibility — the vendor's SOC 2 compliance does not extend to customer-side control failures." }
+  },
+  {
+    title: "Complementary Subservice Organization Controls",
+    tagline: "When your vendor uses vendors — the supply chain of trust",
+    body: `<p>Just as customers have controls they must implement (CUECs), there's another important concept in SOC 2: <span class="key-term">Complementary Subservice Organization Controls (CSOCs)</span>. These apply when the service organization itself relies on other vendors (subservice organizations) to deliver parts of its service.</p>
+    <div class="highlight-box">Example: A SaaS company (the service organization) relies on Amazon Web Services for infrastructure. AWS is a subservice organization. The SaaS company's SOC 2 report might not fully cover AWS's controls — it may rely on AWS's own SOC 2 report and specify that certain AWS security controls are complementary controls that must be in place for the SaaS company's system to be secure.</div>
+    <p>SOC 2 offers two approaches for handling subservice organizations:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Inclusive Method</strong><span>The subservice organization's relevant controls are included within the scope of the service organization's SOC 2 audit. The auditor tests the subservice org's controls directly. Comprehensive but rarely used for large providers like AWS.</span></div>
+      <div class="cheat-pill"><strong>Carve-Out Method</strong><span>The subservice organization is carved out of scope. The report describes what controls the subservice org must have, and customers/auditors must obtain that org's own SOC 2 report separately. Most common approach for major cloud providers.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why the carve-out method dominates:</strong> AWS processes SOC 2 audits for thousands of customers. It would be impossible for every one of those customers' auditors to independently audit AWS's data centers. Instead, AWS has its own SOC 2 report, which any of its customers' auditors can rely on. The carve-out method makes the ecosystem scalable — trust passes through the chain via interlocking SOC 2 reports.</div>
+    <div class="warning-box">When reading a SOC 2 report, always check: Does the service organization use major subservice organizations? Are those orgs carved out? Have you obtained and reviewed the subservice organization's own SOC 2 report? Failing to check the complete chain of custody leaves gaps in your risk assessment.</div>`,
+    quiz: { q: "A SOC 2 report states that the company hosts its infrastructure on AWS, and AWS is carved out of scope. What must a sophisticated customer do to fully assess the security chain?", opts: ["Nothing — the carve-out means AWS's security is irrelevant", "Obtain and review AWS's own SOC 2 report to verify the complementary subservice controls are in place", "Demand that the company switch to an inclusive method audit", "Only review the Availability category of the company's SOC 2"], ans: 1, explain: "When a major subservice organization is carved out, their controls aren't tested in the primary audit. Customers performing thorough vendor due diligence should obtain and review the subservice organization's (AWS's) own SOC 2 report to verify the complete chain of trust." }
+  },
+  {
+    title: "Who Needs SOC 2 and Why",
+    tagline: "The companies that need it and the customers who demand it",
+    body: `<p>Understanding who needs a SOC 2 report — and what makes customers require it — is essential for anyone working in the technology industry. SOC 2 has moved from a niche compliance requirement to a near-universal expectation in B2B software.</p>
+    <div class="tag-header">Companies that typically need SOC 2</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">SaaS (Software as a Service) companies</span>
+      <span class="badge badge-blue">Cloud infrastructure and hosting providers</span>
+      <span class="badge badge-blue">Managed service providers (MSPs)</span>
+      <span class="badge badge-blue">Data analytics and business intelligence platforms</span>
+      <span class="badge badge-blue">Healthcare IT and telehealth companies</span>
+      <span class="badge badge-blue">Financial technology (fintech) companies</span>
+      <span class="badge badge-blue">HR and payroll software companies</span>
+      <span class="badge badge-blue">Any company that stores, processes, or transmits customer data</span>
+    </div>
+    <div class="tag-header">Customers who typically require SOC 2</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">Enterprise businesses in regulated industries (healthcare, finance, legal)</span>
+      <span class="badge badge-teal">US federal and state government agencies</span>
+      <span class="badge badge-teal">Banks and financial institutions</span>
+      <span class="badge badge-teal">Healthcare systems and hospital networks</span>
+      <span class="badge badge-teal">Large enterprises conducting vendor risk management</span>
+    </div>
+    <div class="analogy-box"><strong>The market dynamics:</strong> SOC 2 has become a self-reinforcing standard. Large enterprises won't sign contracts without it. Mid-size companies won't work with vendors who don't have it. Startups that want to sell to enterprise customers get SOC 2 early — because every sales deal held up by a "when will you have your SOC 2?" question is a deal potentially lost to a competitor who already has one.</div>
+    <div class="highlight-box">A 2023 study found that over 70% of enterprise procurement decisions in technology require a SOC 2 report. For companies selling into healthcare, finance, or government — that figure is even higher. SOC 2 has effectively become the price of admission for enterprise B2B software sales.</div>`,
+    quiz: { q: "A startup SaaS company is trying to close a deal with a large hospital system. The hospital's procurement team says they need a SOC 2 Type II report before signing. Why would a hospital specifically require this?", opts: ["Hospitals don't need SOC 2 — they use HIPAA instead", "Because hospitals are regulated, store sensitive patient data, and must ensure their vendors have adequate security controls protecting that data", "Because SOC 2 is required by federal law for all hospital vendors", "Because SOC 2 covers medical device security standards"], ans: 1, explain: "Hospitals handle extremely sensitive patient data (PHI) and are subject to HIPAA. Their vendor risk management requires independent proof that software vendors protecting that data have adequate security controls. SOC 2 Type II provides that independent, auditor-verified evidence." }
+  },
+  {
+    title: "SOC 2 and Other Frameworks",
+    tagline: "How SOC 2 fits into the broader compliance landscape",
+    body: `<p>SOC 2 doesn't exist in isolation. Most organizations subject to SOC 2 are also subject to other compliance frameworks and regulations. Understanding how they overlap — and how to efficiently satisfy multiple requirements — is a critical skill for compliance professionals.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>SOC 2 and ISO 27001</strong><span>ISO 27001 is an international information security management system (ISMS) standard. SOC 2 and ISO 27001 cover much of the same ground — roughly 85% overlap. ISO 27001 is more process-oriented; SOC 2 is an audit opinion. Many companies get both — ISO 27001 for European customers, SOC 2 for US customers.</span></div>
+      <div class="cheat-pill"><strong>SOC 2 and GDPR</strong><span>GDPR is a data privacy law; SOC 2 is a security audit standard. The SOC 2 Privacy category aligns closely with GDPR principles. A strong SOC 2 program builds the security controls that GDPR also requires — but SOC 2 doesn't replace GDPR compliance.</span></div>
+      <div class="cheat-pill"><strong>SOC 2 and HIPAA</strong><span>HIPAA requires healthcare organizations to protect PHI (Protected Health Information). SOC 2 + HIPAA audits (SOC 2+) evaluate SOC 2 controls plus HIPAA-specific requirements simultaneously. A SOC 2 with a HIPAA mapping is strong evidence for healthcare compliance.</span></div>
+      <div class="cheat-pill"><strong>SOC 2 and NIST CSF</strong><span>NIST Cybersecurity Framework (Identify, Protect, Detect, Respond, Recover) maps closely to SOC 2's Common Criteria. Companies using NIST as their internal security framework find SOC 2 audits much easier to prepare for.</span></div>
+      <div class="cheat-pill"><strong>SOC 2 and PCI-DSS</strong><span>PCI-DSS protects payment card data. SOC 2 covers broader security. Payment companies often need both — PCI-DSS for card data specifically, SOC 2 for overall organizational trust. SOC 2+ can combine them.</span></div>
+      <div class="cheat-pill"><strong>SOC 2 and COBIT</strong><span>COBIT is an IT governance framework; SOC 2 is an audit standard. COBIT's governance and management structure helps organizations build the organizational foundations — risk management, change management, access controls — that SOC 2 audits.</span></div>
+    </div>
+    <div class="highlight-box">The most efficient compliance programs build controls that satisfy multiple frameworks simultaneously. Rather than building a GDPR program, then a separate SOC 2 program, then a separate ISO 27001 program — smart organizations build one integrated security and privacy program that maps to all required frameworks at once.</div>`,
+    quiz: { q: "A company wants to sell cloud software to both US enterprises (who require SOC 2) and European businesses (who ask about ISO 27001). What is the most efficient approach?", opts: ["Get SOC 2 first, then ISO 27001 separately from scratch", "Build an integrated security program that satisfies both — since ~85% of controls overlap", "ISO 27001 automatically satisfies SOC 2 requirements", "Only get SOC 2, since it's more widely recognized globally"], ans: 1, explain: "SOC 2 and ISO 27001 have approximately 85% control overlap. Building an integrated security program that satisfies both simultaneously is far more efficient than building separate programs. Many compliance tools and auditing firms specialize in combined SOC 2 + ISO 27001 engagements." }
+  },
+  {
+    title: "Preparing for and Maintaining SOC 2",
+    tagline: "What it actually takes to achieve and sustain compliance",
+    body: `<p>Achieving and maintaining SOC 2 compliance is a significant undertaking — but it's manageable with the right approach. Let's walk through what organizations actually need to do.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Step 1: Determine Scope</strong><span>Which Trust Services Categories? Which systems and services? Which audit type (Type I or Type II)? Scope decisions dramatically affect cost and complexity.</span></div>
+      <div class="cheat-pill"><strong>Step 2: Gap Assessment</strong><span>Compare current security posture against SOC 2 criteria. Identify what's missing. Prioritize remediation by risk. This honest baseline prevents surprises during the formal audit.</span></div>
+      <div class="cheat-pill"><strong>Step 3: Implement Controls</strong><span>Build the missing controls: write policies, implement technical controls, assign ownership, train employees, document procedures. This takes 3–12 months depending on starting point.</span></div>
+      <div class="cheat-pill"><strong>Step 4: Select an Auditor</strong><span>Choose a licensed CPA firm with SOC 2 experience. Consider industry expertise, cost, timeline, and how much advisory help they provide vs. pure audit work.</span></div>
+      <div class="cheat-pill"><strong>Step 5: Run the Audit Period</strong><span>For Type II, controls must operate for 6–12 months before the report can be issued. Keep evidence of controls working: automated logs, signed acknowledgments, completed reviews.</span></div>
+      <div class="cheat-pill"><strong>Step 6: Address Findings</strong><span>Auditors will find issues. Address them promptly and document remediation. Minor exceptions in an otherwise clean report are manageable; unaddressed repeat findings damage credibility.</span></div>
+    </div>
+    <div class="highlight-box"><strong>The ongoing obligation:</strong> SOC 2 is not a one-time achievement. Most customers expect organizations to renew their SOC 2 reports <em>annually</em>. This means maintaining controls continuously, collecting evidence throughout the year, and repeating the audit process every 12 months. SOC 2 compliance is a program — not a project.</div>
+    <div class="analogy-box"><strong>Compliance tool ecosystem:</strong> Modern compliance teams use GRC (Governance, Risk, and Compliance) platforms like Vanta, Drata, Secureframe, or Tugboat Logic to automate evidence collection, monitor controls continuously, and streamline the audit process. These tools can reduce SOC 2 preparation time by 60–70%.</div>`,
+    quiz: { q: "A company achieves its first SOC 2 Type II report in January. Their enterprise customers are asking about their next report. What should the company expect?", opts: ["One SOC 2 report is sufficient — it never expires", "SOC 2 reports must be renewed every 5 years", "Most customers expect annual SOC 2 renewal — the compliance program is ongoing, not a one-time achievement", "They only need to renew if they change their systems"], ans: 2, explain: "SOC 2 reports typically cover a 12-month period and are expected to be renewed annually. Enterprise customers want current evidence that controls are still operating effectively — a 3-year-old SOC 2 report provides very little assurance. Compliance is an ongoing program, not a one-time project." }
+  },
+  {
+    title: "The Service Auditor's Role",
+    tagline: "The independent professional whose opinion makes SOC 2 valuable",
+    body: `<p>The entire credibility of SOC 2 rests on the independence and competence of the <span class="key-term">service auditor</span> — the licensed CPA firm that conducts the audit and issues the report. Understanding their role, constraints, and professional standards is fundamental to understanding why SOC 2 matters.</p>
+    <div class="highlight-box">Only a licensed <strong>CPA firm</strong> (Certified Public Accountant) can issue a SOC 2 report. This is not optional or a technicality — SOC 2 is an attestation engagement under AICPA standards (specifically AT-C Section 205). Engaging a non-CPA security firm to conduct your "SOC 2 audit" produces a report that isn't a SOC 2 report, no matter what they call it.</div>
+    <p>The service auditor's responsibilities include:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Evaluating management's description of the system for accuracy</span>
+      <span class="badge badge-blue">Testing controls to verify they operate as described</span>
+      <span class="badge badge-blue">Sampling transactions and examining evidence</span>
+      <span class="badge badge-blue">Interviewing key personnel</span>
+      <span class="badge badge-blue">Issuing a professional opinion with appropriate qualifications</span>
+      <span class="badge badge-blue">Maintaining independence from the client</span>
+    </div>
+    <div class="analogy-box"><strong>Independence is everything:</strong> If a company could hire any consultant to write a positive report about their own security, the report would be worthless. The service auditor's value comes from their independence — they have a professional and legal obligation to report what they find, not what the client wants them to find. A CPA who issues a false clean opinion risks losing their license and facing legal liability.</div>
+    <div class="warning-box"><strong>Watch out for "SOC 2 readiness" vs. "SOC 2 audit":</strong> Many consulting firms offer "SOC 2 readiness assessments" — valuable preparation services, but not an audit. Only the formal CPA-issued report is a genuine SOC 2. Customers should always verify that a vendor's SOC 2 report was issued by a licensed CPA firm, not a non-CPA security consulting company.</div>`,
+    quiz: { q: "A company hires a cybersecurity consulting firm (not a CPA firm) to assess their security and issue them a 'SOC 2-equivalent' report. Why can't this replace an actual SOC 2 report?", opts: ["Because cybersecurity firms charge more than CPA firms", "Because only licensed CPA firms can issue SOC 2 reports under AICPA attestation standards — non-CPA firms cannot issue legally valid SOC 2 opinions", "Because the cybersecurity firm doesn't understand cloud security", "Because SOC 2 only applies to US companies"], ans: 1, explain: "SOC 2 is an AICPA attestation engagement that can only be performed and reported on by licensed CPA firms. A security firm's assessment may be valuable for internal purposes, but it cannot be called a SOC 2 report and won't satisfy customers or regulators requiring an actual SOC 2." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've made it through all 30 days of SOC 2! Let's take a final inventory of everything you now know.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>SOC 2 (System and Organization Controls 2) is an AICPA auditing standard that evaluates whether a service organization's controls properly protect customer data. It's voluntary but effectively required for B2B technology sales. Only licensed CPA firms can issue SOC 2 reports. Reports are confidential — shared under NDA. The standard is built on the Trust Services Criteria (TSC).</p>
+    <div class="tag-header">5 Trust Services Categories</div>
+    <div class="badge-row">
+      <span class="badge badge-red">Security (MANDATORY — always required)</span>
+      <span class="badge badge-blue">Availability (optional)</span>
+      <span class="badge badge-amber">Processing Integrity (optional)</span>
+      <span class="badge badge-purple">Confidentiality (optional)</span>
+      <span class="badge badge-pink">Privacy (optional)</span>
+    </div>
+    <div class="tag-header">9 Common Criteria Groupings (Security Category)</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">CC1 — Control Environment</span>
+      <span class="badge badge-blue">CC2 — Communication and Information</span>
+      <span class="badge badge-blue">CC3 — Risk Assessment</span>
+      <span class="badge badge-blue">CC4 — Monitoring Activities</span>
+      <span class="badge badge-blue">CC5 — Control Activities</span>
+      <span class="badge badge-blue">CC6 — Logical and Physical Access Controls</span>
+      <span class="badge badge-blue">CC7 — System Operations</span>
+      <span class="badge badge-blue">CC8 — Change Management</span>
+      <span class="badge badge-blue">CC9 — Risk Mitigation</span>
+    </div>
+    <div class="tag-header">Key Structural Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">Type I = Snapshot (design only)</span>
+      <span class="badge badge-teal">Type II = Film over time (design + operating effectiveness)</span>
+      <span class="badge badge-teal">CUECs — customer controls required to complement the vendor's</span>
+      <span class="badge badge-teal">CSOCs — subservice org controls</span>
+      <span class="badge badge-teal">Carve-out vs. Inclusive method</span>
+      <span class="badge badge-teal">Unqualified vs. Qualified opinion</span>
+      <span class="badge badge-teal">SOC 3 = public summary</span>
+      <span class="badge badge-teal">Only CPA firms can issue SOC 2 reports</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete SOC 2 cheat sheet with all controls, criteria, and key concepts summarized in one place.</div>`,
+    quiz: { q: "Which of the following best describes the difference between SOC 2 Type I and Type II?", opts: ["Type I covers all 5 Trust Service Categories; Type II covers only Security", "Type I evaluates control design at a point in time; Type II evaluates design plus operating effectiveness over an audit period", "Type I is for large companies; Type II is for small companies", "Type I is issued by CPA firms; Type II is issued by security firms"], ans: 1, explain: "Type I is a point-in-time snapshot evaluating whether controls are suitably designed. Type II evaluates both design AND operating effectiveness over a defined audit period (typically 6–12 months). Type II is significantly more valuable and is what enterprise customers typically require." }
+  },
+  {
+    title: "SOC 2 Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is SOC 2?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">System and Organization Controls 2. An AICPA auditing standard evaluating whether a service organization's controls properly protect customer data across Security, Availability, Processing Integrity, Confidentiality, and Privacy. Voluntary but effectively required for B2B tech sales. Only licensed CPA firms can issue SOC 2 reports. Reports are confidential — shared under NDA. Built on the Trust Services Criteria (TSC), with the Common Criteria based on COSO's Internal Control framework.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>SOC Report Types</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>SOC 1</b> — Internal controls over financial reporting. Used by payroll processors, benefits administrators, financial data handlers. Required for SOX compliance.</div>
+        <div class="ctrl-card"><b>SOC 2</b> — Controls over Security, Availability, Processing Integrity, Confidentiality, and/or Privacy. Most widely requested in tech industry. Confidential — shared under NDA.</div>
+        <div class="ctrl-card"><b>SOC 3</b> — Simplified, publicly shareable summary of SOC 2. Contains auditor's opinion only — no detailed controls or test results. Safe to post on company website.</div>
+        <div class="ctrl-card"><b>SOC 2+</b> — SOC 2 plus additional framework coverage (HIPAA, PCI-DSS, ISO 27001, NIST). One audit satisfies multiple compliance requirements.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Type I vs. Type II</h3>
+      <div class="tsc-grid">
+        <div class="tsc-security"><strong style="color:#501313">Type I — Snapshot</strong><br><span style="font-size:12px;color:#1a1a18">Point-in-time. Evaluates whether controls are <em>suitably designed</em> as of a specific date. Does NOT test operating effectiveness over time. Stepping stone toward Type II. Less valuable to customers.</span></div>
+        <div class="tsc-availability"><strong style="color:#0C447C">Type II — Film</strong><br><span style="font-size:12px;color:#1a1a18">Over a period (typically 6–12 months). Evaluates suitably designed AND <em>operating effectively</em>. Tests actual evidence. What enterprise customers almost always require. Renewable annually.</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>5 Trust Services Categories</h3>
+      <div class="tsc-grid">
+        <div class="tsc-security"><strong style="color:#501313">Security (MANDATORY)</strong><br><span style="font-size:12px;color:#1a1a18">Protects information and systems from unauthorized access, disclosure, or damage. Covered by the 9 Common Criteria (CC1–CC9). Foundation of every SOC 2.</span></div>
+        <div class="tsc-availability"><strong style="color:#0C447C">Availability (optional)</strong><br><span style="font-size:12px;color:#1a1a18">Systems available for operation as committed. Covers uptime monitoring, capacity planning, backup and recovery, disaster recovery, SLA management.</span></div>
+        <div class="tsc-integrity"><strong style="color:#633806">Processing Integrity (optional)</strong><br><span style="font-size:12px;color:#1a1a18">Processing is complete, valid, accurate, timely, and authorized. Critical for payment processors, payroll systems, financial software. The 5 elements: Complete | Valid | Accurate | Timely | Authorized.</span></div>
+        <div class="tsc-confidential"><strong style="color:#3C3489">Confidentiality (optional)</strong><br><span style="font-size:12px;color:#1a1a18">Information designated as confidential is protected. Covers business secrets, trade secrets, proprietary data. Note: Confidentiality = business info; Privacy = personal info about individuals.</span></div>
+        <div class="tsc-privacy"><strong style="color:#4B1528">Privacy (optional)</strong><br><span style="font-size:12px;color:#1a1a18">Personal information collected, used, retained, and disposed of per commitments and AICPA privacy criteria (GAPP). Aligns with GDPR, CCPA. 10 GAPP components: Notice | Choice/Consent | Collection | Use/Retention | Access | Disclosure | Security | Quality | Monitoring | Enforcement.</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>9 Common Criteria (CC) — Security Category</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>CC1 — Control Environment</b> — Integrity and ethical values, board oversight, organizational structure, competency commitment, accountability. The governance foundation.</div>
+        <div class="ctrl-card"><b>CC2 — Communication and Information</b> — Quality information for internal control, internal communication of responsibilities, external communications. Right info to right people.</div>
+        <div class="ctrl-card"><b>CC3 — Risk Assessment</b> — Objectives clarity, risk identification and analysis, fraud risk consideration, identifying changes affecting controls. Formal and documented.</div>
+        <div class="ctrl-card"><b>CC4 — Monitoring Activities</b> — Ongoing and separate evaluations of control functioning, communicating and correcting deficiencies. Continuous + periodic monitoring.</div>
+        <div class="ctrl-card"><b>CC5 — Control Activities</b> — Selecting and implementing controls to mitigate risks, general technology controls, deploying via policies and procedures. The "what are you doing about it?" criterion.</div>
+        <div class="ctrl-card"><b>CC6 — Logical and Physical Access Controls</b> — Access architecture, user registration, access removal (termination), physical access, data disposal, external threat protection, data transmission controls, malware protection. (8 sub-criteria — the most detailed.)</div>
+        <div class="ctrl-card"><b>CC7 — System Operations</b> — Configuration monitoring, anomaly detection, incident classification, incident response program, incident recovery. Detect → respond → recover.</div>
+        <div class="ctrl-card"><b>CC8 — Change Management</b> — Authorizing, designing, testing, approving, and implementing changes. Covers all change types including emergency changes. Unauthorized changes = control failure.</div>
+        <div class="ctrl-card"><b>CC9 — Risk Mitigation</b> — Business disruption risk mitigation activities, vendor and business partner risk management. Supply chain security and continuity planning.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Structural Concepts</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>CUECs (Complementary User Entity Controls)</b> — Controls the <em>customer</em> must implement for the vendor's system to be secure. Customer is responsible — not the vendor. Must be reviewed and implemented by every customer reading the SOC 2.</div>
+        <div class="ctrl-card"><b>CSOCs (Complementary Subservice Organization Controls)</b> — Controls required from the vendor's own vendors (subservice orgs like AWS). Carve-out method: subservice org is out of scope, their own SOC 2 must be reviewed separately.</div>
+        <div class="ctrl-card"><b>Auditor's Opinion Types</b> — Unqualified = clean opinion, controls effective. Qualified = exceptions found, some controls failed. Adverse = widespread failures. Disclaimer = insufficient evidence to form opinion.</div>
+        <div class="ctrl-card"><b>SOC 2 Report Sections</b> — (1) Auditor's Opinion | (2) Management's Assertion | (3) System Description | (4) Trust Services Criteria, Controls, Tests, and Results. Read Section 4's exception column first.</div>
+        <div class="ctrl-card"><b>Only CPA Firms Issue SOC 2</b> — SOC 2 is an AICPA attestation under AT-C Section 205. Non-CPA security firms cannot issue valid SOC 2 reports regardless of what they call their product.</div>
+        <div class="ctrl-card"><b>Annual Renewal</b> — Enterprise customers expect annual SOC 2 renewal. Compliance is an ongoing program. GRC tools (Vanta, Drata, Secureframe) automate evidence collection and monitoring.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>SOC 2 and Other Frameworks</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>ISO 27001</b> — ~85% overlap. ISO 27001 = international ISMS standard (process-oriented). SOC 2 = US audit opinion. Many companies get both for global coverage.</div>
+        <div class="ctrl-card"><b>GDPR</b> — SOC 2 Privacy ≈ GDPR principles. SOC 2 security controls support GDPR Art. 32. SOC 2 does not replace GDPR compliance — they are complementary.</div>
+        <div class="ctrl-card"><b>HIPAA</b> — SOC 2 + HIPAA = SOC 2+ audit. Strong evidence for healthcare compliance. PHI protection requirements align with Security and Privacy categories.</div>
+        <div class="ctrl-card"><b>NIST CSF</b> — NIST's Identify/Protect/Detect/Respond/Recover maps closely to CC criteria. NIST-based security programs align naturally with SOC 2 audit preparation.</div>
+        <div class="ctrl-card"><b>PCI-DSS</b> — Payment card security. Companies needing both often pursue SOC 2+ to combine audits. PCI-DSS is more prescriptive; SOC 2 is more principles-based.</div>
+        <div class="ctrl-card"><b>COBIT</b> — IT governance framework whose processes (change management, access control, risk management) directly build the controls SOC 2 audits. COBIT governs; SOC 2 audits.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts to Remember</h3>
+      <div class="badge-row">
+        <span class="badge badge-blue">Published by: AICPA</span>
+        <span class="badge badge-blue">TSC last updated: 2017 (2022 supplemental guidance)</span>
+        <span class="badge badge-blue">5 Trust Services Categories</span>
+        <span class="badge badge-blue">Security = MANDATORY</span>
+        <span class="badge badge-blue">9 Common Criteria (CC1–CC9)</span>
+        <span class="badge badge-blue">CC6 has the most sub-criteria (8)</span>
+        <span class="badge badge-blue">Type I = point in time | Type II = 6–12 months</span>
+        <span class="badge badge-blue">Type II = what enterprise customers require</span>
+        <span class="badge badge-blue">SOC 3 = public version</span>
+        <span class="badge badge-blue">CPA firms only can issue SOC 2</span>
+        <span class="badge badge-blue">Unqualified opinion = clean</span>
+        <span class="badge badge-blue">Annual renewal expected</span>
+        <span class="badge badge-blue">5 Processing Integrity elements: Complete, Valid, Accurate, Timely, Authorized</span>
+        <span class="badge badge-blue">GAPP = 10 Generally Accepted Privacy Principles (Privacy category)</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

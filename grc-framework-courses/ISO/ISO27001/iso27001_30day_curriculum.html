@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO 27001 — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #444441; color: #F1EFE8; border-color: #444441; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #F1EFE8; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #2C2C2A; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #444441; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #444441; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #F1EFE8; color: #2C2C2A; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #E6F1FB; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #444441; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-gray   { background: #F1EFE8; color: #2C2C2A; }
+  .badge-teal   { background: #E1F5EE; color: #085041; }
+  .badge-blue   { background: #E6F1FB; color: #0C447C; }
+  .badge-amber  { background: #FAEEDA; color: #633806; }
+  .badge-coral  { background: #FAECE7; color: #4A1B0C; }
+  .badge-green  { background: #EAF3DE; color: #27500A; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-red    { background: #FCEBEB; color: #501313; }
+  .badge-pink   { background: #FBEAF0; color: #4B1528; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .clause-card { background: #F1EFE8; border: 0.5px solid #B4B2A9; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .clause-card b { font-size: 13px; font-weight: 500; color: #2C2C2A; }
+  .annex-card { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; margin-bottom: 6px; }
+  .annex-card b { font-size: 13px; font-weight: 500; color: #444441; }
+  .pdca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .pdca-plan  { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .pdca-do    { background: #E1F5EE; border: 0.5px solid #9FE1CB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .pdca-check { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .pdca-act   { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .theme-org  { background: #F1EFE8; border: 0.5px solid #B4B2A9; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .theme-ppl  { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .theme-phy  { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  .theme-tec  { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: 8px; padding: .65rem .85rem; font-size: 13px; }
+  @media (max-width: 520px) { .cheat-grid, .control-row, .pdca-grid, .theme-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day ISO 27001 curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>ISO 27001 — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title: "What Is ISO 27001?",
+    tagline: "The international gold standard for information security management",
+    body: `<p>Imagine you run a company that handles thousands of customers' personal and financial data. A major bank wants to do business with you — but first they ask: "How do we know your information security is good enough to trust with our customers' data?" You could hand them a 200-page policy document and hope they read it. Or you could show them one internationally recognized certificate that says an independent auditor has already verified your security program meets the world's highest standard. That certificate is <span class="key-term">ISO 27001</span>.</p>
+    <p>ISO 27001 is the world's most widely recognized international standard for <strong>Information Security Management Systems (ISMS)</strong>. Its full official name is <em>ISO/IEC 27001:2022 — Information security, cybersecurity and privacy protection — Information security management systems — Requirements</em>. It was first published in 2005, significantly updated in 2013, and most recently revised in <strong>October 2022</strong>.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of ISO 27001 like a Michelin star rating for restaurants — but for information security. A Michelin star doesn't just mean the food is good today; it means the restaurant has been independently evaluated and consistently meets rigorous standards across cooking, ingredients, service, and consistency. ISO 27001 certification means an independent auditor has verified that an organization systematically manages information security risks — not just that they have some security tools in place.</div>
+    <div class="highlight-box">ISO 27001 is certifiable — organizations can obtain an internationally recognized certificate from an accredited certification body proving they meet the standard. This certificate is accepted by customers, partners, regulators, and governments worldwide. It is not a law or regulation — it's a voluntary standard that has become a de facto market requirement in technology, finance, healthcare, and government contracting.</div>
+    <p>Over 70,000 certificates have been issued worldwide across 150+ countries. ISO 27001 certification has become the primary way organizations prove information security competence to customers and partners globally.</p>`,
+    quiz: { q: "What does ISO 27001 certify about an organization?", opts: ["That their software products have no bugs", "That they have independently verified they systematically manage information security risks through an Information Security Management System (ISMS)", "That they comply with GDPR", "That their network is unhackable"], ans: 1, explain: "ISO 27001 certifies that an organization has implemented a systematic, documented, and independently audited Information Security Management System (ISMS) for managing information security risks. It does not guarantee specific outcomes like 'no breaches' — it certifies the management system for identifying and treating risks." }
+  },
+  {
+    title: "Why Was ISO 27001 Created?",
+    tagline: "The global information security crisis that demanded a universal answer",
+    body: `<p>By the late 1990s and early 2000s, the internet had transformed business — and with it, the attack surface for information security. Organizations were struggling with a familiar problem: every customer, partner, regulator, and auditor was asking different security questions, requiring different documentation, and accepting different evidence of security competence. Sound familiar? It's the same problem HITRUST solved for healthcare — except ISO 27001 solved it globally across all industries.</p>
+    <div class="highlight-box"><strong>The origin story:</strong> ISO 27001's roots trace back to a 1995 UK government standard called BS 7799, developed by the British Standards Institution. This standard recognized that organizations needed a structured way to manage information security — not just buy security products and hope for the best. The standard was adopted by ISO in 2000 (as ISO 17799) and then restructured into the current certifiable management system standard (ISO 27001) in 2005.</div>
+    <p>Several persistent problems drove the need for a global information security standard:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>No Common Language</strong><span>Organizations couldn't compare security approaches because there was no common framework. "We take security seriously" meant something different to every organization.</span></div>
+      <div class="cheat-pill"><strong>Questionnaire Overload</strong><span>Just like HITRUST addressed in healthcare, organizations were buried under incompatible security questionnaires from customers, partners, and regulators.</span></div>
+      <div class="cheat-pill"><strong>Point-in-Time Compliance</strong><span>Security audits were snapshots that told you about the past, not the present. There was no way to demonstrate ongoing, systematic security management.</span></div>
+      <div class="cheat-pill"><strong>Technology Focus Over Management</strong><span>Organizations bought firewalls and antivirus but had no systematic approach to identifying what information needed protecting, assessing risks, and making rational decisions about which controls to implement.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The management system insight:</strong> ISO 27001's most important contribution isn't a list of security controls — it's the insight that information security requires a <em>management system</em>, not just security products. Just as quality management systems (ISO 9001) ensure consistent quality in manufacturing, an ISMS ensures consistent, systematic, improving information security management. The controls matter, but the system around them matters more.</div>`,
+    quiz: { q: "What was the key management insight that made ISO 27001 different from simply listing security controls?", opts: ["It listed more controls than any other standard", "It recognized that information security requires a management system — a systematic, documented, and continuously improving approach — not just the purchase of security products", "It made security legally mandatory for the first time", "It was the first standard to mention cybersecurity"], ans: 1, explain: "ISO 27001's foundational insight is that effective information security is achieved through a management system — systematic processes for identifying risks, deciding how to treat them, implementing controls, monitoring effectiveness, and continuously improving. This is fundamentally different from simply implementing a list of technical security measures." }
+  },
+  {
+    title: "ISO/IEC — The Standards Bodies Behind ISO 27001",
+    tagline: "Understanding the international organizations that give ISO 27001 its global credibility",
+    body: `<p>ISO 27001 is published jointly by two international organizations — <span class="key-term">ISO</span> (International Organization for Standardization) and <span class="key-term">IEC</span> (International Electrotechnical Commission). Understanding these bodies explains why ISO 27001 carries unique international authority.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>ISO — International Organization for Standardization</strong><span>Founded 1947. Non-governmental. 170+ member countries. Each member is the national standards body for their country. Develops international standards across virtually every industry — quality (9001), environment (14001), AI (42001), food safety, and thousands more.</span></div>
+      <div class="cheat-pill"><strong>IEC — International Electrotechnical Commission</strong><span>Founded 1906. Develops international standards for electrical, electronic, and related technologies. Partner with ISO for technology-related standards — which is why information security standards carry the "ISO/IEC" prefix.</span></div>
+    </div>
+    <div class="highlight-box">ISO 27001 belongs to a family of related standards called the <strong>ISO/IEC 27000 series</strong>. Each standard in the series addresses a specific aspect of information security management. Understanding the family helps explain ISO 27001's place in the broader landscape.</div>
+    <p>Key standards in the ISO 27000 family:</p>
+    <div class="badge-row">
+      <span class="badge badge-gray">ISO 27000 — Overview and vocabulary (definitions)</span>
+      <span class="badge badge-gray">ISO 27001 — Requirements (the certifiable standard)</span>
+      <span class="badge badge-gray">ISO 27002 — Code of practice (guidance for implementing controls)</span>
+      <span class="badge badge-gray">ISO 27005 — Information security risk management</span>
+      <span class="badge badge-gray">ISO 27017 — Cloud security controls</span>
+      <span class="badge badge-gray">ISO 27018 — Cloud privacy protection</span>
+      <span class="badge badge-gray">ISO 27701 — Privacy information management (PIMS extension)</span>
+    </div>
+    <div class="analogy-box"><strong>27001 vs 27002 — the most important distinction:</strong> ISO 27001 is the <em>requirements</em> standard — it specifies what an ISMS must do and is what organizations certify against. ISO 27002 is the <em>guidance</em> standard — it provides detailed implementation guidance for each of the controls in Annex A of 27001. Think of 27001 as the exam questions and 27002 as the textbook that helps you answer them. Organizations must conform to 27001; they use 27002 as implementation guidance.</div>`,
+    quiz: { q: "What is the key difference between ISO 27001 and ISO 27002?", opts: ["They are identical standards with different names", "ISO 27001 contains the requirements for certification (what must be done); ISO 27002 provides detailed implementation guidance (how to do it) for the controls in 27001's Annex A", "ISO 27002 is for cloud environments only", "ISO 27001 is for large organizations; ISO 27002 is for small ones"], ans: 1, explain: "ISO 27001 specifies the requirements that an ISMS must meet — organizations certify against ISO 27001. ISO 27002 provides implementation guidance and best practice for the controls referenced in ISO 27001's Annex A — it's the 'how to' companion document. Organizations use both, but only 27001 is the certification standard." }
+  },
+  {
+    title: "The Information Security Management System (ISMS)",
+    tagline: "The core concept that makes ISO 27001 different from every other security standard",
+    body: `<p>The most important concept in all of ISO 27001 is the <span class="key-term">Information Security Management System (ISMS)</span>. Every clause, every control, every requirement in ISO 27001 is either part of the ISMS or serves to build and maintain it. If you understand what an ISMS is and why it matters, you understand ISO 27001.</p>
+    <div class="highlight-box">ISO 27001 defines an ISMS as: a set of policies, procedures, processes, and systems that manage information security risks, covering the overall management of information security within an organization. The ISMS is not a piece of software. It's not a checklist. It's a <em>management system</em> — a systematic, documented, and continuously improving approach to managing information security.</div>
+    <p>What makes an ISMS different from just "doing security":</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Systematic</strong><span>Every security decision follows a documented process — not ad hoc judgment. Risk assessments are formal. Control selection is documented and justified. Nothing is done randomly.</span></div>
+      <div class="cheat-pill"><strong>Documented</strong><span>Policies, procedures, risk assessments, control implementations, and evidence of operations are written down. If it isn't documented, for audit purposes, it didn't happen.</span></div>
+      <div class="cheat-pill"><strong>Risk-Based</strong><span>The ISMS is calibrated to the organization's specific risk profile — not a generic list of controls applied to every situation. Controls are selected because they address identified risks.</span></div>
+      <div class="cheat-pill"><strong>Continuously Improving</strong><span>The ISMS is not static. Regular internal audits, management reviews, and the PDCA cycle ensure it improves over time as threats evolve and the organization changes.</span></div>
+    </div>
+    <div class="analogy-box"><strong>ISMS vs. "doing security" analogy:</strong> A person who eats vegetables occasionally is "doing health." A person with a documented nutrition plan, scheduled medical checkups, tracked health metrics, and a process for adjusting based on results has a health management system. ISO 27001 is the difference between "doing security" (ad hoc, reactive) and having an ISMS (systematic, documented, proactive, continuously improving). Both people care about health — but the outcomes are dramatically different.</div>
+    <div class="info-box"><strong>Scope matters enormously:</strong> An ISMS has a defined scope — specific parts of the organization, specific systems, specific locations. An organization can certify an ISMS covering only one business unit, one geographic location, or one product. This flexibility makes ISO 27001 achievable for organizations of any size — but the scope must be honest and meaningful. A scope carefully designed to exclude all high-risk activities is not a credible ISMS.</div>`,
+    quiz: { q: "What distinguishes an ISMS from simply having good security tools and practices?", opts: ["An ISMS requires more expensive security products", "An ISMS is systematic, documented, risk-based, and continuously improving — providing a structured management approach rather than ad hoc security decisions", "An ISMS only applies to cloud environments", "An ISMS means you have passed a security audit"], ans: 1, explain: "An ISMS provides systematic, documented, risk-based, and continuously improving management of information security. Organizations without an ISMS may have excellent security tools and practices — but without the management system, there's no consistent process for identifying risks, rationally deciding which controls to implement, monitoring effectiveness, and improving over time." }
+  },
+  {
+    title: "The High-Level Structure and PDCA Cycle",
+    tagline: "ISO 27001's architecture — and why it looks familiar",
+    body: `<p>ISO 27001 follows ISO's <span class="key-term">High-Level Structure (HLS)</span> — the same 10-clause framework used by ISO 42001 (AI management), ISO 9001 (quality), and ISO 14001 (environment). This shared structure has two important implications: the frameworks integrate easily with each other, and learning ISO 27001's structure prepares you for all other ISO management system standards.</p>
+    <div class="highlight-box">The 10-clause HLS structure of ISO 27001:<br><br>
+    Clauses 1–3: Introduction (scope, normative references, terms) — informational only, not auditable requirements<br>
+    Clause 4: Context of the Organization<br>
+    Clause 5: Leadership<br>
+    Clause 6: Planning<br>
+    Clause 7: Support<br>
+    Clause 8: Operation<br>
+    Clause 9: Performance Evaluation<br>
+    Clause 10: Improvement<br><br>
+    Plus Annex A: Information Security Controls (93 controls in the 2022 version)</div>
+    <p>These clauses map directly to the <span class="key-term">PDCA Cycle</span> — Plan, Do, Check, Act — which is the engine of continuous improvement in all ISO management systems:</p>
+    <div class="pdca-grid">
+      <div class="pdca-plan"><strong style="color:#0C447C">PLAN (Clauses 4, 5, 6)</strong><br><span style="font-size:12px;color:#1a1a18">Understand context. Get leadership commitment. Identify risks. Select controls. Set objectives. Design the ISMS.</span></div>
+      <div class="pdca-do"><strong style="color:#085041">DO (Clauses 7, 8)</strong><br><span style="font-size:12px;color:#1a1a18">Provide resources. Train people. Implement controls. Run operations. Execute the plan.</span></div>
+      <div class="pdca-check"><strong style="color:#633806">CHECK (Clause 9)</strong><br><span style="font-size:12px;color:#1a1a18">Monitor performance. Measure effectiveness. Internal audit. Management review. Verify it works.</span></div>
+      <div class="pdca-act"><strong style="color:#501313">ACT (Clause 10)</strong><br><span style="font-size:12px;color:#1a1a18">Fix nonconformities. Take corrective action. Continually improve. Then Plan again.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why the cycle never stops:</strong> The PDCA cycle is called a cycle because it never ends. After you Act and improve, you Plan again — with better information than before. The threat landscape changes, your organization changes, technology changes. The ISMS must evolve with those changes. An ISO 27001 certification isn't a destination — it's a commitment to continuous improvement of security management.</div>`,
+    quiz: { q: "Which PDCA phase does Clause 9 (Performance Evaluation) of ISO 27001 correspond to?", opts: ["Plan — because you're planning how to measure", "Do — because you're doing the measurement", "Check — because you're verifying that the ISMS is working as intended", "Act — because you're acting on information"], ans: 2, explain: "Clause 9 (Performance Evaluation) corresponds to the Check phase of PDCA. It covers monitoring, measurement, analysis, evaluation, internal audit, and management review — all of which verify whether the ISMS is working as intended and identify what needs to improve." }
+  },
+  {
+    title: "Clause 4 — Context of the Organization (Part 1)",
+    tagline: "Knowing your environment before you can design your security",
+    body: `<p><span class="key-term">Clause 4</span> begins the ISMS by requiring organizations to deeply understand their context — both the environment they operate in and the people who have a stake in their information security. This understanding drives everything that follows: the scope of the ISMS, the risk assessment, the control selection, and the objectives.</p>
+    <div class="clause-card"><b>Clause 4.1 — Understanding the Organization and Its Context</b><br>Determine external and internal factors that are relevant to the organization's purpose and affect the ISMS's ability to achieve its intended outcomes. This isn't a bureaucratic exercise — it's the foundation for a risk assessment that reflects reality rather than generic assumptions.</div>
+    <p>External factors to consider:</p>
+    <div class="badge-row">
+      <span class="badge badge-gray">Regulatory environment — GDPR, HIPAA, sector-specific laws</span>
+      <span class="badge badge-gray">Industry standards — customer security requirements, market expectations</span>
+      <span class="badge badge-gray">Threat landscape — current attack trends affecting your sector</span>
+      <span class="badge badge-gray">Technology environment — cloud adoption, supply chain dependencies</span>
+      <span class="badge badge-gray">Geopolitical factors — data sovereignty requirements, international operations</span>
+    </div>
+    <p>Internal factors to consider:</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Business strategy and objectives that the ISMS must support</span>
+      <span class="badge badge-blue">Organizational structure and culture</span>
+      <span class="badge badge-blue">Existing information systems and their interdependencies</span>
+      <span class="badge badge-blue">Current security capabilities and resources</span>
+      <span class="badge badge-blue">Historical security incidents and near-misses</span>
+    </div>
+    <div class="analogy-box"><strong>Context changes everything:</strong> A payment processor's ISMS looks completely different from a research university's ISMS — even if both are ISO 27001 certified. The payment processor faces PCI-DSS requirements, sophisticated financial crime attackers, and high-value transaction data. The university faces open-access culture expectations, research IP theft threats, and diverse user populations. Context analysis ensures the ISMS is built for the actual organization, not a generic template.</div>
+    <div class="highlight-box">Clause 4.1 is where organizations document the issues that will shape their entire ISMS. Auditors routinely ask to see this analysis — and a weak or superficial context analysis is a red flag that the entire ISMS may be generic rather than genuinely tailored to the organization's actual risk environment.</div>`,
+    quiz: { q: "Why does ISO 27001 require understanding external and internal context (Clause 4.1) before building the ISMS?", opts: ["Because it is the easiest clause to demonstrate", "Because context determines what risks are relevant, what controls are appropriate, and how the ISMS should be designed — a generic ISMS without context understanding addresses the wrong risks", "Because regulators require a context analysis document", "Because ISO 27002 mandates it"], ans: 1, explain: "Context analysis is foundational because it drives the entire ISMS design. The risks a retail bank faces are completely different from those of a hospital or a startup. Without understanding external threats, regulations, and internal organizational factors, the subsequent risk assessment will be generic rather than targeted — and the controls selected will be poorly matched to the actual risks." }
+  },
+  {
+    title: "Clause 4 — Interested Parties and Scope",
+    tagline: "Who cares about your security — and what does your ISMS actually cover?",
+    body: `<p>The second half of Clause 4 addresses two critical questions: who has a stake in the organization's information security, and what exactly does the ISMS cover? These decisions have significant implications throughout the rest of the ISMS.</p>
+    <div class="clause-card"><b>Clause 4.2 — Understanding Needs and Expectations of Interested Parties</b><br>Identify parties with a stake in the ISMS and their specific requirements. Their requirements become inputs to the ISMS design — some may even become compliance obligations.</div>
+    <p>Typical interested parties in an ISO 27001 ISMS:</p>
+    <div class="badge-row">
+      <span class="badge badge-gray">Customers requiring security assurance (contractual obligations)</span>
+      <span class="badge badge-gray">Regulators setting mandatory security standards</span>
+      <span class="badge badge-gray">Shareholders expecting appropriate risk management</span>
+      <span class="badge badge-gray">Employees with expectations about protecting their own data</span>
+      <span class="badge badge-gray">Business partners with contractual security expectations</span>
+      <span class="badge badge-gray">Cyber insurers requiring minimum security standards</span>
+    </div>
+    <div class="clause-card"><b>Clause 4.3 — Determining the Scope of the ISMS</b><br>Define the boundaries and applicability of the ISMS — which parts of the organization, which locations, which systems, and which processes are included. The scope must be documented and made available to interested parties.</div>
+    <div class="analogy-box"><strong>Scope is a strategic decision:</strong> An organization can scope the ISMS broadly (covering the entire organization and all systems) or narrowly (covering only a specific business unit, product, or geographic location). A narrow scope reduces the certification effort — but it also reduces the assurance value. A customer asking "is your customer data management system in scope?" needs to hear yes. Scoping out the most critical systems undermines the certification's credibility.</div>
+    <div class="clause-card"><b>Clause 4.4 — Information Security Management System</b><br>Establish, implement, maintain, and continually improve the ISMS in accordance with ISO 27001. This clause is the commitment clause — it says "now that you understand your context, actually build the system."</div>
+    <div class="highlight-box"><strong>Scope creep in reverse:</strong> The most common scope mistake is making the scope too narrow to be credible — excluding the most sensitive systems or highest-risk activities to make certification easier. Certification bodies are aware of this and auditors will challenge scopes that seem designed to avoid difficult areas. The scope should reflect genuine information security management, not a carefully curated low-risk slice of the organization.</div>`,
+    quiz: { q: "An organization scopes its ISO 27001 ISMS to exclude its customer database management system because it is the most complex to secure. Why is this problematic?", opts: ["Because it makes the certification more expensive", "Because scoping out the most sensitive or complex systems creates a certification that provides no assurance for the areas customers actually care about most — making the certification misleading", "Because ISO 27001 requires all systems to be in scope", "Because excluding systems is not permitted under ISO 27001"], ans: 1, explain: "ISO 27001 doesn't prohibit narrow scopes, but scoping out the most sensitive systems creates a certification that misleads interested parties. A customer relying on ISO 27001 certification to assess information security trusts that the certification covers meaningful operations. Discovering the most critical system is excluded would legitimately undermine confidence in the entire certification." }
+  },
+  {
+    title: "Clause 5 — Leadership and Commitment",
+    tagline: "Why security must be owned at the top of the organization",
+    body: `<p><span class="key-term">Clause 5</span> — Leadership — is where ISO 27001 makes its most important cultural demand: information security must be owned, championed, and actively supported by top management. This isn't about having an executive sponsor on a project plan. It's about genuine accountability at the board and CEO level.</p>
+    <div class="clause-card"><b>Clause 5.1 — Leadership and Commitment</b><br>Top management must demonstrate leadership and commitment by: taking accountability for ISMS effectiveness, ensuring information security policy aligns with strategy, integrating ISMS requirements into business processes, making resources available, communicating the importance of security management, and promoting continual improvement.</div>
+    <div class="highlight-box"><strong>The "demonstrate" requirement:</strong> ISO 27001 doesn't just require leadership to approve a security policy. It requires them to <em>demonstrate</em> commitment through visible, documentable actions. Auditors look for evidence of leadership involvement: signed policies, management review records, board-level security discussions, resource allocation decisions. A CEO who delegates security entirely to IT has not demonstrated leadership commitment under ISO 27001.</div>
+    <div class="clause-card"><b>Clause 5.2 — Information Security Policy</b><br>Top management must establish an information security policy that: is appropriate to the organization's purpose, includes information security objectives or a framework for setting them, includes commitment to satisfying applicable requirements, includes commitment to continual improvement, and is communicated within the organization and available to interested parties.</div>
+    <div class="analogy-box"><strong>The tone at the top effect:</strong> Research consistently shows that the single most powerful predictor of security program effectiveness is senior leadership's visible commitment to security. When employees see the CEO attending security briefings, when the board asks security questions, when security resources are protected from budget cuts — the message throughout the organization is clear: security matters. ISO 27001 codifies this insight into a formal requirement.</div>
+    <div class="clause-card"><b>Clause 5.3 — Organizational Roles, Responsibilities, and Authorities</b><br>Top management must assign and communicate responsibilities and authorities for information security roles. Key roles include the ISMS owner (often the CISO), information asset owners, and internal auditors. Every significant security activity must have a named accountable person.</div>
+    <div class="warning-box"><strong>The CISO role and ISO 27001:</strong> ISO 27001 doesn't mandate a specific role title — but it does require that clear responsibility exists. Many organizations create the CISO (Chief Information Security Officer) position specifically to fulfill Clause 5.3's accountability requirements. The ISMS owner is typically the most senior person responsible for the ISMS's effectiveness — and they must have sufficient authority to act, not just advise.</div>`,
+    quiz: { q: "ISO 27001 Clause 5.1 requires top management to 'demonstrate' leadership commitment. What distinguishes demonstrating from simply approving?", opts: ["There is no difference — approval is sufficient demonstration", "Demonstrating requires visible, documentable actions — attending security reviews, allocating resources, communicating importance, holding people accountable — not just signing a policy document", "Demonstration only requires annual security awareness training completion", "Only the CEO can demonstrate leadership commitment"], ans: 1, explain: "Demonstrating leadership commitment under Clause 5.1 requires visible, auditable evidence of active engagement — signed policies, management review participation, resource allocation decisions, board-level security discussions. Simply approving a security policy document without ongoing active involvement does not satisfy the demonstration requirement." }
+  },
+  {
+    title: "Clause 6 — Planning: Risks and Opportunities",
+    tagline: "Before you can secure anything, you must understand what you're securing it against",
+    body: `<p><span class="key-term">Clause 6</span> is where the ISMS moves from context and commitment to concrete planning — specifically, what risks exist and what the organization will do about them. The risk assessment is the intellectual heart of ISO 27001.</p>
+    <div class="clause-card"><b>Clause 6.1.1 — Actions to Address Risks and Opportunities</b><br>When planning for the ISMS, the organization must determine risks and opportunities that need to be addressed to ensure the ISMS achieves its intended outcomes, prevents or reduces undesired effects, and achieves continual improvement.</div>
+    <div class="clause-card"><b>Clause 6.1.2 — Information Security Risk Assessment</b><br>Define and apply an information security risk assessment process that: establishes risk acceptance criteria, ensures repeated assessments produce consistent and comparable results, identifies risks associated with the loss of confidentiality, integrity, and availability of information, analyzes and evaluates those risks. The process must be documented.</div>
+    <p>The three core concepts in information security risk:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Confidentiality</strong><span>Information is only accessible to those authorized to access it. Breached by unauthorized disclosure, data theft, or exposure of sensitive information to unintended parties.</span></div>
+      <div class="cheat-pill"><strong>Integrity</strong><span>Information is accurate and complete, and cannot be modified by unauthorized parties without detection. Breached by unauthorized modification, data corruption, or tampering.</span></div>
+      <div class="cheat-pill"><strong>Availability</strong><span>Authorized users can access information and systems when needed. Breached by denial-of-service attacks, system failures, ransomware, or natural disasters disrupting access.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The CIA Triad in everyday terms:</strong> Your bank account has confidentiality (only you and authorized bank staff can see your balance), integrity (the balance can't be changed to a wrong number without authorization), and availability (you can access your account when you need it). ISO 27001 requires identifying and assessing risks to all three properties across all information assets in scope — then systematically deciding how to manage those risks.</div>
+    <div class="highlight-box">ISO 27001 does NOT prescribe a specific risk assessment methodology — organizations can use ISO 27005, NIST SP 800-30, OCTAVE, or any other structured methodology. What it does require is that the methodology is documented, produces consistent results, and is applied systematically. The risk assessment cannot be a one-time exercise — it must be reviewed periodically and when significant changes occur.</div>`,
+    quiz: { q: "A company discovers that its customer portal can be accessed by guessing user IDs without authentication. In CIA Triad terms, which properties are primarily affected?", opts: ["Only Availability — the system is still running", "Confidentiality (unauthorized access to customer data) and Integrity (potential for unauthorized modification of customer records) are primarily affected", "Only Integrity — data accuracy is affected", "CIA Triad doesn't apply to authentication systems"], ans: 1, explain: "Authentication bypass primarily threatens Confidentiality (attackers can access other customers' data — unauthorized disclosure) and Integrity (attackers could modify records without authorization). Availability is not directly threatened — the system is accessible, though to the wrong people. The CIA Triad helps systematically think through the full impact of security vulnerabilities." }
+  },
+  {
+    title: "Clause 6 — Risk Treatment and Statement of Applicability",
+    tagline: "Deciding what to do about identified risks — and proving your decisions",
+    body: `<p>Identifying risks is only half the work in Clause 6. Once risks are assessed, the organization must decide what to do about each one — this is called <span class="key-term">risk treatment</span>. And then it must produce one of ISO 27001's most important documents: the <span class="key-term">Statement of Applicability (SoA)</span>.</p>
+    <div class="clause-card"><b>Clause 6.1.3 — Information Security Risk Treatment</b><br>Apply the risk treatment process to select appropriate risk treatment options (modify, retain, avoid, or share/transfer the risk). Determine all controls necessary to implement the chosen risk treatment options. Produce a risk treatment plan. Obtain risk owner sign-off on residual risk.</div>
+    <p>The four risk treatment options:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Modify (Mitigate)</strong><span>Implement controls to reduce the likelihood or impact of the risk to an acceptable level. The most common treatment — most risks are treated by implementing security controls.</span></div>
+      <div class="cheat-pill"><strong>Retain (Accept)</strong><span>Consciously accept the risk because the cost of mitigation exceeds the expected loss, or the risk is within acceptable tolerance. Must be an explicit, documented decision — not just inaction.</span></div>
+      <div class="cheat-pill"><strong>Avoid</strong><span>Stop the activity that creates the risk entirely. If storing certain data creates unacceptable risk, stop storing it. If a cloud provider is too risky, don't use them. Elimination rather than mitigation.</span></div>
+      <div class="cheat-pill"><strong>Share/Transfer</strong><span>Transfer the financial impact to another party — typically through cyber insurance or contractual obligations on vendors. The risk itself doesn't disappear; the financial consequence is shared.</span></div>
+    </div>
+    <div class="clause-card"><b>The Statement of Applicability (SoA)</b><br>The SoA is a mandatory document listing all Annex A controls, stating whether each is implemented, and providing justification for inclusions and exclusions. It is the key audit document connecting the risk assessment to the control implementation — proving that control selection was deliberate and risk-based rather than arbitrary.</div>
+    <div class="analogy-box"><strong>The SoA as the bridge:</strong> The SoA connects risk to controls. For every implemented Annex A control, the SoA shows which risk(s) it addresses. For every excluded control, it explains why the risk is not applicable, is already addressed another way, or has been accepted. A well-crafted SoA tells the story of the entire ISMS in a single document — making it the centerpiece of every ISO 27001 certification audit.</div>`,
+    quiz: { q: "An organization identifies the risk of customer data being stolen through a phishing attack. After analysis, they decide to implement security awareness training and email filtering rather than stopping customer data collection. Which risk treatment option is this?", opts: ["Avoid — they are stopping a risky activity", "Retain — they are accepting the risk without controls", "Modify (Mitigate) — they are implementing controls to reduce the risk to an acceptable level", "Share — they are transferring risk to another party"], ans: 2, explain: "Implementing security awareness training and email filtering to reduce the likelihood and impact of a phishing-driven data breach is risk modification (mitigation). They are not avoiding the risk (which would mean not collecting customer data), accepting it without controls (retain), or transferring it (insurance/contractual). Mitigation is the most common risk treatment option in information security." }
+  },
+  {
+    title: "Clause 6 — Information Security Objectives",
+    tagline: "Setting measurable targets for your security program",
+    body: `<p>Risk treatment planning tells you what controls to implement. But ISO 27001 also requires setting specific, measurable <span class="key-term">information security objectives</span> — targets that tell you whether the ISMS is actually achieving its goals, not just whether controls are in place.</p>
+    <div class="clause-card"><b>Clause 6.2 — Information Security Objectives and Planning to Achieve Them</b><br>Establish information security objectives at relevant functions and levels. Objectives must be consistent with the information security policy, measurable (where practicable), take into account applicable requirements, be monitored, be communicated, and be updated as appropriate. The organization must determine what will be done, what resources are required, who is responsible, when it will be completed, and how results will be evaluated.</div>
+    <p>What makes good information security objectives under ISO 27001:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Specific</strong><span>"Reduce average time to patch critical vulnerabilities from 30 days to 7 days" — not "improve patching."</span></div>
+      <div class="cheat-pill"><strong>Measurable</strong><span>Include a metric that can be tracked — percentage, count, time period. If you can't measure it, you can't manage it.</span></div>
+      <div class="cheat-pill"><strong>Achievable</strong><span>Realistic given resources, timeline, and starting point. Objectives set for failure destroy program credibility.</span></div>
+      <div class="cheat-pill"><strong>Time-bound</strong><span>With a specific deadline — not "eventually" or "ongoing." Deadlines create accountability.</span></div>
+      <div class="cheat-pill"><strong>Owned</strong><span>Each objective has a named person accountable for achieving it. Shared ownership is no ownership.</span></div>
+      <div class="cheat-pill"><strong>Aligned</strong><span>Objectives flow from the information security policy and address identified risks — not arbitrary technical metrics disconnected from business security goals.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Objectives vs. controls:</strong> A control is "implement multi-factor authentication." An objective is "achieve 100% MFA adoption for all privileged accounts by Q2." The control describes what's implemented; the objective measures whether it's achieving its intended outcome. ISO 27001 requires both — controls without objectives leave you unable to answer "is our security program working?"</div>
+    <div class="warning-box"><strong>Objective inflation:</strong> The most common objective-setting mistake is creating so many objectives that none receives adequate attention — or setting objectives so easy that achieving them demonstrates nothing meaningful about security improvement. ISO 27001 requires a thoughtful, focused set of objectives tied to the most significant risks and improvement opportunities, not an exhaustive list of every possible security metric.</div>`,
+    quiz: { q: "An information security objective states 'We will improve our incident response capability.' Is this a well-formed ISO 27001 objective?", opts: ["Yes — it is clearly defined and achievable", "No — it is too vague. A well-formed objective would specify what 'improved' means measurably, by when, who is responsible, and how progress will be evaluated", "Yes — as long as it appears in the ISMS documentation", "No — incident response objectives must reference Annex A controls"], ans: 1, explain: "This objective fails ISO 27001's requirements because it is not measurable (what does 'improved' mean?), not time-bound (by when?), and not clearly owned (who is responsible?). A conforming objective might be: 'Reduce mean time to detect security incidents from 72 hours to 24 hours, measured monthly through our SIEM, achieved by Q3, owned by the Security Operations team.'" }
+  },
+  {
+    title: "Clause 7 — Support: Resources and Competence",
+    tagline: "Governance without resources is wishful thinking",
+    body: `<p><span class="key-term">Clause 7</span> — Support — addresses the practical resources that make the ISMS function: people, money, knowledge, skills, and information. The most elegant ISMS design fails without adequate support to implement and operate it.</p>
+    <div class="clause-card"><b>Clause 7.1 — Resources</b><br>Determine and provide the resources needed for the establishment, implementation, maintenance, and continual improvement of the ISMS. Resources include: personnel (security team, IT staff, management time), technology (security tools, monitoring systems), budget, and expert knowledge (internal or external).</div>
+    <div class="clause-card"><b>Clause 7.2 — Competence</b><br>Determine the necessary competence for persons doing work under the organization's control that affects information security performance. Ensure those persons are competent based on appropriate education, training, or experience. Take action to acquire necessary competence where gaps exist. Retain documented evidence of competence.</div>
+    <div class="highlight-box"><strong>Competence vs. awareness:</strong> Clause 7.2 is about competence — the actual ability to perform security functions. Clause 7.3 (awareness) is about general knowledge of the ISMS. The system administrator responsible for implementing access controls needs technical competence. Every employee needs awareness. These are different requirements addressed by different training programs.</div>
+    <div class="clause-card"><b>Clause 7.3 — Awareness</b><br>Persons doing work under the organization's control must be aware of: the information security policy, their contribution to ISMS effectiveness, the implications of not conforming to ISMS requirements, and their specific security responsibilities. Awareness is the baseline for all employees; competence is the deeper requirement for those with security-specific roles.</div>
+    <div class="analogy-box"><strong>The competence gap in security:</strong> One of the most common ISMS failures is the gap between documented security requirements and the actual competence of staff to implement them. An organization can have perfect policies requiring multi-factor authentication configuration, encryption key management, and security incident analysis — but if the staff responsible for these activities lack the technical skills to do them correctly, the policies are worthless. Clause 7.2 requires systematically identifying and addressing these gaps.</div>
+    <div class="info-box"><strong>Training records are audit evidence:</strong> "We provide security training" is a claim. Training completion records, competency assessments, and certifications are evidence. ISO 27001 auditors will ask to see documented evidence of competence and awareness activities — not just descriptions of programs that theoretically exist.</div>`,
+    quiz: { q: "An organization's ISMS requires network segmentation to be implemented and maintained. The IT administrator responsible has no formal networking training and learned on the job. Which Clause 7 requirement does this raise concerns about?", opts: ["Clause 7.1 — Resources (insufficient budget)", "Clause 7.2 — Competence (the responsible person may lack the necessary formal competence for a critical security task)", "Clause 7.3 — Awareness (general security awareness)", "Clause 7.4 — Communication (the requirement wasn't communicated)"], ans: 1, explain: "Clause 7.2 requires that persons performing work affecting information security performance are competent based on appropriate education, training, or experience. Network segmentation is a complex security control where implementation errors can have severe consequences — the organization must verify the IT administrator has the necessary competence and address any gaps through training or other means." }
+  },
+  {
+    title: "Clause 7 — Communication and Documentation",
+    tagline: "The right information reaching the right people, in the right way",
+    body: `<p>The final requirements of Clause 7 address communication — how the ISMS information flows inside and outside the organization — and documentation — the written records that prove the ISMS exists and operates.</p>
+    <div class="clause-card"><b>Clause 7.4 — Communication</b><br>Determine what needs to be communicated about the ISMS: what, when, to whom (internal and external), how, and by whom. This covers both planned communication (regular security updates to management, awareness campaigns for staff, responses to customer security questionnaires) and triggered communication (incident notifications, policy updates).</div>
+    <div class="clause-card"><b>Clause 7.5 — Documented Information</b><br>Create and maintain documented information required by ISO 27001 and any additional documentation the organization determines is necessary. Documented information must be: available and suitable when needed, adequately protected (against loss of confidentiality, improper use, or loss of integrity), controlled for changes (version management), and retained appropriately.</div>
+    <p>ISO 27001 mandatory documented information includes:</p>
+    <div class="badge-row">
+      <span class="badge badge-gray">Scope of the ISMS (Clause 4.3)</span>
+      <span class="badge badge-gray">Information security policy (Clause 5.2)</span>
+      <span class="badge badge-gray">Information security risk assessment process (Clause 6.1.2)</span>
+      <span class="badge badge-gray">Information security risk treatment process (Clause 6.1.3)</span>
+      <span class="badge badge-gray">Information security objectives (Clause 6.2)</span>
+      <span class="badge badge-gray">Evidence of competence (Clause 7.2)</span>
+      <span class="badge badge-gray">Statement of Applicability (Clause 6.1.3)</span>
+      <span class="badge badge-gray">Risk assessment results (Clause 8.2)</span>
+      <span class="badge badge-gray">Risk treatment plan results (Clause 8.3)</span>
+      <span class="badge badge-gray">Evidence of monitoring and measurement (Clause 9.1)</span>
+      <span class="badge badge-gray">Internal audit programme and results (Clause 9.2)</span>
+      <span class="badge badge-gray">Management review results (Clause 9.3)</span>
+      <span class="badge badge-gray">Nature of nonconformities and corrective actions (Clause 10.1)</span>
+    </div>
+    <div class="analogy-box"><strong>Documentation as evidence:</strong> ISO 27001's documentation requirements exist for a specific reason: documentation is the evidence that the ISMS actually operates. During a certification audit, the auditor cannot witness every security activity that happened over the past year. Documentation — policies, procedures, records, meeting minutes, training logs — is the substitute for direct observation. If it isn't documented, it didn't happen from the auditor's perspective.</div>`,
+    quiz: { q: "An organization has excellent security practices — regular risk assessments, consistent patching, security reviews — but keeps no records of these activities. During an ISO 27001 certification audit, what is the likely outcome?", opts: ["Certification is granted because the practices clearly exist", "The auditor will require documented evidence. Without records, the auditor cannot verify the practices occurred — resulting in nonconformities even if the practices are genuine", "The auditor will accept the CISO's verbal assurance", "Documentation is only required for larger organizations"], ans: 1, explain: "ISO 27001 auditors cannot observe activities that occurred before the audit. Documentation — records, logs, meeting minutes, reports — is the evidence that practices were performed. Excellent practices with no records will result in nonconformities because the standard requires documented evidence of ISMS operation, not just assertions that activities occurred." }
+  },
+  {
+    title: "Clause 8 — Operation",
+    tagline: "Where planning meets execution — actually running the ISMS",
+    body: `<p><span class="key-term">Clause 8</span> — Operation — is the DO phase of PDCA. It covers the actual execution of the plans made in Clause 6: running the risk assessment, implementing the risk treatment plan, and operating the security controls day-to-day.</p>
+    <div class="clause-card"><b>Clause 8.1 — Operational Planning and Control</b><br>Plan, implement, control, and maintain the processes needed to meet ISMS requirements. Control planned changes. Review unintended changes. Ensure outsourced processes are controlled. This clause makes "running the ISMS" a formal, managed activity rather than an afterthought.</div>
+    <div class="clause-card"><b>Clause 8.2 — Information Security Risk Assessment</b><br>Perform the information security risk assessment at planned intervals — and when significant changes occur or are proposed. Document results. The risk assessment is not a one-time activity at ISMS setup — it must be repeated regularly and whenever circumstances change materially.</div>
+    <div class="clause-card"><b>Clause 8.3 — Information Security Risk Treatment</b><br>Implement the information security risk treatment plan. Document results of the implementation. Ensure the risk treatment plan is being executed as designed — controls are implemented, not just documented as implemented.</div>
+    <div class="highlight-box"><strong>The operational reality check:</strong> Clause 8 is where many ISO 27001 programs struggle. It's relatively straightforward to document a comprehensive risk assessment and risk treatment plan. Actually implementing every control in the plan — and keeping it running consistently — is where the hard work is. Clause 8.1's requirement to control changes is particularly critical: system changes, staff changes, and business changes can inadvertently undermine implemented security controls if change management is weak.</div>
+    <div class="analogy-box"><strong>The outsourcing clause:</strong> Clause 8.1 specifically requires that outsourced processes be controlled. If you outsource your IT management, cloud infrastructure, or security operations — the ISMS must still cover those activities. "We outsourced it" is not a valid reason for a security gap in an ISO 27001 ISMS. The organization remains accountable for security in all processes within scope, whether performed internally or by third parties.</div>
+    <div class="warning-box"><strong>Change management and ISMS integrity:</strong> Organizations frequently underestimate how quickly an operational ISMS can degrade without strong change management. A server migration introduces new security risks. A new application creates new access control requirements. A staff change leaves critical knowledge unshared. Clause 8.1's requirement to review unintended changes is specifically designed to catch these gradual erosions of ISMS effectiveness before they become significant security gaps.</div>`,
+    quiz: { q: "Under ISO 27001 Clause 8.2, when must the information security risk assessment be performed?", opts: ["Once — when the ISMS is initially established", "At planned intervals AND whenever significant changes occur or are proposed — ensuring the risk assessment remains current and relevant", "Only when requested by the certification body", "Annually, regardless of any changes"], ans: 1, explain: "ISO 27001 requires risk assessments at planned intervals (typically annually) AND whenever significant changes occur — new systems, new threats, organizational restructuring, mergers, major regulatory changes. A risk assessment done only at ISMS setup becomes outdated as the environment changes, creating gaps between assessed risks and actual risks." }
+  },
+  {
+    title: "Clause 9 — Performance Evaluation: Monitoring and Measurement",
+    tagline: "Measuring whether the ISMS is actually working",
+    body: `<p><span class="key-term">Clause 9</span> is the CHECK phase of PDCA — verifying that the ISMS is operating as intended, achieving its objectives, and providing the security outcomes it was designed to deliver. Performance evaluation has three components: ongoing monitoring, internal audits, and management reviews.</p>
+    <div class="clause-card"><b>Clause 9.1 — Monitoring, Measurement, Analysis, and Evaluation</b><br>Determine what needs to be monitored and measured, the methods to use, when analysis and evaluation of results should be performed, and who should perform it. Evaluate the information security performance and effectiveness of the ISMS. Retain documented evidence of results.</div>
+    <p>What should be monitored under Clause 9.1:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Control Effectiveness</strong><span>Are the implemented controls actually working? Penetration testing results, vulnerability scan findings, access review outcomes. Not just "is the control implemented" but "is it working?"</span></div>
+      <div class="cheat-pill"><strong>Objective Achievement</strong><span>Are the information security objectives (Clause 6.2) being met? Patch time targets, training completion rates, incident response times. Measure what you committed to measure.</span></div>
+      <div class="cheat-pill"><strong>Security Incidents</strong><span>Track incident counts, severity, root causes, and resolution times. Trends in incident data reveal whether the ISMS is improving or deteriorating security outcomes over time.</span></div>
+      <div class="cheat-pill"><strong>Process Performance</strong><span>Are ISMS processes (risk assessment, access reviews, patch management) being performed as designed? Process adherence monitoring catches compliance gaps before they become security gaps.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Measurement drives improvement:</strong> An ISMS that doesn't measure its own performance can't improve systematically. Organizations that rigorously track security metrics — and tie those metrics to management accountability — consistently demonstrate improving security outcomes. Those that treat measurement as a compliance exercise (completing a form once a year) rarely achieve meaningful security improvement. The measurement program is often the most revealing indicator of whether an ISMS is genuinely effective or merely compliant.</div>
+    <div class="highlight-box">ISO 27001 deliberately does not specify exactly what to measure — organizations determine their own monitoring and measurement approaches based on their specific ISMS objectives and risks. This flexibility is valuable but creates a common pitfall: organizations measure what's easy to measure (training completion rates, policy acknowledgments) rather than what's meaningful (security control effectiveness, incident outcomes, risk reduction). Good measurement answers the question "are we more secure?" not just "did we do the activities?"</div>`,
+    quiz: { q: "ISO 27001 Clause 9.1 requires measuring ISMS performance. Why is measuring control effectiveness more valuable than measuring control implementation?", opts: ["They are equally valuable measurements", "Measuring implementation confirms controls exist; measuring effectiveness confirms they actually reduce risk. A control can be implemented but ineffective — for example, anti-malware software installed but never updated with current signatures", "Implementation measurement is required; effectiveness is optional", "Effectiveness can only be measured through penetration testing"], ans: 1, explain: "Control implementation tells you controls exist; effectiveness tells you they work. Anti-malware software installed but with outdated signatures is implemented but ineffective. MFA deployed but with easily bypassed configuration is implemented but ineffective. Effective ISMS measurement focuses on whether controls are achieving their intended security outcomes, not just whether they technically exist." }
+  },
+  {
+    title: "Clause 9 — Internal Audit and Management Review",
+    tagline: "Independent verification and strategic oversight of the ISMS",
+    body: `<p>The second half of Clause 9 introduces two critical mechanisms for higher-level oversight: <span class="key-term">internal audits</span> (independent verification of ISMS conformance) and <span class="key-term">management reviews</span> (strategic evaluation by top management). Together they provide both tactical compliance assurance and strategic ISMS governance.</p>
+    <div class="clause-card"><b>Clause 9.2 — Internal Audit</b><br>Conduct internal audits at planned intervals to determine whether the ISMS: conforms to the organization's own requirements and ISO 27001 requirements, and is effectively implemented and maintained. Auditors must be independent of the activities they audit. Plan, establish, implement, and maintain an audit programme. Report results to relevant management. Retain documented evidence.</div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Audit Programme</strong><span>A planned schedule of audits covering all ISMS requirements over time. Risk-based: higher-risk areas get more frequent and deeper audit attention. Documented, with defined audit criteria, scope, methods, and frequency.</span></div>
+      <div class="cheat-pill"><strong>Auditor Independence</strong><span>Internal auditors must be objective — they cannot audit activities they are personally responsible for. Someone who implements a control should not audit whether that control works. Independence is fundamental to audit credibility.</span></div>
+    </div>
+    <div class="clause-card"><b>Clause 9.3 — Management Review</b><br>Top management must review the ISMS at planned intervals to ensure its continuing suitability, adequacy, and effectiveness. The review must consider: status of actions from previous reviews, changes in external/internal context, security performance information, feedback from interested parties, risk assessment results, opportunities for improvement.</div>
+    <div class="analogy-box"><strong>Internal audit vs. management review:</strong> Internal audits are technical checks — "is the ISMS conforming to requirements and working?" Management reviews are strategic checks — "is the ISMS still the right system for where we're going? Are our objectives still relevant? Are we investing in the right areas?" Both are necessary. Operational compliance without strategic direction leads to an ISMS that works but addresses the wrong risks. Strategic direction without operational compliance leads to excellent intentions with poor execution.</div>
+    <div class="highlight-box"><strong>Management review outputs must be documented:</strong> A management review that produces a verbal discussion with no documented decisions, actions, or conclusions is insufficient. ISO 27001 requires documented evidence of what was discussed, what decisions were made, and what actions were assigned. Auditors look for substantive management review records — not just attendance sheets from a meeting where security was discussed for five minutes at the end of a board meeting.</div>`,
+    quiz: { q: "Why is auditor independence specifically required under ISO 27001 Clause 9.2?", opts: ["Because external auditors are more expensive", "Because auditors who audit their own work have an inherent conflict of interest — they are unlikely to find and report their own errors objectively. Independence is essential for audit credibility and genuine effectiveness.", "Because ISO requires all auditors to be external", "Because internal audits require government certification"], ans: 1, explain: "Auditor independence prevents the obvious conflict of interest in self-evaluation. A person who implemented a control is unlikely to objectively assess whether that control is effective — they have both emotional investment in its success and potential accountability for its failures. Independence means the auditor has no stake in the activities they audit, enabling objective, credible findings." }
+  },
+  {
+    title: "Clause 10 — Improvement",
+    tagline: "Turning findings into a genuinely better security program",
+    body: `<p><span class="key-term">Clause 10</span> closes the PDCA loop — the ACT phase where findings from monitoring, auditing, and management review are translated into genuine improvements. Improvement in ISO 27001 is not optional or aspirational; it is a mandatory element of the ISMS.</p>
+    <div class="clause-card"><b>Clause 10.1 — Continual Improvement</b><br>Continually improve the suitability, adequacy, and effectiveness of the ISMS. Not "maintain" — improve. The ISMS must get better over time, not just stay the same. This is the commitment that transforms ISO 27001 from a compliance exercise into a genuine security management program.</div>
+    <div class="clause-card"><b>Clause 10.2 — Nonconformity and Corrective Action</b><br>When a nonconformity occurs: react to it and control and correct it; evaluate whether other similar nonconformities exist or could occur; implement corrective action necessary to eliminate the root cause; review the effectiveness of any corrective action taken; update risks and opportunities if needed; make changes to the ISMS if necessary. Retain documented evidence of nonconformities and corrective actions taken.</div>
+    <div class="highlight-box"><strong>Root cause analysis is the key:</strong> The most important word in Clause 10.2 is "root cause." Fixing a symptom without addressing the cause means the problem recurs. If employees keep clicking phishing links despite training, the root cause might be: training is infrequent, training format is ineffective, the phishing simulation isn't realistic, or there's no accountability for repeated failures. Each root cause requires a different corrective action. Surface-level fixes produce surface-level improvements.</div>
+    <div class="analogy-box"><strong>Nonconformity vs. security incident:</strong> A nonconformity in ISO 27001 is a failure to meet an ISMS requirement — a control not implemented as documented, a required activity not performed, a process not following its documented procedure. A security incident (data breach, malware infection) may or may not result from an ISMS nonconformity. Both should feed the Clause 10 improvement process, but they are different types of findings requiring different responses.</div>
+    <p>Sources of improvement input in a mature ISMS:</p>
+    <div class="badge-row">
+      <span class="badge badge-gray">Internal audit findings</span>
+      <span class="badge badge-gray">Management review outputs</span>
+      <span class="badge badge-gray">Security incident post-mortems</span>
+      <span class="badge badge-gray">Near-miss analysis</span>
+      <span class="badge badge-gray">External threat intelligence</span>
+      <span class="badge badge-gray">Regulatory and legal changes</span>
+      <span class="badge badge-gray">Customer or partner feedback</span>
+      <span class="badge badge-gray">Penetration testing results</span>
+      <span class="badge badge-gray">Benchmarking against industry peers</span>
+    </div>`,
+    quiz: { q: "An internal audit finds that password reset procedures are not being followed — users can reset passwords over the phone without identity verification. Under Clause 10.2, what is the minimum required response?", opts: ["Document the finding and include it in the next management review", "React to the immediate finding, investigate root cause, implement corrective action to eliminate the cause, verify the action's effectiveness, and retain evidence of the entire process", "Retrain the help desk staff and close the finding", "Update the password reset policy document"], ans: 1, explain: "Clause 10.2 requires a complete corrective action cycle: immediate reaction (stop the insecure practice), root cause analysis (why isn't the procedure being followed?), corrective action (address the root cause — training? awareness? accountability?), effectiveness verification (confirm the problem doesn't recur), and documentation of the entire process. Simply retraining addresses a symptom, not necessarily the root cause." }
+  },
+  {
+    title: "Annex A — 93 Controls in 4 Themes",
+    tagline: "The comprehensive control library that makes information security practical",
+    body: `<p>ISO 27001's Annex A is one of the framework's most valuable components. It provides a reference set of <span class="key-term">93 information security controls</span> organized into <strong>4 themes</strong>. These controls represent the universe of security measures the standard considers — organizations use the Statement of Applicability to document which controls they implement and why.</p>
+    <div class="highlight-box"><strong>Important: Annex A is normative but selective.</strong> "Normative" means it is authoritative — part of the standard, not optional guidance. But organizations don't implement all 93 controls. The risk assessment determines which controls are relevant; the SoA documents which are implemented. Controls may be excluded with documented justification (typically because the associated risk is not present, has been treated another way, or has been accepted).</div>
+    <div class="theme-grid">
+      <div class="theme-org"><strong style="color:#444441">Theme 1: Organizational (37 controls)</strong><br><span style="font-size:12px;color:#1a1a18">Policies, governance, risk management, information classification, supplier relationships, incident management, business continuity, compliance. The management and policy layer.</span></div>
+      <div class="theme-ppl"><strong style="color:#0C447C">Theme 2: People (8 controls)</strong><br><span style="font-size:12px;color:#1a1a18">Human resources security — before, during, and after employment. Screening, terms of employment, security awareness, disciplinary processes. The human factor in security.</span></div>
+      <div class="theme-phy"><strong style="color:#27500A">Theme 3: Physical (14 controls)</strong><br><span style="font-size:12px;color:#1a1a18">Physical and environmental security — secure areas, entry controls, equipment protection, clear desk/screen policies, physical disposal. Protecting the physical environment.</span></div>
+      <div class="theme-tec"><strong style="color:#3C3489">Theme 4: Technological (34 controls)</strong><br><span style="font-size:12px;color:#1a1a18">Technical security controls — access control, cryptography, vulnerability management, network security, application security, logging, endpoint security. The technical defense layer.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The 2022 restructuring:</strong> ISO 27001:2022 reorganized Annex A from 114 controls in 14 domains (the 2013 structure) to 93 controls in 4 themes. Some controls were merged, some updated, and 11 new controls were added covering modern security challenges. The 4-theme structure (Organizational, People, Physical, Technological) is simpler and more intuitive than the 14-domain structure — but organizations migrating from 2013 certification must update their SoA to reflect the new structure.</div>
+    <div class="info-box"><strong>11 New Controls in ISO 27001:2022:</strong> Threat intelligence, Information security for use of cloud services, ICT readiness for business continuity, Physical security monitoring, Configuration management, Information deletion, Data masking, Data leakage prevention, Monitoring activities, Web filtering, Secure coding.</div>`,
+    quiz: { q: "ISO 27001 Annex A contains 93 controls. Does an organization need to implement all 93 to be certified?", opts: ["Yes — all 93 controls must be implemented for certification", "No — controls are selected based on the risk assessment. Controls not relevant to identified risks may be excluded with documented justification in the Statement of Applicability", "Only IG1 controls must be implemented", "At least 80% must be implemented for certification"], ans: 1, explain: "Organizations implement Annex A controls selectively based on their risk assessment — controls relevant to identified risks are implemented; others may be excluded with documented justification. The Statement of Applicability documents this selection. For example, an organization with no physical servers may exclude controls for data center physical security — because that risk doesn't apply to their environment." }
+  },
+  {
+    title: "Annex A — Organizational Controls (Part 1)",
+    tagline: "The governance and policy layer of information security",
+    body: `<p>Organizational controls are the largest Annex A theme with 37 controls. They establish the governance framework — the policies, processes, and structures that govern how information security is managed across the entire organization. Without organizational controls, technical controls lack context and direction.</p>
+    <div class="annex-card"><b>A.5.1 — Policies for information security</b><br>Define, approve, publish, and communicate information security policies. Review at planned intervals or when significant changes occur. Policies set the direction and intent for all other ISMS activities.</div>
+    <div class="annex-card"><b>A.5.2 — Information security roles and responsibilities</b><br>Define and allocate information security responsibilities. Every significant security activity has a named responsible party — the absence of clear accountability is one of the most common ISMS failures.</div>
+    <div class="annex-card"><b>A.5.9 — Inventory of information and other associated assets</b><br>Identify, document, and maintain an inventory of information and associated assets, with identified owners. You cannot protect what you don't know you have — the asset inventory is the foundation of all subsequent security decisions.</div>
+    <div class="annex-card"><b>A.5.10 — Acceptable use of information and other associated assets</b><br>Define rules for acceptable use of information assets — what employees can and cannot do with organizational information and IT systems. The foundation of the organizational security culture.</div>
+    <div class="annex-card"><b>A.5.12 — Classification of information</b><br>Classify information based on applicable legal requirements and sensitivity. Different information types require different protection levels — classification enables proportionate security.</div>
+    <div class="annex-card"><b>A.5.19 — Information security in supplier relationships</b><br>Define and implement processes to manage information security risks associated with the use of supplier products and services. The supply chain is a major attack vector — governance of supplier security is essential.</div>
+    <div class="annex-card"><b>A.5.24 — Information security incident management planning and preparation</b><br>Plan and prepare for managing information security incidents by defining roles, responsibilities, and procedures. Effective incident response requires planning before incidents occur — not improvising during a crisis.</div>
+    <div class="analogy-box"><strong>Why organizational controls come first:</strong> Technical controls address specific vulnerabilities — firewalls, encryption, access controls. Organizational controls address the governance and decision-making framework that determines which technical controls to implement, how to deploy them, and how to ensure they're operating correctly. Technical controls without organizational governance produce a collection of security tools without a security program.</div>`,
+    quiz: { q: "Why is an asset inventory (A.5.9) foundational to all other Annex A controls?", opts: ["Because ISO 27001 requires it to be completed first", "Because you cannot assess risks, assign owners, apply appropriate controls, or monitor security for assets you don't know exist — the asset inventory enables every subsequent security activity", "Because auditors always check it first", "Because it is required by GDPR"], ans: 1, explain: "The asset inventory is foundational because every security decision — what risks to assess, what controls to implement, who is responsible — depends on knowing what information and systems exist. Without a complete asset inventory, risk assessments miss assets, controls leave gaps, and accountability is undefined. It is the prerequisite for meaningful information security management." }
+  },
+  {
+    title: "Annex A — Organizational Controls (Part 2)",
+    tagline: "Risk, compliance, business continuity, and the 11 new controls",
+    body: `<p>Continuing with key organizational controls — including risk management, compliance, business continuity, and the most significant additions in the 2022 update.</p>
+    <div class="annex-card"><b>A.5.7 — Threat intelligence</b><br>NEW in 2022. Collect and analyze information about threats relevant to the organization — from threat intelligence feeds, ISACs, government sources, and security research. Understanding current threats informs risk assessment and control prioritization.</div>
+    <div class="annex-card"><b>A.5.23 — Information security for use of cloud services</b><br>NEW in 2022. Establish processes for the acquisition, use, management, and exit from cloud services. Cloud-specific security requirements — shared responsibility models, data residency, cloud access security brokers — require explicit governance.</div>
+    <div class="annex-card"><b>A.5.29 — Information security during disruption</b><br>Plan how to maintain an appropriate level of information security during disruptions (ransomware, natural disasters, system failures). Information security must continue to function even when normal operations are disrupted.</div>
+    <div class="annex-card"><b>A.5.30 — ICT readiness for business continuity</b><br>NEW in 2022. Plan, implement, maintain, and test ICT readiness based on business continuity objectives and ICT continuity requirements. Technology resilience planning explicitly tied to business impact analysis.</div>
+    <div class="annex-card"><b>A.5.31 — Legal, statutory, regulatory, and contractual requirements</b><br>Identify, document, and keep up to date all relevant legal, statutory, regulatory, and contractual requirements relating to information security. Compliance management is an explicit ISMS activity, not an afterthought.</div>
+    <div class="analogy-box"><strong>The 11 new controls significance:</strong> The 11 controls added in ISO 27001:2022 reflect a decade of evolution in information security since the 2013 version. Cloud computing has transformed infrastructure (A.5.23). Threat intelligence has matured as a discipline (A.5.7). Data privacy regulations have imposed new requirements (A.8.11 — Data masking). Ransomware has made business continuity planning essential (A.5.30). The new controls aren't arbitrary additions — they address specific gaps that became apparent as organizations operated 2013-era ISMSs in a dramatically changed threat environment.</div>
+    <div class="info-box"><strong>A.5.33 — Protection of records:</strong> Protect records from loss, destruction, falsification, unauthorized access, and unauthorized release. This control directly supports ISO 27001's own documentation requirements — if your ISMS records are compromised, you cannot demonstrate compliance or investigate incidents effectively.</div>`,
+    quiz: { q: "Why was threat intelligence (A.5.7) added as a new control in ISO 27001:2022?", opts: ["Because it was accidentally omitted from the 2013 version", "Because threat intelligence has matured into a recognized security discipline that meaningfully informs risk assessment and control prioritization — organizations that ignore current threat intelligence make security decisions based on outdated information", "Because governments required it after major breaches", "Because ISO 27002 required it"], ans: 1, explain: "Threat intelligence was added because its value as a security practice has been clearly demonstrated since 2013. Organizations that monitor current attack trends, track threat actor capabilities, and incorporate threat intelligence into risk assessments make more informed security decisions than those relying solely on their own historical experience. The control formalizes this best practice within the ISO 27001 framework." }
+  },
+  {
+    title: "Annex A — People Controls",
+    tagline: "The human dimension of information security",
+    body: `<p>Theme 2 — People Controls — contains 8 controls addressing the human element of information security across the employment lifecycle. The human factor is consistently identified as the leading cause of security incidents — through error, negligence, or deliberate action. People controls address this systematically.</p>
+    <div class="annex-card"><b>A.6.1 — Screening</b><br>Perform background verification checks on all candidates for employment before and periodically during employment, commensurate with the applicable laws, regulations, and ethics and proportional to the business requirements, the classification of information to be accessed, and the perceived risks. Not every role warrants the same level of screening.</div>
+    <div class="annex-card"><b>A.6.2 — Terms and conditions of employment</b><br>Include confidentiality/NDA agreements, intellectual property rights, acceptable use expectations, and security responsibilities in employment contracts. Security obligations should be explicit contractual terms — not just assumed.</div>
+    <div class="annex-card"><b>A.6.3 — Information security awareness, education, and training</b><br>Ensure all personnel and contractors receive appropriate security awareness education, training, and regular updates in organizational policies and procedures, relevant to their job function. Security training must be role-relevant and regularly updated — not generic annual compliance box-checking.</div>
+    <div class="annex-card"><b>A.6.4 — Disciplinary process</b><br>Establish a formal disciplinary process for personnel who have committed an information security violation. The disciplinary process must be documented, fair, and applied consistently. Without accountability for violations, security policies are suggestions rather than requirements.</div>
+    <div class="annex-card"><b>A.6.5 — Responsibilities after termination or change of employment</b><br>Define, communicate, and enforce information security responsibilities and obligations that remain valid after termination or change of employment. NDAs and confidentiality obligations typically survive employment termination — employees must understand this.</div>
+    <div class="annex-card"><b>A.6.6 — Confidentiality or non-disclosure agreements</b><br>Identify and regularly review NDA requirements that reflect the organization's need for protection of information. NDAs must be legally enforceable, relevant to the information being protected, and reviewed as circumstances change.</div>
+    <div class="annex-card"><b>A.6.7 — Remote working</b><br>Implement security measures to protect information accessed, processed, or stored at remote working sites. The post-pandemic normalization of remote work makes this control increasingly critical — home networks, personal devices, and uncontrolled physical environments create significant security challenges.</div>
+    <div class="analogy-box"><strong>The termination process is a critical moment:</strong> A.6.5 covers responsibilities after termination, but the termination process itself is one of the highest-risk moments in the employment lifecycle. Access revocation, equipment return, key handover, and knowledge transfer must be managed systematically. Many serious insider threats occur in the period between an employee receiving termination notice and their access being revoked.</div>`,
+    quiz: { q: "Why does ISO 27001 Annex A include a disciplinary process (A.6.4) as an information security control?", opts: ["To satisfy legal requirements for employment law", "Because without consistent accountability for security violations, security policies become optional — employees who see peers violate policy without consequence are less likely to comply themselves", "Because disciplinary actions improve technical security controls", "Because ISO requires HR departments to participate in the ISMS"], ans: 1, explain: "A disciplinary process is a security control because security policies without enforcement consequences are advisory rather than mandatory. Research consistently shows that perceived likelihood of consequences significantly influences policy compliance behavior. The disciplinary process creates accountability — turning 'should do' into 'must do' with real organizational consequences for non-compliance." }
+  },
+  {
+    title: "Annex A — Physical Controls",
+    tagline: "Protecting the physical environments where information security happens",
+    body: `<p>Theme 3 — Physical Controls — contains 14 controls addressing the physical security of facilities, equipment, and the environments where information and systems exist. Physical security is foundational: all the encryption in the world is useless if an attacker can walk into your server room and take the servers.</p>
+    <div class="annex-card"><b>A.7.1 — Physical security perimeters</b><br>Define and use security perimeters to protect sensitive information and associated processing facilities. Perimeters can be fences, walls, security desks, or electronic barriers — the key is clearly defined zones with appropriate access controls for each zone's sensitivity level.</div>
+    <div class="annex-card"><b>A.7.2 — Physical entry controls</b><br>Secure areas protected by appropriate entry controls and access points to ensure only authorized personnel are allowed. Visitors must be identified, authorized, logged, and escorted. Physical entry events should be logged for investigation purposes.</div>
+    <div class="annex-card"><b>A.7.4 — Physical security monitoring</b><br>NEW in 2022. Monitor premises for unauthorized physical access. CCTV, alarm systems, guard patrols, and electronic access logging are all forms of physical security monitoring. Monitoring deters unauthorized access and provides evidence for investigation when incidents occur.</div>
+    <div class="annex-card"><b>A.7.7 — Clear desk and clear screen</b><br>Define and enforce rules for clear desks (papers containing sensitive information secured when unattended) and clear screens (device sessions locked when left unattended). Simple, inexpensive controls with significant impact — sensitive documents left on desks are routinely photographed by malicious visitors or accidentally seen by unauthorized staff.</div>
+    <div class="annex-card"><b>A.7.8 — Equipment siting and protection</b><br>Site and protect equipment to reduce risks from environmental threats, hazards, and unauthorized access. Servers should not be visible through windows, workstations in public areas should use privacy screens, and sensitive equipment should not be in flood-prone locations.</div>
+    <div class="annex-card"><b>A.7.10 — Storage media</b><br>Manage storage media through their lifecycle — acquisition, use, transportation, and disposal. Ensure sensitive data cannot be recovered from disposed media. Physical destruction or certified data wiping is required for media containing sensitive information before disposal.</div>
+    <div class="annex-card"><b>A.7.14 — Secure disposal or re-use of equipment</b><br>Verify that data and licensed software are deleted or overwritten before disposal or re-use of equipment. Improperly disposed equipment is a major source of sensitive data exposure — hard drives sold on eBay containing patient records, customer data, or financial information remain a persistent, preventable problem.</div>
+    <div class="analogy-box"><strong>Physical security as the last line of defense:</strong> Technical controls protect data in transit and at rest. Physical controls protect the hardware on which data lives. An attacker with physical access to an unencrypted server can bypass virtually all software security controls — a known vulnerability in many organizations. Physical security is not the "old" security that technical controls have replaced; it remains an essential, irreducible element of comprehensive information security.</div>`,
+    quiz: { q: "A financial services company disposes of old computers by donating them to a local school without wiping the hard drives. Which Annex A control has failed?", opts: ["A.7.1 — Physical security perimeters", "A.7.7 — Clear desk and clear screen", "A.7.14 — Secure disposal or re-use of equipment", "A.7.4 — Physical security monitoring"], ans: 2, explain: "A.7.14 requires that data is deleted or overwritten before disposal or reuse of equipment. Donating computers without wiping hard drives allows anyone with the donated equipment to recover potentially sensitive financial data. This is one of the most preventable and yet frequently occurring information security failures — affecting hospitals, financial firms, and government agencies regularly." }
+  },
+  {
+    title: "Annex A — Technological Controls (Part 1)",
+    tagline: "The technical security measures that protect information systems",
+    body: `<p>Theme 4 — Technological Controls — is the second largest theme with 34 controls. These are the technical security measures implemented in information systems, networks, applications, and endpoints. They provide the specific defenses that protect information against the threats identified in the risk assessment.</p>
+    <div class="annex-card"><b>A.8.1 — User endpoint devices</b><br>Protect information stored on, processed by, or accessible via user endpoint devices. Includes device management policies, encryption, mobile device management (MDM), remote wipe capabilities, and acceptable use requirements for personal devices used to access organizational information.</div>
+    <div class="annex-card"><b>A.8.2 — Privileged access rights</b><br>Restrict and manage privileged access rights — accounts with elevated permissions to systems, applications, and data. Privileged accounts are the most valuable target for attackers — they require the most rigorous controls including just-in-time access, privileged access workstations, and enhanced monitoring.</div>
+    <div class="annex-card"><b>A.8.3 — Information access restriction</b><br>Restrict access to information and application system functions in accordance with the established policy on access control. Apply least privilege — users access only what they need for their specific job functions. Access rights should be formally approved, documented, and regularly reviewed.</div>
+    <div class="annex-card"><b>A.8.5 — Secure authentication</b><br>Implement secure authentication technologies and procedures. In 2022, "secure authentication" clearly implies multi-factor authentication for sensitive systems. Passwords alone are insufficient for systems with meaningful security requirements.</div>
+    <div class="annex-card"><b>A.8.7 — Protection against malware</b><br>Implement protection against malware and combine it with appropriate user awareness. Anti-malware software, behavior-based detection, email and web filtering, and user awareness training work together — no single control is sufficient.</div>
+    <div class="annex-card"><b>A.8.8 — Management of technical vulnerabilities</b><br>Obtain information about technical vulnerabilities, evaluate exposure, and take appropriate measures. Vulnerability management includes: subscription to vulnerability intelligence, regular scanning, prioritized remediation, and tracking open vulnerabilities to closure.</div>
+    <div class="annex-card"><b>A.8.9 — Configuration management</b><br>NEW in 2022. Establish and manage configurations of hardware, software, services, and networks. Secure baseline configurations, configuration change management, and configuration compliance monitoring are all components of this control.</div>
+    <div class="analogy-box"><strong>Why privileged access (A.8.2) deserves special attention:</strong> Attackers who compromise standard user accounts have limited reach. Attackers who compromise privileged accounts — domain administrators, database administrators, system administrators — potentially control entire organizations. Privileged access management is consistently identified as one of the highest-impact security controls in enterprise environments. The 2016 Bangladesh Bank heist of $81 million and countless ransomware incidents began with privileged account compromise.</div>`,
+    quiz: { q: "ISO 27001 Annex A.8.5 (Secure Authentication) in the 2022 version reflects that passwords alone are insufficient for sensitive systems. What authentication approach does modern security guidance, including ISO 27002, recommend?", opts: ["Longer and more complex passwords only", "Multi-factor authentication (MFA) — combining something you know (password) with something you have (hardware token, authenticator app) or something you are (biometrics)", "Biometrics only", "Single sign-on (SSO) without additional factors"], ans: 1, explain: "ISO 27002:2022 guidance for A.8.5 explicitly acknowledges that passwords alone are insufficient for systems with meaningful security requirements. Multi-factor authentication (MFA) — combining a password with an additional authentication factor — is the recommended approach for sensitive systems because it prevents account takeover even when passwords are compromised through phishing, credential stuffing, or data breaches." }
+  },
+  {
+    title: "Annex A — Technological Controls (Part 2)",
+    tagline: "Cryptography, network security, and the newest technology controls",
+    body: `<p>Continuing with key technological controls — including cryptography, network security, logging, and several of the most significant new controls introduced in the 2022 update.</p>
+    <div class="annex-card"><b>A.8.11 — Data masking</b><br>NEW in 2022. Use data masking according to the access control policy, taking into account applicable legal requirements. Data masking protects sensitive data in non-production environments — using realistic but fake data in development and testing prevents accidental exposure of real customer or patient data.</div>
+    <div class="annex-card"><b>A.8.12 — Data leakage prevention</b><br>NEW in 2022. Apply data leakage prevention measures to systems, networks, and any other devices that process, store, or transmit sensitive information. DLP tools monitor and prevent unauthorized transmission of sensitive data — by email, USB, web upload, or other channels.</div>
+    <div class="annex-card"><b>A.8.20 — Networks security</b><br>Secure, manage, and control networks and network devices to protect information in systems and applications. Network security includes segmentation, firewall management, intrusion detection, encrypted communications, and access controls on network infrastructure.</div>
+    <div class="annex-card"><b>A.8.21 — Security of network services</b><br>Identify, implement, and monitor security mechanisms, service levels, and service requirements of all network services. This applies whether network services are provided internally or by outsourced providers — security requirements must be explicit in any service agreements.</div>
+    <div class="annex-card"><b>A.8.24 — Use of cryptography</b><br>Define and implement rules for the effective use of cryptography, including cryptographic key management. Cryptography protects data confidentiality, integrity, and authentication — but only when correctly implemented. Weak cipher selection, poor key management, and improper implementation undermine cryptographic protection entirely.</div>
+    <div class="annex-card"><b>A.8.15 — Logging</b><br>Produce, store, protect, and analyze logs. Logs are the security camera footage of information systems — essential for detecting incidents, investigating them after the fact, and demonstrating compliance. Logs must be protected against tampering and retained for appropriate periods.</div>
+    <div class="annex-card"><b>A.8.25 — Secure development lifecycle</b><br>Establish and apply rules for the secure development of software and systems. Security must be built into software from requirements through design, development, testing, deployment, and maintenance — not added as a patch after development is complete.</div>
+    <div class="annex-card"><b>A.8.34 — Protection of information systems during audit testing</b><br>Plan and agree audit tests and other assurance activities involving assessment of operational systems. Audit tools must be controlled to prevent misuse; audit activities must not disrupt normal operations or introduce security vulnerabilities.</div>
+    <div class="analogy-box"><strong>Data masking and its importance:</strong> A 2019 study found that organizations routinely use real customer data in development and testing environments — where security controls are typically weaker than production. A developer working on a hospital's patient portal shouldn't have access to real patient records for testing. Data masking creates realistic but synthetic test data — maintaining development effectiveness while eliminating the privacy and security risks of using real data outside controlled environments.</div>`,
+    quiz: { q: "Why was Data Leakage Prevention (A.8.12) added as a new control in ISO 27001:2022?", opts: ["Because data leakage is a new problem that didn't exist before 2022", "Because the proliferation of data egress channels (email, USB, cloud uploads, personal devices) and increasingly stringent data protection regulations have made deliberate monitoring and prevention of unauthorized data transmission an essential, distinct security control", "Because ISO 27002 requires it separately", "Because GDPR mandates DLP implementation"], ans: 1, explain: "DLP was added because modern environments create numerous pathways for intentional or accidental data exfiltration — email, USB drives, personal cloud storage, messaging applications — and because regulatory penalties (GDPR, HIPAA) for data exposure have increased the business cost of data leakage. DLP tools that monitor and prevent unauthorized data transmission address both intentional insider threats and accidental data exposure at scale." }
+  },
+  {
+    title: "The Statement of Applicability — Deep Dive",
+    tagline: "The most important document in your ISO 27001 ISMS",
+    body: `<p>The <span class="key-term">Statement of Applicability (SoA)</span> is arguably the single most important document in an ISO 27001 ISMS. It is mandatory, it connects risk assessment to control implementation, and it is the primary document auditors examine to understand how the ISMS addresses information security risks.</p>
+    <div class="highlight-box">The SoA must: list all Annex A controls; state whether each control is implemented (Yes/No); provide justification for inclusion (which risk[s] it addresses) or exclusion (why the risk is not applicable, is addressed by another control, or has been accepted); and be referenced in the risk treatment plan. The SoA provides the complete picture of how identified risks map to implemented controls.</div>
+    <p>What the SoA reveals about ISMS quality:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Control Selection Logic</strong><span>A well-crafted SoA shows clear logic: identified risk → selected treatment → implemented control → reference to evidence of implementation. The chain is traceable and rational.</span></div>
+      <div class="cheat-pill"><strong>Exclusion Credibility</strong><span>Excluded controls with credible justifications (the risk is genuinely not applicable, or an equivalent control addresses it) demonstrate thorough analysis. Excluded controls with weak justifications suggest either lazy analysis or deliberate avoidance of difficult controls.</span></div>
+      <div class="cheat-pill"><strong>ISMS Completeness</strong><span>The SoA reveals whether the ISMS addresses the full spectrum of information security risks or focuses narrowly on technically complex controls while ignoring organizational and people controls that may be equally important.</span></div>
+      <div class="cheat-pill"><strong>Implementation Status</strong><span>The SoA distinguishes between "planned" and "implemented" controls — revealing the gap between ISMS design and operational reality. An SoA with many "planned but not yet implemented" controls suggests an immature ISMS.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The SoA as the ISMS story:</strong> A well-written SoA tells the complete story of how the organization manages information security risks. Reading it, an auditor can understand: what information assets exist, what risks they face, which treatment options were chosen for each risk, which controls address each risk, and how the controls are implemented. No other single document provides this complete picture — which is why auditors invariably examine the SoA first.</div>
+    <div class="warning-box"><strong>Common SoA mistakes:</strong> Implementing controls before completing the risk assessment (controls without identified risk rationale can't have valid inclusion justifications). Excluding controls based on difficulty rather than risk relevance. Using the same generic justification for every excluded control. Not updating the SoA when the risk environment changes. Disconnecting the SoA from the living risk treatment plan.</div>`,
+    quiz: { q: "An ISO 27001 SoA excludes the control for physical security monitoring (A.7.4) with the justification 'not applicable.' The organization has an office building with servers on-premises. Why would this exclusion concern an auditor?", opts: ["Physical security is always optional in ISO 27001", "Because physical security monitoring is clearly relevant for an organization with on-premises servers — unauthorized physical access could compromise those servers. The exclusion justification seems implausible and suggests the control was excluded for convenience rather than genuine risk analysis.", "Because A.7.4 is a mandatory control that cannot be excluded", "Because the auditor prefers all 93 controls to be implemented"], ans: 1, explain: "Excluding A.7.4 (Physical security monitoring) for an organization with on-premises servers and a physical office requires credible justification — for example, if physical access is controlled through other equivalent measures. Simply claiming it's 'not applicable' when the organization clearly has physical assets to protect suggests the control was excluded to avoid implementation effort, not because the underlying risk is absent. This would be a red flag in an audit." }
+  },
+  {
+    title: "ISO 27001 Certification — The Audit Process",
+    tagline: "What actually happens from gap analysis to certificate issuance",
+    body: `<p>ISO 27001 certification is obtained through independent assessment by an accredited certification body. Understanding the certification process — from initial gap analysis through ongoing surveillance — is essential for anyone preparing for or advising on an ISO 27001 certification program.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Gap Analysis (Optional but recommended)</strong><span>Assess current state against ISO 27001 requirements. Identify gaps. Estimate effort and timeline. Create a remediation roadmap. Dramatically improves success rates and reduces surprises during formal certification.</span></div>
+      <div class="cheat-pill"><strong>ISMS Implementation (3–12 months)</strong><span>Build the ISMS: policies, risk assessment, SoA, control implementation, training, internal audit, management review. The ISMS must be operational before Stage 1 — not just documented.</span></div>
+      <div class="cheat-pill"><strong>Stage 1 Audit (Documentation Review)</strong><span>Certification body auditor reviews ISMS documentation — scope, policy, risk assessment, SoA, objectives, procedures. Determines whether the ISMS design is ready for Stage 2. Often identifies gaps that must be addressed first.</span></div>
+      <div class="cheat-pill"><strong>Stage 2 Audit (Certification Audit)</strong><span>Comprehensive on-site assessment verifying that the ISMS is actually operating as documented. Interviews with staff, observation of processes, testing of controls, review of records. The definitive assessment of ISMS effectiveness.</span></div>
+      <div class="cheat-pill"><strong>Certificate Issuance</strong><span>If Stage 2 is successful (with any major nonconformities closed), the certification body issues a 3-year certificate. The certificate specifies the ISMS scope — what is covered by the certification.</span></div>
+      <div class="cheat-pill"><strong>Surveillance Audits (Year 1 and Year 2)</strong><span>Annual audits at approximately 12-month and 24-month points verify the ISMS continues to operate effectively. Less comprehensive than the initial certification audit but still substantive.</span></div>
+      <div class="cheat-pill"><strong>Recertification Audit (Year 3)</strong><span>At the end of the 3-year certificate cycle, a full recertification audit is required — similar in scope to the original Stage 2 audit. Successful recertification renews the certificate for another 3 years.</span></div>
+      <div class="cheat-pill"><strong>Major vs. Minor Nonconformities</strong><span>Major nonconformity: a systematic ISMS failure preventing certification. Must be resolved before the certificate is issued. Minor nonconformity: a specific gap that doesn't undermine the ISMS overall. Must be resolved within an agreed timeframe after certification.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Accreditation vs. certification:</strong> The certification body that audits you must itself be accredited — verified as competent to conduct ISO 27001 assessments by a national accreditation body (like UKAS in the UK, DAkkS in Germany, or ANAB in the US). An ISO 27001 certificate from a non-accredited certification body lacks the independent quality assurance that makes the certificate credible. Always verify your chosen certification body's accreditation status.</div>`,
+    quiz: { q: "What is the difference between a Stage 1 and Stage 2 ISO 27001 certification audit?", opts: ["Stage 1 is for small organizations; Stage 2 is for large ones", "Stage 1 is a documentation review assessing whether the ISMS design is ready for certification; Stage 2 is a comprehensive operational assessment verifying the ISMS is actually working as documented", "Stage 1 covers Annex A controls; Stage 2 covers Clauses 4–10", "They cover the same activities in different order"], ans: 1, explain: "Stage 1 is primarily a desktop review — auditors examine whether the ISMS documentation (scope, policy, risk assessment, SoA, objectives, procedures) is complete and appropriate. Stage 2 is the operational audit — auditors visit the organization, interview staff, observe processes, test controls, and examine operational records to verify the ISMS is genuinely working in practice, not just documented correctly." }
+  },
+  {
+    title: "ISO 27001 and Other Frameworks",
+    tagline: "How ISO 27001 integrates with everything else you've studied",
+    body: `<p>ISO 27001 doesn't exist in isolation — it sits within a rich ecosystem of security frameworks and regulations. Understanding how ISO 27001 relates to the other frameworks in this course series is essential for GRC professionals designing integrated compliance programs.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>ISO 27001 + ISO 42001 (AI Management)</strong><span>Most natural integration. Both use HLS — share policies, procedures, audit programs, management reviews. Annex A security controls directly support ISO 42001's AI security requirements. Many organizations pursue both simultaneously.</span></div>
+      <div class="cheat-pill"><strong>ISO 27001 + GDPR</strong><span>ISO 27001 Annex A controls address many GDPR technical and organizational measures. Particularly: A.5.12 (classification), A.8.3 (access restriction), A.8.24 (cryptography), A.5.34 (privacy). ISO 27701 extends 27001 specifically for privacy management.</span></div>
+      <div class="cheat-pill"><strong>ISO 27001 + SOC 2</strong><span>~85% control overlap. ISO 27001 satisfies many SOC 2 Trust Services Criteria requirements. ISO 27001 is more process-oriented; SOC 2 provides independent audit assurance. Many organizations pursue both for different market requirements.</span></div>
+      <div class="cheat-pill"><strong>ISO 27001 + HIPAA</strong><span>ISO 27001 Annex A controls map to all three HIPAA Security Rule safeguard categories (administrative, physical, technical). Many US healthcare organizations use ISO 27001 as a global security framework supplemented by HIPAA-specific requirements.</span></div>
+      <div class="cheat-pill"><strong>ISO 27001 + HITRUST</strong><span>Significant overlap — HITRUST maps to ISO 27001 controls. HITRUST r2 certification and ISO 27001 certification together provide comprehensive assurance for healthcare technology companies serving global markets.</span></div>
+      <div class="cheat-pill"><strong>ISO 27001 + COBIT</strong><span>COBIT provides IT governance; ISO 27001 provides information security management. COBIT MEA processes support ISO 27001's Clause 9 monitoring requirements. Many organizations use COBIT for overall IT governance and ISO 27001 for security management.</span></div>
+      <div class="cheat-pill"><strong>ISO 27001 + CIS Controls</strong><span>CIS Controls provide prescriptive implementation guidance that directly maps to ISO 27001 Annex A. CIS Controls IG2-IG3 implementation satisfies many Annex A technical control requirements. Together: ISMS governance (ISO 27001) + specific implementation guidance (CIS).</span></div>
+      <div class="cheat-pill"><strong>ISO 27001 + NIST CSF</strong><span>NIST CSF's five functions (Identify/Protect/Detect/Respond/Recover) map across ISO 27001 Clauses and Annex A. NIST CSF is used for governance communication in the US; ISO 27001 for international certification. Strong mutual reinforcement.</span></div>
+    </div>
+    <div class="highlight-box"><strong>ISO 27701 — The privacy extension:</strong> ISO 27701 extends ISO 27001 with specific privacy information management requirements — essentially adding a Privacy Information Management System (PIMS) to the ISMS. Organizations with both ISO 27001 and ISO 27701 certification have demonstrated systematic management of both information security and privacy — directly relevant to GDPR compliance.</div>`,
+    quiz: { q: "An organization already has ISO 27001 certification and now needs to demonstrate GDPR compliance to European customers. What is the most efficient approach?", opts: ["Start a completely separate GDPR compliance program from scratch", "Extend the existing ISO 27001 ISMS by adding ISO 27701 (the privacy extension) — leveraging existing policies, processes, and audit infrastructure while adding privacy-specific requirements", "GDPR and ISO 27001 are incompatible and cannot be managed together", "Only SOC 2 can demonstrate GDPR compliance"], ans: 1, explain: "ISO 27701 is specifically designed as an extension to ISO 27001 for privacy management. An organization with ISO 27001 certification can add ISO 27701 requirements to their existing ISMS — sharing the same policies, procedures, audit program, and management review infrastructure. This 'build once, extend efficiently' approach is dramatically more efficient than creating parallel compliance programs." }
+  },
+  {
+    title: "Building an ISO 27001 Compliance Program",
+    tagline: "What it actually takes to achieve and sustain certification",
+    body: `<p>Achieving and maintaining ISO 27001 certification requires sustained organizational commitment. Understanding what a genuine ISO 27001 implementation looks like — including the common pitfalls — is essential for anyone leading or advising on a certification program.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Step 1: Secure Top Management Commitment</strong><span>Before spending a dollar on implementation, secure genuine commitment from senior leadership — including resource allocation, personal accountability, and visible engagement. An ISO 27001 program without real leadership commitment will stall, be underfunded, and ultimately fail or achieve only cosmetic compliance.</span></div>
+      <div class="cheat-pill"><strong>Step 2: Define Scope</strong><span>Thoughtfully define an ISMS scope that is credible, achievable, and meaningful to customers. Too narrow: excludes important assets and creates a meaningless certificate. Too broad: initial implementation becomes unmanageable. Start focused; expand scope as the ISMS matures.</span></div>
+      <div class="cheat-pill"><strong>Step 3: Conduct Gap Assessment</strong><span>Compare current information security posture against ISO 27001 requirements. Identify missing policies, undocumented processes, unimplemented controls, and competence gaps. This creates the implementation roadmap and enables realistic timeline and budget estimates.</span></div>
+      <div class="cheat-pill"><strong>Step 4: Build the Documentation Foundation</strong><span>Develop mandatory documented information — information security policy, risk assessment procedure, risk treatment procedure, SoA, and supporting policies. Documentation must reflect how the organization actually operates, not describe an ideal state that doesn't exist.</span></div>
+      <div class="cheat-pill"><strong>Step 5: Conduct Risk Assessment</strong><span>Perform the formal risk assessment — identifying information assets, threats, vulnerabilities, and evaluating risks against acceptance criteria. The risk assessment drives all subsequent control selection decisions and must be credible, documented, and consistently applied.</span></div>
+      <div class="cheat-pill"><strong>Step 6: Implement Controls and Complete SoA</strong><span>Based on the risk treatment plan, implement the selected controls. Complete the Statement of Applicability documenting control inclusion/exclusion justifications. Controls must be genuinely implemented and operating — not just documented as planned.</span></div>
+      <div class="cheat-pill"><strong>Step 7: Train and Build Awareness</strong><span>Deliver role-appropriate training to security staff and general security awareness to all employees. Document completion. Awareness of the ISMS and security responsibilities is an ISO 27001 requirement — untrained staff will undermine even well-designed controls.</span></div>
+      <div class="cheat-pill"><strong>Step 8: Run Internal Audit and Management Review</strong><span>Conduct at least one complete internal audit and one management review before Stage 1 certification. These demonstrate that the ISMS has been operating — not just designed — and provide an opportunity to identify and address gaps before external auditors arrive.</span></div>
+    </div>
+    <div class="highlight-box"><strong>Timeline reality:</strong> A first-time ISO 27001 certification typically takes 9–18 months from project kickoff to certificate issuance. Organizations with existing security programs and documentation move faster. Organizations starting from scratch need more time. The most common delay is the gap between writing policies/procedures and actually operating them long enough to generate the evidence auditors require.</div>`,
+    quiz: { q: "An organization writes all required ISO 27001 policies and procedures in 3 months and immediately schedules the certification audit. Why is this likely to fail?", opts: ["Because 3 months is too short to write documentation", "Because ISO 27001 requires documented evidence that the ISMS has been operating — completed risk assessments, internal audit records, management review minutes, training records, incident logs. Documentation alone without operational evidence demonstrates design but not operation.", "Because the certification body requires a 12-month waiting period", "Because policies and procedures must be translated into multiple languages"], ans: 1, explain: "ISO 27001 certification requires evidence that the ISMS is operating, not just documented. An internal audit requires records of what was audited. A management review requires records of what was discussed and decided. A risk assessment requires evidence it was completed. Training requires completion records. An organization that writes everything in 3 months has designed an ISMS but has no evidence it operates — which will result in a failed Stage 2 audit." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've completed all 30 days of ISO 27001! Let's take a final inventory of everything you now know about the world's most widely adopted information security management system standard.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>ISO 27001 (full name: ISO/IEC 27001:2022) is the international standard for Information Security Management Systems (ISMS). Published by ISO and IEC. Most recently revised October 2022. Certifiable — organizations obtain 3-year certificates with annual surveillance audits. Certifications recognized globally in 150+ countries. Part of the ISO 27000 series of information security standards.</p>
+    <div class="tag-header">The ISMS</div>
+    <p>The Information Security Management System is systematic, documented, risk-based, and continuously improving. Defined scope. Covers information security governance — not just technical controls. Built on the PDCA cycle. Certifiable against ISO 27001 requirements.</div>
+    <div class="tag-header">10-Clause Structure (PDCA)</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Clause 4 — Context (PLAN)</span>
+      <span class="badge badge-blue">Clause 5 — Leadership (PLAN)</span>
+      <span class="badge badge-blue">Clause 6 — Planning/Risk Assessment (PLAN)</span>
+      <span class="badge badge-teal">Clause 7 — Support (DO)</span>
+      <span class="badge badge-teal">Clause 8 — Operation (DO)</span>
+      <span class="badge badge-amber">Clause 9 — Performance Evaluation (CHECK)</span>
+      <span class="badge badge-red">Clause 10 — Improvement (ACT)</span>
+    </div>
+    <div class="tag-header">Annex A — 93 Controls, 4 Themes</div>
+    <div class="badge-row">
+      <span class="badge badge-gray">Organizational (37) — governance, policy, risk, compliance</span>
+      <span class="badge badge-blue">People (8) — HR security, training, termination</span>
+      <span class="badge badge-green">Physical (14) — facilities, equipment, disposal</span>
+      <span class="badge badge-purple">Technological (34) — access, crypto, network, endpoints</span>
+    </div>
+    <div class="tag-header">Key Documents</div>
+    <div class="badge-row">
+      <span class="badge badge-gray">Statement of Applicability (SoA)</span>
+      <span class="badge badge-gray">Information Security Policy</span>
+      <span class="badge badge-gray">Risk Assessment and Treatment Plan</span>
+      <span class="badge badge-gray">ISMS Scope</span>
+      <span class="badge badge-gray">Internal Audit Records</span>
+      <span class="badge badge-gray">Management Review Records</span>
+    </div>
+    <div class="tag-header">Key Structural Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-gray">CIA Triad — Confidentiality, Integrity, Availability</span>
+      <span class="badge badge-gray">4 Risk Treatment Options — Modify, Retain, Avoid, Share</span>
+      <span class="badge badge-gray">3-year certification cycle + annual surveillance</span>
+      <span class="badge badge-gray">High-Level Structure (HLS) — shared with ISO 9001, 14001, 42001</span>
+      <span class="badge badge-gray">Stage 1 (documentation) + Stage 2 (operational) audits</span>
+      <span class="badge badge-gray">11 new controls in 2022 version</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete ISO 27001 cheat sheet with all clauses, Annex A themes, key documents, and framework relationships summarized in one place.</div>`,
+    quiz: { q: "ISO 27001 certification is valid for how long, and what maintains it during that period?", opts: ["1 year — annual full recertification", "3 years — with annual surveillance audits at approximately 12 and 24 months, and a full recertification audit at the 3-year mark", "5 years — with a mid-cycle assessment at 2.5 years", "Indefinitely — until a nonconformity is found"], ans: 1, explain: "ISO 27001 certificates are valid for 3 years. During that period, surveillance audits at approximately the 12-month and 24-month marks verify that the ISMS continues to operate effectively and remains conformant. A full recertification audit at the 3-year mark is required to renew the certificate for another 3-year cycle." }
+  },
+  {
+    title: "ISO 27001 Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is ISO 27001?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">ISO/IEC 27001:2022 — Information security, cybersecurity and privacy protection — Information security management systems — Requirements. International standard for Information Security Management Systems (ISMS). Published jointly by ISO and IEC. First published 2005; revised 2013; current version October 2022. Certifiable — 3-year certificates with annual surveillance audits. 70,000+ certificates worldwide in 150+ countries. Voluntary but de facto market requirement in technology, finance, healthcare, and government contracting. Part of the ISO/IEC 27000 family. ISO 27002 provides implementation guidance for Annex A controls.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The ISMS — Core Concept</h3>
+      <p style="font-size:13.5px;color:#6b6b68">An Information Security Management System is a systematic, documented, risk-based, and continuously improving approach to managing information security. Built on PDCA cycle. Has a defined scope. Covers governance, not just technical controls. Three properties protected: Confidentiality (access only to authorized), Integrity (accurate, unmodified without authorization), Availability (accessible when needed).</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>10-Clause Structure (PDCA Mapping)</h3>
+      <div class="pdca-grid">
+        <div class="pdca-plan"><strong style="color:#0C447C">PLAN — Clauses 4, 5, 6</strong><br><span style="font-size:12px;color:#1a1a18">Clause 4: Context (external/internal factors, interested parties, scope, ISMS commitment). Clause 5: Leadership (top management commitment, information security policy, roles and responsibilities). Clause 6: Planning (risk assessment, risk treatment, SoA, information security objectives).</span></div>
+        <div class="pdca-do"><strong style="color:#085041">DO — Clauses 7, 8</strong><br><span style="font-size:12px;color:#1a1a18">Clause 7: Support (resources, competence, awareness, communication, documented information). Clause 8: Operation (operational planning and control, risk assessment execution, risk treatment implementation).</span></div>
+        <div class="pdca-check"><strong style="color:#633806">CHECK — Clause 9</strong><br><span style="font-size:12px;color:#1a1a18">Clause 9: Performance Evaluation (monitoring/measurement/analysis/evaluation, internal audit programme, management review).</span></div>
+        <div class="pdca-act"><strong style="color:#501313">ACT — Clause 10</strong><br><span style="font-size:12px;color:#1a1a18">Clause 10: Improvement (continual improvement commitment, nonconformity and corrective action — react, root cause, correct, verify, document).</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Annex A — 93 Controls in 4 Themes</h3>
+      <div class="theme-grid">
+        <div class="theme-org"><strong style="color:#444441">Organizational (37 controls)</strong><br><span style="font-size:12px;color:#1a1a18">Policies, roles, asset inventory, information classification, supplier relationships, incident management, business continuity, compliance. Key: A.5.1 Policies, A.5.9 Asset inventory, A.5.12 Classification, A.5.19 Supplier security, A.5.24 Incident planning, A.5.7 Threat intelligence (NEW), A.5.23 Cloud services (NEW), A.5.30 ICT readiness (NEW).</span></div>
+        <div class="theme-ppl"><strong style="color:#0C447C">People (8 controls)</strong><br><span style="font-size:12px;color:#1a1a18">HR security across employment lifecycle. Key: A.6.1 Screening, A.6.2 Terms of employment, A.6.3 Security awareness and training, A.6.4 Disciplinary process, A.6.5 Post-employment responsibilities, A.6.6 NDAs, A.6.7 Remote working.</span></div>
+        <div class="theme-phy"><strong style="color:#27500A">Physical (14 controls)</strong><br><span style="font-size:12px;color:#1a1a18">Facilities and equipment security. Key: A.7.1 Physical perimeters, A.7.2 Physical entry controls, A.7.4 Physical security monitoring (NEW), A.7.7 Clear desk/screen, A.7.8 Equipment siting, A.7.10 Storage media, A.7.14 Secure disposal.</span></div>
+        <div class="theme-tec"><strong style="color:#3C3489">Technological (34 controls)</strong><br><span style="font-size:12px;color:#1a1a18">Technical security controls. Key: A.8.1 Endpoint devices, A.8.2 Privileged access, A.8.3 Access restriction, A.8.5 Secure authentication (MFA), A.8.7 Anti-malware, A.8.8 Vulnerability management, A.8.9 Configuration management (NEW), A.8.11 Data masking (NEW), A.8.12 DLP (NEW), A.8.15 Logging, A.8.20 Network security, A.8.24 Cryptography, A.8.25 Secure SDLC.</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Documents Required by ISO 27001</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Statement of Applicability (SoA)</b> — ALL 93 Annex A controls listed; implementation status; justification for inclusion (which risk) and exclusion (why not applicable or addressed otherwise). Central audit document. Bridges risk assessment to control implementation.</div>
+        <div class="ctrl-card"><b>Information Security Policy</b> — Top management approved. Consistent with strategy. Includes objectives framework. Commitment to requirements and continual improvement. Communicated internally and available externally.</div>
+        <div class="ctrl-card"><b>Risk Assessment Documentation</b> — Risk assessment process. Asset identification. Threat and vulnerability analysis. Risk evaluation against acceptance criteria. Risk register with ownership. Updated periodically and when significant changes occur.</div>
+        <div class="ctrl-card"><b>Risk Treatment Plan</b> — Selected treatment for each risk (Modify/Retain/Avoid/Share). Control justification. Implementation status. Risk owner sign-off on residual risk. Linked to SoA.</div>
+        <div class="ctrl-card"><b>ISMS Scope</b> — Documented boundaries — systems, processes, locations, organizational units covered. Must be available to interested parties. Scope exclusions require justification.</div>
+        <div class="ctrl-card"><b>Internal Audit Records</b> — Audit programme, individual audit reports, nonconformity records, corrective action tracking. Demonstrate ISMS is being independently verified on an ongoing basis.</div>
+        <div class="ctrl-card"><b>Management Review Records</b> — Documented review agenda, inputs reviewed, decisions made, actions assigned. Evidence of top management active ISMS engagement. Not a rubber-stamp meeting.</div>
+        <div class="ctrl-card"><b>Objectives and Achievement Evidence</b> — Documented information security objectives, measurement methodology, progress tracking, and evidence of whether objectives were achieved.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>4 Risk Treatment Options</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Modify (Mitigate)</b> — Implement controls to reduce likelihood or impact to acceptable level. Most common treatment. Requires documented control selection rationale in SoA.</div>
+        <div class="ctrl-card"><b>Retain (Accept)</b> — Consciously accept the risk. Must be explicit documented decision by risk owner. Not inaction — deliberate acceptance within risk criteria.</div>
+        <div class="ctrl-card"><b>Avoid</b> — Eliminate the activity creating the risk. Stop collecting certain data, exit a risky business activity, or discontinue a service.</div>
+        <div class="ctrl-card"><b>Share/Transfer</b> — Transfer financial consequence through cyber insurance or contractual obligation on third parties. The underlying risk remains; financial impact is shared.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Certification Process</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Stage 1 — Documentation Review</b> — Auditor reviews ISMS documentation. Assesses scope appropriateness, policy completeness, risk assessment quality, SoA completeness. Identifies readiness for Stage 2.</div>
+        <div class="ctrl-card"><b>Stage 2 — Certification Audit</b> — On-site operational audit. Interviews, observation, control testing, record review. Verifies ISMS operates as documented. Issues major/minor nonconformities.</div>
+        <div class="ctrl-card"><b>Certificate Validity</b> — 3 years. Surveillance audits at ~12 and ~24 months. Full recertification audit at 3-year mark. Certification body must be accredited by a national accreditation body.</div>
+        <div class="ctrl-card"><b>Nonconformities</b> — Major: systematic ISMS failure, must be resolved before certificate issued. Minor: specific gap not undermining ISMS overall, must be resolved within agreed timeframe after certification.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Framework Relationships</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>ISO 42001</b> — Same HLS. Most natural integration partner. ISMS security controls support AIMS. Combined certification efficient. ISO 42001 extends to AI governance.</div>
+        <div class="ctrl-card"><b>ISO 27701</b> — Privacy extension to ISO 27001. Adds PIMS (Privacy Information Management System). Addresses GDPR requirements. Certifiable alongside ISO 27001.</div>
+        <div class="ctrl-card"><b>GDPR</b> — ISO 27001 Annex A addresses many GDPR Art.32 technical/organizational measures. Not a substitute for GDPR compliance but significant overlap.</div>
+        <div class="ctrl-card"><b>SOC 2</b> — ~85% control overlap. ISO 27001 = management system approach; SOC 2 = audit assurance report. Many organizations pursue both for different market audiences.</div>
+        <div class="ctrl-card"><b>HIPAA</b> — ISO 27001 addresses all three HIPAA Security Rule safeguard categories. Common framework for healthcare organizations with global operations.</div>
+        <div class="ctrl-card"><b>CIS Controls</b> — CIS Controls IG2-IG3 provide prescriptive implementation guidance for ISO 27001 Annex A technical controls. Complementary: ISO 27001 = ISMS governance; CIS = specific implementation.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts</h3>
+      <div class="badge-row">
+        <span class="badge badge-gray">Current version: ISO/IEC 27001:2022 (October 2022)</span>
+        <span class="badge badge-gray">First published: 2005 (from BS 7799 roots in 1995)</span>
+        <span class="badge badge-gray">Previous version: ISO 27001:2013</span>
+        <span class="badge badge-gray">70,000+ certificates worldwide</span>
+        <span class="badge badge-gray">93 Annex A controls (was 114 in 2013)</span>
+        <span class="badge badge-gray">4 Annex A themes (was 14 domains in 2013)</span>
+        <span class="badge badge-gray">11 new controls in 2022 version</span>
+        <span class="badge badge-gray">3-year certification cycle</span>
+        <span class="badge badge-gray">2 surveillance audits per cycle (year 1 and year 2)</span>
+        <span class="badge badge-gray">CIA Triad: Confidentiality, Integrity, Availability</span>
+        <span class="badge badge-gray">PDCA: Plan-Do-Check-Act</span>
+        <span class="badge badge-gray">HLS: High-Level Structure (shared with ISO 9001, 14001, 42001)</span>
+        <span class="badge badge-gray">SoA: Statement of Applicability — key audit document</span>
+        <span class="badge badge-gray">Stage 1 (docs) + Stage 2 (operations) = certification audit</span>
+        <span class="badge badge-gray">ISO 27002: implementation guidance (not certifiable)</span>
+        <span class="badge badge-gray">ISO 27701: privacy extension (certifiable alongside 27001)</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

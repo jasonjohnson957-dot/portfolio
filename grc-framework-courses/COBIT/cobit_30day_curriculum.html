@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COBIT — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #854F0B; color: #FAEEDA; border-color: #854F0B; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #FAEEDA; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #633806; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #854F0B; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #FAEEDA; color: #633806; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .info-box { background: #E6F1FB; border-left: 3px solid #185FA5; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #854F0B; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-amber { background: #FAEEDA; color: #633806; }
+  .badge-teal { background: #E1F5EE; color: #085041; }
+  .badge-blue { background: #E6F1FB; color: #0C447C; }
+  .badge-coral { background: #FAECE7; color: #4A1B0C; }
+  .badge-green { background: #EAF3DE; color: #27500A; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-red { background: #FCEBEB; color: #501313; }
+  .badge-gray { background: #F1EFE8; color: #444441; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .domain-edm { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .domain-apo { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .domain-bai { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .domain-dss { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .domain-mea { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  @media (max-width: 520px) { .cheat-grid, .control-row, .domain-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day COBIT curriculum for high school students with daily lessons and a final cheat sheet</h2>
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>COBIT — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  {
+    title: "What Is COBIT?",
+    tagline: "The rulebook for managing and governing technology in organizations",
+    body: `<p>Imagine you're the CEO of a company and you've just spent $5 million on a new technology system. Six months later, the system crashes, your customer data is compromised, and the project was $2 million over budget. What went wrong — and how do you make sure it never happens again?</p>
+    <p>That's exactly the kind of problem <span class="key-term">COBIT</span> was built to solve. COBIT stands for <strong>Control Objectives for Information and Related Technologies</strong>. It is a globally recognized framework for the <strong>governance and management of enterprise IT</strong>.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of COBIT like the rules and playbook for running a school. There are rules about how teachers teach (management), rules about how the principal oversees the school (governance), ways to measure whether students are learning (performance), and standards to meet so the school stays accredited (compliance). COBIT does all of that — but for information technology inside any organization.</div>
+    <p>COBIT is published and maintained by <strong>ISACA</strong> (the Information Systems Audit and Control Association), a global professional association focused on IT governance, cybersecurity, and audit. The current version is <strong>COBIT 2019</strong>, released in 2018–2019.</p>
+    <div class="highlight-box">COBIT is not a law — it's a <em>voluntary framework</em>. Organizations adopt it because it works. It helps companies align technology with business goals, manage risk, ensure compliance with regulations, and get real value out of their technology investments.</div>`,
+    quiz: { q: "What does COBIT stand for?", opts: ["Computer Operations Board for IT", "Control Objectives for Information and Related Technologies", "Corporate Oversight of Business and IT", "Certified Operations for Business Intelligence Tools"], ans: 1, explain: "COBIT stands for Control Objectives for Information and Related Technologies. It is a framework published by ISACA for IT governance and management." }
+  },
+  {
+    title: "Why Was COBIT Created?",
+    tagline: "The real problems it was designed to fix",
+    body: `<p>In the early 1990s, organizations were spending enormous amounts of money on technology — and getting very poor results. Projects ran over budget, systems failed, data was lost, and executives had no idea whether their IT departments were actually delivering value.</p>
+    <p>Meanwhile, regulators were also noticing a problem: companies were failing to properly control their IT systems, which led to financial fraud, data breaches, and accounting scandals.</p>
+    <div class="highlight-box"><strong>The Enron and WorldCom scandals</strong> in the early 2000s were a major catalyst. Both companies had massive IT systems involved in their fraudulent accounting. The US government responded with the Sarbanes-Oxley Act (SOX) in 2002 — which required publicly traded companies to have proper controls over their IT systems that produce financial data. Organizations needed a framework to help them comply. COBIT was perfectly positioned to fill that need.</div>
+    <div class="analogy-box"><strong>Think about it like this:</strong> Imagine a school where teachers spend the entire budget on fancy whiteboards, but students' grades are still falling and nobody knows why. The school needs a management framework: clear goals, a way to measure progress, defined responsibilities, and accountability. COBIT does that for technology in organizations — ensuring IT spending actually produces results.</div>
+    <p>COBIT was first published in 1996 and has been continuously updated to reflect new technology challenges — from the rise of the internet, to cloud computing, to cybersecurity, to artificial intelligence.</p>`,
+    quiz: { q: "Which major law in 2002 created significant demand for IT governance frameworks like COBIT?", opts: ["GDPR", "The EU AI Act", "The Sarbanes-Oxley Act (SOX)", "The Computer Fraud and Abuse Act"], ans: 2, explain: "The Sarbanes-Oxley Act (SOX) of 2002, passed in response to corporate accounting scandals like Enron, required proper controls over IT systems producing financial data — creating major demand for frameworks like COBIT." }
+  },
+  {
+    title: "COBIT's History and Evolution",
+    tagline: "From a simple audit tool to a world-class governance framework",
+    body: `<p>COBIT didn't start out as a comprehensive governance framework. It began humbly as a tool for IT auditors — people whose job is to check whether a company's IT systems are working properly and following the rules.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>COBIT 1 (1996)</strong><span>Basic audit framework. A checklist approach for IT auditors to assess controls.</span></div>
+      <div class="cheat-pill"><strong>COBIT 2 (1998)</strong><span>Expanded to include better control objectives and more detailed guidance.</span></div>
+      <div class="cheat-pill"><strong>COBIT 3 (2000)</strong><span>Added management guidelines. Began addressing IT management, not just audit.</span></div>
+      <div class="cheat-pill"><strong>COBIT 4.0/4.1 (2005/2007)</strong><span>Major upgrade. Introduced maturity models, aligned with SOX requirements. Became widely adopted globally.</span></div>
+      <div class="cheat-pill"><strong>COBIT 5 (2012)</strong><span>Complete redesign. Introduced governance vs. management distinction, 5 principles, RACI charts, and alignment with ISO 38500.</span></div>
+      <div class="cheat-pill"><strong>COBIT 2019 (2018–19)</strong><span>Current version. Added design factors, focus areas, more flexibility, and better integration with other frameworks.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Evolution analogy:</strong> COBIT's evolution is like a student's journey from elementary school to graduate school. What started as basic rules and checklists has grown into a sophisticated, flexible system for managing one of the world's most complex challenges: making sure technology actually serves human organizations effectively.</div>
+    <div class="highlight-box">COBIT 2019 is the version used today and the one we'll be studying throughout this course. When people say "COBIT" without specifying a version, they typically mean COBIT 2019.</div>`,
+    quiz: { q: "Which version of COBIT introduced the important distinction between governance and management?", opts: ["COBIT 1 (1996)", "COBIT 3 (2000)", "COBIT 5 (2012)", "COBIT 4.1 (2007)"], ans: 2, explain: "COBIT 5 (2012) introduced the crucial governance vs. management distinction that remains central to COBIT 2019. It was a complete redesign of the framework." }
+  },
+  {
+    title: "The 6 Principles of COBIT 2019",
+    tagline: "The core beliefs that everything else is built on",
+    body: `<p>COBIT 2019 is built on <span class="key-term">6 principles</span>. These aren't rules you have to follow — they're the philosophical foundation that explains <em>why</em> COBIT works the way it does. Understanding these principles helps everything else make sense.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. Provide Stakeholder Value</strong><span>Every technology decision should create value for the people who depend on the organization — customers, employees, shareholders, regulators.</span></div>
+      <div class="cheat-pill"><strong>2. Holistic Approach</strong><span>IT governance can't be handled by one department or one person. It requires a system of interacting components working together.</span></div>
+      <div class="cheat-pill"><strong>3. Dynamic Governance System</strong><span>The governance system must be able to adapt when circumstances change — new technology, new regulations, new business strategies.</span></div>
+      <div class="cheat-pill"><strong>4. Governance Distinct from Management</strong><span>Governance (setting direction) and management (executing) are fundamentally different activities requiring different people and processes.</span></div>
+      <div class="cheat-pill"><strong>5. Tailored to Enterprise Needs</strong><span>There's no one-size-fits-all COBIT. Each organization adapts it to their specific size, industry, risk appetite, and regulatory environment.</span></div>
+      <div class="cheat-pill"><strong>6. End-to-End Governance System</strong><span>COBIT covers the entire organization — not just the IT department. IT governance is everyone's responsibility.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Analogy:</strong> Imagine these 6 principles as the core beliefs of a great coach. They believe every player matters (stakeholder value), that the whole team must work together (holistic), that strategy must change as the game evolves (dynamic), that coaching and playing are different jobs (governance vs management), that every team is different (tailored), and that winning requires the whole organization — not just the star players (end-to-end).</div>`,
+    quiz: { q: "Which COBIT 2019 principle says that every technology decision should create value for stakeholders?", opts: ["Holistic Approach", "Dynamic Governance System", "Provide Stakeholder Value", "End-to-End Governance System"], ans: 2, explain: "Principle 1 — Provide Stakeholder Value — states that every technology governance decision should ultimately create value for the people who depend on the organization: customers, employees, shareholders, and regulators." }
+  },
+  {
+    title: "Governance vs. Management — The Most Important Distinction",
+    tagline: "Two completely different jobs that are often confused",
+    body: `<p>One of COBIT's most important contributions to the field of IT is making a crisp, clear distinction between <span class="key-term">governance</span> and <span class="key-term">management</span>. These two things are constantly confused — even by experienced professionals. Getting this right is foundational to understanding COBIT.</p>
+    <div class="highlight-box"><strong>Governance</strong> is about setting direction. It answers: <em>What are we trying to achieve? What risks are acceptable? What resources will we allocate?</em> Governance is done by the board of directors and senior executives. It involves evaluating, directing, and monitoring.<br><br><strong>Management</strong> is about execution. It answers: <em>How do we actually do it? Who does what? How do we know it's working?</em> Management is done by IT executives and managers. It involves planning, building, running, and monitoring operations.</div>
+    <div class="analogy-box"><strong>School analogy:</strong> The school board (governance) sets the direction: "Our school will focus on STEM education, maintain a safe environment, and achieve a 90% graduation rate." The principal and teachers (management) figure out how to actually make that happen: which textbooks to buy, which classes to offer, how to schedule teachers, how to support struggling students. Both are essential — but they're completely different jobs. Confusing them causes chaos.</div>
+    <p>In COBIT 2019, governance has its own domain called <strong>EDM</strong> (Evaluate, Direct, Monitor), while management covers four separate domains: APO, BAI, DSS, and MEA. We'll explore all five in upcoming lessons.</p>
+    <div class="info-box"><strong>Why does this matter?</strong> Many technology disasters happen because governance and management get confused. Executives micromanage technical decisions (governance doing management's job). Or IT managers make strategic decisions without board oversight (management doing governance's job). Clear separation prevents both problems.</div>`,
+    quiz: { q: "A company's board of directors decides that cybersecurity is a top priority and allocates $10 million to address it. Is this governance or management?", opts: ["Management — they're deciding how to spend money", "Governance — they're setting direction and allocating resources", "Neither — this is an IT decision", "Both equally"], ans: 1, explain: "This is governance. The board is setting strategic direction (cybersecurity is a priority) and allocating resources ($10 million). Management's job would be to figure out exactly how to spend that money most effectively." }
+  },
+  {
+    title: "The COBIT Core Model — Overview",
+    tagline: "The five domains that cover everything IT governance needs",
+    body: `<p>The heart of COBIT 2019 is its <span class="key-term">Core Model</span> — a set of <strong>40 governance and management objectives</strong> organized into <strong>5 domains</strong>. These domains cover everything an organization needs to do to properly govern and manage its IT.</p>
+    <div class="domain-grid">
+      <div class="domain-edm"><strong style="color:#501313">EDM — Evaluate, Direct, Monitor</strong><br><span style="font-size:12px">GOVERNANCE domain. 5 objectives. The board's job: set direction, allocate resources, oversee performance.</span></div>
+      <div class="domain-apo"><strong style="color:#633806">APO — Align, Plan, Organize</strong><br><span style="font-size:12px">MANAGEMENT domain. 14 objectives. Strategy, risk, architecture, human resources, quality, security.</span></div>
+      <div class="domain-bai"><strong style="color:#0C447C">BAI — Build, Acquire, Implement</strong><br><span style="font-size:12px">MANAGEMENT domain. 11 objectives. Developing and deploying IT solutions and changes.</span></div>
+      <div class="domain-dss"><strong style="color:#27500A">DSS — Deliver, Service, Support</strong><br><span style="font-size:12px">MANAGEMENT domain. 6 objectives. Day-to-day IT operations, security, continuity, and user support.</span></div>
+      <div class="domain-mea"><strong style="color:#3C3489">MEA — Monitor, Evaluate, Assess</strong><br><span style="font-size:12px">MANAGEMENT domain. 4 objectives. Performance monitoring, internal controls, and regulatory compliance.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Think of it like running a restaurant:</strong> EDM = the restaurant owner deciding the vision, menu style, and budget. APO = the manager planning staffing, suppliers, and kitchen organization. BAI = building the kitchen, buying equipment, training staff. DSS = actually cooking and serving food every day. MEA = checking whether customers are happy, food quality is consistent, and health inspections are passed.</div>
+    <div class="highlight-box">One domain is <em>governance</em> (EDM), done by the board and senior leadership. Four domains are <em>management</em> (APO, BAI, DSS, MEA), done by IT management and staff. This reflects COBIT's core principle: governance and management are different jobs.</div>`,
+    quiz: { q: "How many domains does the COBIT 2019 Core Model contain?", opts: ["3", "4", "5", "7"], ans: 2, explain: "The COBIT 2019 Core Model contains 5 domains: EDM (governance) and APO, BAI, DSS, and MEA (management). Together they contain 40 governance and management objectives." }
+  },
+  {
+    title: "The EDM Domain — Governance in Action",
+    tagline: "Evaluate, Direct, Monitor — what boards and executives actually do",
+    body: `<p>The <span class="key-term">EDM domain</span> (Evaluate, Direct, Monitor) is COBIT's governance domain — the only domain where the board of directors and senior executives are primarily responsible. It contains just 5 objectives, but they're arguably the most important in the entire framework.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>EDM01 — Ensure Governance Framework Setting and Maintenance</strong><span>Make sure the organization has a proper governance structure in place and keeps it updated.</span></div>
+      <div class="cheat-pill"><strong>EDM02 — Ensure Benefits Delivery</strong><span>Make sure IT investments are actually delivering the value they promised. No wasted money.</span></div>
+      <div class="cheat-pill"><strong>EDM03 — Ensure Risk Optimization</strong><span>Make sure the organization's IT risks are understood, acceptable, and being managed.</span></div>
+      <div class="cheat-pill"><strong>EDM04 — Ensure Resource Optimization</strong><span>Make sure IT resources — people, technology, and money — are being used efficiently.</span></div>
+      <div class="cheat-pill"><strong>EDM05 — Ensure Stakeholder Engagement</strong><span>Make sure the right people are informed and involved in governance decisions — employees, customers, regulators, shareholders.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The "Ensure" pattern:</strong> Notice every EDM objective starts with "Ensure." This is deliberate. Governance doesn't do — it ensures. The board doesn't write code or configure servers. It ensures that management is doing those things correctly. That's the governance mindset: oversight, not execution.</div>
+    <div class="highlight-box">EDM03 (Risk Optimization) is particularly important. In COBIT, risk isn't just about cybersecurity — it's about any risk that could prevent IT from delivering value to the business. A failed software project is a risk. A compliance violation is a risk. An over-reliance on a single vendor is a risk. Governance must be aware of and accept these risks consciously.</div>`,
+    quiz: { q: "Why do all EDM objectives start with the word 'Ensure' rather than 'Do' or 'Build'?", opts: ["It's just a naming convention with no deeper meaning", "Because governance is about oversight and setting direction — not execution", "Because the EDM domain is only about documentation", "Because ISACA chose alphabetical ordering"], ans: 1, explain: "The 'Ensure' language is intentional. Governance is about oversight — the board ensures that management is doing things correctly. Governance sets direction and monitors results; it doesn't execute the work itself." }
+  },
+  {
+    title: "The APO Domain — Align, Plan, Organize",
+    tagline: "Turning strategy into action — the planning powerhouse",
+    body: `<p>The <span class="key-term">APO domain</span> (Align, Plan, Organize) is COBIT's largest management domain with <strong>14 objectives</strong>. It covers everything related to strategy, planning, and organizational structure for IT. Think of it as the bridge between governance direction and operational execution.</p>
+    <p>Key APO objectives include:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>APO01 — Managed I&T Management Framework</strong><span>Define and maintain the overall IT management approach for the organization.</span></div>
+      <div class="cheat-pill"><strong>APO02 — Managed Strategy</strong><span>Develop and maintain an IT strategy aligned with business goals.</span></div>
+      <div class="cheat-pill"><strong>APO03 — Managed Enterprise Architecture</strong><span>Design the overall IT structure — how systems, data, and technology fit together.</span></div>
+      <div class="cheat-pill"><strong>APO04 — Managed Innovation</strong><span>Identify and exploit emerging technology opportunities that create business value.</span></div>
+      <div class="cheat-pill"><strong>APO05 — Managed Portfolio</strong><span>Manage the collection of IT programs and projects to maximize overall value.</span></div>
+      <div class="cheat-pill"><strong>APO12 — Managed Risk</strong><span>Identify, assess, and respond to IT-related risks across the organization.</span></div>
+      <div class="cheat-pill"><strong>APO13 — Managed Security</strong><span>Define and maintain the information security management system.</span></div>
+      <div class="cheat-pill"><strong>APO14 — Managed Data</strong><span>Ensure that data — the organization's most valuable asset — is properly managed.</span></div>
+    </div>
+    <div class="analogy-box"><strong>APO analogy:</strong> If COBIT were building a skyscraper, APO is the architectural and planning phase: drawing the blueprints, selecting materials, hiring contractors, getting permits, planning the budget, and ensuring the building meets safety codes — before a single brick is laid.</div>`,
+    quiz: { q: "The APO domain contains how many management objectives — making it COBIT's largest domain?", opts: ["5", "8", "11", "14"], ans: 3, explain: "The APO (Align, Plan, Organize) domain contains 14 objectives — the most of any COBIT domain. It covers strategy, planning, risk, security, architecture, innovation, and data management." }
+  },
+  {
+    title: "The BAI Domain — Build, Acquire, Implement",
+    tagline: "Where IT solutions are actually created and deployed",
+    body: `<p>The <span class="key-term">BAI domain</span> (Build, Acquire, Implement) covers the process of actually creating and deploying IT solutions. It has <strong>11 objectives</strong> covering everything from requirements definition through development, testing, and deployment into production.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>BAI01 — Managed Programs</strong><span>Manage IT programs (collections of related projects) to deliver strategic outcomes on time and budget.</span></div>
+      <div class="cheat-pill"><strong>BAI02 — Managed Requirements Definition</strong><span>Clearly define what a new system needs to do before building it — avoiding costly rework later.</span></div>
+      <div class="cheat-pill"><strong>BAI03 — Managed Solutions Identification and Build</strong><span>Design, develop, or purchase the IT solution that meets defined requirements.</span></div>
+      <div class="cheat-pill"><strong>BAI04 — Managed Availability and Capacity</strong><span>Ensure IT systems have enough resources to meet current and future demands.</span></div>
+      <div class="cheat-pill"><strong>BAI06 — Managed IT Changes</strong><span>Control how changes are made to IT systems — preventing unauthorized or poorly tested changes from causing outages.</span></div>
+      <div class="cheat-pill"><strong>BAI07 — Managed IT Change Acceptance and Transitioning</strong><span>Formally accept and deploy approved changes into the live production environment.</span></div>
+      <div class="cheat-pill"><strong>BAI10 — Managed Configuration</strong><span>Maintain accurate records of all IT components and how they connect to each other.</span></div>
+      <div class="cheat-pill"><strong>BAI11 — Managed Projects</strong><span>Manage individual IT projects using disciplined project management practices.</span></div>
+    </div>
+    <div class="analogy-box"><strong>BAI analogy:</strong> Back to our skyscraper: BAI is the construction phase. The blueprints are done (APO). Now it's time to actually pour concrete, install wiring, build walls, test the elevators, and hand over the keys. But construction has to follow the approved plans — you can't just decide to add 10 floors without going back through the planning process.</div>`,
+    quiz: { q: "Which BAI objective is most critical for preventing unauthorized changes from causing system outages?", opts: ["BAI01 — Managed Programs", "BAI06 — Managed IT Changes", "BAI10 — Managed Configuration", "BAI02 — Managed Requirements Definition"], ans: 1, explain: "BAI06 — Managed IT Changes — controls how changes are made to IT systems, including change approval processes and testing requirements. Poor change management is one of the leading causes of IT outages." }
+  },
+  {
+    title: "The DSS Domain — Deliver, Service, Support",
+    tagline: "Keeping the lights on — day-to-day IT operations",
+    body: `<p>The <span class="key-term">DSS domain</span> (Deliver, Service, Support) covers the ongoing operational management of IT services — the day-to-day work of keeping systems running, handling problems, and supporting users. It has <strong>6 objectives</strong>.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>DSS01 — Managed Operations</strong><span>Manage IT operational procedures — daily schedules, monitoring, backups, and routine maintenance.</span></div>
+      <div class="cheat-pill"><strong>DSS02 — Managed Service Requests and Incidents</strong><span>Handle user requests and IT incidents quickly and effectively — the "helpdesk" function.</span></div>
+      <div class="cheat-pill"><strong>DSS03 — Managed Problems</strong><span>Find and fix the root causes of recurring incidents — don't just put out the same fire repeatedly.</span></div>
+      <div class="cheat-pill"><strong>DSS04 — Managed Continuity</strong><span>Ensure the business can continue operating even during major disruptions — disasters, outages, or attacks.</span></div>
+      <div class="cheat-pill"><strong>DSS05 — Managed Security Services</strong><span>Protect IT systems and data from security threats on an ongoing, operational basis.</span></div>
+      <div class="cheat-pill"><strong>DSS06 — Managed Business Process Controls</strong><span>Ensure that business processes supported by IT have adequate controls to maintain data integrity.</span></div>
+    </div>
+    <div class="analogy-box"><strong>DSS analogy:</strong> DSS is like the facilities management team in our skyscraper after it's been built and occupied. They fix the elevators when they break (incidents), clean the building every night (operations), ensure the fire suppression system is tested (continuity), and lock the doors at night (security). The building is built — now someone has to run it every single day.</div>
+    <div class="highlight-box"><strong>DSS04 (Managed Continuity)</strong> is increasingly critical in a world of ransomware attacks, natural disasters, and global pandemics. Business continuity planning asks: if our main data center goes offline tonight, how quickly can we recover, and what do we do in the meantime?</div>`,
+    quiz: { q: "Your company's website crashes due to a software bug that has caused the same problem three times this month. Which DSS objective addresses finding and fixing the underlying cause?", opts: ["DSS01 — Managed Operations", "DSS02 — Managed Service Requests and Incidents", "DSS03 — Managed Problems", "DSS05 — Managed Security Services"], ans: 2, explain: "DSS03 — Managed Problems — focuses on identifying and eliminating root causes of recurring incidents. Simply fixing the same crash repeatedly is incident management (DSS02); finding out WHY it keeps happening is problem management (DSS03)." }
+  },
+  {
+    title: "The MEA Domain — Monitor, Evaluate, Assess",
+    tagline: "How do you know if IT is actually working?",
+    body: `<p>The <span class="key-term">MEA domain</span> (Monitor, Evaluate, Assess) is the feedback loop of COBIT. With <strong>4 objectives</strong>, it covers how organizations measure whether IT is performing as expected, whether internal controls are working, and whether regulatory requirements are being met.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>MEA01 — Managed Performance and Conformance Monitoring</strong><span>Collect and review data about IT performance — are we meeting our targets? Is IT delivering what was promised?</span></div>
+      <div class="cheat-pill"><strong>MEA02 — Managed System of Internal Control</strong><span>Evaluate whether the system of internal controls across IT is actually working as designed.</span></div>
+      <div class="cheat-pill"><strong>MEA03 — Managed Compliance with External Requirements</strong><span>Identify and monitor all applicable laws, regulations, and standards (SOX, GDPR, ISO 27001, etc.) and ensure the organization is compliant.</span></div>
+      <div class="cheat-pill"><strong>MEA04 — Managed Assurance</strong><span>Obtain independent assurance (audits, reviews) that IT governance and management are working effectively.</span></div>
+    </div>
+    <div class="analogy-box"><strong>MEA analogy:</strong> Back to our restaurant: MEA is the owner reviewing the weekly reports (performance), having a health inspector check the kitchen (internal control audit), confirming the restaurant has all required licenses (regulatory compliance), and hiring a food critic to give an honest review (independent assurance). You need all four to know the restaurant is truly running well — not just what you hope is happening.</div>
+    <div class="highlight-box">MEA03 is the domain most directly connected to legal and regulatory compliance. This is where COBIT meets GDPR, SOX, ISO standards, and other external requirements. Organizations use COBIT to demonstrate to regulators that their IT controls are adequate — making MEA03 critical for audit and compliance teams.</div>`,
+    quiz: { q: "Your company needs to demonstrate to regulators that its IT systems comply with a new data privacy law. Which MEA objective is most directly relevant?", opts: ["MEA01 — Managed Performance Monitoring", "MEA02 — Managed System of Internal Control", "MEA03 — Managed Compliance with External Requirements", "MEA04 — Managed Assurance"], ans: 2, explain: "MEA03 — Managed Compliance with External Requirements — is specifically focused on identifying applicable external laws and regulations and ensuring the organization meets them. This is the bridge between COBIT and legal/regulatory obligations like GDPR or SOX." }
+  },
+  {
+    title: "The Goals Cascade — How IT Connects to Business",
+    tagline: "The chain that links technology decisions to business outcomes",
+    body: `<p>One of COBIT's most powerful concepts is the <span class="key-term">Goals Cascade</span>. It answers a question that business leaders constantly ask: <em>"Why does this IT project matter to the business?"</em> And it does so through a structured chain of goals.</p>
+    <div class="highlight-box">The Goals Cascade works in three levels:<br><br><strong>Level 1 — Enterprise/Stakeholder Goals:</strong> What the overall organization is trying to achieve (grow revenue, comply with regulations, keep customers loyal).<br><br><strong>Level 2 — Alignment Goals:</strong> What IT needs to deliver to support those enterprise goals (respond quickly to business needs, manage IT risk, build secure systems).<br><br><strong>Level 3 — Governance and Management Objectives:</strong> The specific COBIT processes that achieve the alignment goals.</div>
+    <div class="analogy-box"><strong>Example cascade in action:</strong> A hospital wants to protect patient lives (Enterprise Goal). To do that, IT must ensure medical systems are always available (Alignment Goal). That requires managing continuity planning (DSS04), managing IT operations reliably (DSS01), and monitoring system performance (MEA01). The business goal flows all the way down to specific IT processes — and back up again.</div>
+    <p>This cascade is critically important because it prevents the classic disconnect between business and IT. Too often, IT teams build things that make perfect technical sense but deliver no business value. The Goals Cascade forces every IT activity to be traceable back to something the business actually cares about.</p>
+    <div class="info-box"><strong>COBIT 2019</strong> defines <strong>13 Enterprise/Stakeholder Goals</strong> and <strong>13 Alignment Goals</strong>. Each alignment goal maps to one or more COBIT management objectives, creating a complete chain from stakeholder value to IT process.</div>`,
+    quiz: { q: "What is the purpose of the COBIT Goals Cascade?", opts: ["To assign blame when IT projects fail", "To link IT activities to business outcomes — showing how technology connects to what the organization cares about", "To rank COBIT processes by importance", "To determine IT department budgets"], ans: 1, explain: "The Goals Cascade creates a chain from stakeholder/enterprise goals → alignment goals → COBIT governance and management objectives. It ensures every IT activity can be traced to a business purpose, preventing IT from doing things that don't deliver value." }
+  },
+  {
+    title: "Enterprise Goals — What Businesses Are Trying to Achieve",
+    tagline: "The 13 things every organization ultimately cares about",
+    body: `<p>COBIT 2019 defines <span class="key-term">13 Enterprise Goals</span> that represent the fundamental things any organization wants to achieve. These are organized into four categories based on the Balanced Scorecard — a well-known business performance framework.</p>
+    <div class="tag-header">Financial & Customer Goals</div>
+    <div class="badge-row">
+      <span class="badge badge-amber">Portfolio of competitive products and services</span>
+      <span class="badge badge-amber">Managed business risk (risk management)</span>
+      <span class="badge badge-amber">Compliance with external laws and regulations</span>
+      <span class="badge badge-amber">Quality of financial information</span>
+      <span class="badge badge-amber">Customer-oriented service culture</span>
+    </div>
+    <div class="tag-header">Internal Process Goals</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Business service continuity and availability</span>
+      <span class="badge badge-blue">Efficient and effective business processes</span>
+      <span class="badge badge-blue">Optimized business process costs</span>
+      <span class="badge badge-blue">Managed business change programs</span>
+      <span class="badge badge-blue">Operational and staff productivity</span>
+    </div>
+    <div class="tag-header">Learning & Growth Goals</div>
+    <div class="badge-row">
+      <span class="badge badge-teal">Skilled and motivated people</span>
+      <span class="badge badge-teal">Product and business innovation culture</span>
+      <span class="badge badge-teal">Environmental and social policy compliance</span>
+    </div>
+    <div class="analogy-box"><strong>Why these 13?</strong> These represent a comprehensive but manageable view of what organizations need to succeed. Not just financial results (profits, growth) but also operational efficiency, compliance, people, and innovation. Technology governance must ultimately serve all of these — which is why COBIT connects to all 13.</div>`,
+    quiz: { q: "Which of the following is one of COBIT's 13 Enterprise Goals?", opts: ["Install the latest firewall software", "Write better code faster", "Compliance with external laws and regulations", "Upgrade the company's server hardware"], ans: 2, explain: "Compliance with external laws and regulations is one of COBIT's 13 Enterprise Goals. The others listed are operational activities — tasks, not goals. Enterprise goals represent what the organization is ultimately trying to achieve." }
+  },
+  {
+    title: "Alignment Goals — IT's Contribution to the Business",
+    tagline: "The 13 things IT must do to support business success",
+    body: `<p><span class="key-term">Alignment Goals</span> are the bridge between what the business wants (Enterprise Goals) and what IT processes actually do. There are <strong>13 Alignment Goals</strong> in COBIT 2019, organized into four categories.</p>
+    <div class="tag-header">IT Benefits / Value Delivery</div>
+    <div class="badge-row">
+      <span class="badge badge-amber">I&T-enabled strategy and portfolio aligned with enterprise strategy</span>
+      <span class="badge badge-amber">Realized benefits from I&T-enabled investments and portfolio</span>
+      <span class="badge badge-amber">Realized quality of I&T services</span>
+    </div>
+    <div class="tag-header">IT Risk Management</div>
+    <div class="badge-row">
+      <span class="badge badge-red">Managed I&T-related risk</span>
+      <span class="badge badge-red">Information security, processing integrity and privacy</span>
+    </div>
+    <div class="tag-header">IT Resources</div>
+    <div class="badge-row">
+      <span class="badge badge-blue">Agile, cost-effective, and secure I&T infrastructure and applications</span>
+      <span class="badge badge-blue">Knowledgeable, skilled, and motivated I&T personnel</span>
+      <span class="badge badge-blue">Adequate use of applications, information and technology solutions</span>
+    </div>
+    <div class="tag-header">Stakeholder Transparency</div>
+    <div class="badge-row">
+      <span class="badge badge-purple">IT compliance and support for business compliance with external laws</span>
+      <span class="badge badge-purple">Commitment of executive leadership for IT governance</span>
+    </div>
+    <div class="analogy-box"><strong>Think of Alignment Goals like a translator:</strong> The business speaks "revenue growth, customer satisfaction, risk management." IT speaks "server uptime, cybersecurity, software development." Alignment Goals translate business language into IT language — ensuring what IT does actually maps to what the business needs.</div>`,
+    quiz: { q: "Alignment Goals in COBIT serve as a bridge between which two things?", opts: ["Board members and IT staff", "Enterprise Goals and COBIT governance/management objectives (processes)", "Budget requests and budget approvals", "Cybersecurity controls and compliance reports"], ans: 1, explain: "Alignment Goals bridge Enterprise Goals (what the business wants) and the specific COBIT governance and management objectives (what IT processes deliver). They translate business needs into IT deliverables." }
+  },
+  {
+    title: "Design Factors — Tailoring COBIT to Your Organization",
+    tagline: "Why COBIT looks different for a startup vs. a hospital",
+    body: `<p>One of COBIT 2019's most important improvements over previous versions is its emphasis on <span class="key-term">Design Factors</span>. These are the characteristics of your specific organization that determine how COBIT should be applied — because COBIT is not one-size-fits-all.</p>
+    <p>COBIT 2019 defines <strong>11 Design Factors</strong> that influence how you prioritize and implement its governance system:</p>
+    <div class="badge-row">
+      <span class="badge badge-amber">Enterprise strategy</span>
+      <span class="badge badge-amber">Enterprise goals</span>
+      <span class="badge badge-amber">Risk profile</span>
+      <span class="badge badge-amber">I&T-related issues</span>
+      <span class="badge badge-amber">Threat landscape</span>
+      <span class="badge badge-amber">Compliance requirements</span>
+      <span class="badge badge-amber">Role of IT (support vs. strategic)</span>
+      <span class="badge badge-amber">Sourcing model (in-house vs. outsourced)</span>
+      <span class="badge badge-amber">IT implementation methods (agile, waterfall, etc.)</span>
+      <span class="badge badge-amber">Technology adoption strategy (early adopter vs. follower)</span>
+      <span class="badge badge-amber">Enterprise size (large vs. small/medium)</span>
+    </div>
+    <div class="analogy-box"><strong>Design Factor analogy:</strong> Imagine two restaurants: a fast food chain and a Michelin-star fine dining establishment. Both need food safety practices, staff management, and financial controls. But the specific processes, staffing levels, and standards are completely different. A burger chain and a 5-star restaurant don't run the same kitchen. Design Factors let COBIT reflect your organization's specific reality.</div>
+    <div class="highlight-box">A small startup will prioritize very different COBIT processes than a large bank subject to heavy regulation. A hospital where system downtime could cost lives needs much stronger continuity planning than a marketing agency. Design Factors ensure your COBIT implementation is realistic and proportionate to what your organization actually faces.</div>`,
+    quiz: { q: "Why are COBIT 2019 Design Factors important?", opts: ["They determine how much COBIT costs to implement", "They allow organizations to tailor COBIT to their specific context rather than applying it identically to every organization", "They rank COBIT objectives by difficulty", "They are only relevant to large enterprises"], ans: 1, explain: "Design Factors allow organizations to tailor COBIT to their specific context — their size, industry, risk profile, regulatory environment, and IT strategy. This prevents the mistake of applying COBIT identically to organizations with very different needs." }
+  },
+  {
+    title: "Focus Areas — Pre-Packaged COBIT Guidance",
+    tagline: "Ready-made packages for common governance challenges",
+    body: `<p>COBIT 2019 introduced <span class="key-term">Focus Areas</span> — specialized guidance packages that address specific, common governance challenges. Think of Focus Areas as pre-configured COBIT implementations for particular topics or industries.</p>
+    <p>Focus Areas provide targeted guidance for topics including:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Information Security</strong><span>COBIT guidance specifically for organizations building or improving their cybersecurity and information security programs.</span></div>
+      <div class="cheat-pill"><strong>DevOps</strong><span>How COBIT applies to organizations using modern software development practices that combine development and operations teams.</span></div>
+      <div class="cheat-pill"><strong>Small and Medium Enterprises (SMEs)</strong><span>A scaled-down COBIT implementation for organizations that don't have a large IT department or governance team.</span></div>
+      <div class="cheat-pill"><strong>Cloud Computing</strong><span>Governance guidance for organizations migrating to or operating significantly in cloud environments.</span></div>
+      <div class="cheat-pill"><strong>Cybersecurity</strong><span>Detailed COBIT guidance for implementing a comprehensive cybersecurity program aligned with major security frameworks.</span></div>
+      <div class="cheat-pill"><strong>Digital Transformation</strong><span>How COBIT supports organizations fundamentally changing their business model through technology.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Focus Area analogy:</strong> Think of Focus Areas like specialty instruction books that come with a new appliance. The full COBIT framework is the complete technical manual for the entire product line. A Focus Area is the quick-start guide for a specific feature. If your immediate challenge is cybersecurity, you don't have to read everything — start with the cybersecurity Focus Area.</div>
+    <div class="highlight-box">Focus Areas are published separately from the main COBIT 2019 framework and are continuously updated as new topics become relevant. This keeps COBIT current without requiring a complete framework redesign every few years.</div>`,
+    quiz: { q: "A small business with 50 employees wants to implement COBIT but doesn't have a large IT team. Which Focus Area is most relevant?", opts: ["DevOps", "Cloud Computing", "Small and Medium Enterprises (SMEs)", "Digital Transformation"], ans: 2, explain: "The SME Focus Area provides scaled-down COBIT guidance specifically for smaller organizations that don't have the resources or complexity to implement the full framework. It makes COBIT practical and proportionate for smaller enterprises." }
+  },
+  {
+    title: "The 7 Components of a Governance System",
+    tagline: "It takes more than processes to make governance work",
+    body: `<p>A common misconception about COBIT is that it's just a collection of processes. In reality, COBIT 2019 recognizes that effective governance requires <span class="key-term">7 types of components</span> working together as a system. Processes alone are never enough.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. Processes</strong><span>Structured sets of activities that transform inputs into outputs to achieve governance or management objectives.</span></div>
+      <div class="cheat-pill"><strong>2. Organizational Structures</strong><span>The decision-making bodies — IT steering committees, risk committees, audit committees, the CIO role.</span></div>
+      <div class="cheat-pill"><strong>3. Principles, Policies, and Frameworks</strong><span>The written rules that channel behavior — IT policies, security standards, acceptable use policies.</span></div>
+      <div class="cheat-pill"><strong>4. Information</strong><span>The data and information flows needed to make governance decisions — performance reports, risk assessments, audit findings.</span></div>
+      <div class="cheat-pill"><strong>5. Culture, Ethics, and Behavior</strong><span>The informal norms and values that shape how people actually behave — the real governance beyond the written policies.</span></div>
+      <div class="cheat-pill"><strong>6. People, Skills, and Competencies</strong><span>The human capabilities needed to execute governance and management — not just technical skills, but governance and leadership skills.</span></div>
+      <div class="cheat-pill"><strong>7. Services, Infrastructure, and Applications</strong><span>The technology tools that enable and support governance — GRC platforms, monitoring tools, audit management systems.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why 7 components?</strong> Imagine trying to make a sports team great by only working on plays (processes). Without talented players (people/skills), team culture (culture/ethics), a good coach structure (organizational structures), game film analysis (information), team rules (policies), and proper equipment (services/infrastructure) — the best plays in the world won't win games. Governance is the same.</div>`,
+    quiz: { q: "An organization has excellent COBIT processes documented, but employees routinely ignore the policies because 'that's not how things are done here.' Which governance component is failing?", opts: ["Processes", "Organizational Structures", "Culture, Ethics, and Behavior", "Services, Infrastructure, and Applications"], ans: 2, explain: "Culture, Ethics, and Behavior is the governance component that covers informal norms and actual behavior. Having great written processes and policies means nothing if organizational culture encourages people to ignore them. Culture often trumps process." }
+  },
+  {
+    title: "Processes — The Core of COBIT in Practice",
+    tagline: "What processes actually look like inside COBIT",
+    body: `<p>Every one of COBIT's 40 governance and management objectives is described as a <span class="key-term">process</span> — a structured set of activities that transforms inputs into outputs. Each COBIT process has a standard structure.</p>
+    <p>Every COBIT process includes:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Process Description</strong><span>A plain-language explanation of what the process does and why it matters.</span></div>
+      <div class="cheat-pill"><strong>Process Purpose Statement</strong><span>The specific outcome the process is designed to achieve when working well.</span></div>
+      <div class="cheat-pill"><strong>Process Goals</strong><span>Measurable targets that define success — metrics that can be tracked.</span></div>
+      <div class="cheat-pill"><strong>Activities</strong><span>The specific tasks that make up the process — what people actually do.</span></div>
+      <div class="cheat-pill"><strong>RACI Chart</strong><span>Who is Responsible, Accountable, Consulted, and Informed for each activity.</span></div>
+      <div class="cheat-pill"><strong>Inputs and Outputs</strong><span>What information flows into the process and what it produces for other processes to use.</span></div>
+    </div>
+    <div class="analogy-box"><strong>RACI Chart analogy:</strong> Every school project has roles: someone who does the work (Responsible), a teacher who grades it and is on the hook for the outcome (Accountable), classmates who give input (Consulted), and parents who know it's happening (Informed). RACI charts assign these roles to every governance activity — so nobody can say "I didn't know that was my job."</div>
+    <div class="highlight-box"><strong>The RACI principle:</strong> Every governance activity must have exactly ONE person who is Accountable — the person who will be held responsible if it fails. Multiple people can be Responsible (doing the work), but split accountability means no accountability. This is a critical governance principle.</div>`,
+    quiz: { q: "In a COBIT RACI chart, what is the difference between 'Responsible' and 'Accountable'?", opts: ["They are the same thing", "Responsible means doing the work; Accountable means owning the outcome — and there must be exactly one Accountable per activity", "Responsible is for senior staff; Accountable is for junior staff", "Accountable means being consulted; Responsible means being informed"], ans: 1, explain: "Responsible = the person(s) doing the work. Accountable = the single person who owns the outcome and is 'on the hook' if it fails. Having exactly one Accountable prevents the 'everyone's responsible, nobody's responsible' problem." }
+  },
+  {
+    title: "Capability Levels — How Mature Is Your Process?",
+    tagline: "Measuring how well an organization's IT processes actually perform",
+    body: `<p>COBIT 2019 uses a <span class="key-term">capability level</span> system to measure how well an organization's governance and management processes are actually performing. Not all organizations implement every process at the same depth — and that's fine, as long as it's intentional.</p>
+    <p>COBIT 2019 defines <strong>5 capability levels</strong> based on the CMMI (Capability Maturity Model Integration) framework:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Level 0 — Incomplete</strong><span>The process doesn't exist or fails to achieve its purpose. No consistent practice. Problems are common and unaddressed.</span></div>
+      <div class="cheat-pill"><strong>Level 1 — Initial (Performed)</strong><span>The process works sometimes, but it's ad hoc and unpredictable — dependent on individual heroes rather than defined procedures.</span></div>
+      <div class="cheat-pill"><strong>Level 2 — Managed</strong><span>The process is planned, monitored, and adjusted. It produces consistent results, but mainly in one team or area.</span></div>
+      <div class="cheat-pill"><strong>Level 3 — Defined</strong><span>A standard process exists across the whole organization. Everyone follows the same approach. Results are consistent company-wide.</span></div>
+      <div class="cheat-pill"><strong>Level 4 — Quantitatively Managed</strong><span>The process is measured with data and statistics. Leaders use numbers — not gut feelings — to manage and improve it.</span></div>
+      <div class="cheat-pill"><strong>Level 5 — Optimizing</strong><span>The process continuously improves itself, learning from data and feedback. Best-in-class organizations operate here for critical processes.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Student analogy:</strong> Level 0 = doesn't study at all. Level 1 = studies sometimes when scared of failing. Level 2 = has a study schedule that mostly works. Level 3 = follows a consistent, proven study system. Level 4 = tracks study hours and test scores to optimize the method. Level 5 = continuously refines the approach based on what the data says works best.</div>`,
+    quiz: { q: "A company's cybersecurity patching process works when dedicated staff remember to do it, but there's no documented procedure and results vary. What capability level is this?", opts: ["Level 0 — Incomplete", "Level 1 — Initial", "Level 3 — Defined", "Level 5 — Optimizing"], ans: 1, explain: "Level 1 (Initial/Performed) describes processes that work sometimes but are ad hoc and hero-dependent — no consistent documentation, unpredictable results. The process works when the right person remembers to do it, not because there's a reliable system." }
+  },
+  {
+    title: "Performance Management — Measuring What Matters",
+    tagline: "If you can't measure it, you can't manage it",
+    body: `<p>COBIT 2019 has a robust <span class="key-term">performance management system</span> built around the idea that what gets measured gets managed. Every governance and management objective has associated metrics to track whether it's working.</p>
+    <div class="highlight-box">COBIT uses two types of metrics:<br><br><strong>Goal Metrics</strong> (also called lag indicators or KGIs — Key Goal Indicators): Measure the outcome — did we achieve what we set out to achieve? Example: "Percentage of IT projects delivered on time and on budget."<br><br><strong>Practice Metrics</strong> (also called lead indicators or KPIs — Key Performance Indicators): Measure how well the process is performing day-to-day. Example: "Average time to resolve a critical IT incident."</div>
+    <div class="analogy-box"><strong>KGI vs. KPI analogy:</strong> Imagine you're trying to lose weight. The goal metric (KGI) is your actual weight — did it go down? The performance metric (KPI) is how many days you exercised and how many calories you consumed. The KPI tells you how the process is running; the KGI tells you whether it's working. You need both.</div>
+    <p>COBIT also introduces <span class="key-term">Balanced Scorecard</span> thinking into IT governance. Rather than measuring only technical metrics (server uptime, patch rates), COBIT encourages organizations to also measure business value delivered, risk managed, customer satisfaction, and people development — a balanced view of IT performance.</p>
+    <div class="info-box"><strong>Common COBIT metrics in practice:</strong> Percentage of IT projects aligned to business goals. Number of security incidents per month. IT cost as a percentage of revenue. Time to recover from a major outage (Recovery Time Objective). User satisfaction scores with IT services.</div>`,
+    quiz: { q: "A company tracks 'number of critical security patches applied within 48 hours of release.' This is an example of which type of COBIT metric?", opts: ["A Goal Metric (KGI) — it measures the outcome", "A Practice Metric (KPI) — it measures day-to-day process performance", "A Design Factor — it shapes governance design", "A Capability Level — it measures process maturity"], ans: 1, explain: "This is a Practice Metric (KPI — Key Performance Indicator). It measures how well the patching process is performing day-to-day. A Goal Metric (KGI) would measure the outcome — like 'number of security breaches attributable to unpatched vulnerabilities.'" }
+  },
+  {
+    title: "Organizational Structures — Who Makes IT Decisions?",
+    tagline: "The committees, roles, and bodies that govern IT",
+    body: `<p>Governance doesn't happen by accident — it happens through <span class="key-term">organizational structures</span>. These are the formal groups, roles, and decision-making bodies that COBIT identifies as essential for IT governance to function.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Board of Directors</strong><span>Sets overall risk appetite and approves IT governance framework. Accountable for the organization's use of technology.</span></div>
+      <div class="cheat-pill"><strong>Executive Committee</strong><span>Senior leadership team that makes major IT investment and strategy decisions.</span></div>
+      <div class="cheat-pill"><strong>IT Strategy Committee</strong><span>Board-level committee that advises on IT strategic direction and major IT matters.</span></div>
+      <div class="cheat-pill"><strong>IT Steering Committee</strong><span>Senior management-level committee overseeing IT projects, priorities, and performance.</span></div>
+      <div class="cheat-pill"><strong>Chief Information Officer (CIO)</strong><span>Senior executive accountable for IT strategy and IT management performance.</span></div>
+      <div class="cheat-pill"><strong>Chief Information Security Officer (CISO)</strong><span>Senior executive accountable for information security strategy and program.</span></div>
+      <div class="cheat-pill"><strong>Risk Committee</strong><span>Oversees the organization's overall risk management, including IT and cybersecurity risk.</span></div>
+      <div class="cheat-pill"><strong>Audit Committee</strong><span>Board-level oversight of internal and external audit, including IT audit findings.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why so many committees?</strong> Different decisions require different perspectives and different levels of authority. A decision about patching a server (operational) doesn't need the Board. A decision about spending $50 million on a new ERP system (strategic) absolutely does. COBIT maps specific decisions to the right organizational level — preventing both micromanagement and governance gaps.</div>`,
+    quiz: { q: "The CIO presents a proposal to spend $20 million on a new AI platform to a committee of senior executives who prioritize IT projects and budgets. This committee is most likely the:", opts: ["Board of Directors", "IT Strategy Committee", "IT Steering Committee", "Audit Committee"], ans: 2, explain: "The IT Steering Committee is a senior management-level committee that oversees IT projects, priorities, resource allocation, and performance. It's the right forum for prioritizing a major IT investment proposal." }
+  },
+  {
+    title: "Policies, Standards, and Procedures",
+    tagline: "The written rules that channel behavior across the organization",
+    body: `<p>COBIT recognizes that governance requires clear <span class="key-term">principles, policies, and frameworks</span> — the written rules that define acceptable behavior and required practices across the organization. Without written rules, governance is just suggestions.</p>
+    <p>COBIT distinguishes between three levels of written guidance:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Principles</strong><span>High-level statements of belief and values that guide decision-making. Example: "All IT decisions must consider security by default." Set by senior leadership.</span></div>
+      <div class="cheat-pill"><strong>Policies</strong><span>Mandatory rules that everyone must follow. Example: "All employees must use multi-factor authentication to access company systems." Approved by management.</span></div>
+      <div class="cheat-pill"><strong>Standards</strong><span>Technical or procedural specifications that define HOW policies are implemented. Example: "Multi-factor authentication must use TOTP or hardware tokens — not SMS." Written by IT/security teams.</span></div>
+      <div class="cheat-pill"><strong>Procedures</strong><span>Step-by-step instructions for carrying out a standard. Example: "How to enroll a new employee in the MFA system." Written by operational teams.</span></div>
+    </div>
+    <div class="analogy-box"><strong>School analogy:</strong> Principle: "Students will be treated with respect." Policy: "Bullying is prohibited." Standard: "Bullying includes verbal, physical, and cyberbullying." Procedure: "When a bullying incident is reported, the teacher completes Form B-7 within 24 hours and notifies the principal." Each level is more specific and operational than the one above it.</div>
+    <div class="highlight-box">A common governance failure is having policies that nobody reads, standards that are outdated, and procedures that don't match what people actually do. COBIT's governance system requires that policies be reviewed regularly, communicated effectively, and enforced consistently — not just written and filed away.</div>`,
+    quiz: { q: "A company has a rule that says 'No employee may install unauthorized software on a company device.' What type of written governance document is this?", opts: ["A Principle — it guides decision-making at a high level", "A Policy — it is a mandatory rule everyone must follow", "A Standard — it specifies technical requirements", "A Procedure — it provides step-by-step instructions"], ans: 1, explain: "This is a Policy — a mandatory rule that all employees must follow. A Standard would specify what 'authorized software' means technically. A Procedure would describe how to request software approval. A Principle would be the higher-level belief like 'We protect company assets.'" }
+  },
+  {
+    title: "Culture, Ethics, and Behavior",
+    tagline: "The invisible governance force that overrides everything else",
+    body: `<p>Of all COBIT's 7 governance components, <span class="key-term">culture, ethics, and behavior</span> is the most underestimated — and often the most powerful. Culture is the informal set of values, norms, and behaviors that define "how things are actually done here," regardless of what the policies say.</p>
+    <div class="highlight-box"><strong>The culture paradox in governance:</strong> An organization can have perfect processes, excellent policies, state-of-the-art technology, and skilled people — and still have terrible governance if the culture doesn't support it. Culture is what people do when nobody is watching.</div>
+    <div class="analogy-box"><strong>A real example:</strong> A large bank had excellent written security policies forbidding employees from sharing passwords. But because the culture rewarded "getting things done fast" above all else, employees routinely shared passwords to avoid approval delays. The written policy was perfect; the culture made it meaningless. The result was a major data breach.</div>
+    <p>COBIT identifies specific cultural behaviors that good governance requires:</p>
+    <div class="badge-row">
+      <span class="badge badge-amber">Leaders model the governance behaviors they expect from others</span>
+      <span class="badge badge-amber">Raising concerns about governance failures is encouraged, not punished</span>
+      <span class="badge badge-amber">Risk awareness is part of everyday decision-making</span>
+      <span class="badge badge-amber">Accountability for outcomes — not just activities — is the norm</span>
+      <span class="badge badge-amber">Continuous improvement is expected, not optional</span>
+    </div>
+    <p>Changing culture is one of the hardest governance challenges. COBIT acknowledges this and recommends starting from the top: if executives don't follow governance processes, nobody else will. Leadership behavior is the single most powerful shaper of organizational culture.</p>`,
+    quiz: { q: "Despite having a written policy against it, employees at a company routinely bypass security procedures because their manager says 'just get it done.' What governance component is primarily failing?", opts: ["Processes", "Services, Infrastructure, and Applications", "Culture, Ethics, and Behavior", "Information flows"], ans: 2, explain: "Culture, Ethics, and Behavior is failing. When management models behavior that contradicts written policies, culture overrides process. Effective governance requires that leaders demonstrate the behaviors the governance system demands." }
+  },
+  {
+    title: "Information Flows — The Lifeblood of Governance",
+    tagline: "Decision-makers can only govern what they can see",
+    body: `<p>Governance decisions are only as good as the information that informs them. COBIT recognizes <span class="key-term">information flows</span> as a critical governance component — because a board or executive team that doesn't have accurate, timely information about IT performance cannot make good governance decisions.</p>
+    <div class="highlight-box">Every COBIT process has defined <strong>inputs</strong> (information it needs to function) and <strong>outputs</strong> (information it produces for other processes to use). These inputs and outputs create a network of information flows across the entire governance system.</div>
+    <p>Key types of governance information flows include:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Performance Dashboards</strong><span>Regular reports showing how IT is performing against targets — given to the IT Steering Committee and board.</span></div>
+      <div class="cheat-pill"><strong>Risk Reports</strong><span>Updates on IT risks — new threats identified, incidents occurred, risk mitigation progress.</span></div>
+      <div class="cheat-pill"><strong>Audit Findings</strong><span>Results of internal and external audits — what's working well and what needs improvement.</span></div>
+      <div class="cheat-pill"><strong>Project Status Reports</strong><span>Updates on IT project progress, budget consumption, and issue escalation.</span></div>
+      <div class="cheat-pill"><strong>Compliance Reports</strong><span>Evidence that applicable laws and regulations are being followed.</span></div>
+      <div class="cheat-pill"><strong>Incident Reports</strong><span>Details of security incidents, outages, and near-misses — feeding into risk management.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Information flow analogy:</strong> Imagine a pilot flying a plane without any instruments — no altitude gauge, no speed indicator, no fuel level. They might be a brilliant pilot, but without information, they're flying blind. Governance without information flows is the same: leaders making decisions without knowing what's actually happening.</div>`,
+    quiz: { q: "A company's board receives an IT risk report showing a critical vulnerability has been open for 6 months. This report is an example of which governance component?", opts: ["An organizational structure", "A policy", "An information flow", "A capability level"], ans: 2, explain: "The risk report is an information flow — it carries information from the operational level to the governance level, enabling the board to make informed decisions. Without this flow, the board would be governing without visibility into what's actually happening." }
+  },
+  {
+    title: "People, Skills, and Competencies",
+    tagline: "Governance is ultimately a human activity",
+    body: `<p>No matter how well-designed the processes, policies, and structures are — governance ultimately depends on <span class="key-term">people, skills, and competencies</span>. COBIT explicitly recognizes that the right human capabilities are essential to making any governance system work.</p>
+    <p>COBIT identifies three categories of skills needed for IT governance:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Technical Skills</strong><span>The IT-specific knowledge: programming, cybersecurity, network management, cloud architecture, data analytics. The "hard" skills.</span></div>
+      <div class="cheat-pill"><strong>Business Skills</strong><span>Understanding how the business works: finance, project management, strategy, risk management, communication. Connecting IT to business value.</span></div>
+      <div class="cheat-pill"><strong>Governance Skills</strong><span>Understanding governance itself: audit, compliance, policy development, board dynamics, accountability frameworks. The "soft" governance skills.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The T-shaped professional:</strong> The best IT governance professionals are "T-shaped" — deep expertise in one area (the vertical bar of the T) combined with broad knowledge across multiple areas (the horizontal bar). A cybersecurity expert who also understands business risk, regulatory requirements, and board communication is far more effective than a pure technical specialist.</div>
+    <div class="highlight-box"><strong>The COBIT skills gap problem:</strong> One of the biggest challenges in IT governance today is that technical IT staff often lack business and governance skills — and business leaders often lack sufficient IT knowledge to govern effectively. COBIT recommends training, hiring, and professional development plans that specifically address these gaps. Certifications like CISA, CRISC, and CGEIT from ISACA are directly aligned to COBIT's skills framework.</div>
+    <p>COBIT processes include RACI charts that identify what skills are needed at each role level — from board members to entry-level staff.</p>`,
+    quiz: { q: "A CISO is technically brilliant at cybersecurity but struggles to communicate risks to the board in business terms. Which COBIT skills category does this gap fall in?", opts: ["Technical Skills", "Business Skills", "Governance Skills", "Both Business and Governance Skills"], ans: 3, explain: "Both Business Skills (understanding how to frame issues in financial/business impact terms) and Governance Skills (understanding how to communicate with boards and governance bodies) are the gaps here. The CISO has strong technical skills but needs development in the other two categories." }
+  },
+  {
+    title: "COBIT and Risk Management",
+    tagline: "Risk is at the center of everything COBIT does",
+    body: `<p>Risk management isn't just one part of COBIT — it runs through the entire framework. COBIT treats <span class="key-term">IT-related risk</span> as central to governance, dedicating processes in multiple domains to its identification, assessment, and management.</p>
+    <p>COBIT's approach to risk management covers three categories:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>IT Benefit/Value Enablement Risk</strong><span>Risk that IT won't deliver the business value expected — failed projects, poor ROI, misaligned technology investments.</span></div>
+      <div class="cheat-pill"><strong>IT Program and Project Delivery Risk</strong><span>Risk that IT projects will fail — over budget, behind schedule, wrong requirements, poor quality.</span></div>
+      <div class="cheat-pill"><strong>IT Operations and Service Delivery Risk</strong><span>Risk that IT systems will fail or be compromised — outages, cyberattacks, data breaches, performance problems.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Risk appetite analogy:</strong> Different people have different risk tolerances. Some people invest their savings in volatile stocks; others keep everything in cash. COBIT requires organizations to define their IT risk appetite — how much technology risk is acceptable in pursuit of business goals. A startup might accept high technical risk for fast growth; a hospital must accept very low operational risk because downtime can cost lives.</div>
+    <div class="highlight-box">Key COBIT processes for risk management include: <strong>EDM03</strong> (Ensure Risk Optimization — governance level), <strong>APO12</strong> (Managed Risk — strategic level), and <strong>APO13</strong> (Managed Security — operational security risk). Together these create a complete risk management lifecycle from board oversight down to daily security operations.</div>
+    <p>Risk is also connected to the concept of <strong>residual risk</strong> — the risk that remains after controls are applied. COBIT requires that residual risk be acknowledged and accepted by appropriate governance bodies, not hidden or ignored.</p>`,
+    quiz: { q: "A hospital's IT system goes offline during surgery because of a ransomware attack. Which type of COBIT IT risk does this represent?", opts: ["IT Benefit/Value Enablement Risk", "IT Program and Project Delivery Risk", "IT Operations and Service Delivery Risk", "Compliance Risk"], ans: 2, explain: "This is IT Operations and Service Delivery Risk — the risk that IT systems will fail or be compromised during normal operations. Ransomware causing operational downtime is a classic operations and service delivery risk event." }
+  },
+  {
+    title: "COBIT and Compliance",
+    tagline: "How COBIT connects to GDPR, SOX, ISO 27001, and beyond",
+    body: `<p>One of the most practical applications of COBIT is helping organizations manage <span class="key-term">regulatory compliance</span>. Because COBIT is a comprehensive IT governance framework, it creates the controls and documentation that regulators look for when assessing whether an organization is managing its IT responsibly.</p>
+    <div class="highlight-box">COBIT is not a compliance standard itself — it's a governance framework that <em>enables</em> compliance with many different standards and regulations. Think of COBIT as the foundation: build a strong COBIT implementation, and compliance with multiple external requirements becomes much easier.</div>
+    <p>Key frameworks and regulations that align with COBIT:</p>
+    <div class="badge-row">
+      <span class="badge badge-amber">SOX (Sarbanes-Oxley) — Financial controls over IT systems</span>
+      <span class="badge badge-amber">GDPR — Data protection and privacy controls</span>
+      <span class="badge badge-amber">ISO 27001 — Information security management systems</span>
+      <span class="badge badge-amber">NIST Cybersecurity Framework — US cybersecurity guidance</span>
+      <span class="badge badge-amber">ISO 38500 — IT governance standard for boards</span>
+      <span class="badge badge-amber">ITIL — IT service management best practices</span>
+      <span class="badge badge-amber">PCI-DSS — Payment card data security standard</span>
+      <span class="badge badge-amber">HIPAA — US healthcare data protection</span>
+    </div>
+    <div class="analogy-box"><strong>Framework integration analogy:</strong> Think of COBIT as a complete house structure — the foundation, walls, and roof. Specific regulations like GDPR or ISO 27001 are like specific rooms — the bedroom, kitchen, bathroom. COBIT provides the overall structure that makes every specific room possible. Having a strong COBIT implementation is like having a solid house that can accommodate whatever rooms compliance requires.</div>`,
+    quiz: { q: "A company implements COBIT and finds it helps them comply with GDPR, SOX, and ISO 27001 simultaneously. Why does COBIT serve multiple compliance needs?", opts: ["Because COBIT was written by the same authors as GDPR", "Because COBIT is a comprehensive governance framework whose controls underpin many specific compliance requirements", "Because COBIT is legally required alongside all other regulations", "Because COBIT replaces the need for other compliance programs"], ans: 1, explain: "COBIT is a comprehensive governance framework — not a compliance standard itself. The strong governance and management processes it creates underpin the controls required by many different regulations and standards, making multi-framework compliance more efficient." }
+  },
+  {
+    title: "COBIT and ITIL — Two Frameworks, One Goal",
+    tagline: "How COBIT and ITIL work together (and how they differ)",
+    body: `<p>COBIT is frequently used alongside <span class="key-term">ITIL</span> (Information Technology Infrastructure Library), another widely used IT framework. Understanding the difference between them — and how they complement each other — is essential for IT governance professionals.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>COBIT</strong><span>Governance and management framework. Answers: What should IT do? Who is responsible? How do we measure and control it? Broad scope — covers all of IT governance.</span></div>
+      <div class="cheat-pill"><strong>ITIL</strong><span>IT service management framework. Answers: How should IT services be designed, delivered, and supported? Narrower scope — focused on service delivery excellence.</span></div>
+    </div>
+    <div class="analogy-box"><strong>The simple difference:</strong> COBIT asks "Are we doing the right things?" ITIL asks "Are we doing things right?" Both questions matter. COBIT sets the direction and governance; ITIL provides detailed operational guidance for delivering IT services excellently. They're complementary, not competing.</div>
+    <div class="highlight-box"><strong>How they work together in practice:</strong> A company uses COBIT's EDM domain for board-level oversight, APO for strategic planning, and MEA for performance monitoring. For the actual delivery of IT services — helpdesk, incident management, change management, service catalog — they follow ITIL's detailed process guidance. COBIT says "managed incidents are required" (DSS02); ITIL tells you exactly how to run a world-class incident management process.</div>
+    <p>Other frameworks that complement COBIT include: <strong>TOGAF</strong> (enterprise architecture), <strong>PRINCE2</strong> (project management), <strong>PMBOK</strong> (project management), <strong>ISO 31000</strong> (risk management), and <strong>COSO</strong> (internal controls). COBIT is designed to integrate with all of them.</p>`,
+    quiz: { q: "A company uses COBIT to govern its IT and ITIL to manage its IT service delivery. How do these two frameworks relate to each other?", opts: ["They conflict — you must choose one or the other", "COBIT is outdated; ITIL has replaced it", "They complement each other — COBIT provides governance; ITIL provides service management detail", "They are identical frameworks with different names"], ans: 2, explain: "COBIT and ITIL are complementary. COBIT provides the governance framework — what needs to be done and who's accountable. ITIL provides detailed operational guidance for IT service management. Many organizations use both together." }
+  },
+  {
+    title: "Implementing COBIT — The Design and Implementation Guide",
+    tagline: "How organizations actually put COBIT into practice",
+    body: `<p>One of the most common questions about COBIT is: <em>"Where do we start?"</em> COBIT 2019 includes a dedicated <span class="key-term">Design and Implementation Guide</span> that gives organizations a practical approach to implementing the framework.</p>
+    <p>The implementation approach has three phases:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Phase 1: Understand the Context and Strategy</strong><span>Identify your design factors. Understand what the organization is trying to achieve. Define your governance system scope.</span></div>
+      <div class="cheat-pill"><strong>Phase 2: Determine the Initial Scope</strong><span>Based on design factors, identify which COBIT objectives are most important for your organization. Not all 40 are equally critical.</span></div>
+      <div class="cheat-pill"><strong>Phase 3: Refine the Scope</strong><span>Use additional analysis — risk profile, compliance requirements, current pain points — to further prioritize and finalize your COBIT implementation plan.</span></div>
+    </div>
+    <div class="highlight-box">COBIT explicitly warns against trying to implement everything at once. A phased approach — starting with the highest-priority governance and management objectives — is strongly recommended. The most common mistake in COBIT implementations is trying to be perfect from day one rather than building capability progressively.</div>
+    <div class="analogy-box"><strong>Implementation analogy:</strong> Starting a fitness journey: you don't join every sport, hire 5 personal trainers, and overhaul your diet all at once. You identify your biggest health risks (design factors), set priority goals (scope), and start with a manageable but consistent routine (phased implementation). Progress beats perfection.</div>
+    <p>COBIT implementation also requires ongoing maintenance. As the organization's strategy, technology, and risk environment change, the governance system must evolve — this connects to COBIT's principle of a <em>Dynamic Governance System</em>.</p>`,
+    quiz: { q: "What is the most common mistake organizations make when implementing COBIT for the first time?", opts: ["Starting with the EDM domain instead of APO", "Trying to implement all 40 objectives simultaneously rather than using a phased approach", "Skipping the Design Factors analysis", "Not using a Balanced Scorecard"], ans: 1, explain: "Trying to implement all 40 COBIT objectives at once is the most common mistake. COBIT's own guidance recommends a phased approach: start with highest-priority objectives based on design factors and build capability progressively." }
+  },
+  {
+    title: "COBIT Assessments and Audits",
+    tagline: "How do you know if your COBIT implementation is actually working?",
+    body: `<p>Implementing COBIT is one thing — knowing whether it's actually working is another. COBIT 2019 provides a comprehensive <span class="key-term">assessment and audit framework</span> for evaluating governance system effectiveness.</p>
+    <p>COBIT assessments serve several purposes:</p>
+    <div class="badge-row">
+      <span class="badge badge-amber">Determine current capability levels for key processes</span>
+      <span class="badge badge-amber">Identify gaps between current and target performance</span>
+      <span class="badge badge-amber">Support internal audit and external compliance reviews</span>
+      <span class="badge badge-amber">Demonstrate governance maturity to regulators, auditors, and boards</span>
+      <span class="badge badge-amber">Drive continuous improvement by identifying weaknesses</span>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Self-Assessments</strong><span>Internal teams evaluate their own processes against COBIT criteria. Fast and low-cost, but less objective. Good for initial baseline or ongoing monitoring.</span></div>
+      <div class="cheat-pill"><strong>Internal Audit Assessments</strong><span>The organization's own internal audit team conducts the assessment. More objective than self-assessment. Standard practice in large organizations.</span></div>
+      <div class="cheat-pill"><strong>Independent External Assessments</strong><span>An external auditor or consulting firm conducts the assessment. Most objective and credible — often required by regulators or for SOX compliance.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Assessment analogy:</strong> A school measures learning through homework (self-assessment), tests graded by the teacher (internal assessment), and standardized exams graded by outside bodies (external assessment). Each has a role — self-assessment gives frequent feedback; external assessment provides independent credibility. COBIT governance uses the same layered approach.</div>`,
+    quiz: { q: "A regulator requires a company to provide independent proof that its IT governance and controls are effective. Which type of COBIT assessment would best satisfy this requirement?", opts: ["A self-assessment by the IT team", "An assessment by the IT Steering Committee", "An independent external assessment by a qualified auditor", "A verbal confirmation from the CIO"], ans: 2, explain: "An independent external assessment provides the most credible, objective evidence of governance effectiveness. Regulators generally require external, independent assessment because self-assessments and management statements lack objectivity." }
+  },
+  {
+    title: "COBIT and Cybersecurity",
+    tagline: "How COBIT addresses one of the greatest IT challenges of our time",
+    body: `<p>Cybersecurity has become one of the most critical IT governance concerns for organizations worldwide. COBIT addresses cybersecurity both through specific processes and through its dedicated <span class="key-term">Cybersecurity Focus Area</span>.</p>
+    <p>Key COBIT processes that directly address cybersecurity:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>EDM03 — Ensure Risk Optimization</strong><span>Board-level oversight of cybersecurity risk — ensuring cyber risk is within the organization's appetite.</span></div>
+      <div class="cheat-pill"><strong>APO12 — Managed Risk</strong><span>Strategic cyber risk management — identifying, assessing, and treating cybersecurity threats.</span></div>
+      <div class="cheat-pill"><strong>APO13 — Managed Security</strong><span>Designing and maintaining the information security management system (ISMS).</span></div>
+      <div class="cheat-pill"><strong>BAI06 — Managed IT Changes</strong><span>Ensuring changes to IT systems don't introduce new security vulnerabilities.</span></div>
+      <div class="cheat-pill"><strong>DSS05 — Managed Security Services</strong><span>Day-to-day security operations — monitoring, access management, incident response.</span></div>
+      <div class="cheat-pill"><strong>MEA02 — Managed System of Internal Control</strong><span>Assessing whether security controls are actually working as designed.</span></div>
+    </div>
+    <div class="highlight-box">The COBIT Cybersecurity Focus Area maps COBIT processes to the <strong>NIST Cybersecurity Framework</strong> (Identify, Protect, Detect, Respond, Recover) — one of the most widely used cybersecurity frameworks in the US. This mapping allows organizations to use COBIT governance while speaking the language of NIST when needed.</div>
+    <div class="analogy-box"><strong>Cybersecurity governance reality:</strong> Most organizations treat cybersecurity as a purely technical problem — buy the best firewall, hire great security engineers. COBIT teaches that cybersecurity is fundamentally a governance problem: Who is accountable? What risks are acceptable? Are the right decisions being made at the right level? Technology alone never solves governance failures.</div>`,
+    quiz: { q: "A company's board wants to understand whether cyber risk is within the organization's risk appetite. Which COBIT process addresses this at the governance level?", opts: ["DSS05 — Managed Security Services", "APO13 — Managed Security", "EDM03 — Ensure Risk Optimization", "BAI06 — Managed IT Changes"], ans: 2, explain: "EDM03 — Ensure Risk Optimization — is the governance-level process where the board evaluates and ensures that overall IT risk (including cyber risk) is within the organization's accepted risk appetite. It's the governance oversight function for risk, sitting above the management-level APO12 and APO13 processes." }
+  },
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've made it through all 30 days! Let's take stock of everything you now know about COBIT.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>COBIT (Control Objectives for Information and Related Technologies) is ISACA's globally recognized framework for the governance and management of enterprise IT. Current version: COBIT 2019. It's voluntary — organizations adopt it because it works. It connects technology to business value through a structured system of objectives, metrics, and governance components.</p>
+    <div class="tag-header">6 Principles of COBIT 2019</div>
+    <div class="badge-row">
+      <span class="badge badge-amber">Provide Stakeholder Value</span>
+      <span class="badge badge-amber">Holistic Approach</span>
+      <span class="badge badge-amber">Dynamic Governance System</span>
+      <span class="badge badge-amber">Governance Distinct from Management</span>
+      <span class="badge badge-amber">Tailored to Enterprise Needs</span>
+      <span class="badge badge-amber">End-to-End Governance System</span>
+    </div>
+    <div class="tag-header">5 Domains — 40 Objectives</div>
+    <div class="badge-row">
+      <span class="badge badge-red">EDM — Evaluate, Direct, Monitor (5 — Governance)</span>
+      <span class="badge badge-amber">APO — Align, Plan, Organize (14 — Management)</span>
+      <span class="badge badge-blue">BAI — Build, Acquire, Implement (11 — Management)</span>
+      <span class="badge badge-green">DSS — Deliver, Service, Support (6 — Management)</span>
+      <span class="badge badge-purple">MEA — Monitor, Evaluate, Assess (4 — Management)</span>
+    </div>
+    <div class="tag-header">7 Governance System Components</div>
+    <div class="badge-row">
+      <span class="badge badge-gray">Processes</span>
+      <span class="badge badge-gray">Organizational Structures</span>
+      <span class="badge badge-gray">Principles, Policies & Frameworks</span>
+      <span class="badge badge-gray">Information</span>
+      <span class="badge badge-gray">Culture, Ethics & Behavior</span>
+      <span class="badge badge-gray">People, Skills & Competencies</span>
+      <span class="badge badge-gray">Services, Infrastructure & Applications</span>
+    </div>
+    <div class="tag-header">Key Structural Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-amber">Goals Cascade (Enterprise → Alignment → COBIT Objectives)</span>
+      <span class="badge badge-amber">11 Design Factors</span>
+      <span class="badge badge-amber">Focus Areas</span>
+      <span class="badge badge-amber">5 Capability Levels (0–5)</span>
+      <span class="badge badge-amber">RACI Charts</span>
+      <span class="badge badge-amber">KGIs and KPIs</span>
+      <span class="badge badge-amber">Risk Categories</span>
+      <span class="badge badge-amber">Phased Implementation</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete COBIT cheat sheet with all core controls and concepts summarized in one place.</div>`,
+    quiz: { q: "COBIT is published and maintained by which organization?", opts: ["ISO (International Organization for Standardization)", "ISACA (Information Systems Audit and Control Association)", "NIST (National Institute of Standards and Technology)", "The European Union"], ans: 1, explain: "COBIT is published and maintained by ISACA — the Information Systems Audit and Control Association, a global professional organization focused on IT governance, audit, and cybersecurity. COBIT 2019 is the current version." }
+  },
+  {
+    title: "COBIT Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is COBIT?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">Control Objectives for Information and Related Technologies. A globally recognized framework for the governance and management of enterprise IT, published by ISACA. Current version: COBIT 2019. Voluntary framework — not a law. Helps organizations align technology with business goals, manage risk, ensure compliance, and deliver value. Used by organizations worldwide alongside GDPR, SOX, ISO 27001, ITIL, and other frameworks.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>6 Principles of COBIT 2019</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>1. Provide Stakeholder Value</b> — Every IT decision should create value for customers, employees, shareholders, and regulators.</div>
+        <div class="ctrl-card"><b>2. Holistic Approach</b> — Governance requires a system of 7 interacting components — processes alone are never enough.</div>
+        <div class="ctrl-card"><b>3. Dynamic Governance System</b> — The governance system must adapt as strategy, technology, and regulations change.</div>
+        <div class="ctrl-card"><b>4. Governance Distinct from Management</b> — Governance (direction-setting) and management (execution) are fundamentally different jobs.</div>
+        <div class="ctrl-card"><b>5. Tailored to Enterprise Needs</b> — COBIT is adapted based on 11 design factors — no one-size-fits-all implementation.</div>
+        <div class="ctrl-card"><b>6. End-to-End Governance System</b> — IT governance covers the entire organization — not just the IT department.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>5 Domains — 40 Objectives</h3>
+      <div class="domain-grid">
+        <div class="domain-edm"><strong style="color:#501313">EDM — Evaluate, Direct, Monitor</strong><br><span style="font-size:12px;color:#1a1a18">GOVERNANCE domain. 5 objectives. Done by the board/senior executives.<br>EDM01 Governance Framework | EDM02 Benefits Delivery | EDM03 Risk Optimization | EDM04 Resource Optimization | EDM05 Stakeholder Engagement</span></div>
+        <div class="domain-apo"><strong style="color:#633806">APO — Align, Plan, Organize</strong><br><span style="font-size:12px;color:#1a1a18">MANAGEMENT domain. 14 objectives. Strategy, architecture, risk, security, data, innovation, portfolio.<br>Key: APO02 Strategy | APO12 Risk | APO13 Security | APO14 Data</span></div>
+        <div class="domain-bai"><strong style="color:#0C447C">BAI — Build, Acquire, Implement</strong><br><span style="font-size:12px;color:#1a1a18">MANAGEMENT domain. 11 objectives. Building and deploying IT solutions.<br>Key: BAI01 Programs | BAI06 IT Changes | BAI10 Configuration | BAI11 Projects</span></div>
+        <div class="domain-dss"><strong style="color:#27500A">DSS — Deliver, Service, Support</strong><br><span style="font-size:12px;color:#1a1a18">MANAGEMENT domain. 6 objectives. Day-to-day IT operations and support.<br>Key: DSS02 Incidents | DSS03 Problems | DSS04 Continuity | DSS05 Security Services</span></div>
+        <div class="domain-mea"><strong style="color:#3C3489">MEA — Monitor, Evaluate, Assess</strong><br><span style="font-size:12px;color:#1a1a18">MANAGEMENT domain. 4 objectives. Performance, controls, and compliance monitoring.<br>MEA01 Performance | MEA02 Internal Controls | MEA03 Compliance | MEA04 Assurance</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>7 Components of a Governance System</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>1. Processes</b> — Structured activities transforming inputs into outputs. Each has activities, RACI charts, and defined metrics.</div>
+        <div class="ctrl-card"><b>2. Organizational Structures</b> — Decision-making bodies: board, IT Strategy Committee, IT Steering Committee, CIO, CISO, Risk Committee, Audit Committee.</div>
+        <div class="ctrl-card"><b>3. Principles, Policies & Frameworks</b> — Written rules: principles (beliefs) → policies (mandatory rules) → standards (specifications) → procedures (step-by-step instructions).</div>
+        <div class="ctrl-card"><b>4. Information</b> — Data flows needed for governance decisions: performance dashboards, risk reports, audit findings, compliance evidence.</div>
+        <div class="ctrl-card"><b>5. Culture, Ethics & Behavior</b> — Informal norms that shape actual behavior. Often overrides written policies. Must be led by example from the top.</div>
+        <div class="ctrl-card"><b>6. People, Skills & Competencies</b> — Technical skills + business skills + governance skills. Training, RACI role clarity, and ISACA certifications (CISA, CRISC, CGEIT).</div>
+        <div class="ctrl-card"><b>7. Services, Infrastructure & Applications</b> — Technology enabling governance: GRC platforms, monitoring tools, audit management systems.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The Goals Cascade</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Level 1 — Enterprise/Stakeholder Goals (13)</b> — What the organization is trying to achieve: revenue, compliance, customer satisfaction, risk management, operational excellence, people development.</div>
+        <div class="ctrl-card"><b>Level 2 — Alignment Goals (13)</b> — What IT must deliver to support enterprise goals: aligned strategy, realized benefits, managed risk, security, agile infrastructure, skilled staff, compliance support.</div>
+        <div class="ctrl-card"><b>Level 3 — COBIT Objectives (40)</b> — The specific governance and management processes (across EDM, APO, BAI, DSS, MEA) that achieve alignment goals.</div>
+        <div class="ctrl-card"><b>Purpose</b> — Prevents IT from doing things that don't deliver business value. Every IT activity must be traceable back to a stakeholder need.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Design and Customization Tools</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>11 Design Factors</b> — Enterprise strategy, goals, risk profile, compliance requirements, role of IT, sourcing model, implementation methods, technology adoption strategy, enterprise size, I&T issues, threat landscape. Used to tailor COBIT to your organization.</div>
+        <div class="ctrl-card"><b>Focus Areas</b> — Pre-packaged COBIT guidance for specific topics: Information Security, Cybersecurity, DevOps, Cloud Computing, SMEs, Digital Transformation. Published separately and updated continuously.</div>
+        <div class="ctrl-card"><b>5 Capability Levels</b> — 0: Incomplete | 1: Initial (ad hoc) | 2: Managed | 3: Defined (org-wide) | 4: Quantitatively Managed | 5: Optimizing. Used to assess and improve process maturity.</div>
+        <div class="ctrl-card"><b>RACI Charts</b> — Responsible (does the work), Accountable (one person — owns the outcome), Consulted (gives input), Informed (kept updated). Exactly one Accountable per activity — prevents split accountability.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Performance Measurement</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Goal Metrics (KGIs)</b> — Key Goal Indicators: measure outcomes. "Were targets achieved?" Example: % of IT projects delivered on time and on budget.</div>
+        <div class="ctrl-card"><b>Practice Metrics (KPIs)</b> — Key Performance Indicators: measure day-to-day process performance. Example: Average time to resolve a critical IT incident.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Core Controls at a Glance</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Risk Management</b> — Three categories: IT Benefit/Value risk, IT Program/Project Delivery risk, IT Operations/Service Delivery risk. EDM03 (governance) + APO12 (strategic) + DSS05 (operational) form a complete risk management chain.</div>
+        <div class="ctrl-card"><b>Change Management (BAI06)</b> — Controls how changes are made to IT systems. Prevents unauthorized or poorly tested changes from causing outages or security breaches.</div>
+        <div class="ctrl-card"><b>Business Continuity (DSS04)</b> — Ensures the business can continue operating during major disruptions. Requires Business Continuity Plans, tested regularly.</div>
+        <div class="ctrl-card"><b>Compliance Monitoring (MEA03)</b> — Identifies applicable laws and regulations (GDPR, SOX, ISO 27001, etc.) and monitors ongoing compliance. Bridge between COBIT and regulatory requirements.</div>
+        <div class="ctrl-card"><b>Security Management (APO13 + DSS05)</b> — APO13 designs and maintains the ISMS. DSS05 runs daily security operations. Together they cover strategic and operational security.</div>
+        <div class="ctrl-card"><b>Performance Monitoring (MEA01)</b> — Regularly collects and reviews IT performance data against targets. Enables governance bodies to make informed decisions.</div>
+        <div class="ctrl-card"><b>Internal Audit (MEA02 + MEA04)</b> — MEA02 evaluates the system of internal controls. MEA04 obtains independent assurance that governance is working. Critical for SOX compliance and regulatory credibility.</div>
+        <div class="ctrl-card"><b>Configuration Management (BAI10)</b> — Maintains accurate records of all IT components and connections. Foundation for security, troubleshooting, and change impact analysis.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>COBIT Key Relationships with Other Frameworks</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>ITIL</b> — IT service management detail. COBIT says what; ITIL says how (for service delivery). Complementary.</div>
+        <div class="ctrl-card"><b>ISO 27001</b> — Information security management system standard. COBIT APO13 aligns directly. COBIT governance layer sits above ISO 27001 operations.</div>
+        <div class="ctrl-card"><b>NIST CSF</b> — Cybersecurity framework (Identify, Protect, Detect, Respond, Recover). COBIT Cybersecurity Focus Area maps COBIT processes to NIST.</div>
+        <div class="ctrl-card"><b>SOX</b> — Financial controls over IT. COBIT MEA03 and internal control processes directly support SOX Section 404 IT controls.</div>
+        <div class="ctrl-card"><b>GDPR</b> — Data privacy law. COBIT APO14 (Managed Data), APO13 (Security), and MEA03 (Compliance) directly support GDPR compliance.</div>
+        <div class="ctrl-card"><b>ISO 38500</b> — International IT governance standard for boards. Directly aligned with COBIT's EDM governance domain.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers and Facts to Remember</h3>
+      <div class="badge-row">
+        <span class="badge badge-amber">Published by: ISACA</span>
+        <span class="badge badge-amber">Current version: COBIT 2019</span>
+        <span class="badge badge-amber">6 Principles</span>
+        <span class="badge badge-amber">5 Domains</span>
+        <span class="badge badge-amber">40 Governance & Management Objectives</span>
+        <span class="badge badge-amber">7 Governance System Components</span>
+        <span class="badge badge-amber">13 Enterprise Goals</span>
+        <span class="badge badge-amber">13 Alignment Goals</span>
+        <span class="badge badge-amber">11 Design Factors</span>
+        <span class="badge badge-amber">5 Capability Levels (0–5)</span>
+        <span class="badge badge-amber">EDM = Governance | APO+BAI+DSS+MEA = Management</span>
+        <span class="badge badge-amber">RACI = Responsible, Accountable, Consulted, Informed</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>

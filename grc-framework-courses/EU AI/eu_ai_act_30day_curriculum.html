@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EU AI Act — 30-Day Classroom Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a18; font-size: 15px; line-height: 1.7; }
+  .wrap { padding: 1.5rem 1rem; max-width: 760px; margin: 0 auto; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .title-block h1 { font-size: 18px; font-weight: 500; color: #1a1a18; }
+  .title-block p { font-size: 13px; color: #6b6b68; }
+  .nav-row { display: flex; gap: 8px; align-items: center; }
+  .nav-row button { font-size: 13px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; }
+  .nav-row button:hover { background: #f1efe8; }
+  .nav-row button:disabled { opacity: 0.35; cursor: default; }
+  .day-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; margin-bottom: 1.5rem; }
+  .day-pip { width: 100%; height: 28px; border-radius: 8px; border: 0.5px solid #d3d1c7; background: transparent; font-size: 11px; cursor: pointer; color: #6b6b68; display: flex; align-items: center; justify-content: center; }
+  .day-pip:hover { background: #f1efe8; }
+  .day-pip.active { background: #533AB7; color: #EEEDFE; border-color: #533AB7; }
+  .day-pip.cheat { background: #0F6E56; color: #E1F5EE; border-color: #0F6E56; }
+  .day-pip.cheat.active { background: #085041; }
+  .card { background: #fff; border: 0.5px solid #d3d1c7; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1.25rem; }
+  .day-badge { min-width: 52px; height: 52px; border-radius: 8px; background: #EEEDFE; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .day-badge .day-num { font-size: 20px; font-weight: 500; color: #3C3489; line-height: 1; }
+  .day-badge .day-lbl { font-size: 9px; color: #533AB7; text-transform: uppercase; letter-spacing: .5px; }
+  .lesson-meta h2 { font-size: 17px; font-weight: 500; color: #1a1a18; margin-bottom: 2px; }
+  .lesson-meta .tagline { font-size: 13px; color: #6b6b68; }
+  .section-label { font-size: 11px; font-weight: 500; color: #6b6b68; text-transform: uppercase; letter-spacing: .6px; margin: 1rem 0 .4rem; }
+  .lesson-body { font-size: 14px; line-height: 1.8; color: #1a1a18; }
+  .lesson-body p { margin-bottom: .8rem; }
+  .highlight-box { background: #f1efe8; border-left: 3px solid #533AB7; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; }
+  .key-term { background: #EEEDFE; color: #3C3489; border-radius: 4px; padding: 1px 6px; font-size: 13px; font-weight: 500; }
+  .analogy-box { background: #EAF3DE; border-left: 3px solid #3B6D11; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .warning-box { background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .75rem 0; font-size: 13.5px; color: #1a1a18; }
+  .quiz-box { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+  .quiz-box p { font-size: 13.5px; font-weight: 500; margin-bottom: .5rem; }
+  .quiz-btn { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px solid #b0b0aa; background: transparent; color: #1a1a18; cursor: pointer; margin: 3px; }
+  .quiz-btn:hover { background: #fff; }
+  .answer-reveal { display: none; margin-top: .5rem; font-size: 13px; color: #6b6b68; padding: .5rem; background: #fff; border-radius: 8px; border: 0.5px solid #d3d1c7; }
+  .answer-reveal.show { display: block; }
+  .cheat-section h3 { font-size: 15px; font-weight: 500; color: #1a1a18; margin: 1.25rem 0 .5rem; border-bottom: 0.5px solid #d3d1c7; padding-bottom: .4rem; }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  .cheat-pill { background: #f1efe8; border: 0.5px solid #d3d1c7; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .cheat-pill strong { display: block; font-weight: 500; font-size: 13px; color: #1a1a18; }
+  .cheat-pill span { color: #6b6b68; font-size: 12px; }
+  .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .5rem 0; }
+  .ctrl-card { background: #f1efe8; border-radius: 8px; padding: .6rem .8rem; font-size: 12.5px; border: 0.5px solid #d3d1c7; }
+  .ctrl-card b { font-size: 13px; font-weight: 500; }
+  .progress-bar-wrap { background: #f1efe8; border-radius: 99px; height: 5px; margin-bottom: 1rem; overflow: hidden; }
+  .progress-bar-fill { background: #533AB7; height: 100%; border-radius: 99px; transition: width .3s; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: .5rem 0; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 500; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-teal { background: #E1F5EE; color: #085041; }
+  .badge-amber { background: #FAEEDA; color: #633806; }
+  .badge-coral { background: #FAECE7; color: #4A1B0C; }
+  .badge-green { background: #EAF3DE; color: #27500A; }
+  .badge-red { background: #FCEBEB; color: #501313; }
+  .badge-blue { background: #E6F1FB; color: #0C447C; }
+  .tag-header { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; color: #6b6b68; margin: .8rem 0 .3rem; }
+  .penalty-box { background: #FCEBEB; border-left: 3px solid #A32D2D; border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: .5rem 0; font-size: 13.5px; color: #1a1a18; }
+  .risk-unacceptable { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .risk-high { background: #FAEEDA; border: 0.5px solid #FAC775; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .risk-limited { background: #E6F1FB; border: 0.5px solid #85B7EB; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .risk-minimal { background: #EAF3DE; border: 0.5px solid #97C459; border-radius: 8px; padding: .6rem .8rem; font-size: 13px; }
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: .75rem 0; }
+  @media (max-width: 520px) { .cheat-grid, .control-row, .risk-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">30-day EU AI Act curriculum for high school students with daily lessons and a final cheat sheet</h2>
+
+  <div class="top-bar">
+    <div class="title-block">
+      <h1>EU AI Act — 30-Day Classroom Guide</h1>
+      <p>Taught for high school freshmen by a 20-year GRC veteran</p>
+    </div>
+    <div class="nav-row">
+      <button id="prevBtn" onclick="changeDay(-1)">&#8592; Prev</button>
+      <span id="dayCounter" style="font-size:13px;color:#6b6b68;min-width:60px;text-align:center"></span>
+      <button id="nextBtn" onclick="changeDay(1)">Next &#8594;</button>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+  <div class="day-grid" id="dayGrid"></div>
+  <div id="lessonArea"></div>
+</div>
+
+<script>
+const days = [
+  // DAY 1
+  {
+    title: "What Is the EU AI Act?",
+    tagline: "The world's first comprehensive law governing artificial intelligence",
+    body: `<p>Imagine an AI system that decides whether you get a job interview, whether you qualify for a bank loan, or whether a self-driving car makes a split-second decision that affects your life. Who's responsible if something goes wrong? Who makes sure the AI is fair? That's exactly what the <span class="key-term">EU AI Act</span> was created to address.</p>
+    <p>The EU AI Act is the world's first comprehensive legal framework for artificial intelligence. It was officially adopted by the European Union on <strong>March 13, 2024</strong>, and entered into force on <strong>August 1, 2024</strong>. Like GDPR, it is a <strong>regulation</strong> — meaning it applies directly as law across all EU member states without needing to be converted into national laws.</p>
+    <div class="analogy-box"><strong>Real-world analogy:</strong> Think of the EU AI Act like building codes for houses. Builders are free to design all kinds of buildings, but they have to follow safety rules — especially for tall skyscrapers or buildings where lots of people gather. The EU AI Act applies the same idea to AI: more powerful or riskier AI systems face stricter rules.</div>
+    <p>The Act uses a <strong>risk-based approach</strong> — meaning the rules get stricter the higher the potential harm of an AI system. Low-risk AI? Almost no rules. AI that could harm your fundamental rights? Heavy regulation or outright prohibition.</p>
+    <div class="highlight-box">Just like GDPR changed how the world handles personal data, the EU AI Act is designed to change how AI is built, deployed, and governed — globally. Non-EU companies serving EU users must comply.</div>`,
+    quiz: { q: "When did the EU AI Act officially enter into force?", opts: ["January 1, 2023", "May 25, 2018", "August 1, 2024", "March 13, 2025"], ans: 2, explain: "The EU AI Act entered into force on August 1, 2024. It was adopted by the European Parliament on March 13, 2024, after years of drafting and negotiation." }
+  },
+  // DAY 2
+  {
+    title: "Why Was the EU AI Act Created?",
+    tagline: "The problems AI was creating — and why laws were needed",
+    body: `<p>Artificial intelligence was already transforming society before any government had a comprehensive plan for governing it. Several high-profile problems pushed the EU to act.</p>
+    <div class="highlight-box"><strong>AI bias scandals:</strong> Facial recognition systems were found to misidentify Black women at dramatically higher error rates than white men. Hiring algorithms trained on historical data were shown to discriminate against women. Credit-scoring AIs produced racially biased outcomes — all without a single human making an intentionally biased decision.</div>
+    <p>There were also concerns about <strong>mass surveillance</strong>. Governments and private companies were deploying AI-powered cameras and facial recognition in public spaces to track people's movements without their knowledge or consent.</p>
+    <div class="analogy-box"><strong>Think of it this way:</strong> If a human judge made a decision about your parole based on racially biased criteria, there's a legal process to challenge it. But if an algorithm makes that decision, who do you complain to? Before the AI Act, often nobody — because there were no rules. The EU decided that couldn't continue.</div>
+    <p>The EU also saw an economic opportunity. By setting clear, trustworthy AI rules, Europe could position itself as a global leader in <em>safe and trustworthy AI</em> — attracting businesses and talent who want to develop AI responsibly.</p>
+    <p>The result was years of work that produced the EU AI Act: a law designed to protect fundamental rights, ensure safety, and create a level playing field for AI innovation.</p>`,
+    quiz: { q: "Which of these problems helped motivate the creation of the EU AI Act?", opts: ["AI was making computers run too fast", "AI systems were producing biased and discriminatory outcomes", "Too many people were using social media", "AI was replacing teachers in schools"], ans: 1, explain: "Documented cases of AI bias — in hiring, facial recognition, credit scoring, and criminal justice — were a major driver behind the EU AI Act. The law aims to protect fundamental rights from AI-driven harm." }
+  },
+  // DAY 3
+  {
+    title: "What Is 'AI' Under the Act?",
+    tagline: "The legal definition — broader than you might think",
+    body: `<p>Before we can understand what the EU AI Act regulates, we need to understand how it defines <span class="key-term">AI system</span>. The legal definition matters because it determines what's in scope.</p>
+    <div class="highlight-box">The EU AI Act defines an AI system as: <em>"a machine-based system designed to operate with varying levels of autonomy and that may exhibit adaptiveness after deployment, and that, for explicit or implicit objectives, infers, from the input it receives, how to generate outputs such as predictions, recommendations, decisions, or content that can influence real or virtual environments."</em></div>
+    <p>That's a mouthful. Let's break it down simply:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">It runs on a machine (computer, server, device)</span>
+      <span class="badge badge-purple">It can act on its own to some degree</span>
+      <span class="badge badge-purple">It learns or adapts from data</span>
+      <span class="badge badge-purple">It produces outputs: predictions, decisions, content, recommendations</span>
+      <span class="badge badge-purple">Those outputs affect the real world</span>
+    </div>
+    <div class="analogy-box"><strong>Examples of what counts:</strong> A chatbot that answers customer service questions. A system that screens job resumes. A credit-scoring algorithm. A medical imaging tool that detects cancer. A self-driving car's decision-making system. A content recommendation algorithm on a social media platform.</div>
+    <p>The Act also specifically <strong>excludes</strong> some things — like simple rule-based systems (if X, do Y), traditional software that just executes instructions, or human intelligence research tools used purely for scientific purposes.</p>
+    <p>The key idea: if it genuinely infers and decides — rather than just following pre-written rules — it's probably an AI system under the Act.</p>`,
+    quiz: { q: "Which of these would most likely qualify as an AI system under the EU AI Act?", opts: ["A calculator that adds numbers", "A spreadsheet formula", "A system that analyzes resumes and ranks candidates automatically", "A light switch that turns on when you flip it"], ans: 2, explain: "A resume-screening system that learns from data to rank candidates qualifies as an AI system — it infers and makes decisions with autonomy. Calculators, spreadsheets, and light switches follow fixed rules and don't qualify." }
+  },
+  // DAY 4
+  {
+    title: "The Risk-Based Approach",
+    tagline: "Not all AI is treated the same — risk level determines the rules",
+    body: `<p>The most important architectural concept in the EU AI Act is its <span class="key-term">risk-based approach</span>. Instead of applying one set of rules to every AI system, the Act divides AI into tiers based on how much risk they pose to people. The higher the risk, the stricter the rules.</p>
+    <div class="risk-grid">
+      <div class="risk-unacceptable"><strong style="color:#501313">Unacceptable Risk</strong><br><span style="font-size:12px;color:#1a1a18">BANNED. These AI systems are prohibited entirely.</span></div>
+      <div class="risk-high"><strong style="color:#633806">High Risk</strong><br><span style="font-size:12px;color:#1a1a18">HEAVILY REGULATED. Strict requirements before deployment.</span></div>
+      <div class="risk-limited"><strong style="color:#0C447C">Limited Risk</strong><br><span style="font-size:12px;color:#1a1a18">TRANSPARENCY RULES. Must tell users they're interacting with AI.</span></div>
+      <div class="risk-minimal"><strong style="color:#27500A">Minimal Risk</strong><br><span style="font-size:12px;color:#1a1a18">MOSTLY FREE. Encouraged to follow voluntary codes of conduct.</span></div>
+    </div>
+    <p>There is also a separate category for <span class="key-term">General Purpose AI (GPAI)</span> models — like ChatGPT or Gemini — that don't fit neatly into one application but power many things. They have their own rules.</p>
+    <div class="analogy-box"><strong>Analogy — pharmaceutical regulation:</strong> A headache tablet sold over the counter has minimal regulation. A prescription antibiotic has stricter rules. A chemotherapy drug for cancer requires extensive clinical trials and monitoring. The EU AI Act applies the same graduated logic: the more a product can harm you, the stricter the oversight.</div>
+    <div class="highlight-box">This tiered approach was intentional. The EU wanted to avoid stifling beneficial AI innovation while still protecting people from genuinely dangerous AI systems. Low-risk AI gets a light touch; dangerous AI gets stopped or heavily controlled.</div>`,
+    quiz: { q: "What does the EU AI Act's risk-based approach mean?", opts: ["All AI systems follow the same rules regardless of danger", "The rules get stricter as the potential harm of an AI system increases", "Only government AI systems are regulated", "Risk is determined by the size of the company building the AI"], ans: 1, explain: "The risk-based approach means the EU AI Act applies proportionate rules — minimal requirements for low-risk AI, and strict requirements (or outright bans) for AI that poses high risks to people's safety and rights." }
+  },
+  // DAY 5
+  {
+    title: "Who Does the EU AI Act Apply To?",
+    tagline: "Providers, deployers, importers — and the global reach",
+    body: `<p>Like GDPR, the EU AI Act has a <span class="key-term">wide territorial scope</span>. It applies not just to EU-based companies, but to any company anywhere in the world whose AI systems affect people in the EU.</p>
+    <div class="highlight-box">The Act applies if: (1) the AI provider or deployer is located in the EU, OR (2) the output of the AI system is used in the EU — regardless of where the provider is based.</div>
+    <p>The Act defines several key roles:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Provider</strong><span>Develops or places an AI system on the EU market. Carries the most obligations — they built it.</span></div>
+      <div class="cheat-pill"><strong>Deployer</strong><span>Uses an AI system in their business. Has their own set of obligations depending on risk level.</span></div>
+      <div class="cheat-pill"><strong>Importer</strong><span>Brings an AI system from outside the EU into the EU market.</span></div>
+      <div class="cheat-pill"><strong>Distributor</strong><span>Makes an AI system available in the EU supply chain without modifying it.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Analogy:</strong> Think of the Act like food safety regulations. The food manufacturer (Provider) is most responsible — they made it. The restaurant (Deployer) that serves it has responsibilities too. The importer bringing foreign food into the EU also carries obligations. Everyone in the chain has a role.</div>
+    <p>The Act also contains important <strong>exemptions</strong>: AI used exclusively for military, national security, or defense purposes is excluded. So is AI used purely for scientific research (with some conditions). Personal non-professional use is also generally excluded.</p>`,
+    quiz: { q: "A US tech company builds an AI hiring tool used by EU companies to screen job applicants. Does the EU AI Act apply?", opts: ["No — the company is based in the US", "Yes — the AI output affects people in the EU", "Only if the company has an EU office", "Only if the AI system costs more than €1 million"], ans: 1, explain: "The EU AI Act applies when the output of an AI system is used in the EU, regardless of where the provider is based. A US company whose AI affects EU job applicants must comply." }
+  },
+  // DAY 6
+  {
+    title: "Unacceptable Risk — Prohibited AI",
+    tagline: "Some AI systems are so dangerous they are banned entirely",
+    body: `<p>The top tier of the EU AI Act's risk pyramid is <span class="key-term">unacceptable risk</span>. These are AI applications considered so threatening to fundamental rights and human dignity that they are <strong>completely prohibited</strong>. No exceptions. No workarounds. Just banned.</p>
+    <p>Let's go through the prohibited categories one by one:</p>
+    <div class="tag-header">Prohibited AI Systems</div>
+    <div class="badge-row">
+      <span class="badge badge-red">Social scoring by governments</span>
+      <span class="badge badge-red">Subliminal manipulation</span>
+      <span class="badge badge-red">Exploitation of vulnerabilities</span>
+      <span class="badge badge-red">Real-time remote biometric ID in public spaces (mostly)</span>
+      <span class="badge badge-red">Emotion recognition in workplaces & schools</span>
+      <span class="badge badge-red">Biometric categorization by sensitive attributes</span>
+      <span class="badge badge-red">Predictive policing of individuals</span>
+      <span class="badge badge-red">Facial recognition databases scraped from the internet</span>
+    </div>
+    <div class="analogy-box"><strong>What is social scoring?</strong> Imagine if the government tracked everything you did — your purchases, social media posts, traffic violations, who you spend time with — and gave you a "citizen score" that determined whether you could get a loan, travel, or even send your kids to a good school. China's social credit system works roughly this way. The EU AI Act says: not in Europe.</div>
+    <div class="highlight-box"><strong>Subliminal manipulation</strong> means AI that influences your behavior below the level of your conscious awareness — like flashing imperceptible messages or using psychological weaknesses to change your decisions without you knowing. This is banned regardless of who does it.</div>
+    <p>Violations of the prohibited AI rules carry the heaviest fines in the entire Act. We'll cover enforcement in detail on Day 27.</p>`,
+    quiz: { q: "A government wants to deploy an AI that scores citizens on their social behavior and restricts their access to services based on that score. Under the EU AI Act, this is:", opts: ["Allowed with strict oversight", "A limited-risk application requiring transparency notices", "Prohibited — this is an unacceptable risk AI system", "Only allowed for national security purposes"], ans: 2, explain: "Government social scoring systems are explicitly listed as prohibited AI under the EU AI Act. They represent an unacceptable risk to fundamental rights, dignity, and democratic values — and are banned entirely." }
+  },
+  // DAY 7
+  {
+    title: "Real-Time Biometric Surveillance",
+    tagline: "A deeper look at one of the most contested prohibitions",
+    body: `<p>One of the most debated provisions in the entire EU AI Act is the treatment of <span class="key-term">real-time remote biometric identification</span> in publicly accessible spaces. This basically means: using AI-powered cameras to identify people by their face, gait, or other body features as they move through public areas.</p>
+    <div class="highlight-box">The default rule: real-time remote biometric ID in public spaces is <strong>prohibited</strong>. Law enforcement cannot simply set up AI cameras in a city center to identify everyone walking by.</div>
+    <p>However — and this is where it gets controversial — the Act allows <strong>narrow exceptions</strong> for law enforcement:</p>
+    <div class="badge-row">
+      <span class="badge badge-amber">Searching for a specific missing child</span>
+      <span class="badge badge-amber">Preventing a specific, imminent terrorist attack</span>
+      <span class="badge badge-amber">Locating a specific person suspected of a serious crime (e.g. murder, trafficking)</span>
+    </div>
+    <div class="analogy-box"><strong>The debate:</strong> Privacy advocates argue even these exceptions are too broad and create a slippery slope toward mass surveillance. Law enforcement argues they need these tools for genuine public safety emergencies. The EU tried to strike a balance — but many believe the exceptions swallow the rule. This is an ongoing debate even now that the Act is in force.</div>
+    <p>Crucially, these exceptions require:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">Prior judicial or administrative authorization</span>
+      <span class="badge badge-purple">Limited in time and geographic scope</span>
+      <span class="badge badge-purple">Subject to independent oversight</span>
+    </div>
+    <p>Post-hoc (after-the-fact) biometric identification — reviewing existing footage rather than live identification — is treated as high-risk rather than prohibited, and faces strict requirements.</p>`,
+    quiz: { q: "Under the EU AI Act, can law enforcement use real-time AI facial recognition in public spaces?", opts: ["Yes, freely — it's a law enforcement tool", "No — it is absolutely prohibited with no exceptions", "Only in very narrow cases with prior authorization — like an imminent terrorist attack", "Yes, but only in train stations and airports"], ans: 2, explain: "Real-time biometric ID in public spaces is prohibited by default, but narrow exceptions exist for specific law enforcement cases (imminent terrorism, finding a missing child, etc.), subject to prior authorization and strict oversight." }
+  },
+  // DAY 8
+  {
+    title: "High-Risk AI — Overview",
+    tagline: "AI that can seriously affect your life must meet strict standards",
+    body: `<p>The second tier of the risk pyramid is <span class="key-term">high-risk AI</span>. These systems are not banned, but they face substantial legal requirements that must be met <em>before</em> they can be deployed. Getting this wrong has serious consequences.</p>
+    <p>An AI system is high-risk if it falls into one of two categories:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Category A — Safety components</strong><span>AI used as a safety component in products already regulated by EU law (medical devices, vehicles, aviation, machinery)</span></div>
+      <div class="cheat-pill"><strong>Category B — Listed sectors</strong><span>AI deployed in specific high-stakes sectors listed in Annex III of the Act (education, employment, credit, law enforcement, migration, etc.)</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why these?</strong> Think about what these AI systems have in common: they all make decisions that can significantly affect your life. Being denied a job, a loan, or university admission. Being flagged by law enforcement. Having a medical device make a treatment recommendation. These aren't trivial — they can change the course of someone's life.</div>
+    <div class="highlight-box">Not everything in these sectors is automatically high-risk. The Act includes a "safety filter" — if an AI system merely performs a narrow preparatory task (like formatting a document) and a human makes all the decisions, it may not qualify as high-risk even if it operates in a high-risk sector.</div>
+    <p>High-risk AI requirements include: robust data governance, technical documentation, human oversight mechanisms, accuracy standards, cybersecurity, and registration in an EU database before deployment. We'll cover each of these over the next several days.</p>`,
+    quiz: { q: "What makes an AI system 'high-risk' under the EU AI Act?", opts: ["It was built by a large company", "It is used in sensitive sectors or as a safety component in regulated products, AND poses significant risk to health, safety, or fundamental rights", "It costs more than €1 million to develop", "Any AI that uses deep learning"], ans: 1, explain: "High-risk AI is defined by both its application area (specific sectors in Annex III or safety components in regulated products) AND the significance of the risk it poses to health, safety, or fundamental rights — not by cost or technical method." }
+  },
+  // DAY 9
+  {
+    title: "High-Risk AI — Sectors Part 1",
+    tagline: "The specific areas where AI is considered high-stakes",
+    body: `<p>The EU AI Act lists specific sectors and use cases in <strong>Annex III</strong> where AI systems are presumed to be high-risk. Let's go through the first four today.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. Biometric Identification & Categorization</strong><span>AI used to identify or categorize people by physical characteristics. Includes facial recognition in post-hoc law enforcement contexts.</span></div>
+      <div class="cheat-pill"><strong>2. Critical Infrastructure</strong><span>AI managing or controlling power grids, water systems, traffic networks, digital infrastructure. Failures here affect millions of people.</span></div>
+      <div class="cheat-pill"><strong>3. Education & Vocational Training</strong><span>AI that determines access to education, evaluates students, monitors exam behavior, or significantly influences educational pathways.</span></div>
+      <div class="cheat-pill"><strong>4. Employment & Worker Management</strong><span>AI used in hiring, promotion, task allocation, performance monitoring, and termination decisions — the systems that affect your job.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Education example:</strong> An AI that grades your essays and determines whether you pass or fail a course. An AI proctor that watches you during an online exam and flags "suspicious" behavior. An AI admissions system that decides who gets into a university. All high-risk — because they directly affect your educational future.</div>
+    <div class="warning-box"><strong>Employment example:</strong> Amazon famously scrapped an AI hiring tool in 2018 after discovering it was systematically downgrading resumes from women. That kind of AI — one that makes or heavily influences hiring decisions — is exactly what the high-risk category targets. It must now meet strict requirements before deployment in the EU.</div>
+    <p>The employment category is particularly significant because most large employers use some form of AI screening. This provision has significant implications for HR technology companies worldwide.</p>`,
+    quiz: { q: "An AI system used to screen job applications and rank candidates is classified as what under the EU AI Act?", opts: ["Minimal risk — it's just a tool", "Limited risk — requires only a transparency notice", "High risk — employment AI is listed in Annex III", "Prohibited — hiring decisions must be fully human"], ans: 2, explain: "AI used in recruitment and employment decisions is explicitly listed in Annex III as high-risk. It must meet the Act's full requirements for high-risk systems before being deployed in the EU." }
+  },
+  // DAY 10
+  {
+    title: "High-Risk AI — Sectors Part 2",
+    tagline: "More high-stakes areas: services, safety, and justice",
+    body: `<p>Continuing with the remaining high-risk sectors from Annex III of the EU AI Act.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>5. Essential Private & Public Services</strong><span>AI that evaluates creditworthiness, assesses insurance risks, or determines access to public benefits and social services. Directly affects financial wellbeing.</span></div>
+      <div class="cheat-pill"><strong>6. Law Enforcement</strong><span>AI used to assess criminal risk, detect emotional states in suspects, analyze evidence, profile individuals, or predict crime. High risk of rights violations.</span></div>
+      <div class="cheat-pill"><strong>7. Migration, Asylum & Border Control</strong><span>AI used to assess asylum claims, verify documents, predict flight risk, or assist in border screening decisions.</span></div>
+      <div class="cheat-pill"><strong>8. Administration of Justice & Democracy</strong><span>AI that assists courts in research, determines facts, or influences sentencing. Also AI that influences elections.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Credit scoring example:</strong> A bank uses an AI to automatically reject your loan application. The AI was trained on historical data that reflects decades of racial redlining in housing. The result: the AI perpetuates historical discrimination without any human making a consciously biased decision. This is why credit AI is high-risk — it can entrench injustice at massive scale.</div>
+    <div class="highlight-box"><strong>Why elections?</strong> AI systems that can micro-target voters with personalized political messaging, generate fake political content at scale, or manipulate opinion through social media algorithms threaten the foundations of democracy itself. The EU considers this high-risk because the harm extends beyond individuals — it affects entire societies.</div>`,
+    quiz: { q: "An AI system used by a court to help assess the likelihood of a defendant reoffending is classified as:", opts: ["Minimal risk — it's just a recommendation tool", "High risk — justice AI is in Annex III", "Prohibited — all criminal justice AI is banned", "Limited risk — the judge still makes the final call"], ans: 1, explain: "AI used in the administration of justice — including assessing criminal risk or assisting with judicial decisions — is listed in Annex III as high-risk, regardless of whether a human makes the final decision." }
+  },
+  // DAY 11
+  {
+    title: "Requirements for High-Risk AI — Part 1",
+    tagline: "What companies must do before deploying high-risk AI",
+    body: `<p>Now that we know which AI systems are high-risk, let's look at what the Act actually requires of them. These requirements apply <em>before and during</em> deployment. There are eight core requirements — we'll cover four today.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>1. Risk Management System</strong><span>A continuous process to identify, analyze, estimate, and mitigate risks — maintained throughout the AI system's entire lifecycle.</span></div>
+      <div class="cheat-pill"><strong>2. Data & Data Governance</strong><span>Training data must be relevant, representative, and free from errors and bias. Data governance practices must be documented.</span></div>
+      <div class="cheat-pill"><strong>3. Technical Documentation</strong><span>Detailed documentation of how the system works, what it was trained on, its intended purpose, performance metrics, and limitations.</span></div>
+      <div class="cheat-pill"><strong>4. Record-Keeping & Logging</strong><span>Automatic logging of events and decisions — creating an audit trail so problems can be investigated after the fact.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Risk Management analogy:</strong> When engineers design a bridge, they don't just build it and hope for the best. They run stress tests, model failure scenarios, and build in safety margins. The risk management requirement applies the same engineering discipline to AI: continuously identify what could go wrong and mitigate it before someone gets hurt.</div>
+    <div class="highlight-box">The <strong>data governance</strong> requirement is particularly important. Many AI systems inherit bias from their training data. If a hiring AI is trained on historical hiring decisions made by biased humans, it will reproduce that bias. The Act says: you must address this before deployment — not discover it after someone sues you.</div>`,
+    quiz: { q: "Why is the data governance requirement for high-risk AI especially important?", opts: ["Because data is expensive to collect", "Because AI can inherit and amplify biases present in its training data", "Because the EU owns all data used to train AI", "Because logging data is required for marketing"], ans: 1, explain: "Data governance is critical because AI systems learn from their training data. If that data contains bias, the AI will reproduce or amplify it. The requirement forces developers to assess and address data quality and fairness before deployment." }
+  },
+  // DAY 12
+  {
+    title: "Requirements for High-Risk AI — Part 2",
+    tagline: "Transparency, oversight, accuracy, and security",
+    body: `<p>Continuing with the remaining four core requirements for high-risk AI systems.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>5. Transparency & Information to Users</strong><span>The AI system must be designed so that deployers understand how it works, its limitations, and how to interpret its outputs. Clear instructions required.</span></div>
+      <div class="cheat-pill"><strong>6. Human Oversight</strong><span>High-risk AI must be designed to allow human operators to understand, monitor, override, suspend, or stop the system. Humans stay in the loop.</span></div>
+      <div class="cheat-pill"><strong>7. Accuracy, Robustness & Cybersecurity</strong><span>The system must perform at an appropriate level of accuracy. It must be resilient to errors, tampering, and adversarial attacks.</span></div>
+      <div class="cheat-pill"><strong>8. Conformity Assessment & Registration</strong><span>Before market placement, the system must be assessed for compliance. High-risk AI must be registered in an EU database.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Human oversight analogy:</strong> Autopilot on an airplane can fly the plane — but a human pilot is always present, monitoring, and able to override. The EU AI Act requires the same relationship between humans and high-risk AI: the machine can process and recommend, but a human must be able to intervene, stop it, or override its decisions when needed.</div>
+    <div class="highlight-box"><strong>Why cybersecurity?</strong> An AI system that can be hacked to produce wrong outputs — like a medical AI manipulated to recommend the wrong treatment, or a security screening AI tricked into letting threats through — is extremely dangerous. High-risk AI must be designed to resist such attacks, not just perform well under normal conditions.</div>`,
+    quiz: { q: "What does the 'human oversight' requirement for high-risk AI demand?", opts: ["That humans must make every decision the AI recommends", "That AI systems are designed so humans can monitor, understand, and override them", "That at least one human works for the AI company", "That AI decisions are reviewed annually"], ans: 1, explain: "Human oversight requires that high-risk AI systems are built with mechanisms allowing human operators to understand how the system works, monitor its operation, and intervene — including overriding, suspending, or stopping it when needed." }
+  },
+  // DAY 13
+  {
+    title: "Limited Risk AI",
+    tagline: "Chatbots, deepfakes, and the transparency obligation",
+    body: `<p>Below high-risk sits <span class="key-term">limited risk AI</span>. These systems don't pose severe threats to fundamental rights, but they do carry specific risks around deception and manipulation. The EU AI Act addresses these with <strong>transparency obligations</strong>.</p>
+    <p>The key rule: if you're interacting with AI — you have a right to know it.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Chatbots & Conversational AI</strong><span>Must disclose that you're talking to an AI — not a human — unless it's obvious from context.</span></div>
+      <div class="cheat-pill"><strong>Deepfakes & AI-Generated Content</strong><span>AI-generated images, video, and audio must be labeled as artificially generated or manipulated.</span></div>
+      <div class="cheat-pill"><strong>Emotion Recognition Systems</strong><span>Must inform people when their emotions are being assessed (except for safety-critical uses like driver drowsiness detection).</span></div>
+      <div class="cheat-pill"><strong>Biometric Categorization</strong><span>Systems that categorize people by characteristics must disclose they are doing so.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Deepfake example:</strong> A realistic video of a political leader giving a speech that they never actually gave. Under the EU AI Act, such content must be clearly labeled as AI-generated. Failure to do so is a violation. This provision is specifically designed to combat AI-powered disinformation and election interference.</div>
+    <div class="highlight-box"><strong>The chatbot rule matters more than it sounds.</strong> Studies have shown that people form emotional attachments and trust relationships with AI systems they believe are human. If a company's AI customer service agent convinces you it's a real person and you share private information on that basis — that's deception. The EU AI Act says: AI must always identify itself as AI when asked.</div>`,
+    quiz: { q: "A customer service chatbot never tells users it's an AI. Under the EU AI Act's limited-risk rules, this is:", opts: ["Fine — chatbots don't need to disclose anything", "A violation — users must be informed they are interacting with an AI system", "Only a problem if the chatbot handles health data", "Acceptable if the company has a privacy policy"], ans: 1, explain: "Under the EU AI Act's transparency obligations for limited-risk AI, chatbots and conversational AI systems must disclose to users that they are interacting with an AI — not a human. Failure to do so is a compliance violation." }
+  },
+  // DAY 14
+  {
+    title: "Minimal Risk AI",
+    tagline: "The vast majority of AI — light-touch rules",
+    body: `<p>The largest category by far is <span class="key-term">minimal risk AI</span>. The EU AI Act places almost no mandatory requirements on these systems. The EU estimated that roughly 85% of all AI applications in use today fall into this category.</p>
+    <div class="analogy-box"><strong>Examples of minimal-risk AI:</strong> Spam filters in your email. AI-powered grammar checkers. Playlist recommendations on music apps. Navigation apps that reroute based on traffic. Video game AI opponents. AI-powered photo editing filters. AI translation tools used for personal browsing.</div>
+    <p>These systems can cause minor annoyances — a spam filter might block a legitimate email, a recommendation algorithm might suggest bad songs — but they don't pose serious risks to fundamental rights, safety, or democracy.</p>
+    <div class="highlight-box">For minimal-risk AI, the EU AI Act encourages — but does not legally require — adherence to voluntary <strong>codes of conduct</strong>. Companies are invited to voluntarily adopt best practices for ethics, transparency, and fairness even when not legally obligated to.</div>
+    <p>This is an important feature of the Act's design: it doesn't want to kill innovation in areas where AI is genuinely safe and beneficial. The focus of regulation is entirely on the areas of real potential harm.</p>
+    <div class="warning-box"><strong>A word of caution:</strong> Risk classification isn't static. A minimal-risk AI system can become high-risk depending on <em>how</em> it's deployed. A basic recommendation algorithm becomes high-risk if it's used to rank asylum applications. Context matters — and providers need to reassess risk when use cases change.</div>`,
+    quiz: { q: "What does the EU AI Act require of minimal-risk AI systems?", opts: ["Full technical documentation and a conformity assessment", "Registration in the EU AI database before deployment", "Almost nothing mandatory — only voluntary codes of conduct are encouraged", "Mandatory transparency notices to all users"], ans: 2, explain: "Minimal-risk AI systems face almost no mandatory requirements under the EU AI Act. The Act encourages (but doesn't legally require) voluntary codes of conduct. This covers roughly 85% of current AI applications." }
+  },
+  // DAY 15
+  {
+    title: "General Purpose AI (GPAI) Models",
+    tagline: "ChatGPT, Gemini, and the AI that does almost everything",
+    body: `<p>One of the most novel parts of the EU AI Act is its treatment of <span class="key-term">General Purpose AI (GPAI) models</span>. These are AI models — like GPT-4, Claude, Gemini, or Llama — that are trained on vast amounts of data to perform a wide range of tasks, rather than being built for one specific purpose.</p>
+    <p>GPAI models pose a unique challenge: they can be used for almost anything. The same model that helps someone write a birthday card can also, potentially, be used to generate dangerous content or spread disinformation at scale. How do you regulate something that versatile?</p>
+    <div class="highlight-box">The EU AI Act creates a separate regulatory framework specifically for GPAI models — distinct from the four-tier risk pyramid. The rules apply to the <em>model itself</em>, not just specific applications built on top of it.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> Think of a GPAI model like a powerful industrial power tool — an angle grinder. The tool itself is neither safe nor dangerous by default; it depends entirely on how it's used. But the manufacturer of that tool still has obligations: safety guards must be included, instructions must be provided, and if the tool is clearly dangerous in untrained hands, extra precautions are required. The EU AI Act treats GPAI models similarly.</div>
+    <p>All GPAI providers must:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">Prepare technical documentation</span>
+      <span class="badge badge-purple">Comply with EU copyright law</span>
+      <span class="badge badge-purple">Publish a summary of training data</span>
+    </div>`,
+    quiz: { q: "Why do General Purpose AI models get their own regulatory framework in the EU AI Act?", opts: ["Because they are always high-risk", "Because they can be used for almost anything, making standard risk-category classification difficult", "Because they are too expensive for small companies", "Because they were invented after the Act was drafted"], ans: 1, explain: "GPAI models are so versatile that they don't fit neatly into one risk tier — the same model can power low-risk applications and potentially high-risk ones. The Act creates a separate framework addressing the model itself, not just specific deployments." }
+  },
+  // DAY 16
+  {
+    title: "Systemic Risk GPAI",
+    tagline: "The most powerful AI models face additional obligations",
+    body: `<p>Within the GPAI category, the EU AI Act creates a sub-tier for the most powerful models: those that pose <span class="key-term">systemic risk</span>. These are GPAI models that could affect entire societies, economies, or democratic systems if something goes wrong.</p>
+    <div class="highlight-box">The threshold: a GPAI model is presumed to pose systemic risk if it was trained using a compute threshold of more than <strong>10²⁵ FLOPs</strong> (floating point operations). This is a technical measure of computational power — currently only the most advanced frontier AI models exceed this threshold. As of 2024, models like GPT-4 and Gemini Ultra are in this tier.</div>
+    <p>GPAI models with systemic risk face additional requirements on top of the standard GPAI obligations:</p>
+    <div class="badge-row">
+      <span class="badge badge-red">Perform model evaluations — including adversarial testing ("red-teaming")</span>
+      <span class="badge badge-red">Assess and mitigate systemic risks</span>
+      <span class="badge badge-red">Incident reporting to the EU AI Office</span>
+      <span class="badge badge-red">Maintain cybersecurity protections</span>
+      <span class="badge badge-red">Report on energy consumption</span>
+    </div>
+    <div class="analogy-box"><strong>Why systemic risk?</strong> When a simple chatbot makes a mistake, a few people are confused. When one of the world's most powerful AI models makes a mistake — or is deliberately misused — the consequences could be systemic: financial markets destabilized, elections influenced, critical infrastructure disrupted. The stakes are categorically different for frontier AI.</div>
+    <p>The 10²⁵ FLOP threshold isn't fixed — the EU AI Office can update it over time as technology advances and computing power becomes more accessible. This is designed to keep the regulation relevant as AI capabilities evolve.</p>`,
+    quiz: { q: "What determines whether a GPAI model falls into the 'systemic risk' sub-category?", opts: ["Whether it has more than 1 million users", "Whether it was trained with more than 10²⁵ FLOPs of computing power", "Whether it generates text, images, or both", "Whether it was built by a company valued at over €1 billion"], ans: 1, explain: "The systemic risk designation is currently triggered by a training compute threshold of more than 10²⁵ FLOPs — a measure that currently captures only the most advanced frontier AI models like GPT-4 and Gemini Ultra." }
+  },
+  // DAY 17
+  {
+    title: "Providers vs. Deployers — Responsibilities",
+    tagline: "Who built it vs. who uses it — and who's on the hook",
+    body: `<p>One of the most practically important distinctions in the EU AI Act is between <span class="key-term">providers</span> (the companies that build AI systems) and <span class="key-term">deployers</span> (the organizations that use those AI systems in their operations). They have overlapping but distinct obligations.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Provider Obligations</strong><span>Design the AI to meet requirements. Create technical documentation. Run conformity assessment. Register in EU database. Affix CE marking. Post-market monitoring.</span></div>
+      <div class="cheat-pill"><strong>Deployer Obligations</strong><span>Use AI as intended. Ensure human oversight. Don't modify high-risk AI. Conduct fundamental rights impact assessment (for public bodies). Monitor and report serious incidents.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Car manufacturer vs. driver:</strong> A car manufacturer (Provider) is responsible for building the car safely — airbags, crash ratings, seatbelts. A driver (Deployer) is responsible for driving safely — following speed limits, not driving drunk, not using their phone. Both have obligations. The car being safe doesn't excuse reckless driving; and reckless driving doesn't excuse a car with no brakes.</div>
+    <div class="highlight-box">Important: A deployer who modifies a high-risk AI system substantially — changing its intended purpose or altering its core functionality — may become legally reclassified as a <em>provider</em> and inherit all provider obligations. Using an AI in a way it wasn't designed for can make you the responsible party.</div>
+    <p>This allocation of responsibility was carefully designed to prevent the "not my problem" dynamic — where providers blame deployers and deployers blame providers when something goes wrong. The Act makes clear: both parties have skin in the game.</p>`,
+    quiz: { q: "A hospital buys a high-risk medical AI from a tech company and then uses it for purposes it was not designed for. Under the EU AI Act, the hospital may be reclassified as:", opts: ["An importer", "A distributor", "A provider — because they substantially changed the intended use", "A data subject"], ans: 2, explain: "Under the EU AI Act, if a deployer substantially modifies a high-risk AI system or uses it in a way outside its intended purpose, they may be reclassified as a provider and must meet all provider obligations." }
+  },
+  // DAY 18
+  {
+    title: "Transparency Obligations for AI Interactions",
+    tagline: "When AI talks to you, you have the right to know it",
+    body: `<p>The EU AI Act contains several important <span class="key-term">transparency obligations</span> designed to ensure people understand when they're interacting with AI, being assessed by AI, or consuming AI-generated content. This is where the Act most directly affects everyday people.</p>
+    <p>Key transparency rules include:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Chatbot disclosure</strong><span>AI systems that interact with humans must clearly disclose they are AI — unless obviously clear from context. Users can always ask "am I talking to a human?" and must receive an honest answer.</span></div>
+      <div class="cheat-pill"><strong>AI-generated content labeling</strong><span>Synthetic audio, video, images, and text must be labeled as AI-generated — especially for content that could deceive or manipulate.</span></div>
+      <div class="cheat-pill"><strong>Emotion recognition disclosure</strong><span>If AI is assessing your emotions (in most contexts), you must be informed. No secret sentiment analysis.</span></div>
+      <div class="cheat-pill"><strong>Deepfake disclosure</strong><span>Realistic AI-generated representations of real people must be labeled as artificial — including in political campaign content.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Why the deepfake rule matters:</strong> In 2024, AI-generated robocalls impersonating President Biden were used to discourage New Hampshire voters from voting. AI-generated video of world leaders giving speeches they never gave is increasingly common. The EU AI Act's labeling requirement is designed to give people the ability to distinguish real from artificial — protecting both individuals and democratic processes.</div>
+    <div class="highlight-box">Transparency requirements don't apply to AI used for authorized national security, defense, or military purposes — but these exceptions are narrowly defined and subject to oversight.</div>`,
+    quiz: { q: "A political campaign creates an AI-generated video of their candidate giving an inspiring speech. Under the EU AI Act, what must they do?", opts: ["Nothing — political speech is exempt", "Label the video as AI-generated content", "Get approval from the EU AI Office first", "Only label it if the candidate is from an EU country"], ans: 1, explain: "The EU AI Act requires that AI-generated content — including political content — be clearly labeled as artificially generated or manipulated. This is part of the transparency obligations for limited-risk AI systems." }
+  },
+  // DAY 19
+  {
+    title: "The Conformity Assessment",
+    tagline: "Proving your high-risk AI actually meets the rules",
+    body: `<p>Before a high-risk AI system can be placed on the EU market, it must undergo a <span class="key-term">conformity assessment</span> — a formal process to verify that the system actually meets all the requirements for high-risk AI. Think of it as an inspection before the product is allowed to be sold.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Self-Assessment</strong><span>For many high-risk AI systems, the provider can conduct the conformity assessment themselves — but they must do it rigorously and document everything.</span></div>
+      <div class="cheat-pill"><strong>Third-Party Assessment</strong><span>For some high-risk AI — particularly biometric systems and AI in regulated safety-critical products — an independent third-party assessor (a Notified Body) must conduct the review.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Analogy — car crash testing:</strong> Before a new car model can be sold in the EU, it must pass crash safety tests. Some tests are conducted by the manufacturer (self-assessment) and some by independent testing organizations like Euro NCAP. Conformity assessments for AI work similarly — proving the system is safe before it goes on the market.</div>
+    <div class="highlight-box">After a successful conformity assessment, the AI system gets a <span class="key-term">CE marking</span> — the same "CE" mark you see on electrical appliances and medical devices. It signals that the product complies with EU law. Importantly, CE marking on an AI product means it can be sold freely throughout the entire EU single market.</div>
+    <p>If a high-risk AI system is significantly updated after assessment, a <strong>new conformity assessment</strong> may be required. You can't pass inspection once and then make major changes without re-assessing.</p>`,
+    quiz: { q: "What does a CE marking on an AI product signify?", opts: ["The AI was built in China", "The AI has completed a conformity assessment and complies with EU law", "The AI costs under €10,000", "The AI was approved by consumers in surveys"], ans: 1, explain: "A CE marking on an AI product signifies that a conformity assessment has been completed successfully and the product complies with EU law — allowing it to be sold freely throughout the EU single market." }
+  },
+  // DAY 20
+  {
+    title: "The EU AI Database",
+    tagline: "A public registry of high-risk AI in the EU",
+    body: `<p>One of the EU AI Act's accountability mechanisms is the <span class="key-term">EU AI public database</span> — a registry where providers must register their high-risk AI systems before deployment in the EU market.</p>
+    <div class="highlight-box">The database is publicly accessible. Anyone — a researcher, journalist, regulator, civil society organization, or concerned citizen — can look up high-risk AI systems operating in the EU and review information about them.</div>
+    <p>When registering, providers must provide:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">Name and contact details of the provider</span>
+      <span class="badge badge-purple">AI system name and description</span>
+      <span class="badge badge-purple">Intended purpose</span>
+      <span class="badge badge-purple">Countries where the system is deployed</span>
+      <span class="badge badge-purple">Applicable high-risk category</span>
+      <span class="badge badge-purple">Conformity assessment information</span>
+      <span class="badge badge-purple">Summary of results</span>
+    </div>
+    <div class="analogy-box"><strong>Why public registration matters:</strong> Imagine you apply for a job and get rejected. You suspect AI made the decision. With the EU AI database, you can look up whether your prospective employer uses a registered high-risk hiring AI, which company built it, and what category it falls under. That's transparency in action — and it gives regulators, civil society, and journalists the tools to identify problematic patterns across many deployments.</div>
+    <p>The database is managed by the <strong>EU AI Office</strong> — the new regulatory body established specifically to oversee AI governance in the EU. We'll cover the AI Office in more detail on Day 28.</p>`,
+    quiz: { q: "Who can access the EU AI public database?", opts: ["Only government regulators", "Only the companies that registered their AI systems", "Anyone — it is publicly accessible", "Only EU citizens with a verified ID"], ans: 2, explain: "The EU AI public database is publicly accessible — researchers, journalists, regulators, civil society groups, and ordinary citizens can look up registered high-risk AI systems and review information about them." }
+  },
+  // DAY 21
+  {
+    title: "Fundamental Rights Impact Assessment",
+    tagline: "Before deploying AI, ask: who could this hurt?",
+    body: `<p>Before a public body or a private entity operating public services deploys a high-risk AI system, the EU AI Act requires them to conduct a <span class="key-term">Fundamental Rights Impact Assessment (FRIA)</span>. This is a structured evaluation of how the AI system might affect people's fundamental rights.</p>
+    <div class="analogy-box"><strong>What are fundamental rights?</strong> Under EU law, fundamental rights include: the right to dignity, freedom from discrimination, right to privacy, freedom of expression, right to a fair trial, rights of children, right to equal treatment, and more. These are enshrined in the EU Charter of Fundamental Rights — think of it as the EU's Bill of Rights.</div>
+    <p>A FRIA must examine:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">What categories of people the system will affect</span>
+      <span class="badge badge-purple">Whether any groups could be disproportionately harmed</span>
+      <span class="badge badge-purple">Whether the system could discriminate directly or indirectly</span>
+      <span class="badge badge-purple">Whether individuals have meaningful ways to contest AI decisions</span>
+      <span class="badge badge-purple">Data protection impact (often overlapping with GDPR's DPIA)</span>
+    </div>
+    <div class="highlight-box">The FRIA must be <strong>completed before deployment</strong> — not after a problem emerges. And it must be submitted to the national market surveillance authority. It's not a private internal document; there's external accountability built in.</div>
+    <p>The FRIA borrows from GDPR's Data Protection Impact Assessment (DPIA) concept — but goes broader. Where DPIAs focus on privacy risks, FRIAs cover the full spectrum of fundamental rights, including non-discrimination, due process, and democratic participation.</p>`,
+    quiz: { q: "Who is required to conduct a Fundamental Rights Impact Assessment before deploying high-risk AI?", opts: ["Only technology companies worth over €1 billion", "Public bodies and entities providing public services", "Any company using any form of AI", "Only companies that previously violated GDPR"], ans: 1, explain: "FRIAs are required for public bodies and entities operating public services deploying high-risk AI. The assessment must be completed before deployment and submitted to the relevant national authority." }
+  },
+  // DAY 22
+  {
+    title: "AI Regulatory Sandboxes",
+    tagline: "A safe space to innovate — with guardrails",
+    body: `<p>The EU AI Act contains a creative provision aimed at supporting innovation: <span class="key-term">AI regulatory sandboxes</span>. These are controlled environments where companies — especially startups and small businesses — can develop and test innovative AI systems under regulatory supervision, before full compliance requirements apply.</p>
+    <div class="analogy-box"><strong>Think of a sandbox like a playground:</strong> Kids can experiment, try things, make mistakes, and learn — but in a safe environment with boundaries. An AI regulatory sandbox gives companies the same opportunity: test your AI idea in real-world conditions, with regulators watching, before you're held to the full weight of the law.</div>
+    <div class="highlight-box">Member states must establish at least one national AI regulatory sandbox. Companies accepted into a sandbox get direct access to regulators — so they can ask questions, test approaches, and understand what compliance will look like for their specific system. This is particularly valuable for novel AI use cases where the rules aren't yet clear.</div>
+    <p>Sandboxes are specifically designed to be accessible to:</p>
+    <div class="badge-row">
+      <span class="badge badge-green">Startups and small businesses (SMEs)</span>
+      <span class="badge badge-green">Academic research institutions</span>
+      <span class="badge badge-green">Public-sector innovators</span>
+    </div>
+    <p>Data processed within a sandbox under real-world conditions — including personal data — is subject to special rules to prevent unauthorized use. The sandbox is for testing compliance, not for exploiting data access.</p>
+    <div class="warning-box">Being in a sandbox doesn't give a free pass to break the law. Core prohibitions (like banned AI systems) still apply. The sandbox merely gives flexibility on procedural compliance requirements while the system is in development.</div>`,
+    quiz: { q: "What is the main purpose of an AI regulatory sandbox under the EU AI Act?", opts: ["To allow companies to permanently avoid regulation", "To give companies a controlled environment to test innovative AI with regulatory supervision before full compliance applies", "To store banned AI systems for government study", "To compete with US AI companies"], ans: 1, explain: "AI regulatory sandboxes provide a controlled environment for companies (especially startups) to develop and test innovative AI under regulatory supervision, giving them flexibility before the full compliance requirements apply." }
+  },
+  // DAY 23
+  {
+    title: "AI Literacy",
+    tagline: "Everyone who uses AI needs to understand it",
+    body: `<p>One of the most forward-looking provisions in the EU AI Act is the <span class="key-term">AI literacy</span> requirement. Article 4 of the Act requires providers and deployers of AI systems to ensure that their staff and anyone involved in operating AI systems has sufficient AI literacy.</p>
+    <div class="highlight-box">AI literacy means: understanding AI systems' capabilities and limitations, knowing how to use them appropriately, recognizing when AI outputs should be questioned, and understanding the ethical implications of AI use.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> You wouldn't put someone behind the wheel of a 40-ton truck without driver training. You wouldn't let someone operate industrial machinery without safety training. The EU AI Act says: if your job involves deploying or overseeing AI — especially high-risk AI — you need to understand what you're working with. Clicking "approve" on an AI recommendation without understanding it isn't acceptable oversight.</div>
+    <p>AI literacy requirements extend across organizations:</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">Technical staff who build and train AI</span>
+      <span class="badge badge-purple">Business users who deploy AI in processes</span>
+      <span class="badge badge-purple">HR staff using AI screening tools</span>
+      <span class="badge badge-purple">Customer service staff using AI chatbots</span>
+      <span class="badge badge-purple">Managers overseeing AI decision-making</span>
+    </div>
+    <p>This is one of the most practically impactful provisions for employers. It means that deploying AI is not just a technology decision — it comes with a <strong>training obligation</strong>. Companies need to invest in educating their workforce about the AI they use.</p>
+    <div class="warning-box">The EU Commission has also launched broader public AI literacy initiatives — recognizing that all citizens need baseline understanding of AI to participate meaningfully in an AI-shaped society. This connects to the Act's broader goal of trustworthy, human-centered AI.</div>`,
+    quiz: { q: "Under Article 4 of the EU AI Act, who must have adequate AI literacy?", opts: ["Only AI engineers and data scientists", "Only the CEO and board of directors", "Staff and anyone involved in operating or deploying AI systems", "Only EU government employees"], ans: 2, explain: "Article 4 requires providers and deployers of AI to ensure that their staff and all personnel involved in operating AI systems have sufficient AI literacy — including understanding the AI's capabilities, limitations, and ethical implications." }
+  },
+  // DAY 24
+  {
+    title: "Post-Market Monitoring & Incident Reporting",
+    tagline: "Compliance doesn't end at deployment — it continues forever",
+    body: `<p>One of the strongest features of the EU AI Act's approach is that compliance is not a one-time checkbox. Providers of high-risk AI must maintain active <span class="key-term">post-market monitoring</span> systems that continuously track how their AI is performing once deployed in the real world.</p>
+    <div class="highlight-box">Post-market monitoring means: collecting feedback from deployers, monitoring real-world performance metrics, identifying unexpected behaviors, updating risk assessments, and taking corrective action when problems emerge. This continues for the entire lifespan of the AI system.</div>
+    <p>When serious problems are discovered, the Act requires <strong>incident reporting</strong>:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>Serious incidents</strong><span>Providers must report to national authorities within 15 days. Serious = risk to health, safety, or fundamental rights; significant property damage; interruption to essential services.</span></div>
+      <div class="cheat-pill"><strong>Near-misses</strong><span>Events that didn't cause harm but revealed significant risks must also be reported. Catching problems before they cause harm is part of the system.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Aviation analogy:</strong> Every time an airplane has an incident — even a near-miss — it's reported to aviation authorities. These reports feed into a global safety database that improves AI design over time. The EU AI Act applies the same aviation-inspired safety culture to AI. Incident reporting isn't about blame — it's about learning and preventing future harm.</div>
+    <p>Deployers who discover problems with an AI system they use must inform the provider. If the deployer is a public body, they may have additional obligations to notify their national oversight authority directly.</p>`,
+    quiz: { q: "How long does a high-risk AI provider have to report a serious incident to national authorities?", opts: ["24 hours", "15 days", "30 days", "3 months"], ans: 1, explain: "Providers of high-risk AI systems must report serious incidents — events posing risk to health, safety, or fundamental rights — to national market surveillance authorities within 15 days of becoming aware of the incident." }
+  },
+  // DAY 25
+  {
+    title: "Prohibited Practices — A Deeper Look",
+    tagline: "Understanding why specific AI uses are banned",
+    body: `<p>We covered the list of prohibited AI on Day 6. Today, let's go deeper into two of the most important prohibitions: <span class="key-term">subliminal manipulation</span> and <span class="key-term">exploitation of vulnerabilities</span>.</p>
+    <div class="highlight-box"><strong>Subliminal manipulation:</strong> AI techniques that influence a person's behavior in ways they are not consciously aware of — operating below the threshold of conscious perception or rational decision-making. Banned regardless of purpose or who deploys it.</div>
+    <div class="analogy-box"><strong>Subliminal manipulation example:</strong> An e-commerce platform uses AI to analyze when you're feeling sad or insecure (based on your browsing patterns, time of day, and typing speed) and then shows you products specifically designed to exploit those emotional states. You're making a purchase decision — but the AI has rigged the emotional environment to push you toward it without your awareness. This is banned.</div>
+    <div class="highlight-box"><strong>Exploitation of vulnerabilities:</strong> AI that deliberately targets people in vulnerable situations — children who cannot fully understand what's happening, elderly people with cognitive decline, people in financial distress, people with mental health conditions — to influence their behavior in harmful ways.</div>
+    <p>Both prohibitions reflect a core value in the EU AI Act: <strong>AI must not undermine human autonomy and dignity</strong>. People must remain genuinely in control of their own decisions. AI that hijacks human psychology — whether through subliminal means or by exploiting weakness — is treated as incompatible with a rights-respecting society.</p>
+    <div class="warning-box">These prohibitions are difficult to enforce precisely because the manipulation, by definition, happens below the level of awareness. Regulators are developing technical methods and auditing tools to detect these practices — but this remains one of the most challenging enforcement areas.</div>`,
+    quiz: { q: "An AI system detects that a user is stressed and automatically shows them high-pressure sales content to exploit their emotional state without their knowledge. This is an example of:", opts: ["Legitimate marketing", "High-risk AI requiring a conformity assessment", "Prohibited AI — subliminal manipulation exploiting psychological vulnerabilities", "Limited-risk AI requiring a transparency notice"], ans: 2, explain: "Using AI to exploit a user's emotional state to influence behavior below the level of conscious awareness is a form of subliminal manipulation — one of the explicitly prohibited AI practices under the EU AI Act." }
+  },
+  // DAY 26
+  {
+    title: "Relationship with GDPR",
+    tagline: "The EU AI Act and GDPR — two laws, one person, lots of overlap",
+    body: `<p>If you've already studied GDPR, you'll notice significant overlap with the EU AI Act — because almost all AI systems that process personal data are subject to <em>both</em> laws simultaneously. Understanding how they interact is essential for anyone working in AI governance.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>GDPR focus</strong><span>Protecting personal data — how it's collected, used, stored, and shared. Your rights over your information.</span></div>
+      <div class="cheat-pill"><strong>EU AI Act focus</strong><span>Protecting people from AI risks — safety, bias, manipulation, rights violations. How AI systems are built, tested, and used.</span></div>
+    </div>
+    <div class="highlight-box">The Acts overlap most visibly in three areas: <strong>(1) Data governance</strong> — the AI Act's requirement for high-quality training data aligns with GDPR's accuracy and purpose limitation principles. <strong>(2) Automated decision-making</strong> — GDPR's Article 22 rights against solely automated decisions dovetail with the AI Act's requirements for human oversight. <strong>(3) DPIAs and FRIAs</strong> — both require impact assessments before processing, and regulators encourage combining them where possible.</div>
+    <div class="analogy-box"><strong>Analogy:</strong> GDPR is the food safety law that says ingredients must be safe and labeled. The EU AI Act is the restaurant health code that says the kitchen must be clean, the staff trained, and the cooking process safe. Both laws apply to the same meal. Compliance requires satisfying both — not just one.</div>
+    <p>The EU explicitly designed the AI Act to <strong>complement, not replace</strong>, GDPR. Companies building AI systems that process personal data must maintain compliance with both. The good news: many compliance measures serve both laws. A robust data governance program, for example, addresses GDPR accuracy requirements <em>and</em> the AI Act's data quality requirements simultaneously.</p>`,
+    quiz: { q: "Does the EU AI Act replace GDPR for AI systems that process personal data?", opts: ["Yes — the AI Act supersedes GDPR for all AI systems", "No — both laws apply simultaneously and complement each other", "Only GDPR applies if the AI was built before 2024", "Only the AI Act applies if the data is anonymized"], ans: 1, explain: "The EU AI Act does not replace GDPR. Both laws apply simultaneously to AI systems that process personal data. They complement each other — GDPR focuses on data rights, while the AI Act focuses on AI safety and risk management." }
+  },
+  // DAY 27
+  {
+    title: "Enforcement — Fines and Penalties",
+    tagline: "The EU AI Act has significant financial consequences for non-compliance",
+    body: `<p>Like GDPR, the EU AI Act was designed with real financial teeth. The fines are structured in three tiers based on the severity of the violation:</p>
+    <div class="risk-grid">
+      <div class="risk-unacceptable"><strong style="color:#501313">Tier 1 — Prohibited AI violations</strong><br><span style="font-size:12px">Up to <strong>€35 million</strong> or <strong>7% of global annual turnover</strong> — whichever is higher</span></div>
+      <div class="risk-high"><strong style="color:#633806">Tier 2 — High-risk AI violations</strong><br><span style="font-size:12px">Up to <strong>€15 million</strong> or <strong>3% of global annual turnover</strong> — whichever is higher</span></div>
+    </div>
+    <div class="risk-grid">
+      <div class="risk-limited"><strong style="color:#0C447C">Tier 3 — Providing false information</strong><br><span style="font-size:12px">Up to <strong>€7.5 million</strong> or <strong>1.5% of global annual turnover</strong> — whichever is higher</span></div>
+      <div class="risk-minimal"><strong style="color:#27500A">SME / startup relief</strong><br><span style="font-size:12px">Lower caps may apply for small and medium-sized enterprises</span></div>
+    </div>
+    <div class="penalty-box"><strong>Compare to GDPR:</strong> GDPR's maximum Tier 2 fine is 4% of global turnover / €20M. The EU AI Act's maximum (for prohibited AI) is 7% / €35M. Using prohibited AI — like a social scoring system — is treated as more serious than even the most severe GDPR violation.</div>
+    <div class="analogy-box"><strong>Who enforces it?</strong> Each EU member state designates national competent authorities and a national supervisory authority responsible for enforcement. The EU AI Office oversees GPAI models at the European level. Member state regulators handle most other enforcement — similar to how data protection authorities (DPAs) enforce GDPR.</div>
+    <p>Beyond fines, regulators can also order: removal of the AI system from the EU market, suspension of deployment, corrective actions, and public disclosure of violations.</p>`,
+    quiz: { q: "What is the maximum fine for deploying a prohibited AI system under the EU AI Act?", opts: ["€10 million or 2% of global turnover", "€20 million or 4% of global turnover", "€35 million or 7% of global turnover", "€50 million flat"], ans: 2, explain: "Violations of the prohibited AI provisions carry the highest fines in the EU AI Act: up to €35 million or 7% of total worldwide annual turnover — whichever is higher. This exceeds even GDPR's maximum fine." }
+  },
+  // DAY 28
+  {
+    title: "The EU AI Office",
+    tagline: "The new regulatory body at the heart of AI governance",
+    body: `<p>The EU AI Act created an entirely new regulatory institution: the <span class="key-term">EU AI Office</span>, established within the European Commission in 2024. This is the central body responsible for coordinating AI governance across the EU — particularly for General Purpose AI models.</p>
+    <div class="highlight-box">The EU AI Office's core responsibilities: enforcing the rules for GPAI models (including systemic risk models), developing technical standards and guidelines, coordinating between national authorities, maintaining the EU AI database, and conducting research and monitoring of AI developments.</div>
+    <p>Think of the EU AI Office as the EU's equivalent of a food safety regulator, but for AI. It doesn't replace national regulators — it works alongside them:</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>EU AI Office</strong><span>Handles GPAI models and cross-border AI issues. Sets standards. Coordinates national authorities. Main enforcer for frontier AI.</span></div>
+      <div class="cheat-pill"><strong>National Authorities</strong><span>Handle most high-risk AI enforcement within their country. Investigate complaints. Conduct market surveillance. Impose fines.</span></div>
+    </div>
+    <div class="analogy-box"><strong>Analogy:</strong> The EU AI Office is like the European Central Bank — it sets overarching policy and handles the biggest players, while national central banks (national AI authorities) handle day-to-day oversight in their own countries. Both levels are necessary because AI markets are both local and global.</div>
+    <p>The EU AI Office also maintains the <strong>Scientific Panel</strong> — a group of independent AI experts who advise the office on technical questions, assess GPAI models, and support enforcement investigations. This expert input is crucial in a field that evolves faster than most regulators can track.</p>`,
+    quiz: { q: "Which AI systems is the EU AI Office primarily responsible for overseeing?", opts: ["All minimal-risk AI applications in the EU", "General Purpose AI (GPAI) models, including those with systemic risk", "Only AI used by EU government agencies", "Only AI developed in EU member states"], ans: 1, explain: "The EU AI Office has primary enforcement responsibility for General Purpose AI models, including those designated as posing systemic risk. National authorities handle most high-risk AI enforcement within their own countries." }
+  },
+  // DAY 29
+  {
+    title: "Timeline — When Does Everything Apply?",
+    tagline: "The phased implementation of the EU AI Act",
+    body: `<p>Unlike some laws that take effect all at once, the EU AI Act has a carefully phased implementation timeline. Different provisions kick in at different times — giving companies time to prepare while ensuring the most urgent protections are in place first.</p>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>August 1, 2024</strong><span>The Act enters into force. The official start date.</span></div>
+      <div class="cheat-pill"><strong>February 2, 2025</strong><span>Prohibited AI provisions apply — all banned AI systems must be discontinued. Also: governance and AI literacy obligations take effect.</span></div>
+      <div class="cheat-pill"><strong>August 2, 2025</strong><span>GPAI model obligations apply — including systemic risk requirements. EU AI Office operational.</span></div>
+      <div class="cheat-pill"><strong>August 2, 2026</strong><span>Most high-risk AI obligations apply — conformity assessments, registration, transparency rules, human oversight requirements.</span></div>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-pill"><strong>August 2, 2027</strong><span>High-risk AI that is a safety component in existing regulated products gets additional time to comply.</span></div>
+      <div class="cheat-pill"><strong>Ongoing</strong><span>Post-market monitoring, incident reporting, and regulatory updates continue indefinitely as the technology evolves.</span></div>
+    </div>
+    <div class="highlight-box">The phased timeline reflects the EU's recognition that full compliance is complex and requires significant investment. But note: the <strong>prohibited AI provisions took effect first</strong> — February 2025. The EU prioritized getting the most dangerous AI systems off the market as quickly as possible.</div>
+    <div class="analogy-box"><strong>Why phase it?</strong> Building a GDPR-style compliance program for AI takes time — risk assessments, technical documentation, training data audits, conformity assessments, staff training. The EU built in lead time so that by the time full requirements apply, companies have had 2+ years to prepare. No reasonable excuse for non-compliance by 2026.</div>`,
+    quiz: { q: "When did the EU AI Act's prohibited AI provisions — banning systems like social scoring — take effect?", opts: ["August 1, 2024 — same day as entry into force", "February 2, 2025 — six months after entry into force", "August 2, 2026 — with most high-risk AI rules", "January 1, 2028"], ans: 1, explain: "The prohibited AI provisions took effect on February 2, 2025 — 6 months after the Act entered into force on August 1, 2024. This was intentionally prioritized to get the most dangerous AI systems off the market quickly." }
+  },
+  // DAY 30
+  {
+    title: "30-Day Review",
+    tagline: "Everything we covered — in one final look",
+    body: `<p>You've completed all 30 days! Let's take a final inventory of everything you now know about the EU AI Act.</p>
+    <div class="tag-header">The Big Picture</div>
+    <p>The EU AI Act is the world's first comprehensive AI regulation — in force since August 1, 2024. It uses a risk-based approach to regulate AI proportionately: banning the most dangerous systems, heavily regulating high-risk ones, requiring transparency for limited-risk ones, and leaving minimal-risk AI largely free. Non-EU companies serving EU users must comply.</p>
+    <div class="tag-header">The 4 Risk Tiers</div>
+    <div class="badge-row">
+      <span class="badge badge-red">Unacceptable Risk — BANNED (social scoring, subliminal manipulation, most public biometric surveillance)</span>
+      <span class="badge badge-amber">High Risk — HEAVILY REGULATED (8 Annex III sectors + safety components)</span>
+      <span class="badge badge-blue">Limited Risk — TRANSPARENCY RULES (chatbots, deepfakes, emotion recognition)</span>
+      <span class="badge badge-green">Minimal Risk — MOSTLY FREE (85% of current AI)</span>
+    </div>
+    <div class="tag-header">Key Requirements for High-Risk AI</div>
+    <div class="badge-row">
+      <span class="badge badge-purple">Risk management system</span>
+      <span class="badge badge-purple">Data governance</span>
+      <span class="badge badge-purple">Technical documentation</span>
+      <span class="badge badge-purple">Logging & audit trails</span>
+      <span class="badge badge-purple">Transparency to deployers</span>
+      <span class="badge badge-purple">Human oversight</span>
+      <span class="badge badge-purple">Accuracy & cybersecurity</span>
+      <span class="badge badge-purple">Conformity assessment + CE marking</span>
+      <span class="badge badge-purple">EU database registration</span>
+    </div>
+    <div class="tag-header">Key Structural Concepts</div>
+    <div class="badge-row">
+      <span class="badge badge-amber">Providers vs. Deployers</span>
+      <span class="badge badge-amber">GPAI + Systemic Risk</span>
+      <span class="badge badge-amber">EU AI Office</span>
+      <span class="badge badge-amber">Conformity Assessment & CE Marking</span>
+      <span class="badge badge-amber">Fundamental Rights Impact Assessment</span>
+      <span class="badge badge-amber">AI Regulatory Sandboxes</span>
+      <span class="badge badge-amber">AI Literacy</span>
+      <span class="badge badge-amber">Post-Market Monitoring</span>
+      <span class="badge badge-amber">Fines up to 7% global revenue</span>
+    </div>
+    <div class="highlight-box">Hit the green "CS" button above to access your complete EU AI Act cheat sheet with all core controls summarized in one place.</div>`,
+    quiz: { q: "What is the maximum fine for violations of the prohibited AI provisions under the EU AI Act?", opts: ["€20 million or 4% of global turnover", "€35 million or 7% of global turnover", "€50 million or 10% of global turnover", "€10 million or 2% of global turnover"], ans: 1, explain: "The EU AI Act's highest tier of fines — for prohibited AI violations — is €35 million or 7% of total worldwide annual turnover, whichever is higher. This exceeds even GDPR's maximum penalty." }
+  },
+  // CHEAT SHEET
+  {
+    title: "EU AI Act Cheat Sheet",
+    tagline: "Your complete quick-reference guide",
+    isCheatSheet: true,
+    body: `
+    <div class="cheat-section">
+      <h3>What Is the EU AI Act?</h3>
+      <p style="font-size:13.5px;color:#6b6b68">The world's first comprehensive AI regulation, adopted March 13, 2024, entered into force August 1, 2024. Uses a risk-based approach. Applies worldwide to any provider or deployer whose AI affects people in the EU. Does not replace GDPR — both apply to AI systems that process personal data.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Definition of AI System</h3>
+      <p style="font-size:13.5px;color:#6b6b68">A machine-based system that operates with varying levels of autonomy, infers from inputs to generate outputs (predictions, decisions, content, recommendations) that can influence real or virtual environments. Excludes simple rule-based systems.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>The 4 Risk Tiers</h3>
+      <div class="risk-grid">
+        <div class="risk-unacceptable"><strong style="color:#501313">Unacceptable Risk — PROHIBITED</strong><br><span style="font-size:12px;color:#1a1a18">Social scoring by governments. Subliminal manipulation. Exploitation of vulnerabilities. Real-time public biometric ID (with narrow law enforcement exceptions). Emotion recognition in workplaces/schools. Predictive policing of individuals. Biometric categorization by sensitive attributes. Scraped facial recognition databases.</span></div>
+        <div class="risk-high"><strong style="color:#633806">High Risk — HEAVILY REGULATED</strong><br><span style="font-size:12px;color:#1a1a18">Safety components in regulated products (medical devices, vehicles, aviation). Annex III sectors: biometrics, critical infrastructure, education, employment, essential services, law enforcement, migration/asylum, justice/democracy. Must meet 8 requirements before deployment.</span></div>
+        <div class="risk-limited"><strong style="color:#0C447C">Limited Risk — TRANSPARENCY RULES</strong><br><span style="font-size:12px;color:#1a1a18">Chatbots must disclose they are AI. AI-generated content must be labeled. Emotion recognition must be disclosed. Deepfakes must be labeled — including political content.</span></div>
+        <div class="risk-minimal"><strong style="color:#27500A">Minimal Risk — MOSTLY FREE</strong><br><span style="font-size:12px;color:#1a1a18">~85% of current AI. Spam filters, recommendation engines, grammar tools, game AI. No mandatory requirements — voluntary codes of conduct encouraged.</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>8 Requirements for High-Risk AI</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>1. Risk Management System</b> — Continuous process to identify, assess, and mitigate risks across the AI system's entire lifecycle.</div>
+        <div class="ctrl-card"><b>2. Data Governance</b> — Training data must be relevant, representative, and bias-assessed. Data practices documented.</div>
+        <div class="ctrl-card"><b>3. Technical Documentation</b> — Detailed records of how the system works, training data, performance, limitations, and intended purpose.</div>
+        <div class="ctrl-card"><b>4. Record-Keeping & Logging</b> — Automatic logging of events and decisions to create an audit trail.</div>
+        <div class="ctrl-card"><b>5. Transparency to Deployers</b> — Clear instructions on the system's capabilities, limitations, and how to interpret outputs.</div>
+        <div class="ctrl-card"><b>6. Human Oversight</b> — Systems must be designed for human monitoring, understanding, and ability to override or stop the AI.</div>
+        <div class="ctrl-card"><b>7. Accuracy, Robustness & Security</b> — Appropriate performance standards; resilience to errors, adversarial attacks, and tampering.</div>
+        <div class="ctrl-card"><b>8. Conformity Assessment + CE Marking</b> — Pre-market assessment (self or third-party) proving compliance. CE marking issued. Registration in EU AI database required.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Roles</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Provider</b> — Develops or places AI on EU market. Most obligations. Responsible for conformity assessment, CE marking, documentation, and post-market monitoring.</div>
+        <div class="ctrl-card"><b>Deployer</b> — Uses AI in operations. Must use AI as intended, ensure human oversight, report serious incidents. Public body deployers must conduct FRIAs.</div>
+        <div class="ctrl-card"><b>Importer</b> — Brings AI from outside EU into EU market. Must verify compliance before market placement.</div>
+        <div class="ctrl-card"><b>Distributor</b> — Makes AI available in EU supply chain without modification. Checks that CE marking and documentation are present.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>General Purpose AI (GPAI)</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>All GPAI providers must:</b> Prepare technical documentation. Comply with EU copyright law. Publish training data summary.</div>
+        <div class="ctrl-card"><b>Systemic Risk GPAI (10²⁵ FLOPs threshold):</b> Model evaluations (red-teaming). Systemic risk mitigation. Incident reporting to EU AI Office. Cybersecurity protections. Energy consumption reporting.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Core Controls at a Glance</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Conformity Assessment (Art. 43)</b> — Pre-market verification that high-risk AI meets all requirements. Self-assessment or third-party (Notified Body) depending on AI type.</div>
+        <div class="ctrl-card"><b>CE Marking</b> — Affixed after successful conformity assessment. Allows free movement across the EU single market. Must be re-assessed after significant updates.</div>
+        <div class="ctrl-card"><b>EU AI Database (Art. 71)</b> — Public registry of high-risk AI systems. Providers must register before EU market placement. Accessible to all.</div>
+        <div class="ctrl-card"><b>Fundamental Rights Impact Assessment (Art. 27)</b> — Required before public bodies/public service providers deploy high-risk AI. Must identify affected groups and potential rights violations.</div>
+        <div class="ctrl-card"><b>Post-Market Monitoring</b> — Continuous performance tracking after deployment. Serious incidents must be reported to national authorities within 15 days.</div>
+        <div class="ctrl-card"><b>AI Literacy (Art. 4)</b> — Providers and deployers must ensure staff working with AI have adequate AI literacy. Training obligation on all organizations deploying AI.</div>
+        <div class="ctrl-card"><b>AI Regulatory Sandboxes</b> — Controlled test environments for innovative AI development under regulatory supervision. At least one per member state. Particularly accessible to SMEs and startups.</div>
+        <div class="ctrl-card"><b>Human Oversight Design</b> — High-risk AI must be designed with mechanisms allowing human operators to understand, monitor, pause, override, or stop the system at all times.</div>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Enforcement & Fines</h3>
+      <div class="control-row">
+        <div class="ctrl-card"><b>Tier 1 — Prohibited AI violations</b> — Up to €35 million or 7% of global annual turnover (whichever is higher). The highest fines in the Act.</div>
+        <div class="ctrl-card"><b>Tier 2 — High-risk AI violations</b> — Up to €15 million or 3% of global annual turnover (whichever is higher).</div>
+        <div class="ctrl-card"><b>Tier 3 — False information to authorities</b> — Up to €7.5 million or 1.5% of global annual turnover (whichever is higher).</div>
+        <div class="ctrl-card"><b>SME Relief</b> — Lower fine caps for small and medium-sized enterprises and startups — recognized as needing protection from disproportionate penalties.</div>
+      </div>
+      <p style="font-size:12.5px;color:#6b6b68;margin-top:.5rem">Enforcement: EU AI Office (GPAI/systemic risk) + national competent authorities (most high-risk AI). Regulators can also order market withdrawal, deployment suspension, and public disclosure of violations.</p>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Implementation Timeline</h3>
+      <div class="badge-row">
+        <span class="badge badge-purple">Aug 1, 2024 — Entry into force</span>
+        <span class="badge badge-red">Feb 2, 2025 — Prohibited AI banned; AI literacy & governance apply</span>
+        <span class="badge badge-amber">Aug 2, 2025 — GPAI obligations apply</span>
+        <span class="badge badge-blue">Aug 2, 2026 — Most high-risk AI obligations apply</span>
+        <span class="badge badge-green">Aug 2, 2027 — Safety-component high-risk AI in existing products</span>
+      </div>
+    </div>
+
+    <div class="cheat-section">
+      <h3>Key Numbers to Remember</h3>
+      <div class="badge-row">
+        <span class="badge badge-purple">Entry into force: August 1, 2024</span>
+        <span class="badge badge-purple">7% / €35M — max fine (prohibited AI)</span>
+        <span class="badge badge-purple">3% / €15M — max fine (high-risk violations)</span>
+        <span class="badge badge-purple">15 days — serious incident reporting deadline</span>
+        <span class="badge badge-purple">10²⁵ FLOPs — systemic risk GPAI threshold</span>
+        <span class="badge badge-purple">4 risk tiers</span>
+        <span class="badge badge-purple">8 requirements for high-risk AI</span>
+        <span class="badge badge-purple">8 high-risk sectors in Annex III</span>
+        <span class="badge badge-purple">~85% of AI = minimal risk</span>
+      </div>
+    </div>
+    `
+  }
+];
+
+let current = 0;
+
+function buildGrid(){
+  const g = document.getElementById('dayGrid');
+  g.innerHTML = '';
+  for(let i = 0; i < days.length; i++){
+    const b = document.createElement('button');
+    b.className = 'day-pip' + (days[i].isCheatSheet ? ' cheat' : '') + (i === current ? ' active' : '');
+    b.textContent = days[i].isCheatSheet ? 'CS' : (i + 1);
+    b.title = days[i].title;
+    b.onclick = (()=>{ const idx = i; return () => goTo(idx); })();
+    g.appendChild(b);
+  }
+}
+
+function goTo(idx){ current = idx; render(); }
+function changeDay(dir){ current = Math.max(0, Math.min(days.length - 1, current + dir)); render(); }
+
+function render(){
+  const d = days[current];
+  const total = days.length;
+  document.getElementById('dayCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progBar').style.width = (((current + 1) / total) * 100) + '%';
+  buildGrid();
+
+  if(d.isCheatSheet){
+    document.getElementById('lessonArea').innerHTML = `
+      <div class="card">
+        <div class="lesson-header">
+          <div class="day-badge" style="background:#E1F5EE">
+            <div class="day-num" style="color:#085041;font-size:14px">CHEAT</div>
+            <div class="day-lbl" style="color:#0F6E56">SHEET</div>
+          </div>
+          <div class="lesson-meta">
+            <h2>${d.title}</h2>
+            <div class="tagline">${d.tagline}</div>
+          </div>
+        </div>
+        <div class="lesson-body">${d.body}</div>
+      </div>`;
+    return;
+  }
+
+  const quizId = 'quiz_' + current;
+  let quizHtml = '';
+  if(d.quiz){
+    const optsHtml = d.quiz.opts.map((o, i) =>
+      `<button class="quiz-btn" onclick="checkAnswer(${i}, ${d.quiz.ans}, '${quizId}')">${o}</button>`
+    ).join('');
+    quizHtml = `<div class="quiz-box">
+      <p>Quick check: ${d.quiz.q}</p>
+      <div>${optsHtml}</div>
+      <div class="answer-reveal" id="${quizId}"></div>
+    </div>`;
+  }
+
+  document.getElementById('lessonArea').innerHTML = `
+    <div class="card">
+      <div class="lesson-header">
+        <div class="day-badge">
+          <div class="day-num">${current + 1}</div>
+          <div class="day-lbl">Day</div>
+        </div>
+        <div class="lesson-meta">
+          <h2>${d.title}</h2>
+          <div class="tagline">${d.tagline}</div>
+        </div>
+      </div>
+      <div class="section-label">Today's lesson</div>
+      <div class="lesson-body">${d.body}</div>
+      ${quizHtml}
+    </div>`;
+}
+
+function checkAnswer(chosen, correct, qid){
+  const el = document.getElementById(qid);
+  const d = days[current];
+  if(!d.quiz) return;
+  const isRight = chosen === correct;
+  el.innerHTML = `<strong>${isRight ? 'Correct!' : 'Not quite.'}</strong> ${d.quiz.explain}`;
+  el.className = 'answer-reveal show';
+  el.style.background = isRight ? '#EAF3DE' : '#FCEBEB';
+  el.style.borderColor = isRight ? '#3B6D11' : '#A32D2D';
+  el.style.color = '#1a1a18';
+}
+
+render();
+</script>
+</body>
+</html>
