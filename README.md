@@ -10,7 +10,7 @@ This repo is where I build the training that turns *"we should probably govern o
 
 ## What's in here
 
-A consolidated catalog of governance, security, and technical-literacy curricula I've designed, written, and audited end to end. Not slide decks. Full courses with assessments, labs, and facilitator support.
+A consolidated catalog of governance, security, and technical-literacy curricula I've designed, written, and audited end to end. Many as standalone HTML courses. Not slide decks. Full courses with assessments, labs, and facilitator support. 
 
 ```
 curricula/               Multi-week flagship programs
@@ -24,15 +24,15 @@ docs/                    Methodology, style guides, QA standards
 
 ## Flagship work
 
-### Building the Machine
+### [Building the Machine](curricula/ building-the-machine-v3_1_1.html)
 61-day foundational program for the **AI Governance Practitioner Career Path**.
 The one you take before you have opinions at the risk committee meeting.
 
-### Taming the Machine
+### [Taming the Machine](curricula/ taming-the-machine-v3_1_1.html)
 61-day sequel built for **Model Risk Analyst, AI Governance Practitioner, and Bias Auditor** job-readiness.
 Less theory, more "here is the audit report you will actually have to defend."
 
-### Guardians of the Machine
+### [Guardians of the Machine](curricula/guardians-of-the-machine)
 26-week **AI Security and Governance** team curriculum.
 Ships in three synchronized editions: in-person, video-chat, and a full facilitator guide. Assembling the team is optional but strongly encouraged.
 
@@ -40,7 +40,7 @@ Ships in three synchronized editions: in-person, video-chat, and a full facilita
 7-day deep dive into bias taxonomy, group fairness metrics, and the **Chouldechova / Kleinberg impossibility results**.
 Hands-on with Fairlearn, AIF360, Aequitas, and the What-If Tool. Includes the part where you explain to leadership why they cannot have all three fairness criteria at once.
 
-### Reading the Machine · Reading the Numbers
+### [Reading the Machine](curricula/reading-the-machine.html) · [Reading the Numbers](curricula/reading-the-numbers.html)
 Paired **Python and applied-math literacy** courses built specifically for GRC analysts.
 For governance professionals who are tired of nodding politely when the data science team shares a notebook.
 
