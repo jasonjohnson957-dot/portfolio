@@ -24,20 +24,19 @@ docs/                    Methodology, style guides, QA standards
 
 ## Flagship work
 
-### [Building the Machine (BTM)](curricula/building-the-machine-v3_1_1.html)
-### [Preview Link](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/71be3ce75afeb9e09820e311bdc67df2916516c7/curricula/building-the-machine-v3_1_1.html)
+### [Building the Machine (BTM)](curricula/building-the-machine-v3_1_1.html) [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/71be3ce75afeb9e09820e311bdc67df2916516c7/curricula/building-the-machine-v3_1_1.html)
 61-day foundational program for the **AI Governance Practitioner Career Path**.
 The one you take before you have opinions at the risk committee meeting.
 
-### [Taming the Machine (TTM)](curricula/taming-the-machine-v3_1_1.html)
+### [Taming the Machine (TTM)](curricula/taming-the-machine-v3_1_1.html) [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/4c1c191879bd08137c8f1b1cdd1fbef4555c6b38/curricula/taming-the-machine-v3_1_1.html)
 61-day sequel built for **Model Risk Analyst, AI Governance Practitioner, and Bias Auditor** job-readiness.
 Less theory, more "here is the audit report you will actually have to defend."
 
 ### [Guardians of the Machine (GTM)](curricula/guardians-of-the-machine)
-26-week **AI Security and Governance** team curriculum.
+26-week **AI Security and Governance** team building curriculum.
 Ships in three synchronized editions: in-person, video-chat, and a full facilitator guide. Assembling the team is optional but strongly encouraged.
 
-### [Fairness Measurement Fast-Track](curricula/fairness-measurement-fast-track.html)
+### [Fairness Measurement Fast-Track](curricula/fairness-measurement-fast-track.html) [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/4c1c191879bd08137c8f1b1cdd1fbef4555c6b38/curricula/fairness-measurement-fast-track.html)
 7-day deep dive into bias taxonomy, group fairness metrics, and the **Chouldechova / Kleinberg impossibility results**.
 Hands-on with Fairlearn, AIF360, Aequitas, and the What-If Tool. Includes the part where you explain to leadership why they cannot have all three fairness criteria at once.
 
