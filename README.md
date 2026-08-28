@@ -24,15 +24,15 @@ docs/                    Methodology, style guides, QA standards
 
 ## Flagship work
 
-### [Building the Machine](curricula/building-the-machine-v3_1_1.html)
+### [Building the Machine (BTM)](curricula/building-the-machine-v3_1_1.html)
 61-day foundational program for the **AI Governance Practitioner Career Path**.
 The one you take before you have opinions at the risk committee meeting.
 
-### [Taming the Machine](curricula/taming-the-machine-v3_1_1.html)
+### [Taming the Machine (TTM)](curricula/taming-the-machine-v3_1_1.html)
 61-day sequel built for **Model Risk Analyst, AI Governance Practitioner, and Bias Auditor** job-readiness.
 Less theory, more "here is the audit report you will actually have to defend."
 
-### [Guardians of the Machine](curricula/guardians-of-the-machine)
+### [Guardians of the Machine (GTM)](curricula/guardians-of-the-machine)
 26-week **AI Security and Governance** team curriculum.
 Ships in three synchronized editions: in-person, video-chat, and a full facilitator guide. Assembling the team is optional but strongly encouraged.
 
