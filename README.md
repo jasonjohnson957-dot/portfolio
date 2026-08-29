@@ -32,7 +32,7 @@ The one you take before you have opinions at the risk committee meeting.
 61-day sequel built for **Model Risk Analyst, AI Governance Practitioner, and Bias Auditor** job-readiness.
 Less theory, more "here is the audit report you will actually have to defend."
 
-### [Guardians of the Machine (GTM)](curricula/guardians-of-the-machine) · [Preview](
+### [Guardians of the Machine (GTM)](curricula/guardians-of-the-machine) · [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/61f6979ea7c87f8a8002ff1ddcd71fd3a734bbc0/curricula/guardians-of-the-machine/guardians-of-the-machine.html)
 26-week **AI Security and Governance** team building curriculum.
 Ships in three synchronized volumes: in-person, video-chat, and a full facilitator guide. Assembling the team is optional but strongly encouraged.
 
@@ -40,8 +40,7 @@ Ships in three synchronized volumes: in-person, video-chat, and a full facilitat
 7-day deep dive into bias taxonomy, group fairness metrics, and the **Chouldechova / Kleinberg impossibility results**.
 Hands-on with Fairlearn, AIF360, Aequitas, and the What-If Tool. Includes the part where you explain to leadership why they cannot have all three fairness criteria at once.
 
-### [Reading the Machine](curricula/reading-the-machine.html) · [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/670a3eb199e4dcf92e9021fd31838f6ad771a1f6/curricula/reading-the-machine.html) 
-### [Reading the Numbers](curricula/reading-the-numbers.html) · [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/4c1c191879bd08137c8f1b1cdd1fbef4555c6b38/curricula/reading-the-numbers.html)
+### [Reading the Machine](curricula/reading-the-machine.html) · [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/670a3eb199e4dcf92e9021fd31838f6ad771a1f6/curricula/reading-the-machine.html) + [Reading the Numbers](curricula/reading-the-numbers.html) · [Preview](https://htmlpreview.github.io/?https://github.com/jasonjohnson957-dot/portfolio/blob/4c1c191879bd08137c8f1b1cdd1fbef4555c6b38/curricula/reading-the-numbers.html)
 Paired **Python and applied-math literacy** courses built specifically for GRC analysts.
 For governance professionals who are tired of nodding politely when the data science team shares a notebook.
 
