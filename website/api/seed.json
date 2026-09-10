@@ -1,0 +1,66 @@
+{
+  "site": {
+    "name": "Binary Rights",
+    "headline": "Technology should protect people.",
+    "intro": "Exploring responsible AI through practical governance, bias prevention, and learning that turns principles into practice.",
+    "aboutTitle": "Human rights belong in a digital world.",
+    "aboutBody": "Binary Rights brings together AI ethics, bias prevention, and privacy protection. Our work connects the questions we ask about technology with the practices we use to govern it.",
+    "founderTitle": "Built by a practitioner. Designed for practice.",
+    "founderBody": "Jason Johnson works at the intersection of technical project delivery, AI governance, and curriculum design. His portfolio brings together practical learning resources for governance professionals working with complex systems.",
+    "github": "https://github.com/jasonjohnson957-dot/portfolio"
+  },
+  "projects": [
+    {
+      "title": "Building the Machine",
+      "category": "AI governance foundations",
+      "description": "A 61-day foundational curriculum for the AI Governance Practitioner career path.",
+      "url": "https://github.com/jasonjohnson957-dot/portfolio/blob/main/curricula/building-the-machine-v3_1_1.html",
+      "status": "Published"
+    },
+    {
+      "title": "Taming the Machine",
+      "category": "Model risk and bias auditing",
+      "description": "A 61-day sequel focused on job readiness for model risk analysts, governance practitioners, and bias auditors.",
+      "url": "https://github.com/jasonjohnson957-dot/portfolio/blob/main/curricula/taming-the-machine-v3_1_1.html",
+      "status": "Published"
+    },
+    {
+      "title": "Guardians of the Machine",
+      "category": "AI security and governance",
+      "description": "A 26-week team curriculum with in-person, virtual, and facilitator editions.",
+      "url": "https://github.com/jasonjohnson957-dot/portfolio/tree/main/curricula/guardians-of-the-machine",
+      "status": "Published"
+    },
+    {
+      "title": "Fairness Measurement Fast-Track",
+      "category": "Bias measurement",
+      "description": "Seven days of fairness metrics, bias taxonomy, and hands-on exploration of fairness tools.",
+      "url": "https://github.com/jasonjohnson957-dot/portfolio/blob/main/curricula/fairness-measurement-fast-track.html",
+      "status": "Published"
+    },
+    {
+      "title": "Reading the Machine + Reading the Numbers",
+      "category": "Technical literacy",
+      "description": "Python and applied-math literacy for governance, risk, and compliance analysts.",
+      "url": "https://github.com/jasonjohnson957-dot/portfolio/tree/main/curricula",
+      "status": "Published"
+    },
+    {
+      "title": "Framework-aligned learning",
+      "category": "Governance, risk, and compliance",
+      "description": "A collection of learning resources covering security, privacy, and AI governance frameworks.",
+      "url": "https://github.com/jasonjohnson957-dot/portfolio/tree/main/grc-framework-courses",
+      "status": "Published"
+    }
+  ],
+  "demos": [],
+  "learning": [
+    {
+      "title": "Mastering the Machine",
+      "category": "Featured learning platform",
+      "description": "A dedicated learning experience bringing the Machine curricula together. The platform is currently under construction.",
+      "url": "",
+      "status": "In development"
+    }
+  ]
+}
